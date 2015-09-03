@@ -125,8 +125,8 @@ h1 {
 }
 
 p.subtitle {
-    font-size: 110%;
-    font-weight: bold;
+    font-size: 140%;
+    font-weight: normal;
 }
 
 ul.simple {
@@ -134,9 +134,21 @@ ul.simple {
     padding-left: 0;
 }
 
-p.lecture {
+ul.lectures {
+    list-style-type: none; 
+    padding-left: 0;
+}
+
+ul.lectures li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+p.ind {
     padding-left: 30px;
     margin: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 h3 {
