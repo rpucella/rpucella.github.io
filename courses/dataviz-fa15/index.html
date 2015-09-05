@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Visualizing Data (Fall 2015)</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+
+    <script>
+      window.addEventListener("load",run,false);
+
+      function run () {
+        // offset is given by the 'top' div (adjusted for padding)
+        var off = document.getElementById("top").clientHeight;
+        console.log(off);
+        var elts = document.querySelectorAll("div.navbar a");
+        for (var i=0; i<elts.length; i++) {
+          var href=elts[i].getAttribute("href").slice(1);
+          elts[i].setAttribute("onclick","return false;");
+          elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+        }
+      }
+
+      </script>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+      <ul>
+	<li><a href="#top"><b>Visualizing Data FA15</b></a></li> 
+	<li><a href="#announcements">Announcements</a></li>
+	<li><a href="#info">Course Info</a></li>
+	<li><a href="#lectures">Lectures</a></li>
+	<li><a href="#projects">Projects</a></li>
+      </ul>
+    </div>
+
+
+    <div id="top" style="height: 7em;"></div>
+    
+    <h1 class="clear">Visualizing Data (Fall 2015)</h1>
+    
+    <p class="subtitle">ENGR 3599-01 / Mon 18:15-20:45 / AC 326</p>
+    
+      <p>Interactive data visualization sits at the intersection of graphic design and programming: the ideal visualization needs to be easy to understand and aesthetically pleasing, but also interactively navigable, permit different views of the data, and be responsive no matter the amount of data being displayed. The course will focus on the technological aspects of data visualization, from databases and data structures and algorithms to process data, to technologies for interactive visualization such as Javascript/D3.  Course work will be project-driven, based on existing available large data sets. By the end of the course, we should be able to construct visualizations such as <a href="http://fivethirtyeight.com/interactives/world-cup/">2014 World Cup Predictions</a>  or  <a href="http://ri.id.au/closethegap">Close the Gap</a>.</p>
+    
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <ul class="simple">
+	<li><p>None yet.</p></li>
+      </ul>
+      
+    </div>
+
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Info</h3>
+
+
+      <p>Prerequisites: ENGR 2520 (Software Design)</p>
+
+      <p>Office hours: TBA</p>
+
+      <p>We will use two books:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <ul>
+	<li>Scott Murray, <i><a href="http://chimera.labs.oreilly.com/books/1230000000345">Interactive Data Visualization for the Web</a></i></li>
+	<li>Douglas
+	Crockford, <i><a href="http://shop.oreilly.com/product/9780596517748.do">JavaScript:
+	The Good Parts</a></i></li>
+      </ul>
+	
+      <p>These books are mostly for reference, but they are good
+      references. They provide a narrative that is otherwise lost when
+      you look up information online. The D3 book covers the main
+      JavaScript library we will use to develop our visualizations. The
+      JavaScript book covers the non-objectionable parts of the
+      language, and gives a good sense of the coding style that
+      I'll be using.</p>
+
+      <p>Grading: TBA</p>
+
+      <!-- <p>Late work policy: Homeworks are due at the beginning of lecture on the due date. The penalty for late homeworks is 10% per 24 hours. Note that I will usually discuss the homework that has been submitted on the first lecture past the due date. (Since homeworks are due on Thursdays, that would then usually be the following Monday.) Once I've done that, I will no longer be able to accept late submissions.</p> -->
+
+     </div>
+
+    <hr class="section">
+    <div class="section" id="lectures">
+      <h3>Lectures and Readings</h3>
+
+      <ul class="lectures">
+	<li><p>Sep 14: <i>Introduction</i></p>
+	  <!-- <p class="ind">(Placeholder)</p> -->
+	</li>	  
+
+	<li><p>Sep 17: <i></i></p>
+	</li>
+
+	<li><p>Sep 21: <i></i></p>
+	</li>
+
+	<li><p>Sep 28: <i></i></p>
+	</li>
+
+	
+      </ul>
+
+    </div>
+
+    <hr class="section">
+    <div class="section" id="projects">
+      <h3>Projects</h3>
+
+      <p> &nbsp; </p>
+    </div>
+
+  </body>
+</html>
