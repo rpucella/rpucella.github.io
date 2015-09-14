@@ -183,7 +183,76 @@
     <div class="section" id="projects">
       <h3>Projects</h3>
 
-      <p> &nbsp; </p>
+      <ul>
+	<li><p>Project 1: Warm-up (and calibration)</p>
+	  <div class="lect">
+
+	    <p><i>Due date: Mon Sep 14 at noon</i></p>
+
+	    <p>Each of the questions below ask you to draw something in a canvas. I've provided you with a skeleton HTML file that holds three canvases. The HTML file calls a function <tt>run()</tt> upon loading. You should put calls to your drawing functions in that function.</p>
+
+<ol>
+
+<li>(Scenery)
+
+<p>Code a function <tt>drawScenery()</tt> that draws a scenery (lanscape, city scape, etc) in the canvas with ID <tt>canvas-q1</tt>. Don't use images. Construct everything using the basic drawing primitives. Chances are it'll look like something out of a kindergarden class. That's perfectly okay. In fact, even good. You should try to be original. I did not even try.</p>
+
+<img src="./house1.png" height="200" style="float: left; margin: 10px;"></img>
+<p style="margin-top: 30px;">"This is my drawing of a house. There are many like it, but this one is mine." (Riccardo, 6 y.o., Ecole Elizabeth-Turgeon)</p>
+<p style="clear:both;">Make sure you call <tt>drawScenery()</tt> from <tt>run()</tt>.
+</li>
+
+<li>(Turtle graphics)
+<p>
+  Paths in a canvas are defined using lines and arcs given in term of canvas coordinates. An alternate approach is to define a path by a sequence of "moves": starting at a given position pointing in a given direction, move forward 100 units, turn left 45 degrees, then forward 100 units, etc. This approach to drawing is called <a href="https://en.wikipedia.org/wiki/Turtle_graphics">turtle graphics</a>.</p>
+
+  <p>We are going to represent the sequence of moves using an array. I will describe it using examples. The following array represents moving forward 100 units: <tt>["f",100]</tt>. The following array represents moving forward 100 units, turning right 45 degrees, moving forward 60 units, turning left 45 degrees, then moving forward 100 units: <tt>["f",100,"r",45,"f",60,"l",45,"f",100]</tt>. Makes sense?</p>
+
+  <p>Just for kicks, let's add another feature. A move <tt>pu</tt> will "lift the pen off the page" so that subsequent moves are still considered but they are not actually drawn. A move <tt>pd</tt> will "put the pen back on the page" so that subsequent moves now draw again.</p>
+
+  <p>Code a function <tt>draw(ctxt,x,y,moves)</tt> that takes a context <tt>ctxt</tt> on a canvas, an initial position (<tt>x</tt>,<tt>y</tt>) in the canvas, and a sequences of <tt>moves</tt> as above, and draws the corresponding curve in the canvas. </p>
+
+  <p>By default, the initial direction should be the unit vector of the x-axis (i.e., facing east if the canvas was a map in the standard orientation). The pen is initially down.</p>
+
+  <p>The following should draw the letter H in a context <tt>ctxt</tt> at position (100,100):</p>
+<pre>
+    draw(ctxt,100,100,["f",40,
+		       "r",90,
+		       "f",40,
+		       "l",90,
+		       "f",20,
+		       "l",90,
+		       "f",40,
+		       "r",90,
+		       "f",40,
+		       "r",90,
+		       "f",100,
+		       "r",90,
+		       "f",40,
+		       "r",90,
+		       "f",40,
+		       "l",90,
+		       "f",20,
+		       "l",90,
+		       "f",40,
+		       "r",90,
+		       "f",40,
+		       "r",90,
+		       "f",100]);
+</pre>
+  <p>Code a function that draws something interesting in the canvas with ID <tt>canvas-q2</tt> using your <tt>draw()</tt> function. You should try a <a href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_curve">space-filling curve</a> or a <a href="https://en.wikipedia.org/wiki/Koch_snowflake">Kock snowflake</a>. Make sure you call your function from <tt>run()</tt></p>
+</li>
+
+<li>(Animation)
+
+  <p>(Coming later tonight)</p>
+
+</li>
+</ol>
+
+  </div></li>
+    </ul>
+
     </div>
 
   </body>
