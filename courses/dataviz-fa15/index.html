@@ -135,7 +135,14 @@
       <ul class="lectures">
 	<li><p><span class="hdr">Sep 14:</span><i>Introduction I — JavaScript, HTML5 Canvas</i></p>
 		<div class="lect">
-		<p>Project 1: Warm-up.</p>
+		  <p>Lecture <a href="lect01-canvas.pdf">slides.</a></p>
+		  <p>If you need a review, here are some quick tutorials on <a href="http://www.w3.org/MarkUp/Guide/">HTML</a> and <a href="http://www.w3.org/Style/Examples/011/firstcss.en.html">CSS</a>.</p>
+		  <p>Over the next week, you should read the first four chapters of the JavaScript book 
+		    (as well as Chapter 6). Here is a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript">reasonable online tutorial on JavaScript</a> 
+		    that you may find useful. Skip the object-orientation part. The JavaScript book does it better.</p>
+		  <p>If you're looking at a precise description of how to access the DOM from JavaScript, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction">this is a good starting point</a>.</p>
+		  <p>Good tutorials on using the canvas: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a>, and <a href="http://diveintohtml5.info/canvas.html">Dive Into HTML5</a>.
+		  <p>Start of project 1: Warm-up.</p>
 		</div>
 	</li>	  
 
@@ -249,14 +256,16 @@
 
 <li>(SIMPLE ANIMATION)
 
-  <p>(Coming later tonight)</p>
+  <p>Code a function <tt>drawAnimScenery()</tt> that draws the scenery you designed in Question 1 in canvas with ID <tt>canvas-q3</tt> and animates in an interesting way.</p>
 
-<!--
-<img src="./house2.gif" height="200" style="float: left; margin: 10px;"></img>
-<p style="margin-top: 30px;">This is an animated GIF of the animation on my canvas (because if I put the animated canvas here, you could just snatch the code...) Unfortunately, the animated GIF coder is buggy, and messes up colors. Thus the weird effects. </p>
+  <img src="./house2.gif" height="200" style="float: right; margin: 10px;"></img>
+  <p>How do you do animation? Exactly as you would expect: an animation is a movie, and a movie is just a sequence of pictures (frames) shown at regular intervals. So the trick is to repeatedly draw into the canvas, one frame at a time, erasing the canvas between each frame.</p>
+
+  <p> On the right is an animation I constructed from my scenery above. It's actually an animated GIF because I can't well put in my canvas animation code right here, can I? (Unfortunately, the animated GIF coder is buggy, and messes up colors. Thus the weird effects in the cloud and the sun. Ignore that. Canvas animation will be fine.)</p>
+
+  <p>There's a bit of a subtlety in doing animation in the browser: you can't just write a for-loop and draw repeatedly in the canvas within that for-loop. Most browsers only render the canvas when control <i>returns</i> from JavaScript back to the browser. So if you animate in a for-loop, all you'll see is the last frame you ended up drawing, assuming your for-loop terminates. (Remember when I said in class that the inverted program structure forced on you by the browser has consequences? This is one of those.) So what you want to do is have the <i>browser</i> control the looping. Have a look at <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval">setInterval()</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame">requestAnimationFrame()</a>, that should give you some hint. If you're stuck, get in touch with me.</p>
 
 <p style="clear:both;">Make sure you call <tt>drawAnimScenery()</tt> from <tt>run()</tt>.
--->
 </li>
 </ol>
 
