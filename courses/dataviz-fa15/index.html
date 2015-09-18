@@ -28,6 +28,8 @@
       window.addEventListener("load",run,false);
 
       function run () {
+        // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+
         // offset is given by the 'top' div (adjusted for padding)
         var off = document.getElementById("top").clientHeight;
         console.log(off);
@@ -37,6 +39,14 @@
           elts[i].setAttribute("onclick","return false;");
           elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
         }
+
+        // SETUP SEND EMAIL LINK
+        document.getElementById("send_email").addEventListener("click",send_email);
+      }
+
+
+      function send_email () {
+        window.open("mailto:riccardo.pucella@olin.edu");
       }
 
       </script>
@@ -102,6 +112,8 @@
 
 
       <p>Prerequisites: ENGR 2510 (Software Design)</p>
+
+      <p>Instructor: <a href="http://www.rpucella.net">Riccardo Pucella</a> (<a id="send_email" href="#">send email</a>)</p>
 
       <p>Office hours: Mon 16:00-18:00 / MH 353</p>
 
