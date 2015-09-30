@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Social Media Viz Demo</title>
+
+    <!-- load D3 library -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+  </head>
+  
+  <body>
+    
+    <svg id="viz" height="500" width="800" style="border: 1px solid grey;">
+    </svg>
+    
+    <script>
+      
+window.addEventListener("load",run);
+      
+
+/*
+ * Demo: social media 2013-2014 data
+ * 
+ * Version charting two years
+ * Using D3 for DOM manipulation
+ *
+ */
+
+
+function run () {
+
+    var category = "age";
+    var data2013 = getDataRows(category,2013);
+    var data2014 = getDataRows(category,2014);
+
+    var svg = d3.select("#viz");
+
+    // get the size of the SVG element
+    var height = svg.attr("height");
+    var width = svg.attr("width");
+
+    // the chart lives in the svg surrounded by a margin of 100px
+    var margin = 100;
+    var chartHeight = height - 2*margin;
+    var chartWidth = width - 2*margin;
+
+    // figure out the width of the bars so that all bars fit and 
+    //   there is one bar width between them
+    // note that every data point now has _2_ bars associated with 
+    //   it
+    var barWidth = chartWidth/(3*data2013.length-1);
+
+    var data = [data2013,data2014];
+    var color = ["blue","darkblue"];
+
+    // first draw all the 2013 bars, then the 2014 bars
+    data.forEach(function(d,j) {
+	d.forEach(function(v,i) {
+	    // compute the height of the bar as a proportion of the 
+	    // available chartHeight
+	    var barHeight = chartHeight*v.value/100;
+	    // figure out where the vetical bar starts
+	    var yPos = height-margin-barHeight;
+
+	    // create bar & value text
+	    // add some styles to make it pretty too
+
+            svg.append("rect")
+		.attr("x",margin+(i*3+j)*barWidth)
+		.attr("y",yPos)
+		.attr("width",barWidth)
+		.attr("height",barHeight)
+		.style("stroke","white")
+		.style("stroke-width","2px")
+		.style("fill",color[j]);
+
+	    svg.append("text")
+		.attr("x",margin+(i*3+j)*barWidth+barWidth/2)
+ 		.attr("y",yPos-20)
+		.attr("dy","0.3em")
+		.style("text-anchor","middle")
+		.style("font-family","sans-serif")
+		.style("font-weight","bold")
+		.style("font-size","16px")
+		.style("fill",color[j])
+		.text(v.value+"%");
+	});
+
+    });
+
+
+    // show the labels (position them centered with respect 
+    // to _both_ 2013 and 2014 bars
+    data2013.forEach(function(v,i) {
+	svg.append("text")
+	    .attr("x",margin+(i*3)*barWidth+barWidth)
+	    .attr("y",margin+chartHeight+50)
+	    .attr("dy","0.3em")
+	    .style("text-anchor","middle")
+	    .style("font-family","sans-serif")
+	    .style("font-size","20px")
+	    .text(v.group);
+    });
+
+}		 
+
+/* From 
+   http://www.pewinternet.org/files/2015/01/PI_SocialMediaUpdate20144.pdf
+*/
+
+
+function getDataRows (category,year) {
+    var data = [
+	{ category:"all", group:"all", year:2013, value:71},
+	{ category:"all", group:"all", year:2014, value:71},
+	{ category:"gender", group:"Men", year:2013, value:66},
+	{ category:"gender", group:"Men", year:2014, value:66},
+	{ category:"gender", group:"Women", year:2013, value:76},
+	{ category:"gender", group:"Women", year:2014, value:77},
+	{ category:"race", group:"White, Non-Hispanic", year:2013, value:71},
+	{ category:"race", group:"White, Non-Hispanic", year:2014, value:71},
+	{ category:"race", group:"Black, Non-Hispanic", year:2013, value:76},
+	{ category:"race", group:"Black, Non-Hispanic", year:2014, value:67},
+	{ category:"race", group:"Hispanic", year:2013, value:73},
+	{ category:"race", group:"Hispanic", year:2014, value:73},
+	{ category:"age", group:"18-29", year:2013, value:84},
+	{ category:"age", group:"18-29", year:2014, value:87},
+	{ category:"age", group:"30-49", year:2013, value:79},
+	{ category:"age", group:"30-49", year:2014, value:73},
+	{ category:"age", group:"50-64", year:2013, value:60},
+	{ category:"age", group:"50-64", year:2014, value:63},
+	{ category:"age", group:"65+", year:2013, value:45},
+	{ category:"age", group:"65+", year:2014, value:56}
+    ];
+    
+    return data.filter(function(row) {
+	return (row.category===category && row.year===year) ; });
+}
+      
+    </script>
+    
+  </body>
+  
+</html>
