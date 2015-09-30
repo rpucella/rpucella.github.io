@@ -22,6 +22,10 @@
     	span.hdr {
     	  padding-right: 1em
     	}
+
+        li.project {
+          margin-top: 2em;
+        }
     </style>
 
     <script>
@@ -90,7 +94,7 @@
 
       <ul class="simple">
 
-	<li><p class="ann"><span class="hdr">Sep 28:</span><a href="http://www.pewinternet.org/2015/08/19/mobile-messaging-and-social-media-2015/">Mobile Messaging and Social Media 2015</a></li>
+	<li><p class="ann"><span class="hdr">Sep 29:</span>Lecture 3 is up. And Project 2 is also up. See below, including team assignments. Get in touch with me if you need help contacting your partner, or if I somehow missed you. </li>
 
 	<li><p class="ann"><span class="hdr">Sep 24:</span>Reading for next lecture, from the D3 book: Chapters 4,5,6. (Chapters 2-3 quickly review HTML, CSS, JavaScript. Please have a look if you still feel shaky about those.)</li>
 
@@ -235,7 +239,7 @@
       <h3>Projects</h3>
 
       <ul class="lectures">
-	<li><p><b>PROJECT 1: Warm-up (and calibration)</b></p>
+	<li class="project"><p><b>PROJECT 1: Warm-up (and calibration)</b></p>
 	  <div class="lect">
 
 	    <p>Due date: <i>Mon Sep 21 at noon</i></p>
@@ -317,6 +321,84 @@
 
 	</div></li>
 	
+	<li class="project"><p><b>PROJECT 2: Mobile Message and Social Media</b></p>
+	  <div class="lect">
+
+	    <p>Due date: <i>Mon Oct 19 at 23:59</i></p>
+
+	    <p><a href="teams-project2.txt">Team assignments</a>. (If you need help contacting your partner, or if I missed you, please get in touch with me.)</p>
+
+	    <p>In this project, you will come up with (static) visualisations for the <a href="http://www.pewinternet.org/2015/08/19/mobile-messaging-and-social-media-2015/">Mobile Messaging and Social Media 2015</a> Pew Research Center data.</p>
+
+	    <p>I am keeping this project pretty unstructured as a
+	    trial run. If that works well, upcoming projects will
+	    remain unstructured. The idea is to have you explore and
+	    try things out as much as possible.</p> 
+
+	    <p>First off, download the report above. The report, among
+	    other things, gives you percentages of online users using
+	    one of five social media sites (Facebook, Pinterest,
+	    Instagram, LinkedIn, Twitter), cut across demographic
+	    segments (gender, race, age, education, income, and
+	      residential area). </p>
+
+	    <p>Then, I want you to implement visualizations for the
+	    data. The visualizations I want:
+	      <ul>
+		<li>For each social site and each demographic segment,
+		a chart showing the percentage of online users using
+		that social site split across all the groups in the
+		segment. (Visualizations of the first type)
+		<li>For each demographic segment, a chart showing the
+		percentage of online users using each of the 
+		social 		sites across all the groups in the
+		  segments. (Visualizations of the second type)</li>
+	      </ul>
+	    </p>
+	    <p>You will have to enter the data yourself
+	    unfortunately, but on the flip side, you will have full
+	    freedom to choose whatever data layout that you think will
+	    help you. Then, I suggest you proceed in three phases:</p>
+	    <ol>
+	      <li><p>Pick one visualization of the first type (one site,
+	      one segment) and figure out a nice chart for it and
+	      implement it. Ideally, you should be able to parametrize
+	      the process that you use so that you can chart any site
+	      and segment. Do the same for one vizualization of the
+	      second type.</p>
+	      <p>Don't restrict yourself to bar charts. You can
+	      explore dot charts, bubble charts, heat maps, anything
+	      that you think can help a viewer understand what are
+	      the most popular sites/segments in each of the
+	      visualizations. I leave it up to you what you choose to
+	      emphasize, what you think it important.</p> </li>
+	      
+	      <li><p>Extend what you did above so that you visualize
+		  <i>all</i> of the data: all the visualizations of the first type,
+	      all the visualizations of the second type.</p></li>
+
+	      <li><p>Wrap it up in a nice bow: put all of the
+	      visualizations on a web page that is usable and
+	      reasonably nice to look at. As I said in
+	      class, it's fine if all the charts are all on the page,
+	      just order them and lay them out in some reasonable
+	      fashion. (<i>I will talk about how to lay out multiple
+	      charts in the next lecture</i>.) If you know how to use
+	      buttons and selectors on a web page, feel free to use
+	      those to make the page less overwhelming. If you don't
+	      know how to use them, don't worry, we'll look at them in
+		  the next module. They are not required here.</p></li>
+	    </ol>
+
+	    <p>I recommend you keep it all in one single HTML file, but
+	    you do not have to. I ask that you place the data directly
+	    into the file like in the third lecture's examples (as
+	    opposed to pulling it from a CSV file, say) and that you
+	      use D3 as the SVG manipulation library.</p>
+
+	    <p>Submission instructions to follow.</p>
+	  </div>
+	</li>
 
     </ul>
 
