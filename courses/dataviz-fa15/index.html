@@ -97,8 +97,10 @@
 	
 	<li>
 	  <p class="ann">
-	    <span class="hdr">Oct 19:</span>
-	    Prep work for Project 2: <a href="global-attitudes-survey.pdf">Pew Research Center Global Attitudes Project Spring 2013 Questionnaire</a>
+	    <span class="hdr">Oct 20:</span>
+	    Project 3 is up. See below, including team
+	    assignments. Get in touch with me if you need help
+	    contacting your partner.
 	  </p>
 	</li>
 
@@ -402,6 +404,7 @@
 	    remain unstructured. The idea is to have you explore and
 	    try things out as much as possible.</p> 
 
+	    
 	    <p>First off, download the report above. The report, among
 	    other things, gives you percentages of online users using
 	    one of five social media sites (Facebook, Pinterest,
@@ -468,6 +471,111 @@
 </p>
 	  </div>
 	</li>
+
+
+	<li class="project"><p><b>PROJECT 3: Global Attitudes 2013</b></p>
+	  <div class="lect">
+
+	    <p>Due date: <i>Mon Nov 2 at 23:59</i></p>
+
+	    <p><a href="teams-project3.txt">Team assignments</a>. (If you need help contacting your partner, or if I missed you, please get in touch with me.)</p>
+
+	    <p>In this project, you will come up with a dynamic
+	    visualisation for
+	    the <a href="http://www.pewglobal.org/">Pew Research
+	    Global Attitudes</a>, using their 2013 data.</p>  
+
+	    <p>Again, this is pretty unstructured. 
+	      The idea is to have you explore and
+	    try things out as much as possible.</p> 
+
+	    <ol>
+	      <li>
+	    <p>Have a look at the <a href="project3/Pew Research Global Attitudes Project Spring 2013 Questionnaire for Web.pdf">survey questionnaire</a>. 
+	      The Global Attitudes Project collects data from a
+	      survey given to residents of various countries. 
+	      Note that not everyone is asked every question
+	      necessarily: some questions are asked only in some
+	      countries, while some questions are asked only if the
+	      answer to a previous question is a specific one.</p>
+
+	    <p>Identify a few (between 5 and 10) of the questions that
+	    you find interesting. That's going to be highly
+	    personal. Those are the questions that you are going to
+	    visualize.</p>
+	      </li>
+
+	      <li>
+		<p>Get the dataset that corresponds to the
+		  countries you want to include in the visualization. Turns
+		  out that the dataset is too large to comfortably be loaded
+		  all at once into the browser. (At least, on my
+		  system. Your mileage may vary.) Here are the datasets you
+		  can use: 
+		  <a href="project3/america.csv">America (North and South)</a>,
+		  <a href="project3/africa.csv">Africa</a>,
+		  <a href="project3/europe.csv">Europe</a>,
+		  <a href="project3/middle.csv">Middle East</a>,
+		  <a href="project3/apac.csv">Asia-Pacific</a>.
+		  All of these datasets are CSV files, where the first
+		  line of the file is the header names for the columns,
+		  and each subsequent line records the survey answers for
+		  one respondent. There is a column for every question on
+		  the survey questionnaire. The column headers reflect the names that
+		  appear in the survey questionnaire.</p>
+		
+		<p>You can get a <a href="project3/Pew Research Global Attitudes Project Spring 2013 Topline for Web.pdf">summary of the survey data</a>, aggregated as
+		  percentage of all respondents to each question, per
+		  country.</p>
+	      </li>
+	      
+	      <li>
+		<p>Create a dynamic visualization (with one or more
+	      views) of the questions you chose, for the countries you
+	      chose.
+	      How should you visualize that data? 
+		  That's up to you. Certainly, the first step will be
+		  to read in the CSV file containing your data, and
+		  then use that data to create one (or more)
+		  visualization. I will ask you to focus on switching and
+		  filtering interactions. So you will probably want to
+		  allow the user to switch between the various questions you
+		  decided were interesting, and also allow the user to
+		  filter the data based on the answers to other
+		  questions that you think would make for interesting
+		  segments. You should feel free to
+		  combine questions in the same view, if you want,
+		  and if it is relevant to the data you want to
+	      showcase.</p>
+	      </li>
+
+	      <li><p> As usual, wrap it up in a bow, and try to make
+		  it pretty. </p></li>
+	    </ol>
+
+
+	    <p>In the coming days, I will post a few dynamic
+	    visualizations that may help spark your imagination. If
+	    you have doubts as to whether what you're thinking of is
+	    reasonable, feel free to drop me an email with your idea,
+	      and I'll tell you.</p>
+
+	    <p>I recommend you create a folder for the project and
+	    place all your files in that folder, including the CSV
+	    file containing your data. It's probably a good idea to
+	    place your JavaScript code in its own file as well. If you
+	    don't know how to link your HTML page to an external
+	    JavaScript file, find out how. It's not difficult. Again,
+	    I ask that you use D3 as the SVG manipulation library to
+	    create your views.</p>
+
+<p>
+  Submission instructions: please email a zipped file with your
+  project folder to <a href="mailto:dataviz15projects@gmail.com">the projects submission email address</a>. If you have your code posted on a public repo such as GitHub, please feel free to email a link to it instead. One submission per team, please. Make sure that you list all team members.
+</p>
+	  </div>
+	</li>
+
 
     </ul>
 
