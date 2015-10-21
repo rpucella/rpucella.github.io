@@ -8,7 +8,7 @@
     var autoScroll = {};
 
     var scrollY = 0;
-    var distance = 20;
+    var distance = 50;
     var speed = 1;
     var lastPos = -1;
 

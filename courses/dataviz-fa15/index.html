@@ -33,11 +33,13 @@
 
       function run () {
         // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+        // actually, for anything with "scrollto" class
 
         // offset is given by the 'top' div (adjusted for padding)
         var off = document.getElementById("top").clientHeight;
         console.log(off);
-        var elts = document.querySelectorAll("div.navbar a");
+        //var elts = document.querySelectorAll("div.navbar a");
+        var elts = document.querySelectorAll("a.scrollto");
         for (var i=0; i<elts.length; i++) {
           var href=elts[i].getAttribute("href").slice(1);
           elts[i].setAttribute("onclick","return false;");
@@ -54,7 +56,6 @@
       }
 
       </script>
-
   </head>
 
 
@@ -62,11 +63,11 @@
 
     <div class="navbar">
       <ul>
-	<li><a href="#top"><b>Visualizing Data FA15</b></a></li> 
-	<li><a href="#announcements">Announcements</a></li>
-	<li><a href="#info">Course Info</a></li>
-	<li><a href="#lectures">Lectures</a></li>
-	<li><a href="#projects">Projects</a></li>
+	<li><a class="scrollto" href="#top"><b>Visualizing Data FA15</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#projects">Projects</a></li>
       </ul>
     </div>
 
@@ -98,7 +99,7 @@
 	<li>
 	  <p class="ann">
 	    <span class="hdr">Oct 20:</span>
-	    Project 3 is up. See below, including team
+	    <a class="scrollto" href="#project3">Project 3</a> is up. See below, including team
 	    assignments. Get in touch with me if you need help
 	    contacting your partner.
 	  </p>
@@ -306,7 +307,7 @@
       <h3>Projects</h3>
 
       <ul class="lectures">
-	<li class="project"><p><b>PROJECT 1: Warm-up (and calibration)</b></p>
+	<li id="project1" class="project"><p><b>PROJECT 1: Warm-up (and calibration)</b></p>
 	  <div class="lect">
 
 	    <p>Due date: <i>Mon Sep 21 at noon</i></p>
@@ -390,7 +391,8 @@
 
 	</div></li>
 	
-	<li class="project"><p><b>PROJECT 2: Mobile Message and Social Media</b></p>
+	<a name="project2"></a>
+	<li  id="project2" class="project"><p><b>PROJECT 2: Mobile Message and Social Media</b></p>
 	  <div class="lect">
 
 	    <p>Due date: <i>Mon Oct 19 at 23:59</i></p>
@@ -473,7 +475,8 @@
 	</li>
 
 
-	<li class="project"><p><b>PROJECT 3: Global Attitudes 2013</b></p>
+	<a name="project3"></a>
+	<li  id="project3" class="project"><p><b>PROJECT 3: Global Attitudes 2013</b></p>
 	  <div class="lect">
 
 	    <p>Due date: <i>Mon Nov 2 at 23:59</i></p>
