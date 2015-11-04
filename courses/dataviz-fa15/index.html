@@ -313,10 +313,18 @@
 	  </div>
 	</li>
 	
-	<li><p><span class="hdr">Nov 2:</span><i>Synchronized Visualizations I</i></p>
+	<li><p><span class="hdr">Nov 2:</span><b>Large Data Sets</b></p>
+	  <div class="lect">
+	    <p>No slides for this one. I sketched everything out on the whiteboard, with lots of code.</p>
+	    <p>The data I used is the NCHS data, specifically the <a href="http://www.cdc.gov/nchs/data_access/Vitalstatsonline.htm#Mortality_Multiple">Mortality Multiple Cause</a> datasets, the ones we will be using for Project 4.</p>
+	    <p>I pushed the 2013 and the 2008 datasets into a <a href="https://www.sqlite.org/">SQLite</a> database, which can be accessed from Python using the convenient <a href="https://docs.python.org/2/library/sqlite3.html">sqlite3</a> module. SQLite uses SQL as a query language. <a href="http://www.afterhoursprogramming.com/tutorial/SQL/Overview/">Here is a reasonably short tutorial that is not SQLite-specific.</a></p> 
+	    <p>A small web server written in Python using the <a href="http://bottlepy.org/docs/dev/index.html">bottle</a> micro web-framework is used to pull the data from the database and deliver it to a front end. The server sends aggregated data to the front end.</p>
+	    <p>I demoed a simple front end pulls data from the web server and displays it somewhat crudely.</p>
+	    <p><i>(I will post the sample code tomorrow morning after I recreate a smaller version of the database for sharing.)</i></p>
+	  </div>
 	</li>
 
-	<li><p><span class="hdr">Nov 9:</span><i>Synchronized Visualizations II</i></p>
+	<li><p><span class="hdr">Nov 9:</span><i>Synchronized Visualizations</i></p>
 	</li>
 
 	<li><p><span class="hdr">Nov 13:</span><i>Spatial Visualizations I</i></p>
