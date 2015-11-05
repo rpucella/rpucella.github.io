@@ -97,6 +97,14 @@
 
 	<li>
 	  <p class="ann">
+	    <span class="hdr">Nov 4:</span>
+	    Lecture 7 is up, including running sample code. Project 4 should come out sometimes tomorrow. (Submission deadline will be adjusted in consequence, of course.)
+	  </p>
+	</li>
+
+
+	<li>
+	  <p class="ann">
 	    <span class="hdr">Oct 26:</span>
 	    Lecture 6 is up.
 	  </p>
@@ -319,8 +327,23 @@
 	    <p>The data I used is the NCHS data, specifically the <a href="http://www.cdc.gov/nchs/data_access/Vitalstatsonline.htm#Mortality_Multiple">Mortality Multiple Cause</a> datasets, the ones we will be using for Project 4.</p>
 	    <p>I pushed the 2013 and the 2008 datasets into a <a href="https://www.sqlite.org/">SQLite</a> database, which can be accessed from Python using the convenient <a href="https://docs.python.org/2/library/sqlite3.html">sqlite3</a> module. SQLite uses SQL as a query language. <a href="http://www.afterhoursprogramming.com/tutorial/SQL/Overview/">Here is a reasonably short tutorial that is not SQLite-specific.</a></p> 
 	    <p>A small web server written in Python using the <a href="http://bottlepy.org/docs/dev/index.html">bottle</a> micro web-framework is used to pull the data from the database and deliver it to a front end. The server sends aggregated data to the front end.</p>
-	    <p>I demoed a simple front end pulls data from the web server and displays it somewhat crudely.</p>
-	    <p><i>(I will post the sample code tomorrow morning after I recreate a smaller version of the database for sharing.)</i></p>
+	    <p>A simple front end pulls data from the web server and displays it.</p>
+	    <p>The sample
+	    code:<br>
+	       <a href="mortality.db">mortality.db</a>, the
+		  database, a severely cut down version of the full data<br>
+	       <a href="mortality-server.py">mortality-server.py</a>,
+		  the Python web server (uses the bottle framework)<br>
+	       <a href="mortality-demo.html">mortality-demo.html</a>,
+		  the front end.<br>
+	      You need to run the web
+	      server before you can run the demo. Put all the files in
+	      the same folder, and run the web server from that
+	      folder. You may need to load the HTML file through the
+	      web server,
+	      as <tt>localhost:8080/mortality-demo.html</tt>, with the
+	      port number you selected.
+	    </p>
 	  </div>
 	</li>
 
