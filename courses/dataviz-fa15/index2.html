@@ -644,6 +644,110 @@
 	</li>
 
 
+	<a name="project4"></a>
+	<li  id="project4" class="project"><p><b>PROJECT 4: Mortality Data</b></p>
+	  <div class="lect">
+
+	    <p>Due date: <i>Wed Nov 18 at 23:59</i></p>
+
+	    <p><a href="teams-project4.txt">Team assignments</a>. (If
+	    you need help contacting your partner, or if I missed you,
+	    please get in touch with me.)</p> 
+
+	    <p>In this project, you will come up with a dynamic
+	    visualisation for
+	    the <a href="http://www.cdc.gov/nchs/data_access/Vitalstatsonline.htm#Mortality_Multiple">NCHS
+	    Mortality Multiple Cause</a> data.</p>  
+
+	    <p>That data is large, so you will need some back-end
+	    support. To make sure I can work with your submission, I
+	    will ask you to create a small web server in
+	    the <a href="http://bottlepy.org/docs/dev/index.html">Python
+	    Bottle framework</a>, that pulls from a SQLite database
+	    containing the data. There's nothing special about those
+	    technologies except for the fact that they're super easy
+	    to set up and require no infrastructure to speak of. You
+	    will also create a D3 front-end to the data for
+	    visualization purposes, as we've done since the beginning.</p>
+
+	    <p>I've cut up the project in two parts.</p>
+
+	    <ol>
+	      <li> 
+		<p>
+		  Download the mortality data files
+		  for <a href="ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/DVS/mortality/mort2003us.zip">2003</a>,
+		  <a href="ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/DVS/mortality/mort2008us.zip">2008</a>,
+		  and <a href="ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/DVS/mortality/mort2013us.zip">2013</a>.
+		</p>
+		<p>As I mentioned in class, they are in some baroque
+		data format. I've provided you with a <a href="project4/makedb.py">python script to
+		  take one of those files and push its data into a
+		SQLite database</a>. Running <tt>python makedb.py
+		&lt;dataset&gt;</tt> will create a
+		file <tt>mortality.db</tt> with a
+		table <tt>mortality</tt> if it doesn't already exist
+		and push the dataset into the
+		table. Running <tt>makedb.py</tt> with other datasets
+		will simply add the data to the table. (Don't push the
+		same dataset twice, or you'll get duplicated data.)
+		</p>
+
+		<p>
+		  Once you have a file <tt>mortality.db</tt>
+		  containing the 2003, 2008, and 2013 mortality data,
+		  write a Python web server in Bottle that can access
+		  the mortality database using
+		  the <a href="https://docs.python.org/2/library/sqlite3.html">sqlite3</a>
+		  module. 
+		</p>
+
+		<p>
+		  As a first step, have the web server response to GET
+		  requests at URI <tt>/test</tt> by returning a JSON
+		  file containing...
+		</p>
+
+		<p>
+		  Write a simple HTML file <tt>test.html</tt> that
+		  makes a GET call to URI <tt>/text</tt> on the web server you wrote and
+		  displays the resulting JSON data as follows:
+		</p>
+
+	      </li>
+
+	      <li>
+		<i>Coming soon.</i>
+	      </li>
+
+	      <!-- <li><p> As usual, wrap it up in a bow, and try to make
+		  it pretty. </p></li> -->
+	    </ol>
+
+
+	    <p>I recommend you create a folder for the project and
+	    place all your files in that folder, including the
+	    database file you create and the server. It's probably a
+	    good idea to place your JavaScript code in its own file as
+	    well.</p> 
+
+<p>
+  Submission instructions: please email a zipped file with your
+  project folder to <a href="mailto:dataviz15projects@gmail.com">the
+  projects submission email address</a>. If you have your code posted
+  on a public repo such as GitHub, please feel free to email a link to
+  it instead. Do not include the database file, as it is probably too
+  big to be usefully sent. Beside, I can just create my own.</p>
+
+<p>Put a README file in your folder that explains how to setup and run
+  your code, if there's anything special I should know.</p>
+
+<p>
+One submission per team, please. Make sure that you list all team members.
+</p>
+	  </div>
+	</li>
+
 
     </ul>
 
