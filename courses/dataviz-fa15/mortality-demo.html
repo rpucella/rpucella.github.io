@@ -32,12 +32,15 @@
  */
 
 
-// call run when the page finishes loading
+/*
+ * Call run when the page finishes loading
+ *
+ */
       
 window.addEventListener("load",run);
 
+
 function run () {
-    // get data, call function when done
     var svg = d3.select("#viz");
     svg.append("text")
 	.attr("id","loading")
@@ -52,6 +55,14 @@ function run () {
 }
 
 
+/*
+ * Function for getting the total from the
+ * data for a given cause and a given year
+ * (returns 0 if there's no such entry in
+ * the data)
+ * 
+ */
+
 function getTotal (data,cause,year) {
     if (cause in data) { 
 	if (year in data[cause]) {
@@ -63,21 +74,21 @@ function getTotal (data,cause,year) {
     return 0;
 }
 
+
+/* 
+ * Create a simple visual representation
+ * of the data
+ *
+ */
+
 function createView (data) {
     
     // first, sort the data by 2013 numbers
 
     var causes = Object.keys(data);
-    //causes.sort(function(a,b) { return d3.descending(data[a]["2013"][0].total,data[b]["2013"][0].total); });
     causes.sort(function(a,b) { return d3.descending(getTotal(data,a,"2013"),
 						     getTotal(data,b,"2013")); })
 
-    //causes = causes.slice(0,5);
-
-/*
-    max2013 = d3.max(causes.map(function(d) { return data[d]["2013"][0].total; }));
-    max2008 = d3.max(causes.map(function(d) { return data[d]["2008"][0].total; }));
-*/
     max2013 = d3.max(causes.map(function(d) { return getTotal(data,d,"2013"); }));
     max2008 = d3.max(causes.map(function(d) { return getTotal(data,d,"2008"); }));
 
@@ -92,13 +103,10 @@ function createView (data) {
 	.enter()
 	.append("g")
 
+    // note: the width attribute holds strings
     var x2008 = +svg.attr("width")*1/5;
     var x2013 = +svg.attr("width")*3/5;
 
-/*
-    var y2008 = function(d) { return y(data[d]["2008"][0].total); };
-    var y2013 = function(d) { return y(data[d]["2013"][0].total); };
-*/
     var y2008 = function(d) { return y(getTotal(data,d,"2008")); };
     var y2013 = function(d) { return y(getTotal(data,d,"2013")); };
 
@@ -130,7 +138,6 @@ function createView (data) {
 	    .append("text")
 	    .attr("class","label")
 	    .attr("x",+svg.attr("width")*3/5+20)
-//	    .attr("y",function(d) { return y(data[d]["2013"][0].total); })
 	    .attr("y",function(d) { return y(getTotal(data,d,"2013")); })
 	    .attr("dy","0.35em")
 	    .style("stroke","black")
@@ -142,6 +149,12 @@ function createView (data) {
 	});
 }
 
+
+
+/*
+ * Convert a cause code to text
+ *
+ */
 
 var CAUSE = {
     "1":"Tuberculosis (A16-A19)",
@@ -189,6 +202,11 @@ var CAUSE = {
 }
     
 
+/*
+ * Pulls the data for a given gender
+ * (can be empty)
+ * 
+ */
 
 function getData (gender,f) {
 
@@ -206,7 +224,6 @@ function getData (gender,f) {
 		 }
 	     });
 }
-
       
     </script>
     
