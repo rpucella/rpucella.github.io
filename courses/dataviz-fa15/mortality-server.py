@@ -5,7 +5,7 @@
 #
 # run with:
 #
-#    python mortality-server 8080
+#    python mortality-server.py 8080
 #
 # You can use any legal port number instead of 8080
 # of course
