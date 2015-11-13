@@ -55,7 +55,7 @@ function run () {
 	.style("text-anchor","middle")
 	.text("loading data...");
 
-    getData("",function(data) {
+    getData(function(data) {
 	GLOBAL.data = data;
 	createCausesView(data);
 	createGendersView(data);
@@ -182,7 +182,7 @@ function updateCausesView (data,gender) {
 	.style("stroke","blue")
 	.style("stroke-width","6px");
 
-    g.on("mouseenter",function (d,i) {  
+    g.on("mouseover",function (d,i) {  
 	moveToFront(this);
 	d3.select(this).select("line").style("stroke","red");
 	d3.select(this).selectAll("circle").style("fill","red");
@@ -300,7 +300,7 @@ function updateGendersView (data,cause) {
 	.style("font-weight","bold")
 	.style("fill","white")
 
-    g.on("mouseenter",function (d,i) {  
+    g.on("mouseover",function (d,i) {  
 	d3.select(this).select("circle").style("fill","red");
 	updateCausesView(GLOBAL.data,d.gender);
     });
