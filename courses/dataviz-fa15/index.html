@@ -12,6 +12,11 @@
     <script src="autoscroll.js"></script>
     
     <style>
+
+        code,tt,pre {
+          font-size: 130%;
+        }
+	
         div.lect {
        	  padding-left: 3em
         }
@@ -94,6 +99,13 @@
       <h3>Announcements</h3>
 
       <ul class="simple">
+
+	<li>
+	  <p class="ann">
+	    <span class="hdr">Nov 28:</span>
+	    By request, here are galleries of what teams have done for the first three projects. Only static snapshots, but it should give you an idea what people have done: <a href="project1/snapshots-p1.html">Project 1</a>, <a href="project2/snapshots-p2.html">Project 2</a>, <a href="project3/snapshots-p3.html">Project 3</a>. (Snapshots in not particular order.)
+	  </p>
+	</li>
 
 	<li>
 	  <p class="ann">
@@ -404,14 +416,14 @@
 
 	<li><p><span class="hdr">Nov 16:</span><b>Visualizing Temporal Data</b></p>
 	  <div class="lect">
-	    <p><a href="lect-temporal.pdf">Lecture slides</a> The slides contain links to many visualizations of
+	    <p><a href="lect09-temporal.pdf">Slides</a>. The slides contain links to many visualizations of
 	    temporal data.</p>
 	    <p>D3 recipes: <a href="http://bl.ocks.org/mbostock/3883245">line
 	    charts</a>, <a href="http://bl.ocks.org/mbostock/3884955">multi-series line
 	    charts</a>, <a href="http://bl.ocks.org/mbostock/3885211">stacked area
-	    charts</a>, <a href="http://bl.ocks.org/mbostock/4060954">steamgraphs</a>, <a href="http://bl.ocks.org/kgryte/5926740">rose
+	    charts</a>, <a href="http://bl.ocks.org/mbostock/4060954">streamgraphs</a>, <a href="http://bl.ocks.org/kgryte/5926740">rose
 	    graphs</a>, <a href="http://bl.ocks.org/tjdecke/5558084">day/hour heatmap</a>.
-	    <p>An overview of <a href="http://www.visualisingdata.com/2010/08/making-sense-of-streamgraphs/">steamgraphs.</a></p>
+	    <p>An overview of <a href="http://www.visualisingdata.com/2010/08/making-sense-of-streamgraphs/">streamgraphs.</a></p>
 	      
 
 	  </div>
@@ -448,8 +460,8 @@
 <p>Code a function <tt>drawScenery()</tt> that draws a scenery (landscape, cityscape, etc) in the canvas with ID <tt>canvas-q1</tt>. Don't use images. Construct everything using the basic drawing primitives. Chances are it'll look like something out of a kindergarden class. That's perfectly okay. In fact, even good. You should try to be original. I did not even try.</p>
 
 <img src="./house1.png" height="200" style="float: left; margin: 10px;"></img>
-<p style="margin-top: 30px;">"This is my drawing of a house. There are many like it, but this one is mine." (Riccardo, 6 y.o., Elizabeth-Turgeon School)</p>
-<p style="clear:both;">Make sure you call <tt>drawScenery()</tt> from <tt>run()</tt>.
+<p style="margin-top: 30px;">"This is my drawing of my house. There are many like it, but this one is mine."</p>
+<p style="clear:both;">Make sure you call <code>drawScenery()</code> from <tt>run()</tt>.
 </li>
 
 <li>(TURTLE GRAPHICS)
