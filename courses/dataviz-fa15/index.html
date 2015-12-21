@@ -22,10 +22,13 @@
         }
     	p.ann { 
     	  padding-left: 3em;
-    	  text-indent: -3em;
+    	  text-indent: -3em; 
     	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
     	span.hdr {
-    	  padding-right: 1em
+   	  padding-right: 1em
     	}
 
         li.project {
@@ -99,6 +102,20 @@
       <h3>Announcements</h3>
 
       <ul class="simple">
+
+	<li>
+	  <p class="ann">
+	    <span class="hdr">Dec 18:</span>
+	    If you host your final project visualization somewhere, please send me a link, and I will add it here. If you're hosting your project on GitHub and you're not using a custom web server (and don't have a large dataset), you can easily create a <a href="https://help.github.com/articles/creating-project-pages-manually/">GitHub Project Page</a>. If you have a lot of data, or if you need a custom server, then you have to do a bit more work. Consider reducing the size of your data set by pre-aggregating across the dimensions that your viz uses. Alternatively, you can look at hosting options such as <a href="https://www.heroku.com/">Heroku</a> or <a href="http://docs.aws.amazon.com/gettingstarted/latest/wah-linux/web-app-hosting-intro.html">AWS EC2</a>.
+	  <p class="ann_ctd">
+	    HOSTED FINAL PROJECTS:
+	  </p>
+	  <p class="ann_ctd">
+	    Francisci, Ta, Seitz: <a href="http://phiaseitz.github.io/dataviz-final-project/">Hospital Locator, a web tool to aid in locating the "best-value" hospital near you</a><br>
+	    Caporaletti, Langowitz: <a href="http://ec2-54-172-173-152.compute-1.amazonaws.com:5000/">Disability in the school to prison pipeline</a>
+	  </p>
+	</li>
+
 
 	<li>
 	  <p class="ann">
@@ -292,6 +309,135 @@
     <hr class="section">
     <div class="section" id="lectures">
       <h3>Lectures and Readings</h3>
+
+      <ul class="content">
+	<li><p><span class="hdr">Sep 14:</span><b>JavaScript, HTML5 Canvas</b></p>
+		<div class="lect">
+		  <p><a href="lect01-canvas.pdf">Slides</a>.</p>
+		  <p>If you need a review, here are some quick tutorials on <a href="http://www.w3.org/MarkUp/Guide/">HTML</a> and <a href="http://www.w3.org/Style/Examples/011/firstcss.en.html">CSS</a>.</p>
+		  <p>Over the next week, you should read the first four chapters of the JavaScript book 
+		    (as well as Chapter 6). Here is a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript">reasonable online tutorial on JavaScript</a> 
+		    that you may find useful. Skip the object-orientation part. The JavaScript book does it better.</p>
+		  <p>If you're looking at a precise description of how to access the DOM from JavaScript, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction">this is a good starting point</a>.</p>
+		  <p>Good tutorials on using the canvas: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a>, and <a href="http://diveintohtml5.info/canvas.html">Dive Into HTML5</a>.
+
+		  <p><a class="scrollto" href="#project1">Project 1: Warm-up</a>.</p>
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Sep 17:</span><b>Scalable Vector Graphics</b></p>
+		<div class="lect">
+		  <p><a href="lect02-svg.pdf">Slides</a>. Also, the <a href="lect02-demo.html">sample code</a> we wrote at the end of class.</p> 
+		  <p>A nice and astonishingly complete <a href="http://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html">primer for SVG</a>. It's old, but mostly still relevant.</p>
+		  <p><a href="https://developer.mozilla.org/en-US/docs/Web/SVG">Online reference for SVG</a>.</p>
+	</li>
+
+	<li><p><span class="hdr">Sep 28:</span><b>Static Visualizations I</b></p>
+
+	  <div class="lect">
+
+	    <p><a href="lect03-static-1.pdf">Slides</a>.</p>
+
+	    <p>An <a href="http://www.datavizcatalogue.com/index.html">interactive catalogue of data visualizations</a>.</p>
+
+	    <p>This may be handy as a <a href="http://img.labnol.org/di/data-chart-type.png">quick reference</a>.</p>
+
+	    <p><a href="http://nigelholmes.com/">Nigel Holmes</a> has some beautiful narrative infographics.</p>
+
+	    <p><a href="http://www.nationalgeographic.com/what-the-world-eats/">What the world eats</a> interactive visualization.</p>
+
+	    <p>JavaScript libraries mentioned during lecture: <a href="https://developers.google.com/chart/">Google Charts</a>, <a href="http://www.highcharts.com/">HighCharts</a>, <a href="http://d3js.org/">D3</a>.</p>
+
+	    <p>The sample code given in class: <a href="social-media-1.html">social-media-1.html</a>, <a href="social-media-2.html">social-media-2.html</a>, <a href="social-media-3.html">social-media-3.html</a>.</p>
+
+	    <p>The <a href="measures.png">small graphic</a> I scribbled on the whiteboard describing the measures used to draw the charts in the above code.
+
+	    <p><a class="scrollto" href="#project2">Project 2: Mobile Messaging and Social Media 2015</a>.</p>
+
+	  </div>
+	</li>
+
+	<li><p><span class="hdr">Oct 5:</span><b>Static Visualizations II</b></p>
+	  <div class="lect">
+
+	    <p><a href="lect04-static-2.pdf">Slides</a>.</p>
+
+	    <p>A variant of the sample code I gave in class: <a href="social-media-7.html">social-media-7.html</a>.</p>
+
+	    <p>Selections in D3: <a href="https://github.com/mbostock/d3/wiki/Selections">the API</a>, and a <a href="http://bost.ocks.org/mike/selection/">long document</a> explaining the implementation which sheds light on the details.</p>
+
+	    <p><a href="http://getbootstrap.com/">Bootstrap</a>, a library for responsive design layout.</p>
+
+	    <p>HTML layout in CSS: <a href="http://htmldog.com/guides/css/intermediate/layout/">old-school CSS</a>, and the new (but not yet standardized) <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Using_CSS_flexible_boxes">flexbox</a> mode.</p>
+
+	  </div>
+	</li>
+
+	<li><p><span class="hdr">Oct 19:</span><b>Dynamic Visualizations I</b></p>
+	  <div class="lect">
+
+	    <p><a href="lect05-dynamic-1.pdf">Slides</a>.</p>
+
+	    <p>The sample code I gave in class: <a href="social-media-dynamic-1.html">social-media-dynamic-1.html</a>, <a href="social-media-dynamic-2.html">social-media-dynamic-2.html</a>, <a href="data.csv">data.csv</a> (fake data, need I remind you).</p>
+
+	    <p>Here's a quick <a href="http://recurial.com/programming/understanding-callback-functions-in-javascript/">description of how to use callback functions</a> to deal with asynchronous functions like <tt>d3.csv</tt>. It uses a different example, but the principle is the same.</p>
+
+	    <p>The next project works with survey data. Here's an <a href="https://zapier.com/learn/ultimate-guide-to-forms-and-surveys/design-analyze-survey/">overview of the kind of analyses you can do with survey data</a>. (Not all apply to the data we'll be working with, though.)</p>
+
+	    <p><a class="scrollto" href="#project3">Project 3: Global Attitudes 2013</a>.</p>
+	  </div>
+	</li>
+	
+	<li><p><span class="hdr">Oct 26:</span><b>Dynamic Visualizations II</b></p>
+	  <div class="lect">
+
+	    <p><a href="lect06-dynamic-2.pdf">Slides</a>.</p>
+
+	    <p>The sample code I gave in class: <a href="social-media-dynamic-3.html">social-media-dynamic-3.html</a>, <a href="social-media-dynamic-4.html">social-media-dynamic-4.html</a>, <a href="social-media-dynamic-5.html">social-media-dynamic-5.html</a>. This uses the same fake data from last time: <a href="data.csv">data.csv</a>.</p>
+
+	    <p>Chapters 8 and 10 from the D3 book discusses data updates, and also binding event listeners to view elements.</p>
+	  </div>
+	</li>
+	
+	<li><p><span class="hdr">Nov 2:</span><b>Large Data Sets</b></p>
+	  <div class="lect">
+	    <p>No slides for this one. I sketched everything out on the whiteboard, with lots of code.</p>
+	    <p>The data I used is the NCHS data, specifically the <a href="http://www.cdc.gov/nchs/data_access/Vitalstatsonline.htm#Mortality_Multiple">Mortality Multiple Cause</a> datasets, the ones we will be using for Project 4.</p>
+	    <p>I pushed the 2013 and the 2008 datasets into a <a href="https://www.sqlite.org/">SQLite</a> database, which can be accessed from Python using the convenient <a href="https://docs.python.org/2/library/sqlite3.html">sqlite3</a> module. SQLite uses SQL as a query language. <a href="http://www.afterhoursprogramming.com/tutorial/SQL/Overview/">Here is a reasonably short tutorial that is not SQLite-specific.</a></p> 
+	    <p>A small web server written in Python using the <a href="http://bottlepy.org/docs/dev/index.html">bottle</a> micro web-framework is used to pull the data from the database and deliver it to a front end. The server sends aggregated data to the front end.</p>
+	    <p>A simple front end pulls data from the web server and displays it.</p>
+	    <p>The sample
+	    code:<br>
+	      - <a href="mortality.db">mortality.db</a>, the
+		  database, a severely cut down version of the full data<br>
+	      -  <a href="mortality-server.py">mortality-server.py</a>,
+		  the Python web server (uses the bottle framework)<br>
+	      -  <a href="mortality-demo.html">mortality-demo.html</a>,
+		  the front end.<br>
+	      You need to run the web
+	      server before you can run the demo. Put all the files in
+	      the same folder, and run the web server from that
+	      folder. You may need to load the HTML file through the
+	      web server,
+	      as <tt>localhost:8080/mortality-demo.html</tt>, with the
+	      port number you selected.
+	    </p>
+	    <p>Some more about <a href="http://www.applied-survey-methods.com/weight.html">weighting</a> to produce age-standardized data (or standardization across any demographic category for which we have a population distribution).</p>
+
+	    <p><a class="scrollto" href="#project4">Project 4: Mortality Data</a>.</p>
+
+	  </div>
+	</li>
+
+
+
+	<li><p><span class="hdr">Nov 9:</span><b>Synchronized Visualizations</b></p>
+
+	<li><p><span class="hdr">Nov 16:</span><b>Visualizing Temporal Data</b></p>
+
+	<li><p><span class="hdr">Nov 30:</span><b>Visualizing Spatial Data</b></p>
+
+      </ul>
       
       <ul class="lectures">
 	<li><p><span class="hdr">Sep 14:</span><b>JavaScript, HTML5 Canvas</b></p>
