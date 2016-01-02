@@ -90,6 +90,28 @@ div.navbar a {
 
 }
 
+
+
+
+div.home {
+    position: fixed;
+    z-index: 5;
+    left: 0em;
+    top: 0.5em;
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+
+div.home:hover {
+    background: rgb(150,0,0);
+}
+
+div.home a {
+    padding: 1em 1em 0.6em 1em;
+}
+
+
 table.toc {
     text-align: left; 
     margin-left: auto; 
