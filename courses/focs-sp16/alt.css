@@ -162,11 +162,13 @@ ul.simple {
 ul.lectures {
     list-style-type: none; 
     padding-left: 0;
+    margin: 0;
 }
 
 ul.lectures li {
+    margin-top: 0px;
     padding-top: 0px;
-    padding-bottom: 5px;
+    padding-bottom: 2px;
 }
 
 p.ind {
@@ -196,6 +198,3 @@ hr.section {
     margin-top: 40px;
     margin-bottom: 40px;
 }
-
-
-
