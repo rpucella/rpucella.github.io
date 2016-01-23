@@ -132,18 +132,18 @@ li > p { margin-top:0;}
     
     <h1 class="clear">Homework 1</h1>
     
-    <p class="subtitle">Due date: ??</p>
+    <p class="subtitle">Due date: Thursday, Jan 28 (midnight)</p>
 
 
     <p><b>Note on integrity:</b> This homework is meant to be done
     individually. You may discuss problems with fellow students, but
-    all work must be entirely yout own, and should not be from any
+    all work must be entirely your own, and should not be from any
     other course, present, past, or future. If you use a solution from
     another source you must cite it &mdash; this includes when that source
       is someone else helping you.</p>
 
     <p>Every source file you submit should begin with a block comment
-    that lists your name, your email address, and any remarks that you
+      that lists your <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
       wish to make to the instructor.</p>
 
     <p>All programming is to be done in OCaml v4.</p>
@@ -156,7 +156,10 @@ li > p { margin-top:0;}
     <p>Electronic submission instructions to be announced soon.</p>
     
     <ol class="number">
-      <li> <b>Numerical functions</b>
+      <li> <p><b>Numerical functions</b></p>
+
+	<p>For the functions below, I really only care about the result they return for <i>positive integers</i>.</p>
+
 
 	<ol class="letter">
 
@@ -275,7 +278,7 @@ li > p { margin-top:0;}
       </li>
 
       <li> <p><b>List functions</b></p>
-	<p>Some of the functions below are already available in the OCaml base library. Please implement the functions below from scratch as recursive functions for full marks.</p>
+	<p>Some of the functions below are already available in the OCaml base library. Please implement them from scratch as recursive functions for full marks.</p>
 
 	<ol class="letter">
 
@@ -433,9 +436,9 @@ Exception: Failure "out of bounds".</pre>
 	    <p>
 	    Code a function <tt class="code">setSub</tt> of
 	      type <tt class="code">'a list * 'a list -> bool</tt>
-	    where <tt>setSub (S,T)</tt> returns true when <tt>S</tt>
-	    is a subset of <tt>T</tt> (where <tt>S</tt> and <tt>T</tt>
-	    are interpreted as sets.)</p>
+	    where <tt>setSub (S,T)</tt> returns true if <tt>S</tt>
+	    is a subset of <tt>T</tt> when <tt>S</tt> and <tt>T</tt>
+	    are interpreted as sets, and false otherwise.</p>
 
 <pre class="code">
 # setSub ([],[]);;
@@ -461,7 +464,7 @@ Exception: Failure "out of bounds".</pre>
 	    type <tt class="code">'a list * 'a list -> bool</tt>
 	    where <tt>setEqual (S,T)</tt>
 	    returns true if <tt>S</tt> and <tt>T</tt> are equal when
-	    interpreted as sets.</p>
+	    interpreted as sets, and false otherwise.</p>
 
 <pre class="code">
 # setEqual ([],[]);;
@@ -513,7 +516,7 @@ Exception: Failure "out of bounds".</pre>
 
 	  <li><p>Code a function <tt class="code">setInter</tt> of
 	    type <tt class="code">'a list * 'a list -> 'a list</tt>
-	    where <tt>setInter (S,T)</tt> returns a list representint the
+	    where <tt>setInter (S,T)</tt> returns a list representing the
 	      intersection of <tt>S</tt> and <tt>T</tt> interpreted as
 	    sets.</p>
 
