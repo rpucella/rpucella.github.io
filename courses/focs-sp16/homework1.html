@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 1</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+        code,tt,pre {
+          font-size: 130%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+	pre.code {
+	   border: 1px solid grey;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+	}
+
+/* from
+    http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
+ */
+
+ol {
+    counter-reset:li; /* Initiate a counter */
+    margin-left:0; /* Remove the default left margin */
+    padding-left:0; /* Remove the default left padding */
+    padding-top:1em;
+}
+ol > li {
+    position:relative; /* Create a positioning context */
+    margin:0 0 6px 2em; /* Give each list item a left margin to make
+    room for the numbers */
+    padding:4px 8px; /* Add some spacing around the content */
+    list-style:none; /* Disable the normal item numbering */
+    /*border-top:2px solid #666;
+    background:#f6f6f6; */
+}
+ol > li:before {
+    counter-increment:li; /* Increment the counter by 1 */
+    /* Position and style the number */
+    position:absolute;
+    top:-2px;
+    left:-2em;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    width:2em;
+    /* Some space between the number and the content in browsers that
+    support
+       generated content but not positioning it (Camino 2 is one
+    example) */
+    margin-right:8px;
+    padding:4px;
+/*    border-top:2px solid #666;
+    color:#fff;
+    background:#666; 
+    font-weight:bold; */
+/*    font-family:"Helvetica Neue", Arial, sans-serif;
+    text-align:center; */
+}
+
+ol.letter > li:before {
+    content:"(" counter(li,lower-alpha) ")"; /* Use the counter as content */
+}
+
+ol.number > li:before {
+    content:"(" counter(li,decimal) ")"; /* Use the counter as content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP16</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 7em;"></div>
+    
+    <h1 class="clear">Homework 1</h1>
+    
+    <p class="subtitle">Due date: ??</p>
+
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely yout own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+    that lists your name, your email address, and any remarks that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework1.ml"><tt>homework1.ml</tt></a> provided.</p>
+
+    <p>Electronic submission instructions to be announced soon.</p>
+    
+    <ol class="number">
+      <li> <b>Numerical functions</b>
+
+	<ol class="letter">
+
+	  <li> <p>Code a function <tt class="code">gcd</tt> of
+	    type <tt class="code">int * int -> int</tt> which takes two
+	    integers and returns the greatest common divisor of those
+	      integers.</p>
+	    
+	    <pre class="code">
+foobar baz
+	    </pre>
+	  </li>
+
+	  <li> <p>Two integers are coprime if they have only the trivial
+	    divisor in common &mdash; that is, if their greatest
+	      common divisor is 1. </p>
+	    
+	    <p>Code a function <tt class="code">is_coprime</tt> of
+	    type <tt class="code">int * int -> bool</tt> which returns
+	    true if the two integers are coprime, and false
+	      otherwise.</p>
+	  </li>
+
+	  <li><p>The Euler &phi; function is defined by taking &phi;(n)
+	  to be the number of integers 1&le; x &le; n such that x and
+	      n are coprime.</p>
+
+	    <p>Code a function <tt class="code">euler</tt> of type
+	    <tt class="code">int -> int</tt> which computes &phi;(n) of
+	    its input n. </p>
+	    
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">coprimes</tt> of type
+	  <tt class="code">int -> int list</tt> which returns the list
+	  of all integers 1&le;x&le;n such that x and n are coprime.</p>
+
+	  </li>
+	</ol>
+      </li>
+
+      <li> <b>List functions</b>
+	<ol class="letter">
+
+	  <li><p>
+	    Code a function <tt class="code">append</tt> of type <tt class="code">'a list * 'a list
+	      -> 'a list</tt> which takes two lists and returns a new list
+	    consisting of the second list appended at the end of the first.</p>
+	  </li>
+
+	  <li><p>
+	    Code a function <tt class="code">flatten</tt> of
+	      type <tt class="code">'a list list -> 'a list</tt> which
+	    takes a list of lists and "flattens" it into a single list.</p>
+	  </li>
+
+	  <li><p>
+	    Code a function <tt class="code">last</tt> of
+	    type <tt class="code">'a list -> 'a</tt> which returns the
+	    last element of a list.</p>
+
+	    <p>If the list is empty, then there is no last
+	    element. Use built-in
+	    function <tt class="code">failwith</tt> to return an
+	    error. (Function <tt>failwith</tt> takes a string as input,
+	      the error message to report.)</p>
+
+	  <li><p>Code a function <tt class="code">nth</tt> of
+	    type <tt class="code">int * 'a list -> 'a</tt> where <tt>nth (n,xs)</tt>
+	    returns the element at position <tt>n</tt> in
+	    list <tt>xs</tt>, where 0 is the position of the first
+	      element. </p>
+
+	    <p>If the position input <tt>n</tt> is out of bounds, use
+	    built-in function <tt class="code">failwith</tt> to return an error.</p>
+	  </li>
+
+	  <li><p><b>(Challenging)</b> Code a function <tt class="code">separate</tt> of
+	    type <tt class="code">('a * 'b) list -> ('a list * 'b
+	    list)</tt> which takes a list of pairs, and returns a pair
+	    of lists (L1,L2), where L1 is the list of all first
+	    components of the original pairs and L2 is the list of all
+	      second components of the original pairs.
+	  </li>
+
+
+	</ol>
+      </li>
+
+      <li> <b>Set functions</b>
+	<ol class="letter">
+
+	  <li><p>
+	    Code a function <tt class="code">append</tt> of type <tt class="code">'a list * 'a list
+	      -> 'a list</tt> which takes two lists and returns a new list
+	    consisting of the second list appended at the end of the first.</p>
+	  </li>
+
+	  <li><p>
+	    Code a function <tt class="code">flatten</tt> of
+	      type <tt class="code">'a list list -> 'a list</tt> which
+	    takes a list of lists and "flattens" it into a single list.</p>
+	  </li>
+
+	  <li><p>
+	    Code a function <tt class="code">last</tt> of
+	    type <tt class="code">'a list -> 'a</tt> which returns the
+	    last element of a list.</p>
+
+	    <p>If the list is empty, then there is no last
+	    element. Use built-in
+	    function <tt class="code">failwith</tt> to return an
+	    error. (Function <tt>failwith</tt> takes a string as input,
+	      the error message to report.)</p>
+
+	  <li><p>Code a function <tt class="code">nth</tt> of
+	    type <tt class="code">int * 'a list -> 'a</tt> where <tt>nth (n,xs)</tt>
+	    returns the element at position <tt>n</tt> in
+	    list <tt>xs</tt>, where 0 is the position of the first
+	      element. </p>
+
+	    <p>If the position input <tt>n</tt> is out of bounds, use
+	    built-in function <tt class="code">failwith</tt> to return an error.</p>
+	  </li>
+
+	</ol>
+      </li>
+
+
+    </ol>
+	
+    
+
+  </body>
+</html>
