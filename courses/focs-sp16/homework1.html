@@ -42,7 +42,7 @@
         }
 
 	pre.code {
-	   border: 1px solid grey;
+	   border: 1px solid #c6c6c6;
 	border-radius: 5px;
 	padding: 10px;
 	font-size:100%;
@@ -166,18 +166,43 @@ li > p { margin-top:0;}
 	      integers.</p>
 	    
 	    <pre class="code">
-foobar baz
-	    </pre>
+# gcd (1,1);;
+- : int = 1
+# gcd (1,3);;
+- : int = 1
+# gcd (2,4);;
+- : int = 2
+# gcd (4,2);;
+- : int = 2
+# gcd (4,6);;
+- : int = 2
+# gcd (9,12);;
+- : int = 3
+# gcd (60,70);;
+- : int = 10</pre>
 	  </li>
 
 	  <li> <p>Two integers are coprime if they have only the trivial
 	    divisor in common &mdash; that is, if their greatest
 	      common divisor is 1. </p>
-	    
+  
 	    <p>Code a function <tt class="code">is_coprime</tt> of
 	    type <tt class="code">int * int -> bool</tt> which returns
 	    true if the two integers are coprime, and false
 	      otherwise.</p>
+
+<pre class="code">
+# is_coprime (1,2);;
+- : bool = true
+# is_coprime (2,3);;
+- : bool = true
+# is_coprime (2,4);;
+- : bool = false
+# is_coprime (10,20);;
+- : bool = false
+# is_coprime (9,16);;
+- : bool = true</pre>
+
 	  </li>
 
 	  <li><p>The Euler &phi; function is defined by taking &phi;(n)
@@ -187,7 +212,22 @@ foobar baz
 	    <p>Code a function <tt class="code">euler</tt> of type
 	    <tt class="code">int -> int</tt> which computes &phi;(n) of
 	    its input n. </p>
-	    
+
+<pre class="code">
+# euler 1;;
+- : int = 1
+# euler 2;;
+- : int = 1
+# euler 3;;
+- : int = 2
+# euler 4;;
+- : int = 2
+# euler 10;;
+- : int = 4
+# euler 20;;
+- : int = 8
+# euler 5555;;
+- : int = 4000</pre>	    
 	  </li>
 
 
@@ -195,23 +235,89 @@ foobar baz
 	  <tt class="code">int -> int list</tt> which returns the list
 	  of all integers 1&le;x&le;n such that x and n are coprime.</p>
 
+<pre class="code">
+# coprimes 1;;
+- : int list = [1]
+# coprimes 2;;
+- : int list = [1]
+# coprimes 3;;
+- : int list = [1; 2]
+# coprimes 4;;
+- : int list = [1; 3]
+# coprimes 10;;
+- : int list = [1; 3; 7; 9]
+# coprimes 20;;
+- : int list = [1; 3; 7; 9; 11; 13; 17; 19]
+# coprimes 5555;;
+- : int list =
+[1; 2; 3; 4; 6; 7; 8; 9; 12; 13; 14; 16; 17; 18; 19; 21; 23; 24; 26; 27; 28;
+ 29; 31; 32; 34; 36; 37; 38; 39; 41; 42; 43; 46; 47; 48; 49; 51; 52; 53; 54;
+ 56; 57; 58; 59; 61; 62; 63; 64; 67; 68; 69; 71; 72; 73; 74; 76; 78; 79; 81;
+ 82; 83; 84; 86; 87; 89; 91; 92; 93; 94; 96; 97; 98; 102; 103; 104; 106; 107;
+ 108; 109; 111; 112; 113; 114; 116; 117; 118; 119; 122; 123; 124; 126; 127;
+ 128; 129; 131; 133; 134; 136; 137; 138; 139; 141; 142; 144; 146; 147; 148;
+ 149; 151; 152; 153; 156; 157; 158; 159; 161; 162; 163; 164; 166; 167; 168;
+ 169; 171; 172; 173; 174; 177; 178; 179; 181; 182; 183; 184; 186; 188; 189;
+ 191; 192; 193; 194; 196; 197; 199; 201; 203; 204; 206; 207; 208; 211; 212;
+ 213; 214; 216; 217; 218; 219; 221; 222; 223; 224; 226; 227; 228; 229; 232;
+ 233; 234; 236; 237; 238; 239; 241; 243; 244; 246; 247; 248; 249; 251; 252;
+ 254; 256; 257; 258; 259; 261; 262; 263; 266; 267; 268; 269; 271; 272; 273;
+ 274; 276; 277; 278; 279; 281; 282; 283; 284; 287; 288; 289; 291; 292; 293;
+ 294; 296; 298; 299; 301; 302; 304; 306; 307; 309; 311; 312; 313; 314; 316;
+ 317; 318; 321; 322; 323; 324; 326; 327; 328; 329; 331; 332; 333; 334; 336;
+ 337; 338; 339; 342; 343; 344; 346; 347; 348; 349; 351; 353; 354; 356; 357;
+ 358; 359; 361; 362; 364; 366; 367; 368; 369; 371; 372; 373; 376; 377; 378;
+ 379; 381; 382; 383; 384; 386; 387; 388; 389; 391; 392; 393; 394; 397; 398;
+399; 401; 402; 403; 406; 408; 409; 411; 412; 413; 414; 416; ...]</pre>
+
 	  </li>
 	</ol>
       </li>
 
-      <li> <b>List functions</b>
+      <li> <p><b>List functions</b></p>
+	<p>Some of the functions below are already available in the OCaml base library. Please implement the functions below from scratch as recursive functions for full marks.</p>
+
 	<ol class="letter">
 
 	  <li><p>
 	    Code a function <tt class="code">append</tt> of type <tt class="code">'a list * 'a list
 	      -> 'a list</tt> which takes two lists and returns a new list
 	    consisting of the second list appended at the end of the first.</p>
+
+<pre class="code">
+# append ([],[]);;
+- : 'a list = []
+# append ([1],[]);;
+- : int list = [1]
+# append ([],[1]);;
+- : int list = [1]
+# append ([1],[1]);;
+- : int list = [1; 1]
+# append ([1;2;3],[4;5;6]);;
+- : int list = [1; 2; 3; 4; 5; 6]
+# append (["a"],["b"]);;
+- : string list = ["a"; "b"]</pre>
+
 	  </li>
 
 	  <li><p>
 	    Code a function <tt class="code">flatten</tt> of
 	      type <tt class="code">'a list list -> 'a list</tt> which
 	    takes a list of lists and "flattens" it into a single list.</p>
+
+<pre class="code">
+# flatten [];;
+- : 'a list = []
+# flatten [[1;2;3]];;
+- : int list = [1; 2; 3]
+# flatten [[1;2;3];[4;5;6]];;
+- : int list = [1; 2; 3; 4; 5; 6]
+# flatten [[1;2;3];[4;5;6];[7;8]];;
+- : int list = [1; 2; 3; 4; 5; 6; 7; 8]
+# flatten [[1;2;3];[];[7;8]];;
+- : int list = [1; 2; 3; 7; 8]
+# flatten [["a"];["b"]];;
+- : string list = ["a"; "b"]</pre>
 	  </li>
 
 	  <li><p>
@@ -224,15 +330,44 @@ foobar baz
 	    function <tt class="code">failwith</tt> to return an
 	    error. (Function <tt>failwith</tt> takes a string as input,
 	      the error message to report.)</p>
+<pre class="code">
+# last [];;
+Exception: Failure "empty list".
+# last [1];;
+- : int = 1
+# last [1;2];;
+- : int = 2
+# last [1;2;3;4;5;6;7;8];;
+- : int = 8
+# last ["a";"b";"c"];;
+- : string = "c"</pre>
+	  </li>
+
 
 	  <li><p>Code a function <tt class="code">nth</tt> of
-	    type <tt class="code">int * 'a list -> 'a</tt> where <tt>nth (n,xs)</tt>
+	    type <tt class="code">int * 'a list -> 'a</tt> where <tt>nth(n,xs)</tt>
 	    returns the element at position <tt>n</tt> in
 	    list <tt>xs</tt>, where 0 is the position of the first
 	      element. </p>
 
 	    <p>If the position input <tt>n</tt> is out of bounds, use
 	    built-in function <tt class="code">failwith</tt> to return an error.</p>
+
+<pre class="code">
+# nth (0,["a";"b";"c"]);;
+- : string = "a"
+# nth (1,["a";"b";"c"]);;
+- : string = "b"
+# nth (2,["a";"b";"c"]);;
+- : string = "c"
+# nth (0,["a";"b";"c"]);;
+- : string = "a"
+# nth (3,["a";"b";"c"]);;
+Exception: Failure "out of bounds".
+# nth (0,[]);;
+Exception: Failure "out of bounds".</pre>
+
+
 	  </li>
 
 	  <li><p><b>(Challenging)</b> Code a function <tt class="code">separate</tt> of
@@ -241,46 +376,188 @@ foobar baz
 	    of lists (L1,L2), where L1 is the list of all first
 	    components of the original pairs and L2 is the list of all
 	      second components of the original pairs.
+
+<pre class="code">
+# separate [];;
+- : 'a list * 'b list = ([], [])
+# separate [(1,2)];;
+- : int list * int list = ([1], [2])
+# separate [(1,2);(3,4)];;
+- : int list * int list = ([1; 3], [2; 4])
+# separate [(1,2);(3,4);(5,6)];;
+- : int list * int list = ([1; 3; 5], [2; 4; 6])
+# separate [(1,"a");(2,"b");(3,"c")];;
+- : int list * string list = ([1; 2; 3], ["a"; "b"; "c"])</pre>
 	  </li>
 
 
 	</ol>
       </li>
 
-      <li> <b>Set functions</b>
+      <li> <p><b>Set functions</b></p>
+
+	<p>Mathematically, a <i>set</i> is a collection of elements in
+	which repetition and order is irrelevant; the sets {1,1,2,3}
+	and {2,3,3,1} are considered to be equal.</p> 
+
+	<p>For this question we use lists to represent sets, and
+	define set operations on those lists which interpret those
+	lists as sets (meaning that repetition and order of elements
+	is irrelevant).</p> 
+
 	<ol class="letter">
 
 	  <li><p>
-	    Code a function <tt class="code">append</tt> of type <tt class="code">'a list * 'a list
-	      -> 'a list</tt> which takes two lists and returns a new list
-	    consisting of the second list appended at the end of the first.</p>
+	    Code a function <tt class="code">setIn</tt> of
+	    type <tt class="code">'a * 'a list -> bool</tt>
+	    where <tt>setIn (a,S)</tt> returns true if element
+	    <tt>a</tt> is an element of set <tt>S</tt>, and false
+	    otherwise. </p>
+
+<pre class="code">
+# setIn (1,[]);;
+- : bool = false
+# setIn (1,[2;3]);;
+- : bool = false
+# setIn (1,[1;2;3]);;
+- : bool = true
+# setIn (1,[3;4;4;1;1;]);;
+- : bool = true
+# setIn ("a",["b";"a";"b"]);;
+- : bool = true</pre>
+	  </li>
+
+	  <li><p>Recall that a set S is a subset of T when every
+	      element of S is an element of T.</p>
+
+	    <p>
+	    Code a function <tt class="code">setSub</tt> of
+	      type <tt class="code">'a list * 'a list -> bool</tt>
+	    where <tt>setSub (S,T)</tt> returns true when <tt>S</tt>
+	    is a subset of <tt>T</tt> (where <tt>S</tt> and <tt>T</tt>
+	    are interpreted as sets.)</p>
+
+<pre class="code">
+# setSub ([],[]);;
+- : bool = true
+# setSub ([],[1;1;1]);;
+- : bool = true
+# setSub ([1],[1;1;1]);;
+- : bool = true
+# setSub ([1;1;],[1;1;1]);;
+- : bool = true
+# setSub ([1;1],[1;2;3]);;
+- : bool = true
+# setSub ([1;1;],[2;3]);;
+- : bool = false
+# setSub ([1],[]);;
+- : bool = false
+# setSub (["a"],["a";"b"]);;
+- : bool = true</pre>
 	  </li>
 
 	  <li><p>
-	    Code a function <tt class="code">flatten</tt> of
-	      type <tt class="code">'a list list -> 'a list</tt> which
-	    takes a list of lists and "flattens" it into a single list.</p>
+	    Code a function <tt class="code">setEqual</tt> of
+	    type <tt class="code">'a list * 'a list -> bool</tt>
+	    where <tt>setEqual (S,T)</tt>
+	    returns true if <tt>S</tt> and <tt>T</tt> are equal when
+	    interpreted as sets.</p>
+
+<pre class="code">
+# setEqual ([],[]);;
+- : bool = true
+# setEqual ([1],[1]);;
+- : bool = true
+# setEqual ([1],[1;1;1]);;
+- : bool = true
+# setEqual ([1;1;1],[1;1]);;
+- : bool = true
+# setEqual ([1;2],[1;2;3]);;
+- : bool = false
+# setEqual ([1;2],[2;1]);;
+- : bool = true
+# setEqual ([1;1;2],[2;2;1]);;
+- : bool = true
+# setEqual (["a";"b"],["b";"a"]);;
+- : bool = true</pre>
+
 	  </li>
 
-	  <li><p>
-	    Code a function <tt class="code">last</tt> of
-	    type <tt class="code">'a list -> 'a</tt> which returns the
-	    last element of a list.</p>
+	  <li><p>Code a function <tt class="code">setUnion</tt> of
+	    type <tt class="code">'a list * 'a list -> 'a list</tt>
+	    where <tt>setUnion (S,T)</tt> returns a list representing the
+	      union of <tt>S</tt> and <tt>T</tt> interpreted as
+	    sets.</p>
 
-	    <p>If the list is empty, then there is no last
-	    element. Use built-in
-	    function <tt class="code">failwith</tt> to return an
-	    error. (Function <tt>failwith</tt> takes a string as input,
-	      the error message to report.)</p>
+<pre class="code">
+# setEqual (setUnion ([],[]), []);;
+- : bool = true
+# setEqual (setUnion ([],[1;1]), [1]);;
+- : bool = true
+# setEqual (setUnion ([1;2],[]), [2;1]);;
+- : bool = true
+# setEqual (setUnion ([1;2;3],[4;5;6]), [1;2;3;4;5;6]);;
+- : bool = true
+# setEqual (setUnion ([1;2],[2;3;3]), [1;2;3]);;
+- : bool = true
+# setEqual (setUnion ([1;2],[2;1]), [1;2]);;
+- : bool = true
+# setEqual (setUnion ([1],[2]), [1]);;
+- : bool = false
+# setEqual (setUnion ([1],[2]), [2]);;
+- : bool = false
+# setEqual (setUnion (["a"],["b"]), ["a";"b"]);;
+- : bool = true</pre>
 
-	  <li><p>Code a function <tt class="code">nth</tt> of
-	    type <tt class="code">int * 'a list -> 'a</tt> where <tt>nth (n,xs)</tt>
-	    returns the element at position <tt>n</tt> in
-	    list <tt>xs</tt>, where 0 is the position of the first
-	      element. </p>
+	  </li>
 
-	    <p>If the position input <tt>n</tt> is out of bounds, use
-	    built-in function <tt class="code">failwith</tt> to return an error.</p>
+	  <li><p>Code a function <tt class="code">setInter</tt> of
+	    type <tt class="code">'a list * 'a list -> 'a list</tt>
+	    where <tt>setInter (S,T)</tt> returns a list representint the
+	      intersection of <tt>S</tt> and <tt>T</tt> interpreted as
+	    sets.</p>
+
+<pre class="code">
+# setEqual (setInter ([],[]), []);;
+- : bool = true
+# setEqual (setInter ([1;2],[1]), [1]);;
+- : bool = true
+# setEqual (setInter ([1;2],[2;3]), [2]);;
+- : bool = true
+# setEqual (setInter ([1;2;3],[3;3;2;2]), [2;3]);;
+- : bool = true
+# setEqual (setInter ([],[1;2;3]), []);;
+- : bool = true
+# setEqual (setInter ([1;2;3],[]), []);;
+- : bool = true
+# setEqual (setInter ([1;2],[2]), [1]);;
+- : bool = false
+# setEqual (setInter ([1;2],[2;3]), [1;3]);;
+- : bool = false
+# setEqual (setInter (["a";"b"],["c";"b"]), ["b"]);;
+- : bool = true</pre>
+
+	  </li>
+
+	  <li><p>Code a function <tt class="code">setSize</tt> of
+	    type <tt class="code">'a list -> int</tt>
+	    where <tt>setSize (S)</tt> returns the number of elements
+	      in <tt>S</tt> when interpreted as a set.</p>
+
+<pre class="code">
+# setSize [];;
+- : int = 0
+# setSize [1];;
+- : int = 1
+# setSize [1;2;3];;
+- : int = 3
+# setSize [1;1;1;2;2;2;3;3;3;4;4;4];;
+- : int = 4
+# setSize [1;2;3;2;1];;
+- : int = 3
+# setSize ["a";"a";"b"];;
+- : int = 2</pre>
+
 	  </li>
 
 	</ol>
