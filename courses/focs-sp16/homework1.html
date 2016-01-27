@@ -13,6 +13,8 @@
     
     <style>
 
+      hr { margin-top: 50px; }
+
         code,tt,pre {
           font-size: 130%;
         }
@@ -153,7 +155,17 @@ li > p { margin-top:0;}
     <p>Please code your answers by modifying the
       file <a href="homework1.ml"><tt>homework1.ml</tt></a> provided.</p>
 
-    <p>Electronic submission instructions to be announced soon.</p>
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Download the file <a href="hw1-checker.ml"><tt>hw1-checker.ml</tt></a> into the same directory as your homework solution.</li>
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use "homework1.ml";;</tt></li>
+      <li>Load the homework checker via <tt>#use "hw1-checker.ml";;</tt></li>
+      <li>The homework checker checks that you've implemented all functions (or provided stubs for them) and that those functions have the type that I asked you to give them. If the checker says your types are OK, then you're fine. If the checker gives you an error, fix it. If you believe that the checker gives you an error wrongly, send me an email.</li>
+    </ul>
+
+    <hr>
     
     <ol class="number">
       <li> <p><b>Numerical functions</b></p>
