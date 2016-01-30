@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 2</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 130%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+	pre.code {
+	   border: 1px solid #c6c6c6;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+	}
+
+/* from
+    http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
+ */
+
+ol {
+    counter-reset:li; /* Initiate a counter */
+    margin-left:0; /* Remove the default left margin */
+    padding-left:0; /* Remove the default left padding */
+    padding-top:1em;
+}
+ol > li {
+    position:relative; /* Create a positioning context */
+    margin:0 0 6px 2em; /* Give each list item a left margin to make
+    room for the numbers */
+    padding:4px 8px; /* Add some spacing around the content */
+    list-style:none; /* Disable the normal item numbering */
+    /*border-top:2px solid #666;
+    background:#f6f6f6; */
+}
+ol > li:before {
+    counter-increment:li; /* Increment the counter by 1 */
+    /* Position and style the number */
+    position:absolute;
+    top:-2px;
+    left:-2em;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    width:2em;
+    /* Some space between the number and the content in browsers that
+    support
+       generated content but not positioning it (Camino 2 is one
+    example) */
+    margin-right:8px;
+    padding:4px;
+/*    border-top:2px solid #666;
+    color:#fff;
+    background:#666; 
+    font-weight:bold; */
+/*    font-family:"Helvetica Neue", Arial, sans-serif;
+    text-align:center; */
+}
+
+ol.letter > li:before {
+    content:"(" counter(li,lower-alpha) ")"; /* Use the counter as content */
+}
+
+ol.number > li:before {
+    content:"(" counter(li,decimal) ")"; /* Use the counter as content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP16</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 7em;"></div>
+    
+    <h1 class="clear">Homework 2</h1>
+    
+    <p class="subtitle">Due date: Thursday, February 4 (midnight)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists your <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework2.ml"><tt>homework2.ml</tt></a> provided.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Download the file <a href="hw2-checker.ml"><tt>hw2-checker.ml</tt></a> into the same directory as your homework solution.</li>
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use "homework2.ml";;</tt></li>
+      <li>Load the homework checker via <tt>#use "hw2-checker.ml";;</tt></li>
+      <li>The homework checker checks that you've implemented all functions (or provided stubs for them) and that those functions have the type that I asked you to give them. If the checker says your types are OK, then you're fine. If the checker gives you an error, fix it. If you believe that the checker gives you an error wrongly, send me an email.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework2.ml</tt> as an attachment to <tt>focs.sp16@gmail.com</tt> with subject <i>Homework 2 submission</i>.</li>
+    </ul>
+
+    <hr>
+    
+    <ol class="number">
+      <li> <p><b>The set of all strings</b></p>
+
+	<p>For this question, the order in which you
+	  return the elements of lists is irrelevant.</p>
+
+	<ol class="letter">
+
+	  <li> <p>Code a function <tt class="code">prepend</tt> of
+	      type <tt class="code">string * string list -> string list</tt> which takes a string <tt>s</tt> and a list of strings <tt>ss</tt> and returns the list of strings obtained by prepending <tt>s</tt> to every string in <tt>ss</tt>.</p>
+	    
+	    <pre class="code">
+# prepend("",[]);;
+- : string list = []
+# prepend("",["hello";"world"]);;
+- : string list = ["hello"; "world"]
+# prepend("test",[]);;
+- : string list = []
+# prepend("test",["hello";"world"]);;
+- : string list = ["testhello"; "testworld"]</pre>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">concatenate</tt> of
+	      type <tt class="code">string list * string list ->
+	      string list</tt> which takes a list of
+	      strings <tt>ss1</tt> and a list of strings <tt>ss2</tt>
+	      and returns the list of strings obtained by concatening
+	      every string from <tt>ss1</tt> with every string
+	      in <tt>ss2</tt>. Function <tt>prepend</tt> might be
+	      useful.</p>
+	    
+	    <pre class="code">
+# concatenate([],[]);;
+- : string list = []
+# concatenate([],["hello";"world"]);;
+- : string list = []
+# concatenate(["a"],["hello";"world"]);;
+- : string list = ["ahello"; "aworld"]
+# concatenate(["a";"b"],["hello";"world"]);;
+- : string list = ["ahello"; "aworld"; "bhello"; "bworld"]
+# concatenate(["a";"b"],[]);;
+- : string list = []
+# concatenate(["a";"b"],["hello"]);;
+- : string list = ["ahello"; "bhello"]
+</pre>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">all_strings</tt> of
+	      type <tt class="code">string list * int -> string
+	      list</tt> where <tt>all_strings (alph,n)</tt> returns
+	      the list of all strings <i>of length up
+		to <tt>n</tt></i> over
+	      alphabet <tt>alpha</tt>. You may assume that the
+	      alphabet is made up only of strings of length 1. (That is,
+	      it's fine if your code doesn't match the specification
+	      when the alphabet has longer strings in it.) Function <tt>concatenate</tt>
+	      might be useful.</p>
+	    </p>
+
+	    <pre class="code">
+# all_strings([],4);;
+- : string list = [""]
+# all_strings(["a"],4);;
+- : string list = [""; "a"; "aa"; "aaa"; "aaaa"]
+# all_strings(["a";"b"],4);;
+- : string list =
+[""; "a"; "aa"; "aaa"; "aaaa"; "aaab"; "aab"; "aaba"; "aabb"; "ab"; "aba";
+ "abaa"; "abab"; "abb"; "abba"; "abbb"; "b"; "ba"; "baa"; "baaa"; "baab";
+ "bab"; "baba"; "babb"; "bb"; "bba"; "bbaa"; "bbab"; "bbb"; "bbba"; "bbbb"]
+# all_strings(["a";"b";"c"],4);;
+- : string list =
+[""; "a"; "aa"; "aaa"; "aaaa"; "aaab"; "aaac"; "aab"; "aaba"; "aabb"; "aabc";
+ "aac"; "aaca"; "aacb"; "aacc"; "ab"; "aba"; "abaa"; "abab"; "abac"; "abb";
+ "abba"; "abbb"; "abbc"; "abc"; "abca"; "abcb"; "abcc"; "ac"; "aca"; "acaa";
+ "acab"; "acac"; "acb"; "acba"; "acbb"; "acbc"; "acc"; "acca"; "accb";
+ "accc"; "b"; "ba"; "baa"; "baaa"; "baab"; "baac"; "bab"; "baba"; "babb";
+ "babc"; "bac"; "baca"; "bacb"; "bacc"; "bb"; "bba"; "bbaa"; "bbab"; "bbac";
+ "bbb"; "bbba"; "bbbb"; "bbbc"; "bbc"; "bbca"; "bbcb"; "bbcc"; "bc"; "bca";
+ "bcaa"; "bcab"; "bcac"; "bcb"; "bcba"; "bcbb"; "bcbc"; "bcc"; "bcca";
+ "bccb"; "bccc"; "c"; "ca"; "caa"; "caaa"; "caab"; "caac"; "cab"; "caba";
+ "cabb"; "cabc"; "cac"; "caca"; "cacb"; "cacc"; "cb"; "cba"; "cbaa"; "cbab";
+ "cbac"; "cbb"; "cbba"; "cbbb"; "cbbc"; "cbc"; "cbca"; "cbcb"; "cbcc"; "cc";
+ "cca"; "ccaa"; "ccab"; "ccac"; "ccb"; "ccba"; "ccbb"; "ccbc"; "ccc"; "ccca";
+ "cccb"; "cccc"]
+# all_strings(["a";"b"],1);;
+- : string list = [""; "a"; "b"]
+# all_strings(["a";"b"],0);;
+- : string list = [""]</pre>
+	  </li>
+
+
+	</ol>
+      </li>
+
+      <li> <p><b>Languages</b></p>
+
+	<p>For this question, the order in which you
+	  return the elements of lists is irrelevant.</p>
+
+	<p>In the following, a language is represented as a list of
+	  strings. Note that I do not particularly care about
+	  repetitions. If you can avoid them, fine, but you do not
+	  have to. Although if you generate too many
+	  repeated strings, it will be pretty tough to debug your
+	  follow-up code.</p>
+
+	<ol class="letter">
+
+	  <li><p>
+	    Code a function <tt class="code">restrict</tt> of
+	    type <tt class="code">string list * int -> string
+		list</tt> that takes a language <tt>ss</tt> and an
+	    integer <tt>n</tt> and returns the language of all strings
+	    in <tt>ss</tt> of length at
+	    most <tt>n</tt>. Function <tt>String.length</tt> in the
+	    OCaml built-in library might be useful.</p>
+
+<pre class="code">
+# restrict([],4);;
+- : string list = []
+# restrict(["a";"b"],4);;
+- : string list = ["a"; "b"]
+# restrict(["a";"b"],0);;
+- : string list = []
+# restrict(["a";"b"],1);;
+- : string list = ["a"; "b"]
+# restrict(["a";"b";"abc"],1);;
+- : string list = ["a"; "b"]
+# restrict(["a";"b";"abc"],2);;
+- : string list = ["a"; "b"]
+# restrict(["a";"b";"abc"],3);;
+- : string list = ["a"; "b"; "abc"]</pre>
+	  </li>
+
+
+	  <li><p>
+	    Code a function <tt class="code">langUnion</tt> of
+	    type <tt class="code">string list * string list * int -> string
+		list</tt> that takes two languages and an
+	    integer <tt>n</tt> and returns the language of all strings
+	    in either languages of length at most <tt>n</tt>.</p>
+
+<pre class="code">
+# langUnion([],[],4);;
+- : string list = []
+# langUnion(["a";"b"],["c";"d"],4);;
+- : string list = ["a"; "b"; "c"; "d"]
+# langUnion(["a";"b"],["abc";"abcd";"abcde"],4);;
+- : string list = ["a"; "b"; "abc"; "abcd"]
+# langUnion(["abc";"abcd";"abcde"],["a";"b"],4);;
+- : string list = ["abc"; "abcd"; "a"; "b"]
+# langUnion(["abc";"abcd";"abcde"],[],4);;
+- : string list = ["abc"; "abcd"]
+# langUnion([],["abc";"abcd";"abcde"],4);;
+- : string list = ["abc"; "abcd"]</pre>
+	  </li>
+
+	  <li><p>
+	    Code a function <tt class="code">langConcat</tt> of
+	    type <tt class="code">string list * string list * int -> string
+		list</tt> that takes two languages <tt>ss1</tt>
+	    and <tt>ss2</tt> and an
+	    integer <tt>n</tt> and returns the language of all strings
+of length at most <tt>n</tt>
+	    obtained by 
+	    concatenating a string from <tt>ss1</tt> to a string
+	    from <tt>ss2</tt>.</p>
+
+<pre class="code">
+# langConcat([],[],4);;
+- : string list = []
+# langConcat(["a";"b"],[],4);;
+- : string list = []
+# langConcat([],["c";"d"],4);;
+- : string list = []
+# langConcat(["a";"b"],["c";"d"],4);;
+- : string list = ["ac"; "ad"; "bc"; "bd"]
+# langConcat(["ab";"abb"],["c";"cc";"ccc"],4);;
+- : string list = ["abc"; "abcc"; "abbc"]</pre>
+	  </li>
+
+
+	  <li><p>
+	    Code a function <tt class="code">langStar</tt> of
+	    type <tt class="code">string list * int -> string
+		list</tt> that takes a language <tt>ss</tt> and an
+	    integer <tt>n</tt> and returns the language of all strings
+	    of length at most <tt>n</tt>
+	    obtained by concatenating an arbitrary number of strings
+	    from <tt>ss</tt>.</p>
+
+<pre class="code">
+# langStar([],4);;
+- : string list = [""]
+# langStar(["a"],4);;
+- : string list = [""; "a"; "aa"; "aaa"; "aaaa"]
+# langStar(["a";"b"],4);;
+- : string list =
+[""; "a"; "b"; "aa"; "ab"; "aaa"; "aab"; "aaaa"; "aaab"; "aaba"; "aabb";
+ "aba"; "abb"; "abaa"; "abab"; "abba"; "abbb"; "ba"; "bb"; "baa"; "bab";
+ "baaa"; "baab"; "baba"; "babb"; "bba"; "bbb"; "bbaa"; "bbab"; "bbba";
+ "bbbb"]
+# langStar(["a";"b";"c"],4);;
+- : string list =
+[""; "a"; "b"; "c"; "aa"; "ab"; "ac"; "aaa"; "aab"; "aac"; "aaaa"; "aaab";
+ "aaac"; "aaba"; "aabb"; "aabc"; "aaca"; "aacb"; "aacc"; "aba"; "abb"; "abc";
+ "abaa"; "abab"; "abac"; "abba"; "abbb"; "abbc"; "abca"; "abcb"; "abcc";
+ "aca"; "acb"; "acc"; "acaa"; "acab"; "acac"; "acba"; "acbb"; "acbc"; "acca";
+ "accb"; "accc"; "ba"; "bb"; "bc"; "baa"; "bab"; "bac"; "baaa"; "baab";
+ "baac"; "baba"; "babb"; "babc"; "baca"; "bacb"; "bacc"; "bba"; "bbb"; "bbc";
+ "bbaa"; "bbab"; "bbac"; "bbba"; "bbbb"; "bbbc"; "bbca"; "bbcb"; "bbcc";
+ "bca"; "bcb"; "bcc"; "bcaa"; "bcab"; "bcac"; "bcba"; "bcbb"; "bcbc"; "bcca";
+ "bccb"; "bccc"; "ca"; "cb"; "cc"; "caa"; "cab"; "cac"; "caaa"; "caab";
+ "caac"; "caba"; "cabb"; "cabc"; "caca"; "cacb"; "cacc"; "cba"; "cbb"; "cbc";
+ "cbaa"; "cbab"; "cbac"; "cbba"; "cbbb"; "cbbc"; "cbca"; "cbcb"; "cbcc";
+ "cca"; "ccb"; "ccc"; "ccaa"; "ccab"; "ccac"; "ccba"; "ccbb"; "ccbc"; "ccca";
+ "cccb"; "cccc"]
+# langStar(["a";"bc"],4);;
+- : string list =
+[""; "a"; "bc"; "aa"; "abc"; "aaa"; "aabc"; "aaaa"; "abca"; "bca"; "bcbc";
+ "bcaa"]
+# langStar(["a";"bc";"def"],4);;
+- : string list =
+[""; "a"; "bc"; "def"; "aa"; "abc"; "adef"; "aaa"; "aabc"; "aaaa"; "abca";
+ "bca"; "bcbc"; "bcaa"; "defa"]</pre>
+	  </li>
+
+	</ol>
+      </li>
+
+      <li> <p><b>Regular expressions</b></p>
+
+	<p>In file <tt>homework2.ml</tt>, I've implement a bunch of
+	code to manipulate regular expressions. In particular, I've
+	  given you a function 
+<pre>
+  lang : string * int -> string list</pre>
+that takes a regular expression and an
+	integer and returns the list of strings in the language of the
+	  regular expression of length at most the given
+integer. Function 
+<pre>
+  dump : string list -> unit</pre>
+	can be used to display the strings in a language in a way
+	  that's a bit more convenient.</p>
+
+	<p>Note that function <tt>lang</tt> will <b>not</b> work until
+	  you complete question 2 correctly. You can still complete
+	  this question even if you haven't done question 2, of
+	  course. You just won't be able to test your answers.</p>
+
+	<p>The syntax of regular expression corresponds to what we saw
+	in class: the alphabet is restricted to be alphabetical
+	characters (a,b,c,d,...,z,A,B,...,Z), and 0, 1, (, ), *, + all
+	  have meaning. For example, <tt>ab+ac</tt> is a valid regular
+	  expression, as is <tt>a(b+c)</tt> and <tt>a*(b+c)*</tt> and
+	  so on.</p>
+
+	<p>Here's a sample interaction:</p>
+
+<pre class="code">
+# lang("ab+bc",4);;
+- : string list = ["ab"; "bc"]
+# dump(lang("ab+bc",4));;
+  ab
+  bc
+- : unit = ()
+# dump(lang("a(b+c)*",4));;
+  a
+  ab
+  ac
+  abb
+  abc
+  abbb
+  abbc
+  abcb
+  abcc
+  acb
+  acc
+  acbb
+  acbc
+  accb
+  accc
+- : unit = ()
+# dump(lang("a*(b+c)*",4));;
+  &lt;empty&gt;
+  b
+  c
+  bb
+  bc
+  bbb
+  bbc
+  bbbb
+  bbbc
+  bbcb
+  bbcc
+  bcb
+  bcc
+  bcbb
+  bcbc
+  bccb
+  bccc
+  cb
+  cc
+  cbb
+  cbc
+  cbbb
+  cbbc
+  cbcb
+  cbcc
+  ccb
+  ccc
+  ccbb
+  ccbc
+  cccb
+  cccc
+  a
+  ab
+  ac
+  abb
+  abc
+  abbb
+  abbc
+  abcb
+  abcc
+  acb
+  acc
+  acbb
+  acbc
+  accb
+  accc
+  aa
+  aab
+  aac
+  aabb
+  aabc
+  aacb
+  aacc
+  aaa
+  aaab
+  aaac
+  aaaa
+- : unit = ()</pre>	
+
+        <p>In this question, I will ask you to come up with regular
+        expressions. You can test your regular expressions  using
+          the function <tt>lang</tt> above. </p>
+
+	<p>For submission purposes, I ask you to define those regular
+	  expressions as constants using <tt>let</tt> with a fixed
+	  name given below in each question. There is already a
+	  placeholder in <tt>homework2.ml</tt> for those answers. Just
+	  replace the placeholder with your definition.</p>
+
+
+	<ol class="letter">
+
+	  <li><p>
+	      Come up with a regular expression <tt class="code">regexp_a</tt> for the language
+	      consisting of all strings over the alphabet <tt>{a,b}</tt> of length exactly 3.
+	    </p>
+
+<pre class="code">
+# dump(lang(regexp_a,6));;
+  aaa
+  aab
+  aba
+  abb
+  baa
+  bab
+  bba
+  bbb
+- : unit = ()</pre>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular expression <tt class="code">regexp_b</tt> for the language
+	      consisting of all strings over the alphabet <tt>{a,b}</tt> of
+	      length a multiple of 3.
+	    </p>
+
+<pre class="code">
+# dump(lang(regexp_b,6));;
+  &lt;empty&gt;
+  aaa
+  aab
+  aba
+  abb
+  baa
+  bab
+  bba
+  bbb
+  aaaaaa
+  aaaaab
+  aaaaba
+  aaaabb
+  aaabaa
+  aaabab
+  aaabba
+  aaabbb
+  aabaaa
+  aabaab
+  aababa
+  aababb
+  aabbaa
+  aabbab
+  aabbba
+  aabbbb
+  abaaaa
+  abaaab
+  abaaba
+  abaabb
+  ababaa
+  ababab
+  ababba
+  ababbb
+  abbaaa
+  abbaab
+  abbaba
+  abbabb
+  abbbaa
+  abbbab
+  abbbba
+  abbbbb
+  baaaaa
+  baaaab
+  baaaba
+  baaabb
+  baabaa
+  baabab
+  baabba
+  baabbb
+  babaaa
+  babaab
+  bababa
+  bababb
+  babbaa
+  babbab
+  babbba
+  babbbb
+  bbaaaa
+  bbaaab
+  bbaaba
+  bbaabb
+  bbabaa
+  bbabab
+  bbabba
+  bbabbb
+  bbbaaa
+  bbbaab
+  bbbaba
+  bbbabb
+  bbbbaa
+  bbbbab
+  bbbbba
+  bbbbbb
+- : unit = ()</pre>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular expression <tt class="code">regexp_c</tt> for the language
+	      consisting of all strings over the alphabet <tt>{a,b}</tt> with
+	      exactly one <tt>a</tt> in then.
+	    </p>
+
+<pre class="code">
+# dump(lang(regexp_c,6));;
+  a
+  ab
+  abb
+  abbb
+  abbbb
+  abbbbb
+  ba
+  bab
+  babb
+  babbb
+  babbbb
+  bba
+  bbab
+  bbabb
+  bbabbb
+  bbba
+  bbbab
+  bbbabb
+  bbbba
+  bbbbab
+  bbbbba
+- : unit = ()</pre>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular
+	      expression <tt class="code">regexp_d</tt> for the
+	      language 
+	      consisting of all strings over the alphabet <tt>{a,b}</tt> with
+	      an odd number of <tt>a</tt>s in them.
+	    </p>
+
+<pre class="code">
+# dump(lang(regexp_d,6));;
+  a
+  aaa
+  aaab
+  aaabb
+  aaabbb
+  aaba
+  aabab
+  aababb
+  aabba
+  aabbab
+  aabbba
+  aaaaa
+  aaaaab
+  aaaaba
+  aaabaa
+  aabaaa
+  ab
+  abaa
+  abaab
+  abaabb
+  ababa
+  ababab
+  ababba
+  abaaaa
+  abb
+  abbaa
+  abbaab
+  abbaba
+  abbb
+  abbbaa
+  abbbb
+  abbbbb
+  ba
+  baaa
+  baaab
+  baaabb
+  baaba
+  baabab
+  baabba
+  baaaaa
+  bab
+  babaa
+  babaab
+  bababa
+  babb
+  babbaa
+  babbb
+  babbbb
+  bba
+  bbaaa
+  bbaaab
+  bbaaba
+  bbab
+  bbabaa
+  bbabb
+  bbabbb
+  bbba
+  bbbaaa
+  bbbab
+  bbbabb
+  bbbba
+  bbbbab
+  bbbbba
+- : unit = ()</pre>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular
+	      expression <tt class="code">regexp_e</tt> for the
+	      language 
+	      consisting of all strings over the alphabet <tt>{a,b}</tt> in
+	      which every <tt>b</tt> is immediately followed by
+	      an <tt>a</tt>.
+	    </p>
+
+<pre class="code">
+# dump(lang(regexp_e,6));;
+  &lt;empty&gt;
+  ba
+  baa
+  baaa
+  baaaa
+  baaaaa
+  baba
+  babaa
+  babaaa
+  bababa
+  baaba
+  baabaa
+  baaaba
+  a
+  aba
+  abaa
+  abaaa
+  abaaaa
+  ababa
+  ababaa
+  abaaba
+  aa
+  aaba
+  aabaa
+  aabaaa
+  aababa
+  aaa
+  aaaba
+  aaabaa
+  aaaa
+  aaaaba
+  aaaaa
+  aaaaaa
+- : unit = ()</pre>
+	  </li>
+
+	</ol>
+      </li>
+
+
+    </ol>
+	
+    
+
+  </body>
+</html>
