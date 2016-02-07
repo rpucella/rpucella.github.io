@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!--
+	
+	/*************************************************************
+	* HACKATHON VIII
+	* 
+	* Salesforce assessment tool
+	*
+	*
+	*  Jacob Willson 
+	*  Theresa Pappafotopoulos 
+	*  Riccardo Pucella
+	*
+	************************************************************/
+	
+      -->
+    
+    <meta charset="utf-8">
+    
+    <!-- get rid of favicon request -->
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
+    
+    <script src="lib/d3.min.js"></script>
+    <script src="code.js"></script>
+
+    <style>
+
+* {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#main {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 900px;
+  min-height: 600px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  fill: blue;
+}
+
+    </style>
+
+    <script> window.addEventListener("load",run); </script>
+
+  </head>
+
+  <body style="min-height 600px; min-width: 900px;">
+
+    <svg id="main" viewbox="0 0 900 600">
+      <defs>
+	<clipPath id="clip">
+	  <rect id="clip-rect" x="0" y="0" width="900" height="600" />
+	</clipPath>
+	<linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0">
+	  <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+	  <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+	</linearGradient>
+      </defs>
+      <g  clip-path="url(#clip)">
+	<rect x="0" y="595" width="2700" height="5" style="fill:url(#grad1);"/>
+	<text x="450" y="300" dy="0.35em" style="text-anchor:middle; font-size: 30px;">
+	  Intro copy
+	</text>
+
+	<!-- landing page -->
+	<g id="get-started-button" class="clickable">
+	  <rect x="350" y="430" width="200" height="40" style="fill: white; stroke: black;" />
+	  <text x="450" y="450" dy="0.35em" style="text-anchor:middle; font-size: 20px;">
+	    Get started
+	  </text>
+	</g>
+
+	<!-- overview page -->
+	<rect x="910" width="280" y="10" height="580" style="fill: white; stroke: #cccccc;" />
+	<text x="1050" y="300" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	  Overview text
+	</text>
+	<text x="1050" y="450" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	  Filtering options
+	</text>
+
+	<line x1="1500" x2="1500" y1="10" y2="590" style="stroke: black;" />
+	<line x1="1210" x2="1790" y1="300" y2="300" style="stroke: black;" />
+
+	<text id="josephine-button" class="clickable" x="1350" y="150" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	  Josephine
+	</text>
+
+	<!-- salesperson description -->
+	<rect x="1810" width="280" y="10" height="580" style="fill: white; stroke: #cccccc;" />
+	<text x="1950" y="300" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	  Josephine overview
+	</text>
+
+	<g class="clickable" id="josephine-assessment-button">
+	  <rect x="1850" width="200" y="430" height="40" style="fill:white; stroke: black;" />
+	  <text x="1950" y="450" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	    Detailed assessment
+	  </text>
+	</g>
+
+	<g id="return-to-overview-button" class="clickable">
+	  <rect x="2060" y="20" width="20" height="20" style="fill: white; stroke: black;"/>
+	  <line x1="2060" y1="20" x2="2080" y2="40" style="stroke: black;" />
+	  <line x1="2060" y1="40" x2="2080" y2="20" style="stroke: black;" />
+	</g>
+
+	<!-- salesperson assessment -->
+	<rect x="2110" width="580" y="10" height="580" style="fill: white; stroke: #cccccc;" />
+	<text x="2400" y="300" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	  Josephine detailed assessment
+	</text>
+
+	<g id="return-to-salesperson-button" class="clickable">
+	  <rect x="2660" y="20" width="20" height="20" style="fill: white; stroke: black;"/>
+	  <line x1="2660" y1="20" x2="2680" y2="40" style="stroke: black;" />
+	  <line x1="2660" y1="40" x2="2680" y2="20" style="stroke: black;" />
+	</g>
+
+      </g>
+    </svg>
+
+  </body>
+
+</html>
