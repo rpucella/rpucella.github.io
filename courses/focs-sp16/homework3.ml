@@ -185,7 +185,7 @@ let dfaThreeA = {
  *)
 
 let nfaLastThreeB = {
-  states = [0;2;3;4];
+  states = [0;1;2;3];
   alphabet = ['a';'b';'c'];
   delta = [ (0,'a',0);
 	    (0,'b',0);

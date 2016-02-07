@@ -1,0 +1,104 @@
+<html>
+
+<body>
+<pre>
+
+(*  Q1  *)
+
+let rec gcd (a,b) = 
+  if a <0 || b < 0 then failwith "only nonnegative numbers"
+  else if a = 0 then b
+  else if b = 0 then a
+  else if a > b then gcd(b,a mod b)
+  else gcd(a,b mod a)
+
+let is_coprime (a,b) = 
+  gcd(a,b) = 1
+
+let rec euler_helper (i,n) = 
+  if i >= n then 0 
+  else if is_coprime(i,n) then 1+euler_helper(i+1,n)
+  else euler_helper(i+1,n)
+
+let euler (n) = 
+  euler_helper(1,n)
+
+let rec coprimes_helper (i,n) = 
+  if i >= n then []
+  else if is_coprime(i,n) then i::coprimes_helper(i+1,n)
+  else coprimes_helper(i+1,n)
+
+let coprimes (n) = 
+  coprimes_helper(1,n) 
+
+
+
+(*  Q2  *)
+
+let rec append (xs,ys) = 
+  match xs with 
+    [] -> ys
+  | x::xs' -> x::(append(xs',ys))
+
+
+let rec flatten (xss) = 
+  match xss with 
+    [] -> []
+  | xs::xss' -> append(xs,flatten(xss'))
+
+let rec nth (n,xs) = 
+  match xs with
+    [] -> failwith "out of bounds"
+  | x::xs' -> if n = 0 then x else nth(n-1,xs')
+
+let rec last (xs) = 
+  match xs with 
+    [] -> failwith "empty list"
+  | x::xs' -> (match xs' with [] -> x | y::ys -> last(xs'))
+
+let rec separate (xs) = 
+  match xs with 
+    [] -> ([],[])
+  | x::xs' -> (let result = separate(xs') in
+               match x with (b,c) ->
+                 match result with (bs,cs) -> (b::bs,c::cs))
+
+
+(*  Q3  *)
+
+let rec setIn (e,xs) = 
+  match xs with 
+    [] -> false
+  | x::xs' -> (if x = e then true else setIn(e,xs'))
+
+let rec setSub (xs,ys) = 
+  match xs with 
+    [] -> true
+  | x::xs' -> setIn(x,ys) && setSub(xs',ys)
+
+let setEqual (xs,ys) = 
+  setSub(xs,ys) && setSub(ys,xs)
+
+(* We don't _technically_ need to remove duplicates,
+   as long as setEqual/setSub/setIn work correctly 
+ *)
+
+let setUnion (xs,ys) = 
+  append(xs,ys)
+
+let rec setInter (xs,ys) = 
+  match xs with
+    [] -> []
+  | x::xs' -> if setIn(x,ys) then x::setInter(xs',ys) else setInter(xs',ys)
+
+let rec setSize (xs) = 
+  match xs with 
+    [] -> 0
+  | x::xs' -> (if setIn(x,xs') then setSize(xs')
+	       else 1+setSize(xs'))
+
+
+</pre>
+</body>
+
+</html>
