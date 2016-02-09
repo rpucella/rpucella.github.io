@@ -497,15 +497,21 @@ parameterized over the type of states. (That means that you can use
 	    </p>
 
 <pre class="code">
-# langDFA (dfa_q2_a,7);;
+# langDFA(dfa_q2_a,6);;
   &lt;epsilon&gt;
   a
+  b
   aa
   ba
+  ab
+  bb
   aaa
   baa
   aba
   bba
+  aab
+  bab
+  abb
   aaaa
   baaa
   abaa
@@ -513,6 +519,12 @@ parameterized over the type of states. (That means that you can use
   aaba
   baba
   abba
+  aaab
+  baab
+  abab
+  bbab
+  aabb
+  babb
   aaaaa
   baaaa
   abaaa
@@ -526,6 +538,17 @@ parameterized over the type of states. (That means that you can use
   bbaba
   aabba
   babba
+  aaaab
+  baaab
+  abaab
+  bbaab
+  aabab
+  babab
+  abbab
+  aaabb
+  baabb
+  ababb
+  bbabb
   aaaaaa
   baaaaa
   abaaaa
@@ -550,50 +573,26 @@ parameterized over the type of states. (That means that you can use
   baabba
   ababba
   bbabba
-  aaaaaaa
-  baaaaaa
-  abaaaaa
-  bbaaaaa
-  aabaaaa
-  babaaaa
-  abbaaaa
-  aaabaaa
-  baabaaa
-  ababaaa
-  bbabaaa
-  aabbaaa
-  babbaaa
-  aaaabaa
-  baaabaa
-  abaabaa
-  bbaabaa
-  aababaa
-  bababaa
-  abbabaa
-  aaabbaa
-  baabbaa
-  ababbaa
-  bbabbaa
-  aaaaaba
-  baaaaba
-  abaaaba
-  bbaaaba
-  aabaaba
-  babaaba
-  abbaaba
-  aaababa
-  baababa
-  abababa
-  bbababa
-  aabbaba
-  babbaba
-  aaaabba
-  baaabba
-  abaabba
-  bbaabba
-  aababba
-  bababba
-  abbabba
+  aaaaab
+  baaaab
+  abaaab
+  bbaaab
+  aabaab
+  babaab
+  abbaab
+  aaabab
+  baabab
+  ababab
+  bbabab
+  aabbab
+  babbab
+  aaaabb
+  baaabb
+  abaabb
+  bbaabb
+  aababb
+  bababb
+  abbabb
 - : unit = ()
 </pre>
 	  </li>
