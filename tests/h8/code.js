@@ -144,9 +144,51 @@ function showNameOverview (i) {
 
     slideTo(1200);
 
-}
+    d3.selectAll("#details")
+	.selectAll("text.questions")
+	.data(QUESTIONS)
+	.enter()
+	.append("text")
+	.classed("questions",true)
+	.attr("x",2200)
+	.attr("y",function(d,i) { return 40+(30*i); })
+	.attr("dy","0.35em")
+	.style("text-anchor","start")
+	.style("font-size","20px")
+	.text(function(d) { return d; })
+
+    d3.selectAll("#details")
+	.selectAll("text.self")
+	.data(entry.self)
+	.enter()
+	.append("text")
+	.classed("self",true)
+	.attr("x",2400)
+	.attr("y",function(d,i) { return 40+(30*i); })
+	.attr("dy","0.35em")
+	.style("text-anchor","start")
+	.style("font-size","20px");
+
+    d3.selectAll("#details")
+	.selectAll("text.manager")
+	.data(entry.manager)
+	.enter()
+	.append("text")
+	.classed("manager",true)
+	.attr("x",2500)
+	.attr("y",function(d,i) { return 40+(30*i); })
+	.attr("dy","0.35em")
+	.style("text-anchor","start")
+	.style("font-size","20px");
+
+    d3.selectAll("#details > text")
+	.text(function(d) { return d; });
 
     
+}
+
+  
+  
 
 function draw (quad) {
 
@@ -441,7 +483,26 @@ var SAMPLE_SELF_ASSESSMENT = {
 }
 
 
-
+var QUESTIONS = [
+    "Question 1",
+    "Question 2",
+    "Question 3",
+    "Question 4",
+    "Question 5",
+    "Question 6",
+    "Question 7",
+    "Question 8",
+    "Question 9",
+    "Question 10",
+    "Question 11",
+    "Question 12",
+    "Question 13",
+    "Question 14",
+    "Question 15",
+    "Question 16",
+    "Question 17",
+    "Question 18"
+];
 
 var TRANSLATION_MAP = [
   [1,"A",3],
