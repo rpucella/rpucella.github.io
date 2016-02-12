@@ -13,7 +13,7 @@
 
 
 var GLOBAL = {
-    data:null,
+    data: null,
     view:"self_score"
 }
  
@@ -38,8 +38,8 @@ function setupEvents () {
     d3.select("#get-started-button")
 	.on("click",function() { slideTo(900); });
 
-    d3.select("#josephine-button")
-	.on("click",function() { slideTo(1200); });
+//    d3.select("#josephine-button")
+//	.on("click",function() { slideTo(1200); });
 
     d3.select("#return-to-overview-button")
 	.on("click",function() { slideTo(900); });
@@ -61,7 +61,7 @@ function slideTo (x) {
     d3.select("#clip-rect").transition().duration(500).attr("x",x);
 }
 
-
+/*
 function testCloud (f) {
     var names = GLOBAL.data.map(function(d) { return d.name; });
     console.log(names);
@@ -78,7 +78,7 @@ function testCloud (f) {
 
     cloud.start();
 }
-
+*/
 
 function switchView () {
     var sw = {self_score:"manager_score",
@@ -108,12 +108,12 @@ function placeNamesInQuads () {
 
     for (category in byQuad) {
 
-	var names = byQuad[category].map(function(d) { return d.name; })
-	console.log(names);
+	var names = byQuad[category]  //.map(function(d) { return d.name; })
+	//console.log(names);
 
 	var cloud = d3.layout.cloud()
 	    .size([290,290])
-	    .words(names.map(function(d) {return {text:d,size:18}; }))
+	    .words(names.map(function(d) {return {text:d.name,size:18,index:d.index}; }))
 	    .padding(5)
 	    .rotate(0)
 	    .font("sans-serif")
@@ -128,6 +128,25 @@ function placeNamesInQuads () {
 	
 }
 
+function showNameOverview (i) {
+
+    console.log(GLOBAL.data[i]);
+    var entry = GLOBAL.data[i];
+
+    d3.select("#overview-salesperson-name")
+	.text(entry.name)
+
+    d3.select("#overview-salesperson-self-class")
+	.text(entry.self_score+" ("+(classifyScore(entry.self_score))+")");
+
+    d3.select("#overview-salesperson-manager-class")
+	.text(entry.manager_score+" ("+(classifyScore(entry.manager_score))+")");
+
+    slideTo(1200);
+
+}
+
+    
 
 function draw (quad) {
 
@@ -156,7 +175,7 @@ function draw (quad) {
 	.style("cursor","pointer")
 	.attr("transform","translate(150,150)")
 	.text(function(d) { return d.text; })
-	.on("click",function(d) { console.log("clicked on ",d.text); });
+	.on("click",function(d) { console.log("clicked on ",d.text); console.log("index=",d.index); showNameOverview(d.index); });
 
     q.exit().remove();
 
@@ -173,21 +192,24 @@ function draw (quad) {
 function setupData () {
 
     var data = readData();
-    console.log(data);
 
     var d = [];
     var e = Object.keys(data);
     for (var i=0; i<e.length; i++) {
-	d.push(data[e[i]]);
+	entry = data[e[i]];
+	entry.index = i;
+	d.push(entry);
     }
     GLOBAL.data = d;
+
+    console.log("Data = ",d);
 
     var m = d3.nest()
 	.key(function(d) { return d[0]; })
 	.key(function(d) { return d[1]; })
 	.map(TRANSLATION_MAP);
 
-    console.log(m);
+    ///console.log(m);
 
     computeScores(m);
 }
@@ -198,8 +220,8 @@ function computeScores (code) {
 
     var id;
     for (var i=0; i<results.length; i++) {
-	console.log(i);
-	console.log(results[i]);
+	///console.log(i);
+	///console.log(results[i]);
 	results[i].self_score = score(results[i].self,code);
 	results[i].manager_score = score(results[i].manager,code);
     }
@@ -208,7 +230,7 @@ function computeScores (code) {
 
 function score (answers,code) {
 
-    console.log(answers,code);
+    ///console.log(answers,code);
     var result = 0;
     for (var i=0; i<answers.length; i++) {
 	result += code[i+1][answers[i].toUpperCase()][0][2];

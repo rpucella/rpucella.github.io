@@ -72,13 +72,13 @@ text.names:hover {
 	<clipPath id="clip">
 	  <rect id="clip-rect" x="0" y="0" width="900" height="600" />
 	</clipPath>
-	<linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0">
+<!--	<linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0">
 	  <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
 	  <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
 	</linearGradient>
-      </defs>
+-->      </defs>
       <g  clip-path="url(#clip)">
-	<rect x="0" y="595" width="2700" height="5" style="fill:url(#grad1);"/>
+	<!-- <rect x="0" y="595" width="2700" height="5" style="fill:url(#grad1);"/> -->
 	<text x="450" y="300" dy="0.35em" style="text-anchor:middle; font-size: 30px;">
 	  Intro copy
 	</text>
@@ -127,8 +127,17 @@ text.names:hover {
 
 	<!-- salesperson description -->
 	<rect x="1810" width="280" y="10" height="580" style="fill: white; stroke: #cccccc;" />
-	<text x="1950" y="300" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
-	  Josephine overview
+	<text id="overview-salesperson-name" x="1950" y="100" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	</text>
+	<text  x="1950" y="200" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	  Self assessment
+	</text>
+	<text id="overview-salesperson-self-class" x="1950" y="230" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	</text>
+	<text  x="1950" y="300" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	  Manager assessment
+	</text>
+	<text id="overview-salesperson-manager-class" x="1950" y="330" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
 	</text>
 
 	<g class="clickable" id="josephine-assessment-button">
