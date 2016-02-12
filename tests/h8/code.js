@@ -13,13 +13,18 @@
 
 
 var GLOBAL = {
-    data:null
+    data:null,
+    view:"self_score"
 }
  
 
 function run () {
 
     setupData();
+
+    printViewName();
+
+    placeNamesInQuads();
 
     setupEvents();
     
@@ -45,6 +50,8 @@ function setupEvents () {
     d3.select("#return-to-salesperson-button")
 	.on("click",function() { slideTo(1200); });
     
+    d3.select("#switch-view-button")
+	.on("click",switchView);
 }
 
 function slideTo (x) {
@@ -54,6 +61,115 @@ function slideTo (x) {
     d3.select("#clip-rect").transition().duration(500).attr("x",x);
 }
 
+
+function testCloud (f) {
+    var names = GLOBAL.data.map(function(d) { return d.name; });
+    console.log(names);
+    var cloud = d3.layout.cloud()
+	.size([300,300])
+	.words(names.map(function(d) {return {text:d,size:15}; }))
+	.padding(5)
+	.rotate(0)
+	.font("sans-serif")
+	.fontSize(function(d) { return d.size; })
+	// .text(function(d) { return d; })
+	.on("end",draw)
+	//.timeInterval(1000);
+
+    cloud.start();
+}
+
+
+function switchView () {
+    var sw = {self_score:"manager_score",
+	      manager_score:"self_score"};
+
+    GLOBAL.view = sw[GLOBAL.view];
+    printViewName();
+    placeNamesInQuads();
+}
+
+function printViewName () {
+    d3.select("#view-name").text(GLOBAL.view);
+}
+
+function placeNamesInQuads () {
+
+    var byQuad = d3.nest()
+	.key(function(d) { return classifyScore(d[GLOBAL.view]); })
+	.map(GLOBAL.data);
+
+    var quadMap = {"Order taker":"quad1",
+		   "Explainer":"quad2",
+		   "Navigator":"quad3",
+		   "Consultant":"quad4"};
+
+    console.log("byQuad = ",byQuad);
+
+    for (category in byQuad) {
+
+	var names = byQuad[category].map(function(d) { return d.name; })
+	console.log(names);
+
+	var cloud = d3.layout.cloud()
+	    .size([290,290])
+	    .words(names.map(function(d) {return {text:d,size:18}; }))
+	    .padding(5)
+	    .rotate(0)
+	    .font("sans-serif")
+	    .fontSize(function(d) { return d.size; })
+	    .spiral("rectangular")
+	// .text(function(d) { return d; })
+	    .on("end",draw(quadMap[category]))
+	//.timeInterval(1000);
+
+	cloud.start();
+    }
+	
+}
+
+
+function draw (quad) {
+
+    return function(words) {
+
+    console.log("Drawing cloud");
+    console.log("words = ",words);
+
+    var quadOrigin = {quad1:{x:1350,y:150},
+		      quad2:{x:1350,y:450},
+		      quad3:{x:1650,y:450},
+		      quad4:{x:1650,y:150}}[quad];
+
+    console.log("Quad origin",quadOrigin)
+
+    var q = d3.select("#"+quad)
+	.selectAll("text.names")
+	.data(words,function(d) { return d.text; });
+
+    q.enter().append("text")
+	.classed("names",true)
+	.attr("text-anchor", "middle")
+	.style("font-family","sans-serif")
+	.style("font-size",function(d) { return d.size+"px"; })
+	.attr("dy",function(d) { return (d.size/2)+"px";})
+	.style("cursor","pointer")
+	.attr("transform","translate(150,150)")
+	.text(function(d) { return d.text; })
+	.on("click",function(d) { console.log("clicked on ",d.text); });
+
+    q.exit().remove();
+
+    d3.select("#"+quad).selectAll("text.names")
+            .transition()
+	    .attr("transform", function(d) {
+            return "translate(" + [d.x+150, d.y+150] + ")";
+	})
+
+    }
+}
+
+
 function setupData () {
 
     var data = readData();
@@ -61,9 +177,7 @@ function setupData () {
 
     var d = [];
     var e = Object.keys(data);
-    console.log(e);
     for (var i=0; i<e.length; i++) {
-	console.log(data[e[i]]);
 	d.push(data[e[i]]);
     }
     GLOBAL.data = d;

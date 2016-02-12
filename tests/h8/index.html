@@ -24,6 +24,7 @@
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
     
     <script src="lib/d3.min.js"></script>
+    <script src="lib/d3.layout.cloud.js"></script>
     <script src="code.js"></script>
 
     <style>
@@ -47,6 +48,14 @@
 }
 
 .clickable:hover {
+  fill: blue;
+}
+
+text.names {
+  fill: darkred;
+}
+
+text.names:hover {
   fill: blue;
 }
 
@@ -84,19 +93,37 @@
 
 	<!-- overview page -->
 	<rect x="910" width="280" y="10" height="580" style="fill: white; stroke: #cccccc;" />
-	<text x="1050" y="300" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	<text x="1050" y="100" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
 	  Overview text
 	</text>
+
+	<text id="view-name" x="1050" y="300" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
+	</text>
+	
+	<g id="switch-view-button" class="clickable">
+	  <rect x="950" y="360" width="200" height="40" style="fill: white; stroke: black;" />
+	  <text x="1050" y="380" dy="0.35em" style="text-anchor:middle; font-size: 20px;">
+	    Switch view
+	  </text>
+	</g>
+	
 	<text x="1050" y="450" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
 	  Filtering options
 	</text>
 
+	<g id="quad1" transform="translate(1200,0)"></g>
+	<g id="quad2" transform="translate(1200,300)"></g>
+	<g id="quad3" transform="translate(1500,300)"></g>
+	<g id="quad4" transform="translate(1500,0)"></g>
+
 	<line x1="1500" x2="1500" y1="10" y2="590" style="stroke: black;" />
 	<line x1="1210" x2="1790" y1="300" y2="300" style="stroke: black;" />
 
+	<!--
 	<text id="josephine-button" class="clickable" x="1350" y="150" dy="0.35em" style="text-anchor: middle; font-size: 20px;">
 	  Josephine
 	</text>
+	-->
 
 	<!-- salesperson description -->
 	<rect x="1810" width="280" y="10" height="580" style="fill: white; stroke: #cccccc;" />
