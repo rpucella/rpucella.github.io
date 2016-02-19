@@ -68,6 +68,10 @@ function setupEvents () {
     
     d3.select("#changeview")
 	.on("click",switchView);
+
+    d3.select("#assessment-button")
+	.on("click",function() { slideTo(1200,600); });
+
 }
 
 function slideTo (x,y) {
@@ -135,8 +139,8 @@ function layoutQuadrant (byQuad,accumulator,quads) {
 	return function(last) {
 
 	    var cloud = d3.layout.cloud()
-		.size([280,280])
-		.words(names.map(function(d) {return {text:d.name,size:18,index:d.index,quad:quadMap[quads[0]]}; }))
+		.size([290,260])
+		.words(names.map(function(d) {return {text:d.name,size:14,index:d.index,quad:quadMap[quads[0]]}; }))
 		.padding(5)
 		.rotate(0)
 		.font("sans-serif")
@@ -214,12 +218,31 @@ function showNameOverview (i) {
 	.duration(300)
 	.attr("transform","translate("+x(entry.manager_score)+",0)");
 
+    var self_class = classifyScore(entry.self_score);
+    var manager_class = classifyScore(entry.manager_score);
 
+/*
     d3.select("#overview-salesperson-self-class")
 	.text(entry.self_score+" ("+(classifyScore(entry.self_score))+")");
 
     d3.select("#overview-salesperson-manager-class")
 	.text(entry.manager_score+" ("+(classifyScore(entry.manager_score))+")");
+*/
+
+    d3.selectAll("#self-class-OrderTaker,#self-class-Explainer,#self-class-Consultant,#self-class-Navigator,#manager-class-OrderTaker,#manager-class-Explainer,#manager-class-Consultant,#manager-class-Navigator")
+	.attr("fill","#333333");
+
+    d3.select("#self-class-"+(self_class.replace(" ","-")))
+	.attr("fill","#9cdcf6")
+
+    d3.select("#manager-class-"+(manager_class.replace(" ","-")))
+	.attr("fill","#9cdcf6")
+
+
+//    d3.select(
+//
+//    d3.selectAll("#self-class-OrderTaker,#self-class-Explainer,#self-class-Consultant,#self-class-Navigator")
+//	.attr("fill","#333333");
 
     slideTo(300,600);
 
@@ -280,10 +303,10 @@ function drawAll (words) {
 */
 
     var quadTranslate = function(x,y) { 
-	return {quad1:"translate("+(460+x)+","+(760+y)+")",
-		quad2:"translate("+(460+x)+","+(1040+y)+")",
-		quad3:"translate("+(740+x)+","+(1040+y)+")",
-		quad4:"translate("+(740+x)+","+(760+y)+")"};
+	return {quad1:"translate("+(455+x)+","+(770+y)+")",
+		quad2:"translate("+(455+x)+","+(1030+y)+")",
+		quad3:"translate("+(745+x)+","+(1030+y)+")",
+		quad4:"translate("+(745+x)+","+(770+y)+")"};
     }
 
     ///console.log("Quad origin",quadOrigin)
@@ -397,13 +420,17 @@ function computeScores (code) {
     }
 }
 
+function answerValue (question, answer) {
+    var code = GLOBAL.translation;
+    return code[question][answer.toUpperCase()][0][2];
+}
 
 function score (answers,code) {
 
     ///console.log(answers,code);
     var result = 0;
     for (var i=0; i<answers.length; i++) {
-	result += code[i+1][answers[i].toUpperCase()][0][2];
+	result += answerValue(i+1,answers[i]); // code[i+1][answers[i].toUpperCase()][0][2];
     }
     return result;
 }
@@ -477,12 +504,47 @@ function dumpData () {
 
 }
 
+function random(map,n) { 
+    var row = [];
+    var dict = ["a","b","c","d"];
+    var rnd;
+    for (var i=0; i<18; i++) {
+	if (Math.random() < 0.2) { 
+	    rnd = dict[Math.floor(Math.random() * 4)];
+	} else {
+	    rnd = map[i+1][n][0][1];
+	}
+	row.push(rnd.toLowerCase());
+    }
+    return row;
+}
+
 
 function readData () {
 
-    result = {}
+    var m = d3.nest()
+	.key(function(d) { return d[0]; })
+	.key(function(d) { return d[2]; })
+	.map(TRANSLATION_MAP);
 
-    var ids = Object.keys(SAMPLE_SELF_ASSESSMENT);
+    var result = SAMPLE_DATA;
+
+    var ids = Object.keys(result);
+    for (var i=0; i<ids.length; i++) {
+	result[ids[i]].team = "Sample Team";
+    }
+
+    for (var i=0; i<TEAM_W.length; i++) {
+	result["w_"+i] = {name:TEAM_W[i],
+			  self: random(m,Math.floor(Math.random()*4)+1),
+			  manager: random(m,Math.floor(Math.random()*4)+1),
+			  team: "Team W"};
+    }
+
+    return result;
+
+
+    var ids = Object.keys(SAMPLE_DATA);
 
     for (var i=0; i<ids.length; i++) {
 	result[ids[i]] = {name:SAMPLE_SELF_ASSESSMENT[ids[i]].name,
@@ -504,118 +566,149 @@ function readData () {
 
 // possibility: entry for self-assessments, entry for manager assessments
 
-var SAMPLE_MANAGER_ASSESSMENT = {
-  "REP#1":{name:"Noah",
-	   answers:["a","b","a","c","a","a","c","b","d","d","c","a","a","b","a","a","b","c"]},
-  "REP#2":{name:"Liam",
-	   answers:["b","a","a","a","a","c","b","a","c","b","c","a","d","a","c","c","c","b"]},
-  "REP#3":{name:"Mason",
-	   answers:["b","d","a","b","b","d","d","b","b","a","d","a","b","a","b","c","d","b"]},
-  "REP#4":{name:"Jacob",
-	   answers:["b","d","d","b","d","a","a","d","d","b","c","e","d","a","e","a","d","a"]},
-  "REP#5":{name:"William",
-	   answers:["b","c","d","b","d","d","b","c","b","d","b","c","b","b","c","d","d","c"]},
-  "REP#6":{name:"Ethan",
-	   answers:["c","b","a","b","c","d","b","a","b","b","c","d","b","b","a","b","b","d"]},
-  "REP#7":{name:"Michael",
-	   answers:["a","d","d","a","a","d","b","b","c","c","a","a","a","d","c","a","b","d"]},
-  "REP#8":{name:"Alexander",
-	   answers:["c","d","b","c","d","a","b","b","a","d","c","b","b","c","e","b","d","d"]},
-  "REP#9":{name:"James",
-	   answers:["a","c","a","d","d","a","d","c","a","c","d","d","d","d","c","c","d","c"]},
-  "REP#10":{name:"Daniel",
-	    answers:["c","c","d","d","b","b","a","b","a","c","d","d","d","c","d","c","d","a"]},
-  "REP#11":{name:"Emma",
-	    answers:["b","b","c","c","a","d","c","b","d","c","d","d","c","a","d","a","a","d"]},
-  "REP#12":{name:"Olivia",
-	    answers:["a","d","a","b","d","a","d","c","d","b","a","b","b","a","e","d","d","a"]},
-  "REP#13":{name:"Sophia",
-	    answers:["b","d","d","d","a","a","c","a","a","a","a","b","a","b","d","b","c","a"]},
-  "REP#14":{name:"Isabella",
-	    answers:["a","a","b","a","b","a","d","b","a","c","d","a","c","c","e","b","c","a"]},
-  "REP#15":{name:"Ava",
-	    answers:["d","b","a","a","c","b","d","c","a","b","c","d","b","a","d","b","a","d"]},
-  "REP#16":{name:"Mia",
-	    answers:["c","a","c","a","b","d","c","a","b","d","b","e","b","c","c","a","d","d"]},
-  "REP#17":{name:"Emily",
-	    answers:["c","a","b","b","b","a","a","a","c","c","b","a","a","d","e","a","b","c"]},
-  "REP#18":{name:"Abigail",
-	    answers:["d","c","b","a","a","c","d","d","c","d","c","e","d","d","b","b","b","b"]},
-  "REP#19":{name:"Madison",
-	    answers:["a","a","a","b","c","c","a","d","b","c","b","c","a","d","b","a","d","c"]},
-  "REP#20":{name:"Charlotte",
-	    answers:["c","a","a","d","b","a","c","d","d","d","a","c","a","c","d","b","b","a"]},
-  "REP#21":{name:"Charlotte",
-	    answers:["b","b","b","a","d","a","c","a","c","a","a","c","a","c","c","c","c","b"]},
-  "REP#22":{name:"Kimberly",
-	    answers:["b","b","b","d","d","c","a","c","c","b","d","d","d","c","d","b","d","a"]},
-  "REP#23":{name:"Lisa",
-	    answers:["c","c","b","b","b","d","a","b","c","a","a","c","d","c","d","d","c","b"]},
-  "REP#24":{name:"Angela",
-	    answers:["d","b","a","c","d","d","a","c","a","c","c","d","b","d","e","d","a","a"]},
-  "REP#25":{name:"Thomas",
-	    answers:["d","c","d","a","a","b","b","b","c","b","b","c","c","d","b","b","a","d"]},
-  "REP#98":{name:"Napoleon",
-	    answers:["b","a","c","b","a","d","b","c","d","b","d","a","a","a","b","a","a","d"]},
-  "REP#99":{name:"Josephine",
-	    answers:["c","b","d","a","d","a","d","d","c","a","c","d","d","d","a","b","c","d"]}
+var SAMPLE_DATA = {
+    "REP#1":{name:"Noah",
+	     manager:["a","b","a","c","a","a","c","b","d","d","c","a","a","b","a","a","b","c"],
+	     self:["d","c","a","d","c","c","a","c","b","c","d","e","a","a","e","b","b","c"]},
+    "REP#2":{name:"Liam",
+	     manager:["b","a","a","a","a","c","b","a","c","b","c","a","d","a","c","c","c","b"],
+	     self:["b","b","d","b","b","a","b","c","d","c","c","b","a","a","b","d","a","d"]},
+    "REP#3":{name:"Mason",
+	     manager:["b","d","a","b","b","d","d","b","b","a","d","a","b","a","b","c","d","b"],
+	     self:["a","b","b","b","c","c","a","a","c","d","c","b","a","d","c","c","d","c"]},
+    "REP#4":{name:"Jacob",
+	     manager:["b","d","d","b","d","a","a","d","d","b","c","e","d","a","e","a","d","a"],
+	     self:["b","d","b","a","c","d","a","a","d","c","a","d","a","a","d","c","d","a"]},
+    "REP#5":{name:"William",
+	     manager:["b","c","d","b","d","d","b","c","b","d","b","c","b","b","c","d","d","c"],
+	     self:["b","a","a","b","b","c","a","b","a","d","d","a","b","a","a","b","d","c"]},
+    "REP#6":{name:"Ethan",
+	     manager:["c","b","a","b","c","d","b","a","b","b","c","d","b","b","a","b","b","d"],
+	     self:["c","c","d","b","a","b","c","d","c","b","a","e","b","b","d","b","c","a"]},
+    "REP#7":{name:"Michael",
+	     manager:["a","d","d","a","a","d","b","b","c","c","a","a","a","d","c","a","b","d"],
+	     self:["c","c","b","c","d","d","a","a","c","a","b","e","c","a","a","c","a","c"]},
+    "REP#8":{name:"Alexander",
+	     manager:["c","d","b","c","d","a","b","b","a","d","c","b","b","c","e","b","d","d"],
+	     self:["d","c","a","d","d","c","b","d","a","a","c","d","a","c","e","c","d","c"]},
+    "REP#9":{name:"James",
+	     manager:["a","c","a","d","d","a","d","c","a","c","d","d","d","d","c","c","d","c"],
+	     self:["d","a","d","b","d","b","c","c","b","a","c","e","b","b","a","c","d","b"]},
+    "REP#10":{name:"Daniel",
+	      manager:["c","c","d","d","b","b","a","b","a","c","d","d","d","c","d","c","d","a"],
+	      self:["d","a","d","c","b","c","d","c","a","a","c","a","d","a","e","c","c","c"]},
+    "REP#11":{name:"Emma",
+	      manager:["b","b","c","c","a","d","c","b","d","c","d","d","c","a","d","a","a","d"],
+	      self:["c","c","a","d","a","b","d","b","a","a","d","b","b","a","e","b","c","c"]},
+    "REP#12":{name:"Olivia",
+	      manager:["a","d","a","b","d","a","d","c","d","b","a","b","b","a","e","d","d","a"],
+	      self:["c","d","a","d","b","c","c","a","b","b","d","e","d","a","c","d","c","b"]},
+    "REP#13":{name:"Sophia",
+	      manager:["b","d","d","d","a","a","c","a","a","a","a","b","a","b","d","b","c","a"],
+	      self:["b","c","d","a","d","b","c","b","a","c","b","e","b","d","e","c","c","c"]},
+    "REP#14":{name:"Isabella",
+	      manager:["a","a","b","a","b","a","d","b","a","c","d","a","c","c","e","b","c","a"],
+	      self:["a","a","b","c","c","b","d","b","a","b","b","b","b","a","e","c","a","a"]},
+    "REP#15":{name:"Ava",
+	      manager:["d","b","a","a","c","b","d","c","a","b","c","d","b","a","d","b","a","d"],
+	      self:["b","c","a","b","c","b","b","d","a","b","b","e","c","c","e","b","b","c"]},
+    "REP#16":{name:"Mia",
+	      manager:["c","a","c","a","b","d","c","a","b","d","b","e","b","c","c","a","d","d"],
+	      self:["b","b","c","a","c","c","b","c","b","c","a","a","c","d","e","d","c","d"]},
+    "REP#17":{name:"Emily",
+	      manager:["c","a","b","b","b","a","a","a","c","c","b","a","a","d","e","a","b","c"],
+	      self:["a","c","c","d","b","b","c","c","b","d","a","e","c","b","b","c","c","c"]},
+    "REP#18":{name:"Abigail",
+	      manager:["d","c","b","a","a","c","d","d","c","d","c","e","d","d","b","b","b","b"],
+	      self:["c","c","a","b","c","d","c","b","a","a","b","e","b","d","a","d","d","d"]},
+    "REP#19":{name:"Madison",
+	      manager:["a","a","a","b","c","c","a","d","b","c","b","c","a","d","b","a","d","c"],
+	      self:["c","d","c","c","b","c","c","b","a","c","a","c","c","a","b","a","a","c"]},
+    "REP#20":{name:"Charlotte X",
+	      manager:["c","a","a","d","b","a","c","d","d","d","a","c","a","c","d","b","b","a"],
+	      self:["a","d","d","b","b","d","a","c","a","d","b","d","c","d","e","a","b","c"]},
+    "REP#21":{name:"Charlotte Y",
+	      manager:["b","b","b","a","d","a","c","a","c","a","a","c","a","c","c","c","c","b"],
+	      self:["a","b","d","c","c","a","d","d","d","c","c","c","a","c","d","c","c","d"]},
+    "REP#22":{name:"Kimberly",
+	      manager:["b","b","b","d","d","c","a","c","c","b","d","d","d","c","d","b","d","a"],
+	      self:["a","d","c","a","a","b","b","d","c","b","c","a","b","b","b","a","b","b"]},
+    "REP#23":{name:"Lisa",
+	      manager:["c","c","b","b","b","d","a","b","c","a","a","c","d","c","d","d","c","b"],
+	      self:["b","d","c","a","a","b","c","a","c","c","a","e","d","a","e","b","b","c"]},
+    "REP#24":{name:"Angela",
+	      manager:["d","b","a","c","d","d","a","c","a","c","c","d","b","d","e","d","a","a"],
+	      self:["c","a","d","b","a","d","b","d","d","a","b","e","c","a","a","c","b","d"]},
+    "REP#25":{name:"Thomas",
+	      manager:["d","c","d","a","a","b","b","b","c","b","b","c","c","d","b","b","a","d"],
+	      self:["c","c","c","d","c","c","d","b","b","c","c","c","b","b","c","b","b","c"]},
+    "REP#98":{name:"Napoleon",
+	      manager:["b","a","c","b","a","d","b","c","d","b","d","a","a","a","b","a","a","d"],
+	      self:["c","b","d","a","d","a","d","d","c","a","c","d","d","d","a","b","c","d"]},
+    "REP#99":{name:"Josephine",
+	      manager:["c","b","d","a","d","a","d","d","c","a","c","d","d","d","a","b","c","d"],
+	      self:["b","a","c","b","a","d","b","c","d","b","d","a","a","a","b","a","a","d"]}
 };
 
+var TEAM_W = ["Walter","Wanda","Wei","Wendy","Wesley","Whitney","Wilhelmina","Willette","Willow","Wilma","Winifred","Winona"];
+
+
+
 var SAMPLE_SELF_ASSESSMENT = {
-  "REP#1":{name:"Noah",
-	   answers:["d","c","a","d","c","c","a","c","b","c","d","e","a","a","e","b","b","c"]},
-  "REP#2":{name:"Liam",
-	   answers:["b","b","d","b","b","a","b","c","d","c","c","b","a","a","b","d","a","d"]},
-  "REP#3":{name:"Mason",
-	   answers:["a","b","b","b","c","c","a","a","c","d","c","b","a","d","c","c","d","c"]},
-  "REP#4":{name:"Jacob",
-	   answers:["b","d","b","a","c","d","a","a","d","c","a","d","a","a","d","c","d","a"]},
-  "REP#5":{name:"William",
-	   answers:["b","a","a","b","b","c","a","b","a","d","d","a","b","a","a","b","d","c"]},
-  "REP#6":{name:"Ethan",
-	   answers:["c","c","d","b","a","b","c","d","c","b","a","e","b","b","d","b","c","a"]},
-  "REP#7":{name:"Michael",
-	   answers:["c","c","b","c","d","d","a","a","c","a","b","e","c","a","a","c","a","c"]},
-  "REP#8":{name:"Alexander",
-	   answers:["d","c","a","d","d","c","b","d","a","a","c","d","a","c","e","c","d","c"]},
-  "REP#9":{name:"James",
-	   answers:["d","a","d","b","d","b","c","c","b","a","c","e","b","b","a","c","d","b"]},
-  "REP#10":{name:"Daniel",
-	    answers:["d","a","d","c","b","c","d","c","a","a","c","a","d","a","e","c","c","c"]},
-  "REP#11":{name:"Emma",
-	    answers:["c","c","a","d","a","b","d","b","a","a","d","b","b","a","e","b","c","c"]},
-  "REP#12":{name:"Olivia",
-	    answers:["c","d","a","d","b","c","c","a","b","b","d","e","d","a","c","d","c","b"]},
-  "REP#13":{name:"Sophia",
-	    answers:["b","c","d","a","d","b","c","b","a","c","b","e","b","d","e","c","c","c"]},
-  "REP#14":{name:"Isabella",
-	    answers:["a","a","b","c","c","b","d","b","a","b","b","b","b","a","e","c","a","a"]},
-  "REP#15":{name:"Ava",
-	    answers:["b","c","a","b","c","b","b","d","a","b","b","e","c","c","e","b","b","c"]},
-  "REP#16":{name:"Mia",
-	    answers:["b","b","c","a","c","c","b","c","b","c","a","a","c","d","e","d","c","d"]},
-  "REP#17":{name:"Emily",
-	    answers:["a","c","c","d","b","b","c","c","b","d","a","e","c","b","b","c","c","c"]},
-  "REP#18":{name:"Abigail",
-	    answers:["c","c","a","b","c","d","c","b","a","a","b","e","b","d","a","d","d","d"]},
-  "REP#19":{name:"Madison",
-	    answers:["c","d","c","c","b","c","c","b","a","c","a","c","c","a","b","a","a","c"]},
-  "REP#20":{name:"Charlotte",
-	    answers:["a","d","d","b","b","d","a","c","a","d","b","d","c","d","e","a","b","c"]},
-  "REP#21":{name:"Charlotte",
-	    answers:["a","b","d","c","c","a","d","d","d","c","c","c","a","c","d","c","c","d"]},
-  "REP#22":{name:"Kimberly",
-	    answers:["a","d","c","a","a","b","b","d","c","b","c","a","b","b","b","a","b","b"]},
-  "REP#23":{name:"Lisa",
-	    answers:["b","d","c","a","a","b","c","a","c","c","a","e","d","a","e","b","b","c"]},
-  "REP#24":{name:"Angela",
-	    answers:["c","a","d","b","a","d","b","d","d","a","b","e","c","a","a","c","b","d"]},
-  "REP#25":{name:"Thomas",
-	    answers:["c","c","c","d","c","c","d","b","b","c","c","c","b","b","c","b","b","c"]},
-  "REP#98":{name:"Napoleon",
-	    answers:["c","b","d","a","d","a","d","d","c","a","c","d","d","d","a","b","c","d"]},
-  "REP#99":{name:"Josephine",
-	    answers:["b","a","c","b","a","d","b","c","d","b","d","a","a","a","b","a","a","d"]}
+    "REP#1":{name:"Noah",
+	     manager:["d","c","a","d","c","c","a","c","b","c","d","e","a","a","e","b","b","c"]},
+    "REP#2":{name:"Liam",
+	     manager:["b","b","d","b","b","a","b","c","d","c","c","b","a","a","b","d","a","d"]},
+    "REP#3":{name:"Mason",
+	     manager:["a","b","b","b","c","c","a","a","c","d","c","b","a","d","c","c","d","c"]},
+    "REP#4":{name:"Jacob",
+	     manager:["b","d","b","a","c","d","a","a","d","c","a","d","a","a","d","c","d","a"]},
+    "REP#5":{name:"William",
+	     manager:["b","a","a","b","b","c","a","b","a","d","d","a","b","a","a","b","d","c"]},
+    "REP#6":{name:"Ethan",
+	     manager:["c","c","d","b","a","b","c","d","c","b","a","e","b","b","d","b","c","a"]},
+    "REP#7":{name:"Michael",
+	     manager:["c","c","b","c","d","d","a","a","c","a","b","e","c","a","a","c","a","c"]},
+    "REP#8":{name:"Alexander",
+	     manager:["d","c","a","d","d","c","b","d","a","a","c","d","a","c","e","c","d","c"]},
+    "REP#9":{name:"James",
+	     manager:["d","a","d","b","d","b","c","c","b","a","c","e","b","b","a","c","d","b"]},
+    "REP#10":{name:"Daniel",
+	      manager:["d","a","d","c","b","c","d","c","a","a","c","a","d","a","e","c","c","c"]},
+    "REP#11":{name:"Emma",
+	      manager:["c","c","a","d","a","b","d","b","a","a","d","b","b","a","e","b","c","c"]},
+    "REP#12":{name:"Olivia",
+	      manager:["c","d","a","d","b","c","c","a","b","b","d","e","d","a","c","d","c","b"]},
+    "REP#13":{name:"Sophia",
+	      manager:["b","c","d","a","d","b","c","b","a","c","b","e","b","d","e","c","c","c"]},
+    "REP#14":{name:"Isabella",
+	      manager:["a","a","b","c","c","b","d","b","a","b","b","b","b","a","e","c","a","a"]},
+    "REP#15":{name:"Ava",
+	      manager:["b","c","a","b","c","b","b","d","a","b","b","e","c","c","e","b","b","c"]},
+    "REP#16":{name:"Mia",
+	      manager:["b","b","c","a","c","c","b","c","b","c","a","a","c","d","e","d","c","d"]},
+    "REP#17":{name:"Emily",
+	      manager:["a","c","c","d","b","b","c","c","b","d","a","e","c","b","b","c","c","c"]},
+    "REP#18":{name:"Abigail",
+	      manager:["c","c","a","b","c","d","c","b","a","a","b","e","b","d","a","d","d","d"]},
+    "REP#19":{name:"Madison",
+	      manager:["c","d","c","c","b","c","c","b","a","c","a","c","c","a","b","a","a","c"]},
+    "REP#20":{name:"Charlotte",
+	      manager:["a","d","d","b","b","d","a","c","a","d","b","d","c","d","e","a","b","c"]},
+    "REP#21":{name:"Charlotte",
+	      manager:["a","b","d","c","c","a","d","d","d","c","c","c","a","c","d","c","c","d"]},
+    "REP#22":{name:"Kimberly",
+	      manager:["a","d","c","a","a","b","b","d","c","b","c","a","b","b","b","a","b","b"]},
+    "REP#23":{name:"Lisa",
+	      manager:["b","d","c","a","a","b","c","a","c","c","a","e","d","a","e","b","b","c"]},
+    "REP#24":{name:"Angela",
+	      manager:["c","a","d","b","a","d","b","d","d","a","b","e","c","a","a","c","b","d"]},
+    "REP#25":{name:"Thomas",
+	      manager:["c","c","c","d","c","c","d","b","b","c","c","c","b","b","c","b","b","c"]},
+    "REP#98":{name:"Napoleon",
+	      manager:["c","b","d","a","d","a","d","d","c","a","c","d","d","d","a","b","c","d"]},
+    "REP#99":{name:"Josephine",
+	      manager:["b","a","c","b","a","d","b","c","d","b","d","a","a","a","b","a","a","d"]}
 };
 
 var QUESTIONS = [
@@ -640,68 +733,68 @@ var QUESTIONS = [
 ];
 
 var TRANSLATION_MAP = [
-  [1,"A",3],
-  [1,"B",1],
-  [1,"C",4],
-  [1,"D",2],
-  [2,"A",1],
-  [2,"B",4],
-  [2,"C",2],
-  [2,"D",3],
-  [3,"A",3],
-  [3,"B",2],
-  [3,"C",1],
-  [3,"D",4],
-  [4,"A",4],
-  [4,"B",1],
-  [4,"C",2],
-  [4,"D",3],
-  [5,"A",1],
-  [5,"B",3],
-  [5,"C",2],
-  [5,"D",4],
-  [6,"A",4],
-  [6,"B",3],
-  [6,"C",2],
-  [6,"D",1],
-  [7,"A",2],
-  [7,"B",1],
-  [7,"C",3],
-  [7,"D",4],
-  [8,"A",3],
-  [8,"B",2],
-  [8,"C",1],
-  [8,"D",4],
-  [9,"A",2],
-  [9,"B",3],
-  [9,"C",4],
-  [9,"D",1],
-  [10,"A",4],
-  [10,"B",1],
-  [10,"C",2],
-  [10,"D",3],
-  [11,"A",2],
-  [11,"B",3],
-  [11,"C",4],
-  [11,"D",1],
-  [12,"A",1],
-  [12,"B",2],
-  [12,"C",3],
-  [12,"D",4],
-  [12,"E",1],
-  [13,"A",1],
-  [13,"B",2],
-  [13,"C",3],
-  [13,"D",4],
-  [14,"A",1],
-  [14,"B",2],
-  [14,"C",3],
-  [14,"D",4],
-  [15,"A",4],
-  [15,"B",1],
-  [15,"C",2],
-  [15,"D",3],
-  [15,"E",1],
+    [1,"A",3],
+    [1,"B",1],
+    [1,"C",4],
+    [1,"D",2],
+    [2,"A",1],
+    [2,"B",4],
+    [2,"C",2],
+    [2,"D",3],
+    [3,"A",3],
+    [3,"B",2],
+    [3,"C",1],
+    [3,"D",4],
+    [4,"A",4],
+    [4,"B",1],
+    [4,"C",2],
+    [4,"D",3],
+    [5,"A",1],
+    [5,"B",3],
+    [5,"C",2],
+    [5,"D",4],
+    [6,"A",4],
+    [6,"B",3],
+    [6,"C",2],
+    [6,"D",1],
+    [7,"A",2],
+    [7,"B",1],
+    [7,"C",3],
+    [7,"D",4],
+    [8,"A",3],
+    [8,"B",2],
+    [8,"C",1],
+    [8,"D",4],
+    [9,"A",2],
+    [9,"B",3],
+    [9,"C",4],
+    [9,"D",1],
+    [10,"A",4],
+    [10,"B",1],
+    [10,"C",2],
+    [10,"D",3],
+    [11,"A",2],
+    [11,"B",3],
+    [11,"C",4],
+    [11,"D",1],
+    [12,"A",1],
+    [12,"B",2],
+    [12,"C",3],
+    [12,"D",4],
+    [12,"E",1],
+    [13,"A",1],
+    [13,"B",2],
+    [13,"C",3],
+    [13,"D",4],
+    [14,"A",1],
+    [14,"B",2],
+    [14,"C",3],
+    [14,"D",4],
+    [15,"A",4],
+    [15,"B",1],
+    [15,"C",2],
+    [15,"D",3],
+    [15,"E",1],
   [16,"A",1],
   [16,"B",4],
   [16,"C",3],
