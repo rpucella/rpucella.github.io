@@ -14,11 +14,15 @@
 
 var GLOBAL = {
     data: null,
-    view:"self_score"
+    view:"self_score",
+    words:{"self_score":[],
+	   "manager_score":[]}
 }
  
 
 function run () {
+
+    //loadExternalSVGs();
 
     setupData();
 
@@ -35,30 +39,42 @@ function run () {
 
 function setupEvents () {
 
-    d3.select("#get-started-button")
-	.on("click",function() { slideTo(900); });
+    //d3.select("#get-started-button")
+
+    d3.select("#getstarted")
+	.on("mouseenter",function() { d3.select("#getstarted-hover").style("display","inline"); });
+
+    d3.select("#getstarted-hover")
+	.style("cursor","pointer")
+	.on("click",function() { slideTo(0,600); })
+	.on("mouseleave",function() { d3.select("#getstarted-hover").style("display","none"); });
 
 //    d3.select("#josephine-button")
-//	.on("click",function() { slideTo(1200); });
+//	.on("click",function() { slideTo(600,600); });
 
-    d3.select("#return-to-overview-button")
-	.on("click",function() { slideTo(900); });
+    d3.select("#return-to-overview")
+	.on("click",function() { slideTo(0,600); });
 
-    d3.select("#josephine-assessment-button")
-	.on("click",function() { slideTo(1800); });
+    d3.select("#detailedview")
+	.on("mouseenter",function() { d3.select("#detailedview-hover").style("display","inline"); });
+
+    d3.select("#detailedview-hover")
+	.style("cursor","pointer")
+	.on("click",function() { slideTo(900,600); })
+	.on("mouseleave",function() { d3.select("#detailedview-hover").style("display","none"); });
 
     d3.select("#return-to-salesperson-button")
-	.on("click",function() { slideTo(1200); });
+	.on("click",function() { slideTo(300,600); });
     
-    d3.select("#switch-view-button")
+    d3.select("#changeview")
 	.on("click",switchView);
 }
 
-function slideTo (x) {
-    console.log("Sliding to x =",x);
-    var vb = ""+x+" 0 900 600";
-    d3.select("#main").transition().duration(500).attr("viewBox",vb);
-    d3.select("#clip-rect").transition().duration(500).attr("x",x);
+function slideTo (x,y) {
+    console.log("Sliding to x =",x," y =",y);
+    var vb = ""+x+" "+y+" 900 600";
+    d3.select("#main-svg").transition().duration(300).attr("viewBox",vb);
+    d3.select("#clip-rect").transition().duration(300).attr("x",x).attr("y",y);
 }
 
 /*
@@ -99,13 +115,50 @@ function placeNamesInQuads () {
 	.key(function(d) { return classifyScore(d[GLOBAL.view]); })
 	.map(GLOBAL.data);
 
+    console.log("byQuad = ",byQuad);
+
+    layoutQuadrant(byQuad,[],Object.keys(byQuad))([]);
+}
+
+
+function layoutQuadrant (byQuad,accumulator,quads) {
+    
     var quadMap = {"Order taker":"quad1",
 		   "Explainer":"quad2",
 		   "Navigator":"quad3",
 		   "Consultant":"quad4"};
 
-    console.log("byQuad = ",byQuad);
+    if (quads.length > 0) {
 
+	var names = byQuad[quads[0]];
+	
+	return function(last) {
+
+	    var cloud = d3.layout.cloud()
+		.size([280,280])
+		.words(names.map(function(d) {return {text:d.name,size:18,index:d.index,quad:quadMap[quads[0]]}; }))
+		.padding(5)
+		.rotate(0)
+		.font("sans-serif")
+		.fontSize(function(d) { return d.size; })
+		.spiral("rectangular")
+		.on("end",layoutQuadrant(byQuad,accumulator.concat(last),quads.slice(1)));
+	    //.timeInterval(1000);
+	    
+	    cloud.start();
+		    
+	}
+
+    } else {
+
+	return function (last) {
+	    drawAll(accumulator.concat(last))
+	}
+
+    }
+}
+
+/*
     for (category in byQuad) {
 
 	var names = byQuad[category]  //.map(function(d) { return d.name; })
@@ -125,8 +178,10 @@ function placeNamesInQuads () {
 
 	cloud.start();
     }
-	
 }
+
+*/
+
 
 function showNameOverview (i) {
 
@@ -136,13 +191,37 @@ function showNameOverview (i) {
     d3.select("#overview-salesperson-name")
 	.text(entry.name)
 
+    d3.select("#self-assessment-score")
+	.text(entry.self_score)
+
+    d3.select("#manager-assessment-score")
+	.text(entry.manager_score)
+
+    var MAX_SCORE = 72
+    var MIN_SCORE = 18
+
+    var x = d3.scale.linear()
+	.domain([MIN_SCORE,MAX_SCORE])
+	.range([0,1170-920])
+
+    d3.select("#self-assessment-dial")
+	.transition()
+	.duration(300)
+	.attr("transform","translate("+x(entry.self_score)+",0)");
+
+    d3.select("#manager-assessment-dial")
+	.transition()
+	.duration(300)
+	.attr("transform","translate("+x(entry.manager_score)+",0)");
+
+
     d3.select("#overview-salesperson-self-class")
 	.text(entry.self_score+" ("+(classifyScore(entry.self_score))+")");
 
     d3.select("#overview-salesperson-manager-class")
 	.text(entry.manager_score+" ("+(classifyScore(entry.manager_score))+")");
 
-    slideTo(1200);
+    slideTo(300,600);
 
     d3.selectAll("#details")
 	.selectAll("text.questions")
@@ -150,8 +229,8 @@ function showNameOverview (i) {
 	.enter()
 	.append("text")
 	.classed("questions",true)
-	.attr("x",2200)
-	.attr("y",function(d,i) { return 40+(30*i); })
+	.attr("x",1300)
+	.attr("y",function(d,i) { return 640+(30*i); })
 	.attr("dy","0.35em")
 	.style("text-anchor","start")
 	.style("font-size","20px")
@@ -163,8 +242,8 @@ function showNameOverview (i) {
 	.enter()
 	.append("text")
 	.classed("self",true)
-	.attr("x",2400)
-	.attr("y",function(d,i) { return 40+(30*i); })
+	.attr("x",1500)
+	.attr("y",function(d,i) { return 640+(30*i); })
 	.attr("dy","0.35em")
 	.style("text-anchor","start")
 	.style("font-size","20px");
@@ -175,8 +254,8 @@ function showNameOverview (i) {
 	.enter()
 	.append("text")
 	.classed("manager",true)
-	.attr("x",2500)
-	.attr("y",function(d,i) { return 40+(30*i); })
+	.attr("x",1600)
+	.attr("y",function(d,i) { return 640+(30*i); })
 	.attr("dy","0.35em")
 	.style("text-anchor","start")
 	.style("font-size","20px");
@@ -189,6 +268,53 @@ function showNameOverview (i) {
 
   
   
+
+function drawAll (words) {
+    console.log("DRAW ALL = ",words);
+
+/*
+    var quadOrigin = {quad1:{x:450,y:750},
+		      quad2:{x:450,y:1050},
+		      quad3:{x:750,y:1050},
+		      quad4:{x:750,y:750}}[quad];
+*/
+
+    var quadTranslate = function(x,y) { 
+	return {quad1:"translate("+(460+x)+","+(760+y)+")",
+		quad2:"translate("+(460+x)+","+(1040+y)+")",
+		quad3:"translate("+(740+x)+","+(1040+y)+")",
+		quad4:"translate("+(740+x)+","+(760+y)+")"};
+    }
+
+    ///console.log("Quad origin",quadOrigin)
+
+    var q = d3.select("#main-g")
+	.selectAll("text.names-in-quads")
+	.data(words,function(d) { return d.text; });
+
+    q.enter().append("text")
+	.classed("names-in-quads",true)
+	.attr("text-anchor", "middle")
+	.style("font-family","sans-serif")
+	.style("font-size",function(d) { return d.size+"px"; })
+	.attr("dy",function(d) { return (d.size/2)+"px";})
+	.style("cursor","pointer")
+	//.attr("transform","translate(150,150)")
+	.attr("transform",function(d) { return quadTranslate(0,0)[d.quad]; })
+	.text(function(d) { return d.text; })
+	.on("click",function(d) { console.log("clicked on ",d.text); console.log("index=",d.index); showNameOverview(d.index); });
+
+    q.exit().remove();
+
+    d3.select("#main-g").selectAll("text.names-in-quads")
+            .transition()
+	    .attr("transform", function(d) {
+		// return "translate(" + [d.x+150, d.y+150] + ")";
+		return quadTranslate(d.x,d.y)[d.quad];
+	    });
+    
+}
+
 
 function draw (quad) {
 
@@ -250,6 +376,8 @@ function setupData () {
 	.key(function(d) { return d[0]; })
 	.key(function(d) { return d[1]; })
 	.map(TRANSLATION_MAP);
+
+    GLOBAL.translation = m;
 
     ///console.log(m);
 
@@ -426,7 +554,11 @@ var SAMPLE_MANAGER_ASSESSMENT = {
   "REP#24":{name:"Angela",
 	    answers:["d","b","a","c","d","d","a","c","a","c","c","d","b","d","e","d","a","a"]},
   "REP#25":{name:"Thomas",
-	    answers:["d","c","d","a","a","b","b","b","c","b","b","c","c","d","b","b","a","d"]}
+	    answers:["d","c","d","a","a","b","b","b","c","b","b","c","c","d","b","b","a","d"]},
+  "REP#98":{name:"Napoleon",
+	    answers:["b","a","c","b","a","d","b","c","d","b","d","a","a","a","b","a","a","d"]},
+  "REP#99":{name:"Josephine",
+	    answers:["c","b","d","a","d","a","d","d","c","a","c","d","d","d","a","b","c","d"]}
 };
 
 var SAMPLE_SELF_ASSESSMENT = {
@@ -479,9 +611,12 @@ var SAMPLE_SELF_ASSESSMENT = {
   "REP#24":{name:"Angela",
 	    answers:["c","a","d","b","a","d","b","d","d","a","b","e","c","a","a","c","b","d"]},
   "REP#25":{name:"Thomas",
-	    answers:["c","c","c","d","c","c","d","b","b","c","c","c","b","b","c","b","b","c"]}
-}
-
+	    answers:["c","c","c","d","c","c","d","b","b","c","c","c","b","b","c","b","b","c"]},
+  "REP#98":{name:"Napoleon",
+	    answers:["c","b","d","a","d","a","d","d","c","a","c","d","d","d","a","b","c","d"]},
+  "REP#99":{name:"Josephine",
+	    answers:["b","a","c","b","a","d","b","c","d","b","d","a","a","a","b","a","a","d"]}
+};
 
 var QUESTIONS = [
     "Question 1",
@@ -580,3 +715,28 @@ var TRANSLATION_MAP = [
   [18,"C",3],
   [18,"D",4]
 ];
+
+
+function loadExternalSVGs () { 
+
+    // AH! From:
+    //   http://bl.ocks.org/enjalot/1503463
+
+    defs = d3.select("#main").append("defs");
+    d3.html("cover.svg", function(d) {
+        console.log("loading cover.svg", d)
+        //get a selection of the image so we can pull out the icon
+        xml = d3.select(d) 
+        console.log("xml", xml.select("#image"), xml.select("#image").node());
+        icon = document.importNode(xml.select("#image").node(), true)
+        console.log("image", icon)
+        mask = defs.append("svg:g")
+            .attr("id", "cover")
+        mask.node().appendChild(icon);
+	
+	d3.select("#cover_image")
+	    .append("use")
+	    .attr("xlink:href","#cover")
+	    //.attr("transform","scale(0.3)");
+    });
+}
