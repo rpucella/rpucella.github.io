@@ -26,6 +26,8 @@ function run () {
 
     setupData();
 
+    setupTeams();
+
     printViewName();
 
     placeNamesInQuads();
@@ -81,6 +83,46 @@ function slideTo (x,y) {
     d3.select("#clip-rect").transition().duration(300).attr("x",x).attr("y",y);
 }
 
+
+
+function setupTeams () {
+    var teams = GLOBAL.data.reduce(function(acc,current) { 
+	if (acc.some(function(x) { return x===current.team; })) {
+	    return acc;
+	} else {
+	    return acc.concat([current.team]); 
+	}
+    },[]);
+    console.log("teams = ",teams);
+    GLOBAL.teams = teams;
+
+    console.log("about to print");
+
+    d3.select("#main-g")
+	.selectAll("text.filters")
+	.data(teams)
+	.enter()
+	.append("text")
+	.classed("filters selected",true)
+	.attr("x",20)
+	.attr("y",function(d,i) { return 1130 - (i*20); })
+	.attr("dy","0.35em")
+	.text(function(d) { return d;})
+	.on("click", function(d) { var e = d3.select(this);
+				   if (e.classed("selected")) {
+				       e.classed("selected",false);
+				       e.classed("unselected",true);
+				       d3.selectAll("text.names-in-quads[data-team=\""+d+"\"]")
+					   .style("fill","#dddddd");
+				   } else {
+				       e.classed("selected",true);
+				       e.classed("unselected",false);
+				       d3.selectAll("text.names-in-quads[data-team=\""+d+"\"]")
+					   .style("fill",null);
+				   }});
+}
+
+
 /*
 function testCloud (f) {
     var names = GLOBAL.data.map(function(d) { return d.name; });
@@ -110,7 +152,8 @@ function switchView () {
 }
 
 function printViewName () {
-    d3.select("#view-name").text(GLOBAL.view);
+    var txt = GLOBAL.view==="self_score" ? "Self assessment" : "Manager assessment";
+    d3.select("#view-name").text(txt);
 }
 
 function placeNamesInQuads () {
@@ -140,7 +183,7 @@ function layoutQuadrant (byQuad,accumulator,quads) {
 
 	    var cloud = d3.layout.cloud()
 		.size([290,260])
-		.words(names.map(function(d) {return {text:d.name,size:14,index:d.index,quad:quadMap[quads[0]]}; }))
+		.words(names.map(function(d) {return {text:d.name,size:14,index:d.index,quad:quadMap[quads[0]],team:d.team}; }))
 		.padding(5)
 		.rotate(0)
 		.font("sans-serif")
@@ -317,6 +360,7 @@ function drawAll (words) {
 
     q.enter().append("text")
 	.classed("names-in-quads",true)
+	.attr("data-team",function(d) { return d.team; })  // data- so that we can select it
 	.attr("text-anchor", "middle")
 	.style("font-family","sans-serif")
 	.style("font-size",function(d) { return d.size+"px"; })

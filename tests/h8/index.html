@@ -56,11 +56,25 @@
 }
 
 text.names-in-quads {
-  fill: darkred;
+  fill: #000000;
 }
 
 text.names-in-quads:hover {
   fill: blue;
+}
+
+text.filters { 
+  font-size: 12pt;
+  cursor: pointer;
+}
+
+text.filters.selected {
+  fill: #a5cf5e;
+}
+
+text.filters.unselected {
+  fill: #666666;
+  opacity: 50%;
 }
 
     </style>
@@ -782,9 +796,10 @@ text.names-in-quads:hover {
 	</g>
 </g>
 
-
       <rect id="assessment-button" x="1700" y="1150" width="50" height="30" fill="red" stroke="none" />
-
+      <rect x="550" y="600" width="100" height="35" style="fill: white;" />
+      <text id="view-name" x="600" y="618" dy="0.35em" 
+	    style="font-weight: bold; text-transform: uppercase; text-anchor: middle;">
       </g>
 
     </svg>
