@@ -110,6 +110,18 @@
       <ul class="simple">
 
       	<li>
+	  <p class="ann"><span class="hdr">Feb 20:</span>
+	    Added some notes for the Turing machines lecture. Please
+	    read Chapter 5 in the book, their description of Turing
+	    machines. Slightly different tack, but completely
+	    equivalent. I've also added some notes
+	    about <tt>fold-left</tt> in the functional programming
+	    lecture section. 
+	    s.</p>
+	</li>
+
+
+      	<li>
 	  <p class="ann"><span class="hdr">Feb 17:</span>
 	    The type checker for homework 4 <a href="hw4-checker.ml"><tt>hw4-checker.ml</tt></a> is now available. Reminder: it only checks the type of your functions.</p>
 	</li>
@@ -363,6 +375,15 @@
 	<li><p><span class="hdr">Feb 11:</span><b>Functional programming</b></p>
 		<div class="lect">
 		  <p><a href="functional.pdf">Notes</a> from the lecture.</p>
+
+		  <p>One higher-order function that I have not
+		  described in class is <tt>fold-left</tt>, which is a
+		  variant of <tt>fold-right</tt>. It is also available
+		    in the OCaml library
+		  as <tt>List.fold_left</tt>. Here is
+		  a <a href="http://www.cs.cornell.edu/courses/cs3110/2011sp/recitations/rec05.htm">quick
+		      overview of the differences</a>.</p>
+
 		</div>
 	</li>	  
 	
@@ -375,17 +396,19 @@
 		  class. These notes go into some detail about
 		  them.</p> 
 
-		  <p>Non-regular languages ; pumping lemma</p>
+		  <p>I mentionned at the beginning of class examples of languages that were not regular, such as &lcub;a<sup>n</sup>b<sup>n</sup> | n &ge; 0&rcub;, are not regular. We don't have any way right now to show that a language is not regular. The most common tool used is the <i>Pumping Lemma for Regular Languages</i>. Here's a reasonable <a href="https://courses.cs.washington.edu/courses/cse322/08au/lec9.pdf">reference</a>.</p>
 
 		  <p>Read <b>Chapter 5</b> of the <i>Understanding
 		      Computation</i> book.</p>
 
+		  <p>The <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis">Church-Turing thesis</a>.</p>
+
 		  <p>If you're curious about what other machines
-		  beyond finite automata and Turing machines are used
+		  aside from finite automata and Turing machines are used
 		    in the field, read through <b>Chapter 4</b> of
 		    the <i>Understanding Computation</i> book, which
 		  describes pushdown automata &mdash; basically a
-		    finite automaton equipped with a stack.</p>
+		    finite automaton equipped with a stack. This gives you a class of machines that lands midway between finite automata and Turing machines in terms of the class of languages they can accept.</p>
 		    
 		</div>
 	</li>	  
