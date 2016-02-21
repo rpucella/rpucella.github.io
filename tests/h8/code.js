@@ -54,25 +54,135 @@ function setupEvents () {
 //    d3.select("#josephine-button")
 //	.on("click",function() { slideTo(600,600); });
 
-    d3.select("#return-to-overview")
-	.on("click",function() { slideTo(0,600); });
+    d3.select("#home")
+	.on("mouseenter",function() { d3.select("#home-hover").style("display","inline"); });
+
+    d3.select("#home-hover")
+	.style("cursor","pointer")
+	.on("click",function() { slideTo(0,600); })
+	.on("mouseleave",function() { d3.select("#home-hover").style("display","none"); });
+
+    d3.select("#previous")
+	.on("mouseenter",function() { d3.select("#previous-hover").style("display","inline"); })
+
+    d3.select("#previous-hover")
+	.style("cursor","pointer")
+	.on("click",function() { slideTo(300,600); })
+	.on("mouseleave",function() { d3.select("#previous-hover").style("display","none"); });
 
     d3.select("#detailedview")
 	.on("mouseenter",function() { d3.select("#detailedview-hover").style("display","inline"); });
-
+    
     d3.select("#detailedview-hover")
 	.style("cursor","pointer")
 	.on("click",function() { slideTo(900,600); })
 	.on("mouseleave",function() { d3.select("#detailedview-hover").style("display","none"); });
 
-    d3.select("#return-to-salesperson-button")
-	.on("click",function() { slideTo(300,600); });
-    
     d3.select("#changeview")
 	.on("click",switchView);
 
     d3.select("#assessment-button")
 	.on("click",function() { slideTo(1200,600); });
+
+
+    for (var i=1; i<19; i++) {
+	(function(closure_i){
+	    d3.select("#qcontract-"+closure_i)
+		.style("cursor","pointer")
+		.on("click",function() { hideQuestionDetails(closure_i); });
+	})(i);
+    }
+
+    enableQuestionClickEvents();
+
+}
+
+function enableQuestionClickEvents () {
+
+    for (var i = 1; i < 19; i++) {
+	(function(closure_i){ 
+	    d3.select("#question-"+closure_i)
+		.style("cursor","pointer")
+		.on("click",function() { showQuestionDetails(closure_i); });
+	})(i);
+    }
+}
+
+
+function disableQuestionClickEvents () {
+
+    for (var i = 1; i < 19; i++) {
+	(function(closure_i){ 
+	    d3.select("#question-"+closure_i)
+		.style("cursor",null)
+		.on("click",null);
+	})(i);
+    }
+}
+    
+
+
+function showQuestionDetails (num) { 
+
+    disableQuestionClickEvents();
+
+    d3.select("#qexpand-"+num)
+	.attr("transform","translate(0,300)")
+	.style("display","inline")
+	.transition()
+	.duration(300)
+	.attr("transform","translate(0,0)");
+
+    var min_shown = Math.max(1,num-3);
+
+    for (var i=0; i<min_shown; i++) {
+	d3.select("#question-"+i)
+	    .style("display","none");
+    }
+
+    for (var i=min_shown; i<19; i++) {
+	if (i !== num) {
+	    d3.select("#question-"+i)
+		.style("opacity","0.3");
+	} else {
+	    d3.select("#question-"+i)
+		.style("font-weight","bold");
+	}
+    }
+	    
+    var delta = 88 / 3;
+    var qs = d3.select("#questions")
+	.transition()
+	.duration(300)
+	.attr("transform","translate(0,"+(-delta*(min_shown-1))+")");
+}
+
+
+function hideQuestionDetails (num) { 
+    var id = "#qexpand-"+num;
+
+    d3.select(id)
+	.attr("transform","translate(0,0)")
+	.transition()
+	.duration(300)
+	.attr("transform","translate(0,300)");
+
+    d3.select("#questions")
+	.transition()
+	.duration(300)
+	.attr("transform","translate(0,0)");
+
+    setTimeout(function() { 
+	d3.select(id).style("display","none"); 
+	for (var i=0; i<19; i++) {
+	    d3.select("#question-"+i)
+		.style("display","inline")
+		.style("opacity","1")
+		.style("font-weight","normal");
+	}
+	enableQuestionClickEvents();
+
+    },300);
 
 }
 
@@ -96,8 +206,6 @@ function setupTeams () {
     console.log("teams = ",teams);
     GLOBAL.teams = teams;
 
-    console.log("about to print");
-
     d3.select("#main-g")
 	.selectAll("text.filters")
 	.data(teams)
@@ -113,11 +221,13 @@ function setupTeams () {
 				       e.classed("selected",false);
 				       e.classed("unselected",true);
 				       d3.selectAll("text.names-in-quads[data-team=\""+d+"\"]")
+					   .property("selected","false")
 					   .style("fill","#dddddd");
 				   } else {
 				       e.classed("selected",true);
 				       e.classed("unselected",false);
 				       d3.selectAll("text.names-in-quads[data-team=\""+d+"\"]")
+					   .property("selected","true")
 					   .style("fill",null);
 				   }});
 }
@@ -162,7 +272,7 @@ function placeNamesInQuads () {
 	.key(function(d) { return classifyScore(d[GLOBAL.view]); })
 	.map(GLOBAL.data);
 
-    console.log("byQuad = ",byQuad);
+    console.log("Data by quad = ",byQuad);
 
     layoutQuadrant(byQuad,[],Object.keys(byQuad))([]);
 }
@@ -170,7 +280,7 @@ function placeNamesInQuads () {
 
 function layoutQuadrant (byQuad,accumulator,quads) {
     
-    var quadMap = {"Order taker":"quad1",
+    var quadMap = {"Order Taker":"quad1",
 		   "Explainer":"quad2",
 		   "Navigator":"quad3",
 		   "Consultant":"quad4"};
@@ -244,25 +354,33 @@ function showNameOverview (i) {
     d3.select("#manager-assessment-score")
 	.text(entry.manager_score)
 
-    var MAX_SCORE = 72
-    var MIN_SCORE = 18
-
-    var x = d3.scale.linear()
-	.domain([MIN_SCORE,MAX_SCORE])
-	.range([0,1170-920])
-
-    d3.select("#self-assessment-dial")
-	.transition()
-	.duration(300)
-	.attr("transform","translate("+x(entry.self_score)+",0)");
-
-    d3.select("#manager-assessment-dial")
-	.transition()
-	.duration(300)
-	.attr("transform","translate("+x(entry.manager_score)+",0)");
+    var xData = {"Order Taker": [[18,26],[920,982]],
+		 "Explainer": [[27,45],[982,1045]],
+		 "Navigator": [[46,64],[1045,1108]],
+		 "Consultant": [[65,72],[1108,1170]]};
 
     var self_class = classifyScore(entry.self_score);
     var manager_class = classifyScore(entry.manager_score);
+    
+    x_self = d3.scale.linear()
+	.domain(xData[self_class][0])
+	.range([xData[self_class][1][0]-920,
+		xData[self_class][1][1]-920]);
+
+    x_manager = d3.scale.linear()
+	.domain(xData[manager_class][0])
+	.range([xData[manager_class][1][0]-920,
+		xData[manager_class][1][1]-920]);
+
+    d3.select("#self-assessment-dial_1_")
+	.transition()
+	.duration(300)
+	.attr("transform","translate("+x_self(entry.self_score)+",0)");
+
+    d3.select("#manager-assessment-dial_2_")
+	.transition()
+	.duration(300)
+	.attr("transform","translate("+x_manager(entry.manager_score)+",0)");
 
 /*
     d3.select("#overview-salesperson-self-class")
@@ -272,8 +390,8 @@ function showNameOverview (i) {
 	.text(entry.manager_score+" ("+(classifyScore(entry.manager_score))+")");
 */
 
-    d3.selectAll("#self-class-OrderTaker,#self-class-Explainer,#self-class-Consultant,#self-class-Navigator,#manager-class-OrderTaker,#manager-class-Explainer,#manager-class-Consultant,#manager-class-Navigator")
-	.attr("fill","#333333");
+    d3.selectAll("#self-class-Order-Taker,#self-class-Explainer,#self-class-Consultant,#self-class-Navigator,#manager-class-Order-Taker,#manager-class-Explainer,#manager-class-Consultant,#manager-class-Navigator")
+	.attr("fill","#666666");
 
     d3.select("#self-class-"+(self_class.replace(" ","-")))
 	.attr("fill","#9cdcf6")
@@ -336,7 +454,7 @@ function showNameOverview (i) {
   
 
 function drawAll (words) {
-    console.log("DRAW ALL = ",words);
+    console.log("Data to draw = ",words);
 
 /*
     var quadOrigin = {quad1:{x:450,y:750},
@@ -360,7 +478,8 @@ function drawAll (words) {
 
     q.enter().append("text")
 	.classed("names-in-quads",true)
-	.attr("data-team",function(d) { return d.team; })  // data- so that we can select it
+	.attr("data-team",function(d) { return d.team; })  // data- so that we can selectAll it
+	.property("selected","true")   // by default, all teams are selected
 	.attr("text-anchor", "middle")
 	.style("font-family","sans-serif")
 	.style("font-size",function(d) { return d.size+"px"; })
@@ -369,7 +488,7 @@ function drawAll (words) {
 	//.attr("transform","translate(150,150)")
 	.attr("transform",function(d) { return quadTranslate(0,0)[d.quad]; })
 	.text(function(d) { return d.text; })
-	.on("click",function(d) { console.log("clicked on ",d.text); console.log("index=",d.index); showNameOverview(d.index); });
+	.on("click",function(d) { if (this.selected==="true") { showNameOverview(d.index); }});
 
     q.exit().remove();
 
@@ -484,7 +603,7 @@ function classifyScore (sc) {
     if (sc < 18) {
 	return "?"
     } else if (sc < 27) {
-	return "Order taker";
+	return "Order Taker";
     } else if (sc < 46) { 
 	return "Explainer";
     } else if (sc < 65) { 
@@ -575,14 +694,15 @@ function readData () {
 
     var ids = Object.keys(result);
     for (var i=0; i<ids.length; i++) {
-	result[ids[i]].team = "Sample Team";
+	result[ids[i]].team = (ids[i]==="REP#97" || ids[i]==="REP#98" || ids[i]==="REP#99") ? 
+	                          "Imperial Team" : "Original Team";
     }
 
     for (var i=0; i<TEAM_W.length; i++) {
 	result["w_"+i] = {name:TEAM_W[i],
 			  self: random(m,Math.floor(Math.random()*4)+1),
 			  manager: random(m,Math.floor(Math.random()*4)+1),
-			  team: "Team W"};
+			  team: "W Team"};
     }
 
     return result;
@@ -686,6 +806,9 @@ var SAMPLE_DATA = {
     "REP#25":{name:"Thomas",
 	      manager:["d","c","d","a","a","b","b","b","c","b","b","c","c","d","b","b","a","d"],
 	      self:["c","c","c","d","c","c","d","b","b","c","c","c","b","b","c","b","b","c"]},
+    "REP#97":{name:"Gary",
+	      manager:["b","a","d","b","b","d","b","a","d","b","c","a","b","a","c","a","a","d"],
+	      self:["c","b","d","c","d","b","d","d","a","a","c","c","d","b","a","c","c","d"]},
     "REP#98":{name:"Napoleon",
 	      manager:["b","a","c","b","a","d","b","c","d","b","d","a","a","a","b","a","a","d"],
 	      self:["c","b","d","a","d","a","d","d","c","a","c","d","d","d","a","b","c","d"]},
