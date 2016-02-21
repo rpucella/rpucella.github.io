@@ -593,7 +593,46 @@ rej     |  X  X  X  X  b [b] /  /
 	    </p>
 
 <pre class="code">
-(Sample output coming soon)
+# run tm_q2_a "";;
+start  [>]
+...
+- : bool = true
+# run tm_q2_a "c";;
+start  [>] c 
+...
+- : bool = true
+# run tm_q2_a "cc";;
+start  [>] c  c 
+...
+- : bool = true
+# run tm_q2_a "dd";;
+start  [>] d  d 
+...
+- : bool = true
+# run tm_q2_a "cddc";;
+start  [>] c  d  d  c 
+...
+- : bool = true
+# run tm_q2_a "cdc";;
+start  [>] c  d  c 
+...
+- : bool = true
+# run tm_q2_a "ccdcc";;
+start  [>] c  c  d  c  c 
+...
+- : bool = true
+# run tm_q2_a "ccdccc";;
+start  [>] c  c  d  c  c  c 
+...
+- : bool = false
+# run tm_q2_a "ccdc";;
+start  [>] c  c  d  c 
+...
+- : bool = false
+# run tm_q2_a "dcdc";;
+start  [>] d  c  d  c 
+...
+- : bool = false
 </pre>
 	      
 
@@ -606,7 +645,50 @@ rej     |  X  X  X  X  b [b] /  /
 	    </p>
 
 <pre class="code">
-(Sample output coming soon)
+# run tm_q2_b "";;
+start  [>]
+...
+- : bool = true
+# run tm_q2_b "baaa";;
+start  [>] b  a  a  a 
+...
+- : bool = true
+# run tm_q2_b "bbaaaaaa";;
+start  [>] b  b  a  a  a  a  a  a 
+...
+- : bool = true
+# run tm_q2_b "bbbaaaaaaaaa";;
+start  [>] b  b  b  a  a  a  a  a  a  a  a  a 
+...
+- : bool = true
+# run tm_q2_b "b";;
+start  [>] b 
+...
+- : bool = false
+# run tm_q2_b "ba";;
+start  [>] b  a 
+...
+- : bool = false
+# run tm_q2_b "baa";;
+start  [>] b  a  a 
+...
+- : bool = false
+# run tm_q2_b "baaaa";;
+start  [>] b  a  a  a  a 
+...
+- : bool = false
+# run tm_q2_b "bbaaaaaaa";;
+start  [>] b  b  a  a  a  a  a  a  a 
+...
+- : bool = false
+# run tm_q2_b "aaa";;
+start  [>] a  a  a 
+...
+- : bool = false
+# run tm_q2_b "abbb";;
+start  [>] a  b  b  b 
+...
+- : bool = false
 </pre>
 
 	</ol>
@@ -633,7 +715,74 @@ rej     |  X  X  X  X  b [b] /  /
 	    the same length.)</p>
 
 <pre class="code">
-(Sample output coming soon)
+# run binaryAddition "";;
+start  [>] 
+...
+- : bool = false
+# run binaryAddition "##";;
+start  [>] # # 
+...
+- : bool = false
+# run binaryAddition "000";;
+start  [>] 0 0 0 
+...
+- : bool = false
+# run binaryAddition "000#000";;
+start  [>] 0 0 0 # 0 0 0 
+...
+- : bool = false
+# run binaryAddition "000##000";;
+start  [>] 0 0 0 # # 0 0 0 
+...
+- : bool = false
+# run binaryAddition "000#000#000";;
+start  [>] 0 0 0 # 0 0 0 # 0 0 0 
+...
+- : bool = true
+# run binaryAddition "001#000#001";;
+start  [>] 0 0 1 # 0 0 0 # 0 0 1 
+...
+- : bool = true
+# run binaryAddition "000#001#000";;
+start  [>] 0 0 1 # 0 0 0 # 0 0 0 
+...
+- : bool = false
+# run binaryAddition "000#001#001";;
+start  [>] 0 0 1 # 0 0 1 # 0 0 0 
+...
+- : bool = true
+# run binaryAddition "001#000#011";;
+start  [>] 0 0 1 # 0 0 0 # 0 1 1
+...
+- : bool = false
+# run binaryAddition "001#001#010";;
+start  [>] 0 0 1 # 0 0 1 # 0 1 0 
+...
+- : bool = true
+# run binaryAddition "001#001#011";;
+start  [>] 0 0 1 # 0 0 1 # 0 1 1 
+...
+- : bool = false
+# run binaryAddition "001#001#110";;
+start  [>] 0 0 1 # 0 0 1 # 1 1 0 
+...
+- : bool = false
+# run binaryAddition "101#001#110";;
+start  [>] 1 0 1 # 0 0 1 # 1 1 0 
+...
+- : bool = true
+# run binaryAddition "101#010#111";;
+start  [>] 1 0 1 # 0 1 0 # 1 1 1 
+...
+- : bool = true
+# run binaryAddition "00111#10101#11110";;
+start  [>] 0 0 1 1 1 # 1 0 1 0 1 # 1 1 1 1 0 
+...
+- : bool = false
+# run binaryAddition "00111#10101#11100";;
+start  [>] 0 0 1 1 1 # 1 0 1 0 1 # 1 1 1 0 0 
+...
+- : bool = true
 </pre>
 
       </li>
