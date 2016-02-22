@@ -16,7 +16,8 @@ var GLOBAL = {
     data: null,
     view:"self_score",
     words:{"self_score":[],
-	   "manager_score":[]}
+	   "manager_score":[]},
+    buyer: "None"
 }
  
 
@@ -59,7 +60,7 @@ function setupEvents () {
 
     d3.select("#home-hover")
 	.style("cursor","pointer")
-	.on("click",function() { slideTo(0,600); })
+	.on("click",function() { disableActionPlan(); slideTo(0,600); })
 	.on("mouseleave",function() { d3.select("#home-hover").style("display","none"); });
 
     d3.select("#previous")
@@ -67,23 +68,45 @@ function setupEvents () {
 
     d3.select("#previous-hover")
 	.style("cursor","pointer")
-	.on("click",function() { slideTo(300,600); })
+	.on("click",function() { disableActionPlan(); slideTo(300,600); })
 	.on("mouseleave",function() { d3.select("#previous-hover").style("display","none"); });
+
+
+    d3.select("#home-action")
+	.on("mouseenter",function() { d3.select("#home-action-hover").style("display","inline"); });
+
+    d3.select("#home-action-hover")
+	.style("cursor","pointer")
+	.on("click",function() { disableActionPlan(); slideTo(0,600); })
+	.on("mouseleave",function() { d3.select("#home-action-hover").style("display","none"); });
+
+    d3.select("#previous-action")
+	.on("mouseenter",function() { d3.select("#previous-action-hover").style("display","inline"); })
+
+    d3.select("#previous-action-hover")
+	.style("cursor","pointer")
+	.on("click",function() { slideTo(900,600); })
+	.on("mouseleave",function() { d3.select("#previous-action-hover").style("display","none"); });
+
 
     d3.select("#detailedview")
 	.on("mouseenter",function() { d3.select("#detailedview-hover").style("display","inline"); });
     
     d3.select("#detailedview-hover")
 	.style("cursor","pointer")
-	.on("click",function() { slideTo(900,600); })
+	.on("click",function() { enableActionPlan(); slideTo(900,600); })
 	.on("mouseleave",function() { d3.select("#detailedview-hover").style("display","none"); });
 
     d3.select("#changeview")
 	.on("click",switchView);
 
-    d3.select("#assessment-button")
-	.on("click",function() { slideTo(1200,600); });
-
+    d3.select("#actionplan")
+	.on("mouseenter",function() { d3.select("#actionplan-hover").style("display","inline"); });
+    
+    d3.select("#actionplan-hover")
+	.style("cursor","pointer")
+	.on("click",function() { slideTo(1200,600); })
+	.on("mouseleave",function() { d3.select("#actionplan-hover").style("display","none"); });
 
     for (var i=1; i<19; i++) {
 	(function(closure_i){
@@ -95,7 +118,61 @@ function setupEvents () {
 
     enableQuestionClickEvents();
 
+    d3.select("#selector-procurer")
+	.style("cursor","pointer")
+	.on("click",function() { setBuyerArchetype("Procurer");});
+
+    d3.select("#selector-reactor")
+	.style("cursor","pointer")
+	.on("click",function() { setBuyerArchetype("Reactor");});
+
+    d3.select("#selector-improver")
+	.style("cursor","pointer")
+	.on("click",function() { setBuyerArchetype("Improver");});
+
+    d3.select("#selector-transformer")
+	.style("cursor","pointer")
+	.on("click",function() { setBuyerArchetype("Transformer");});
 }
+
+
+function setBuyerArchetype (arch) {
+    GLOBAL.buyer = arch;
+
+    var highlight = {Procurer: "#buyer-procurer",
+		     Reactor: "#buyer-reactor",
+		     Improver: "#buyer-improver",
+		     Transformer: "#buyer-transformer"};
+
+    d3.selectAll("#buyer-procurer,#buyer-reactor,#buyer-improver,#buyer-transformer,#buyer-procurer-mark,#buyer-reactor-mark,#buyer-improver-mark,#buyer-transformer-mark")
+	.style("display","none");
+
+    d3.selectAll(highlight[arch]+","+highlight[arch]+"-mark")
+	.style("display","inline");
+
+    
+}
+
+
+function enableActionPlan () {
+    d3.selectAll("#detailedview,#detailedview-hover")
+	.style("display","none");
+
+    d3.select("#actionplan")
+	.style("display","inline");
+
+    d3.select("#actionplan-hover")
+	.style("display","none");
+
+}
+
+function disableActionPlan () {
+    d3.selectAll("#actionplan,#actionplan-hover")
+	.style("display","none");
+
+    d3.select("#detailedview")
+	.style("display","inline");
+}    
 
 function enableQuestionClickEvents () {
 
@@ -121,6 +198,8 @@ function disableQuestionClickEvents () {
 }
     
 
+// FIXME - reset questions when moving out of the question details pane!
+
 
 function showQuestionDetails (num) { 
 
@@ -135,10 +214,15 @@ function showQuestionDetails (num) {
 
     var min_shown = Math.max(1,num-3);
 
-    for (var i=0; i<min_shown; i++) {
+    for (var i=1; i<min_shown; i++) {
 	d3.select("#question-"+i)
 	    .style("display","none");
     }
+
+    d3.selectAll("#questions text.self")
+	.style("display",function(d,i) { return (i+1 < min_shown) ? "none" : "inline"});
+    d3.selectAll("#questions text.manager")
+	.style("display",function(d,i) { return (i+1 < min_shown) ? "none" : "inline"});
 
     for (var i=min_shown; i<19; i++) {
 	if (i !== num) {
@@ -180,6 +264,12 @@ function hideQuestionDetails (num) {
 		.style("opacity","1")
 		.style("font-weight","normal");
 	}
+
+	d3.selectAll("#questions text.self")
+	    .style("display","inline");
+	d3.selectAll("#questions text.manager")
+	    .style("display","inline");
+
 	enableQuestionClickEvents();
 
     },300);
@@ -382,14 +472,6 @@ function showNameOverview (i) {
 	.duration(300)
 	.attr("transform","translate("+x_manager(entry.manager_score)+",0)");
 
-/*
-    d3.select("#overview-salesperson-self-class")
-	.text(entry.self_score+" ("+(classifyScore(entry.self_score))+")");
-
-    d3.select("#overview-salesperson-manager-class")
-	.text(entry.manager_score+" ("+(classifyScore(entry.manager_score))+")");
-*/
-
     d3.selectAll("#self-class-Order-Taker,#self-class-Explainer,#self-class-Consultant,#self-class-Navigator,#manager-class-Order-Taker,#manager-class-Explainer,#manager-class-Consultant,#manager-class-Navigator")
 	.attr("fill","#666666");
 
@@ -399,13 +481,78 @@ function showNameOverview (i) {
     d3.select("#manager-class-"+(manager_class.replace(" ","-")))
 	.attr("fill","#9cdcf6")
 
-
-//    d3.select(
-//
-//    d3.selectAll("#self-class-OrderTaker,#self-class-Explainer,#self-class-Consultant,#self-class-Navigator")
-//	.attr("fill","#333333");
-
     slideTo(300,600);
+
+    
+    // ANSWERS TO THE QUESTIONS
+
+    var color = function(d,i) { 
+	if (Math.abs(entry.spread[i]) > 1) {
+	    return "red";
+	} else {
+	    return "#878787";
+	}
+    }
+
+    d3.select("#questions")
+	.selectAll("text.self")
+	.data(entry.self)
+	.enter()
+	.append("text")
+	.classed("self",true)
+	.style("font-family","sans-serif")
+	.style("font-weight","bold")
+	.style("font-size","14pt")
+	// .style("fill",color)
+	.attr("transform",function(d,i) { return "translate(400,0) "+d3.select("#question-"+(i+1)+" > text").attr("transform"); });
+
+    d3.select("#questions")
+	.selectAll("text.manager")
+	.data(entry.manager)
+	.enter()
+	.append("text")
+	.classed("manager",true)
+	.style("font-family","sans-serif")
+	.style("font-weight","bold")
+	.style("font-size","14pt")
+	// .style("fill",color)   // "#878787")
+	.attr("transform",function(d,i) { return "translate(510,0) "+d3.select("#question-"+(i+1)+" > text").attr("transform"); });
+
+    d3.selectAll("#questions > text.self")
+	.style("fill",color)
+	.text(function(d,i) { return d.toUpperCase(); });
+
+    d3.selectAll("#questions > text.manager")
+	.style("fill",color)
+	.text(function(d,i) { return d.toUpperCase(); });
+
+    
+    // select an action plan
+
+    d3.selectAll("#action-no-archetype,#action-aligned,#action-procurer,#action-reactor,#action-improver,#action-transformer")
+	.style("display","none");
+
+    
+    var id;
+    var archMap = {"None":"#action-no-archetype",
+		   "Procurer":"#action-procurer",
+		   "Reactor":"#action-reactor",
+		   "Improver":"#action-improver",
+		   "Transformer":"#action-transformer"};
+
+    if (alignedArchetypes(manager_class,GLOBAL.buyer)) {
+	id = "#action-aligned";
+    } else {
+	id = archMap[GLOBAL.buyer];
+    }
+
+    d3.select(id)
+	.style("display","inline");
+
+    return;
+
+
+    // older version
 
     d3.selectAll("#details")
 	.selectAll("text.questions")
@@ -447,10 +594,17 @@ function showNameOverview (i) {
     d3.selectAll("#details > text")
 	.text(function(d) { return d; });
 
-    
 }
 
-  
+function alignedArchetypes (seller, buyer) {
+
+    var align = {"Order Taker":"Procurer",
+		 "Explainer":"Reactor",
+		 "Navigator":"Improver",
+		 "Consultant":"Transformer"};
+
+    return (buyer===align[seller]);
+}
   
 
 function drawAll (words) {
@@ -565,8 +719,6 @@ function setupData () {
 
     GLOBAL.translation = m;
 
-    ///console.log(m);
-
     computeScores(m);
 }
 
@@ -580,7 +732,16 @@ function computeScores (code) {
 	///console.log(results[i]);
 	results[i].self_score = score(results[i].self,code);
 	results[i].manager_score = score(results[i].manager,code);
+	results[i].spread = computeSpread(results[i].self,results[i].manager,code);
     }
+}
+
+function computeSpread (self,manager,code) {
+    var result = [];
+    for (var i=0; i<self.length; i++) {
+	result.push(answerValue(i+1,self[i])-answerValue(i+1,manager[i]));
+    }
+    return result;
 }
 
 function answerValue (question, answer) {
