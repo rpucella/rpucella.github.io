@@ -16,7 +16,7 @@
       hr { margin-top: 50px; }
 
         code,tt,pre {
-          font-size: 130%;
+          font-size: 140%;
         }
 	
         div.lect {
@@ -173,27 +173,68 @@ li > p { margin-top:0;}
 
     <p>For this homework, we use the same type of Turing machines as
       in Homework 5. I've provided you with an implementation of
-      Turing machines that can be run via function \t{run}. As in
+      Turing machines that can be run via function <tt>run</tt>. As in
       Homework 5, the only types of Turing machines <tt>run</tt> can
-      execute are of type <tt>string tm</tt>. But we're going to
-      generalize things a little bit here. </p>
+      execute are of type <tt>string tm</tt>. That's because the
+      Turing machines prints information such as the state it's in at
+      every step, and that forces the states to be something specific,
+      here, strings. (We're going to fix that problem here, among other
+      things.) </p>
 
-    <p>In this homework, we'll explore an easier way to program Turing
-    machines. 
-Well, maybe \emph{easier} is a bit misleading.
+    <p>In this homework, we'll explore a slightly easier way to program Turing
+      machines.</p>
 
-Depending on how you implemented the Turing machine for \emph{Binary
-  Sum} in the last homework, you probably noticed that there
-was a lot of redundancy in the state transitions. Some of that
+<p>
+Depending on how you implemented the Turing machine for binary
+addition in Homework 5, you probably noticed that there
+was a fair amount of redundancy in the state transitions. Some of that
 redundancy it turns out can be eliminated by encoding information in
-the finite control of the Turing machine---that is, in their states.  
+the finite control of the Turing machine &mdash; that is, in its
+states.
+</p>
 
-Consider the Turing machine above that decides the language 
-$A$
-consisting of all strings over $\{\t0,\t1\}$ that either contain
-an even number of $\t0$s and have no sequence of more than two
-consecutive $\t0$s, or that contain an odd number of $\t0$s and have
-no sequence of more than two consecutive $\t1$s. 
+<p>
+To illustrate, let's consider a slightly simpler language. Consider
+the language <i>Add1</i>, consisting of all strings of the
+form <tt><i>u</i><i>#v</i></tt> where <tt><i>u</i></tt>
+and <tt><i>v</i></tt> are non-empty strings of the same length over <tt>{0,1}</tt> and
+<tt><i>v</i></tt> is <tt><i>u</i></tt>+1 in binary. The Turing machine
+implementing this language is a simpler variant than the Turing
+machine you implemented for binary addition, but shares similar
+features. In particular, you need to match a symbol after
+the <tt>#</tt> that depends on the symbol you saw before
+the <tt>#</tt>, and you need to remember a carry in some cases. 
+</p>
+
+<p>
+A possible structure for the Turing machine is as follows:
+<ul>
+<li>Scan from left to right, making sure the string has the right
+  shape</li>
+<li>Scan from left to right, finding the last <tt>0</tt>
+or <tt>1</tt> before the <tt>#</tt>, crossing it out, and then
+scanning past the <tt>#</tt> to find the last <tt>0</tt> or <tt>1</tt>
+before the end of the string, and checking that it matches the value
+  seen before the <tt>#</tt> plus any carry from the previous
+  iteration.</li>
+<li>Continue until all the symbols have been crossed out (accept) or
+  you exhaust the symbols before or after the <tt>#</tt> (reject). 
+</li>
+</ul>
+</p>
+
+<p>
+Here is a Turing machine that implements the above, where the states
+are not just strings, but 
+rather <i>structured</i> values. For this particular example, I chose
+a state to be a tuple of 
+the form <i>(name,m,c)</i> where <i>name</i> is a name for the
+state, <i>m</i> is either -1 (the uninitialized value) or 0 or 1 (representing
+whether or not the symbol read before the <tt>#</tt> when scanning was
+a <tt>0</tt> or a <tt>1</tt>), and <i>c</i> is the carry from
+iteration to iteration, set to -1 (uninitialized) or to 0 or 1 when there is
+no carry or a carry, respectively. Other choices are possible. 
+</p>
 
 <pre>
 let add1 = 
@@ -228,7 +269,7 @@ let add1 =
     | (("scan-1",-1,carry),"X") -> (("scan-1",-1,carry),"X",0)
     | (("scan-1",-1,carry),"0") -> (("skip",0,carry),"X",1)
     | (("scan-1",-1,carry),"1") -> (("skip",1,carry),"X",1)
-    | (("scan-1",-1,0),">") -> (("check-done",-1,-1),">",1)  (* carry should be 0 to be done *)
+    | (("scan-1",-1,0),">") -> (("check-done",-1,-1),">",1)  (* carry should be 0 to accept *)
 
     | (("skip",v,carry),"#") -> (("go-end-2",v,carry),"#",1)
     | (("skip",v,carry),"X") -> (("skip",v,carry),"X",1)
@@ -247,106 +288,50 @@ let add1 =
     | (_,sym) -> (("rej",-1,-1),sym,1))}
 </pre>
 
+    <p>Note that the states are constructed via a
+    function <tt>triples</tt> that you will implement in Problem 1. It
+    basically takes the cross product of its three arguments. So the
+      above machine has 90 states. It's a finite number of states
+    &mdash; that's because I don't allow arbitary integers, but only
+    -1,0,1. </p>
 
-We saw that the machine works in two phases.
-In the second phase, the states that determine whether there are more
-than two $\t0$s in sequence and those that determine whether there are more
-than two $\t1$s in sequence are basically the same, except that in one
-case they keep an eye out for $\t0$s, and in the other they keep an
-eye out for $\t1$s. But the logic is the same. That one bit of
-information (whether we're in case 0 or in case 1) we can record in
-the state itself.
+    <p>The transition function, and this is key, can use
+    pattern-matching and variables to represent a whole swat of
+    transitions when the transition doesn't depend on part of the
+    state. In <tt>add1</tt>, most of the
+    transitions during the iteration do not depend on the carry part
+    of the state. So we can just match on the name of the state, and
+    pass the carry part through to the resulting state. We could spell
+    it out by having different transitions for all the possible values
+    of the carry (-1,0,1), but we don't need to. That's where we gain
+    a lot of the simplification. Look at the code for matching in
+    state named <tt>scan-2</tt>. Those two rules take the place of the
+    four rules that would be needed otherwise (one for every possible
+    choice of <tt>v</tt> and <tt>carry</tt>) and not only is it
+    shorter but it's also easier to see what's happening.</p>
 
-Look at the way I named the states: states \t{"q1/0"} and \t{"q1/1"}
-play the same role, except that \t{"q1/0"} is in that part of the
-machine that looks for $\t0s$ in sequence in the second phase, while
-\t{"q1/1"} is in that part of the machine that looks for $\t1s$ in
-sequence in the second phase. Right now, that's just a convention in
-how I named my states. 
+    <p>There's only one problem with the above. The resulting machine
+      has type <tt>(string * int * int) tm</tt>. Which is fine, except
+      that our <tt>run</tt> function expects a <tt>string tm</tt>, as
+      I mentioned above. </p>
 
-But I can make that information explicit by using \emph{structured}
-states. We can represent states as a name
-in conjunction with some information, such as the ``case'' 0 or 1 that
-applies. 
+    <p>The way we're going to fix that annoyance (Problem 2 below) is
+      by implementing a function to <i>transform</i> a Turing
+      machine with structured states into an equivalent Turing machine
+      where the states are just strings. We'll need to provide a
+      transformation function that can transform a tuple into a string
+      (which can be anything but to be readable, we'll just flatten
+      the representation into a string), and modify the transitions of
+      the Turing machine to work with those new states.
+    </p>
 
-This lets us write transitions that do not depend on the
-encoded information by matching simply on the name \t{"q1"}, while transitions
-that do depend on the extra information can transition differently
-based on the value of the bit. 
+    <p>
+    Here are a few sample runs of the machine with a correctly
+    implemented <tt>transform</tt> function. Note the state
+    transformation function, which uses <tt>^</tt> to concatenate
+    strings, and <tt>string_of_int</tt> to convert an integer into a
+    string.</p>
 
-To show how structured states can simplify the description
-of the Turing machine for $A$, here is another Turing machine that
-decides $A$, written using structured states:
-\begin{code}
-type even_odd_sequence_state = 
-  | Simple of string
-  | BitTag of string * string
-
-let evenOddSequence_struct = 
-  let delta (p,a) = 
-    match p,a with
-    | Simple("even"), ">" -> (Simple("even"), ">", Right)
-    | Simple("even"), "0" -> (Simple("odd"), "0", Right)
-    | Simple("even"), "1" -> (Simple("even"), "1", Right)
-    | Simple("even"), "_" -> (BitTag("q1", "0"), "_", Left)
-          
-    | Simple("odd"), "0" -> (Simple("even"), "0", Right)
-    | Simple("odd"), "1" -> (Simple("odd"), "1", Right)
-    | Simple("odd"), "_" -> (BitTag("q1", "1"), "_", Left)
-          
-    | BitTag("q1", t), ">" -> (Simple("acc"), ">", Right)
-    | BitTag("q1", t), sym when t = sym -> (BitTag("q2", t), sym, Left)
-    | BitTag("q1", t), sym -> (BitTag("q1", t), sym, Left)
-          
-    | BitTag("q2", t), ">" -> (Simple("acc"), ">", Right)
-    | BitTag("q2", t), sym when t = sym -> (BitTag("q3", t), sym, Left)
-    | BitTag("q2", t), sym -> (BitTag("q1", t), sym, Left)
-          
-    | BitTag("q3", t), ">" -> (Simple("acc"), ">", Right)
-    | BitTag("q3", t), sym when t <> sym -> (BitTag("q1", t), sym, Left)
-          
-    | Simple("acc"), sym -> (Simple("acc"), sym, Right)
-    | _, sym -> (Simple("rej"), sym, Right)  in
-  let states = [ Simple("even"); Simple("odd"); Simple("acc"); Simple("rej");
-                 BitTag("q1", "0"); BitTag("q2", "0"); BitTag("q3", "0"); 
-                 BitTag("q1", "1"); BitTag("q2", "1"); BitTag("q3", "1") ]  in
-  let alph = ["0"; "1"; ">"; "_"]  in
-  let string_of st = 
-    match st with
-    | Simple(s) -> s
-    | BitTag(s,b) -> s^"|"^b  in
-  transform string_of
-    { tm_states = states;
-      tm_input_alph = ["0"; "1"];
-      tm_tape_alph = alph;
-      tm_leftmost = ">";
-      tm_blank = "_";
-      tm_delta = make_delta states alph delta;
-      tm_start = Simple("even");
-      tm_accept = Simple("acc");
-      tm_reject = Simple("rej") }
-\end{code}
-It doesn't look like it's a big win, but it makes a difference for
-larger machines, as we shall see in Problems 2 and 3 below. 
-
-There's one tiny problem with doing things that way: states are no
-longer strings---in the above example, they're elements of type
-\t{even\_odd\_sequence\_state}. This is a problem because the \t{run}
-function expects states to be strings, in order to be able to print
-configurations during execution. It's annoying, but that's the way it
-is. 
-
-The fix is to write a function \t{transform} (which you'll write in
-Problem 1) to take a Turing machine where states have some type
-$T$ and transform it into a machine where states are strings. We
-do this simply by providing a function to convert values of type $T$
-into strings. In the above example, function \t{string\_of} is what
-does the conversion. You can use pretty much anything you want as a
-conversion function, as long as it yields strings, and as long as two
-distinct states get converted to distinct strings. (What happens if
-you don't have that last property?)
-
-Here are a few sample runs of the machine:
 <pre>
 # let m = transform add1 (fun (x,y,z) -> x^"|"^(string_of_int y)^"|"^(string_of_int z));;
 val m : string tm =
@@ -591,6 +576,11 @@ rej|-1|-1          >  0  X  X  #  0  1 [X] _
 
       <li> <p><b>Easy Warm Up</b></p>
 
+	<p>The code in <tt>homework6.ml</tt> includes a
+	  function <tt>pairs</tt> of type <tt>'a list -> 'b list ->
+	  ('a * 'b) list</tt> which is basically
+	  function <tt>all_pairs</tt> from Homework 4.</p>
+
 	<ol class="letter">
 
 <!--
@@ -603,17 +593,32 @@ rej|-1|-1          >  0  X  X  #  0  1 [X] _
 	  </li>
 -->
 
-	  <li> <p>Function <tt>pairs</tt> of type <tt>'a
-		list -> 'b list -> ('a * 'b) list</tt><p> in your
-	      homework code is basically function <tt>all_pairs</tt>
-	      from Homework 4.</p>
-
-	    <p>Code a function <tt class="code">triples</tt> of
+	  <li> <p>Code a function <tt class="code">triples</tt> of
 	      type <tt class="code">'a list -> 'b list -> 'c list ->
-	      ('a * 'b * 'c) list</tt> which...
+		('a * 'b * 'c) list</tt> where <tt>(triples xs ys
+		zs)</tt> returns the list of all
+	      triples <i>(a,b,c)</i> where <i>a</i> is an element
+	      of <tt>xs</tt>, <i>b</i> is an element of <tt>ys</tt>,
+	      and <i>c</i> is an element of <tt>zs</tt>.  Order is not important.
 	    </p>
 
 <pre class="code">
+# triples [] [] [];;
+- : ('a * 'b * 'c) list = []
+# triples [] ["a";"b"] [100;101];;
+- : ('a * string * int) list = []
+# triples [1;2] [] [100;101];;
+- : (int * 'a * int) list = []
+# triples [1;2] ["a";"b"] [];;
+- : (int * string * 'a) list = []
+# triples [1] ["a"] [100];;
+- : (int * string * int) list = [(1, "a", 100)]
+# triples [1;2;3] ["a";"b"] [100;101;102];;
+- : (int * string * int) list =
+[(1, "a", 100); (1, "a", 101); (1, "a", 102); (1, "b", 100); (1, "b", 101);
+ (1, "b", 102); (2, "a", 100); (2, "a", 101); (2, "a", 102); (2, "b", 100);
+ (2, "b", 101); (2, "b", 102); (3, "a", 100); (3, "a", 101); (3, "a", 102);
+ (3, "b", 100); (3, "b", 101); (3, "b", 102)]
 </pre>
 	  </li>
 
@@ -621,20 +626,56 @@ rej|-1|-1          >  0  X  X  #  0  1 [X] _
 	    <p> Code a
 	      function <tt class="code">quads</tt> of
 	      type <tt class="code">'a list -> 'b list -> 'c list ->
-		'd list -> ('a * 'b * 'c * 'd) list</tt> which...
+		'd list -> ('a * 'b * 'c * 'd) list</tt>
+	      where <tt>(quads xs ys zs ws)</tt> returns the list of all
+	      tuples <i>(a,b,c,d)</i> where <i>a</i> is an element
+	      of <tt>xs</tt>, <i>b</i> is an element of <tt>ys</tt>,
+	      <i>c</i> is an element of <tt>zs</tt>, and <i>d</i> is
+	      an element of <tt>ws</tt>. Order is not important.
 	    </p>
 
 <pre class="code">
+# quads [] [] [] [];;
+- : ('a * 'b * 'c * 'd) list = []
+# quads [] ["a";"b"] [100;101] [true;false];;
+- : ('a * string * int * bool) list = []
+# quads [1;2] [] [100;101] [true;false];;
+- : (int * 'a * int * bool) list = []
+# quads [1;2] ["a";"b"] [] [true;false];;
+- : (int * string * 'a * bool) list = []
+# quads [1;2] ["a";"b"] [100;101] [];;
+- : (int * string * int * 'a) list = []
+# quads [1] ["a"] [100] [true];;
+- : (int * string * int * bool) list = [(1, "a", 100, true)]
+# quads [1;2] ["a";"b"] [100;101] [true;false];;
+- : (int * string * int * bool) list =
+[(1, "a", 100, true); (1, "a", 100, false); (1, "a", 101, true);
+ (1, "a", 101, false); (1, "b", 100, true); (1, "b", 100, false);
+ (1, "b", 101, true); (1, "b", 101, false); (2, "a", 100, true);
+ (2, "a", 100, false); (2, "a", 101, true); (2, "a", 101, false);
+ (2, "b", 100, true); (2, "b", 100, false); (2, "b", 101, true);
+ (2, "b", 101, false)]
 </pre>
 	  </li>
 
 
 
 	  <li><p>Code a function <tt class="code">range</tt> of
-	      type <tt class="code">int -> int list</tt> which...
+	      type <tt class="code">int -> int list</tt>
+	      where <tt>(range n)</tt> returns the list of all integers
+	      from <tt>0</tt> to <tt>n</tt>, inclusively. It should
+	      return the empty list if <tt>n</tt>&lt;0. Order is not important.
 	    </p>
 
 <pre class="code">
+# range (-1);;
+- : int list = []
+# range 0;;
+- : int list = [0]
+# range 3;;
+- : int list = [3; 2; 1; 0]
+# range 17;;
+- : int list = [17; 16; 15; 14; 13; 12; 11; 10; 9; 8; 7; 6; 5; 4; 3; 2; 1; 0]
 </pre>
 	  </li>
 
@@ -659,41 +700,129 @@ rej|-1|-1          >  0  X  X  #  0  1 [X] _
 
 	  <li> <p>Code a function <tt class="code">transformStates</tt> of
 	      type <tt class="code">'a list -> ('a -> b) -> 'b
-	      list</tt> which...  
+		list</tt> where <tt>(transformStates states f)</tt>
+	      returns the result of applying transformation <tt>f</tt>
+	      to every state in <tt>states</tt>.
 	    </p>
 
 <pre class="code">
+# let trans (x,y) = x^"/"^(string_of_int y);;
+val trans : string * int -> string = <fun>
+# trans ("hello",10);;
+- : string = "hello/10"
+
+# transformStates [] trans;;
+- : string list = []
+# transformStates [("a",1);("b",2);("c",3)] trans;;
+- : string list = ["a/1"; "b/2"; "c/3"]
 </pre>
 	  </li>
 
 
 	  <li> <p>Code a function <tt class="code">find_original</tt> of
-	      type <tt class="code">'a list -> ('a -> 'b) -> 'b -> 'a</tt> which...  
+	      type <tt class="code">'a list -> ('a -> 'b) -> 'b ->
+		'a</tt> where <tt>(find_original states f target)</tt>
+	      returns the state <tt>s</tt> in <tt>states</tt> for
+	      which <tt>(f s)</tt> is <tt>target</tt>. In other words,
+	      it returns the original state that transforms
+	      to <tt>target</tt>. 
 	    </p>
 
 <pre class="code">
+# let trans (x,y) = x^"/"^(string_of_int y);;
+val trans : string * int -> string = <fun>
+# trans ("hello",10);;
+- : string = "hello/10"
+
+# find_original [("a",1);("b",2);("c",3)] trans "a/1";;
+- : string * int = ("a", 1)
+# find_original [("a",1);("b",2);("c",3)] trans "b/2";;
+- : string * int = ("b", 2)
+# find_original [("a",1);("b",2);("c",3)] trans "c/3";;
+- : string * int = ("c", 3)
+# find_original [("a",1);("b",2);("c",3)] trans "d/3";;
+Exception: Failure "cannot find original value".
 </pre>
 	  </li>
 
 
 	  <li> <p>Code a function <tt class="code">transformDelta</tt> of
-	      type <tt class="code">('a -> 'c) -> 'a list -> ('a * 'b
-	      -> 'a * 'b * int) -> (('c * 'b) -> ('c * 'b *
-	      int)) </tt> which...   
+	      type <tt class="code">'a list -> ('a * 'b
+	      -> 'a * 'b * int) -> ('a -> 'c) -> ('c * 'b -> 'c * 'b *
+		int) </tt> where <tt>(transformDelta states delta
+	      f)</tt> takes a a list of <tt>states</tt> and a Turing
+	      machine transition function <tt>delta</tt> as well as a
+	      state transformation function <tt>f</tt> and
+	      returns <i>a new transition function</i> with same
+	      transitions as <tt>delta</tt> except using the
+	      transformed states instead of the original states. Thus,
+	      if <tt>delta(p,a)</tt> is <tt>(q,b,d)</tt>, then the new
+	      transition function takes <tt>(f p,a)</tt> to <tt>(f
+	      q,b,d)</tt>. 
 	    </p>
+	    
+	    <p><b>Hint:</b> you may find
+	      function <tt>find_original</tt> useful. Just
+	      sayin'. </p>
+
+	    <p><b>Also:</b> if you get the answer to this one right and you
+	    understand what you're doing, then you've understood
+	    everything there is to understand about higher-order
+	      functions. Kudos.</p>
 
 <pre class="code">
+# let trans (x,y) = x^"/"^(string_of_int y);;
+val trans : string * int -> string = <fun>
+# trans ("hello",10);;
+- : string = "hello/10"
+
+# let delta x = match x with
+                | (("a",1),"0") -> (("b",2),"0",0)
+                | (("a",1),"1") -> (("c",3),"1",0)
+                | (("b",2),"0") -> (("c",3),"0",0)
+                | (("b",2),"1") -> (("a",1),"1",0)
+                | (("c",3),"0") -> (("a",1),"0",1)
+                | (("c",3),"1") -> (("b",2),"1",1)
+                | (_,sym) -> (("a",1),sym,1)  ;;
+val delta : (string * int) * string -> (string * int) * string * int = <fun>
+# delta(("a",1),"0");;
+- : (string * int) * string * int = (("b", 2), "0", 0)
+# delta(("b",2),"0");;
+- : (string * int) * string * int = (("c", 3), "0", 0)
+# delta(("c",3),"0");;
+- : (string * int) * string * int = (("a", 1), "0", 1)
+# let new_delta = transformDelta [("a",1);("b",2);("c",3)] delta trans;;
+val new_delta : string * string -> string * string * int = <fun>
+# new_delta("a/1","0");;
+- : string * string * int = ("b/2", "0", 0)
+# new_delta("b/2","0");;
+- : string * string * int = ("c/3", "0", 0)
+# new_delta("c/3","0");;
+- : string * string * int = ("a/1", "0", 1)
 </pre>
 	  </li>
 
 
 	  <li> <p>Code a function <tt class="code">transform</tt> of
 	      type <tt class="code">'a tm -> ('a -> 'b) -> 'b tm</tt>
-	      which...    
+	      where <tt>(transform m f)</tt> returns a Turing
+	      machine that acts just like Turing machine <tt>m</tt> except that it
+	      uses the states obtained by transforming the states
+	      of <tt>m</tt> by <tt>f</tt>. 
 	    </p>
 
-<pre class="code">
-</pre>
+	    <p>
+	      As the example in the introduction shows, you can use
+	      transform to transform a Turing machine with structured
+	      states (i.e., states represented using tuples) into a
+	      Turing machines with strings as states which you can
+	      feed to function <tt>run</tt>.
+	    </p>
+
+	    <p>
+	      For a simple output, run the <tt>add1</tt> machine as in
+	      the introduction.</p>
+
 	  </li>
 
 
@@ -707,37 +836,91 @@ rej|-1|-1          >  0  X  X  #  0  1 [X] _
 	  machines. Unless you want to drive yourself insane, you are
 	  strongly encouraged to use structured states. Which means
 	  that you can test your Turing machines
-	  with the code you wrote in Question 1. </p>
-
-	<p>For submission purposes, I ask you to define those Turing
-	  machines as constants using <tt>let</tt> with a fixed
-	  name given below in each question. There is already a
-	  placeholder in <tt>homework6.ml</tt> for those answers. Just
-	  replace the placeholder with your definition.</p>
+	  with the code you wrote in Problem 2. </p>
 
 	<ol class="letter">
 
-	  <li> <p>Design a Turing machine <tt class="code">permutation</tt> of
-	      type <tt class="code"><i>X</i> tm</tt> for
-	      some <tt><i>X</i></tt> which you are free to choose, and
-	      which... 
+	  <li> <p>Design a total Turing machine <tt class="code">permutation</tt> of
+	      type <tt class="code"><i>X</i> tm</tt> (for whatever
+	      type <tt><i>X</i></tt> that makes your life easier) which
+	      accepts all strings over alphabet <tt>{a, ..., z,#}</tt>
+	      of the form <tt><i>u</i>#<i>v</i></tt>
+	      where <tt><i>u</i></tt> and <tt><i>v</i></tt> contain
+	      only letters and are permutations of each other. 
 	    </p>
 
-<pre class="code">
-</pre>
+	    <p>The following strings should be accepted:
+	    </p>
+	    <pre>
+#
+a#a
+kk#kk
+hello#elhol
+obb#bob
+germany#mnayrge
+	    </pre>
+
+	    <p>The following strings should be rejected:
+	    </p>
+
+	    <pre>
+a#
+#a
+aaa#aaaa
+aaaa#aaa
+hello#hell
+hell#hello
+aab#bba
+a#a#a
+hello
+	    </pre>
+
 	  </li>
 
 
 	  <li> <p>Code a function <tt class="code">copies</tt> of
-	      type <tt class="code">int -> <i>X</i> tm</tt> for
-	      some <tt><i>X</i></tt> which you are free to choose, where...
-	      
+	      type <tt class="code">int -> <i>X</i> tm</tt> (for
+	      whatever type <tt><i>X</i></tt> that makes your life
+	      easier) where <tt>(copies n)</tt> returns a Turing machine
+	      over alphabet <tt>{0,1,#}</tt> that accepts strings of
+	      the form <tt><i>u</i>#<i>u</i>#...#<i>u</i></tt>
+	      where <tt><i>u</i></tt> is a string over <tt>{0,1}</tt>
+	      and there are <tt>n</tt> copies
+	      of <tt><i>u</i></tt>. This requires <tt>n</tt> to be
+	      greater than 0. (Report an error if <tt>n&le;0</tt>.)
 	    </p>
 
-<pre class="code">
-</pre>
-	  </li>
+	    <p>Thus, <tt>(copies 1)</tt> should accept the following
+	    strings:
+	    </p>
 
+<pre>
+   &lt;empty&gt;
+   1000
+   0101010101</pre>
+	    <p>and reject:</p>
+<pre>
+   0#1
+   10#10
+   10#10#10</pre>
+	    <p>while <tt>(copies 3)</tt> should accept the following
+	    strings:
+	    </p>
+	    <pre>
+   ##
+   01#01#01
+   1001#1001#1001</pre>
+	    <p>and reject:</p>
+	    <pre>
+  &lt;empty&gt;
+   #
+   ###
+   0#0
+   10#10#10#10</pre>
+	    <p>You get the gist.</p>
+
+
+	  </li>
 
 
 	</ol>
