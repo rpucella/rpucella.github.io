@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 6</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 130%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+	pre.code {
+	   border: 1px solid #c6c6c6;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+	}
+
+/* from
+    http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
+ */
+
+ol {
+    counter-reset:li; /* Initiate a counter */
+    margin-left:0; /* Remove the default left margin */
+    padding-left:0; /* Remove the default left padding */
+    padding-top:1em;
+}
+ol > li {
+    position:relative; /* Create a positioning context */
+    margin:0 0 6px 2em; /* Give each list item a left margin to make
+    room for the numbers */
+    padding:4px 8px; /* Add some spacing around the content */
+    list-style:none; /* Disable the normal item numbering */
+    /*border-top:2px solid #666;
+    background:#f6f6f6; */
+}
+ol > li:before {
+    counter-increment:li; /* Increment the counter by 1 */
+    /* Position and style the number */
+    position:absolute;
+    top:-2px;
+    left:-2em;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    width:2em;
+    /* Some space between the number and the content in browsers that
+    support
+       generated content but not positioning it (Camino 2 is one
+    example) */
+    margin-right:8px;
+    padding:4px;
+/*    border-top:2px solid #666;
+    color:#fff;
+    background:#666; 
+    font-weight:bold; */
+/*    font-family:"Helvetica Neue", Arial, sans-serif;
+    text-align:center; */
+}
+
+ol.letter > li:before {
+    content:"(" counter(li,lower-alpha) ")"; /* Use the counter as content */
+}
+
+ol.number > li:before {
+    content:"(" counter(li,decimal) ")"; /* Use the counter as content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP16</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 7em;"></div>
+    
+    <h1 class="clear">Homework 6</h1>
+    
+    <p class="subtitle">Due date: Friday, March 11 (midnight)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists your <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework6.ml"><tt>homework6.ml</tt></a> provided.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Download the file <a href="hw6-checker.ml"><tt>hw6-checker.ml</tt></a> into the same directory as your homework solution.</li>
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use "homework6.ml";;</tt></li>
+      <li>Load the homework checker via <tt>#use "hw6-checker.ml";;</tt></li>
+      <li>The homework checker checks that you've implemented all functions (or provided stubs for them) and that those functions have the type that I asked you to give them. If the checker says your types are OK, then you're fine. If the checker gives you an error, fix it. If you believe that the checker gives you an error wrongly, send me an email.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework6.ml</tt> as an attachment to <tt>focs.sp16@gmail.com</tt> with subject <i>Homework 6 submission</i>.</li>
+    </ul>
+
+    <p>If your code fails because you did not follow the instructions above (in particular, because your code fails to type check when put in presence of my automated testing rig) I'll be unhappy.</p>
+
+
+    <hr>
+
+
+    <p>For this homework, we use the same type of Turing machines as
+      in Homework 5. I've provided you with an implementation of
+      Turing machines that can be run via function \t{run}. As in
+      Homework 5, the only types of Turing machines <tt>run</tt> can
+      execute are of type <tt>string tm</tt>. But we're going to
+      generalize things a little bit here. </p>
+
+    <p>In this homework, we'll explore an easier way to program Turing
+    machines. 
+Well, maybe \emph{easier} is a bit misleading.
+
+Depending on how you implemented the Turing machine for \emph{Binary
+  Sum} in the last homework, you probably noticed that there
+was a lot of redundancy in the state transitions. Some of that
+redundancy it turns out can be eliminated by encoding information in
+the finite control of the Turing machine---that is, in their states.  
+
+Consider the Turing machine above that decides the language 
+$A$
+consisting of all strings over $\{\t0,\t1\}$ that either contain
+an even number of $\t0$s and have no sequence of more than two
+consecutive $\t0$s, or that contain an odd number of $\t0$s and have
+no sequence of more than two consecutive $\t1$s. 
+
+<pre>
+let add1 = 
+  { states = triples ["start";"check1";"check2";"rewind";"go-end-1";"go-end-2";
+                      "skip";"scan-1";"scan-2";"check-done"]
+                     [-1;0;1] [-1;0;1];
+    input_alphabet = ["0";"1";"#"];
+    tape_alphabet = ["0";"1";"#";"X";"_";">"];
+    blank = "_";
+    left_marker = ">";
+    start = ("start",-1,-1);
+    accept = ("acc",-1,-1);
+    reject = ("rej",-1,-1);
+    delta = (fun x -> match x with
+    | (("start",-1,-1),">") -> (("check1",-1,-1),">",1)
+    | (("check1",-1,-1),"0") -> (("check1",-1,-1),"0",1)
+    | (("check1",-1,-1),"1") -> (("check1",-1,-1),"1",1)
+    | (("check1",-1,-1),"#") -> (("check2",-1,-1),"#",1)
+    | (("check2",-1,-1),"0") -> (("check2",-1,-1),"0",1)
+    | (("check2",-1,-1),"1") -> (("check2",-1,-1),"1",1)
+    | (("check2",-1,-1),"_") -> (("rewind",-1,1),"_",0)   (* start with a carry of 1! *)
+
+    | (("rewind",-1,carry),">") -> (("go-end-1",-1,carry),">",1)
+    | (("rewind",-1,carry),"0") -> (("rewind",-1,carry),"0",0)
+    | (("rewind",-1,carry),"1") -> (("rewind",-1,carry),"1",0)
+    | (("rewind",-1,carry),"#") -> (("rewind",-1,carry),"#",0)
+    | (("rewind",-1,carry),"X") -> (("rewind",-1,carry),"X",0)
+
+    | (("go-end-1",-1,carry),"#") -> (("scan-1",-1,carry),"#",0)
+    | (("go-end-1",-1,carry),sym) -> (("go-end-1",-1,carry),sym,1)
+
+    | (("scan-1",-1,carry),"X") -> (("scan-1",-1,carry),"X",0)
+    | (("scan-1",-1,carry),"0") -> (("skip",0,carry),"X",1)
+    | (("scan-1",-1,carry),"1") -> (("skip",1,carry),"X",1)
+    | (("scan-1",-1,0),">") -> (("check-done",-1,-1),">",1)  (* carry should be 0 to be done *)
+
+    | (("skip",v,carry),"#") -> (("go-end-2",v,carry),"#",1)
+    | (("skip",v,carry),"X") -> (("skip",v,carry),"X",1)
+
+    | (("go-end-2",v,carry),"_") -> (("scan-2",v,carry),"_",0)
+    | (("go-end-2",v,carry),sym) -> (("go-end-2",v,carry),sym,1)
+
+    | (("scan-2",v,carry),"X") -> (("scan-2",v,carry),"X",0)
+    | (("scan-2",v,carry),"0") when (v+carry) mod 2 = 0 -> (("rewind",-1,(v+carry) / 2),"X",0)
+    | (("scan-2",v,carry),"1") when (v+carry) mod 2 = 1 -> (("rewind",-1,(v+carry) / 2),"X",0)
+
+    | (("check-done",-1,-1),"_") -> (("acc",-1,-1),"_",1)
+    | (("check-done",-1,-1),"X") -> (("check-done",-1,-1),"X",1)
+    | (("check-done",-1,-1),"#") -> (("check-done",-1,-1),"#",1)
+
+    | (_,sym) -> (("rej",-1,-1),sym,1))}
+</pre>
+
+
+We saw that the machine works in two phases.
+In the second phase, the states that determine whether there are more
+than two $\t0$s in sequence and those that determine whether there are more
+than two $\t1$s in sequence are basically the same, except that in one
+case they keep an eye out for $\t0$s, and in the other they keep an
+eye out for $\t1$s. But the logic is the same. That one bit of
+information (whether we're in case 0 or in case 1) we can record in
+the state itself.
+
+Look at the way I named the states: states \t{"q1/0"} and \t{"q1/1"}
+play the same role, except that \t{"q1/0"} is in that part of the
+machine that looks for $\t0s$ in sequence in the second phase, while
+\t{"q1/1"} is in that part of the machine that looks for $\t1s$ in
+sequence in the second phase. Right now, that's just a convention in
+how I named my states. 
+
+But I can make that information explicit by using \emph{structured}
+states. We can represent states as a name
+in conjunction with some information, such as the ``case'' 0 or 1 that
+applies. 
+
+This lets us write transitions that do not depend on the
+encoded information by matching simply on the name \t{"q1"}, while transitions
+that do depend on the extra information can transition differently
+based on the value of the bit. 
+
+To show how structured states can simplify the description
+of the Turing machine for $A$, here is another Turing machine that
+decides $A$, written using structured states:
+\begin{code}
+type even_odd_sequence_state = 
+  | Simple of string
+  | BitTag of string * string
+
+let evenOddSequence_struct = 
+  let delta (p,a) = 
+    match p,a with
+    | Simple("even"), ">" -> (Simple("even"), ">", Right)
+    | Simple("even"), "0" -> (Simple("odd"), "0", Right)
+    | Simple("even"), "1" -> (Simple("even"), "1", Right)
+    | Simple("even"), "_" -> (BitTag("q1", "0"), "_", Left)
+          
+    | Simple("odd"), "0" -> (Simple("even"), "0", Right)
+    | Simple("odd"), "1" -> (Simple("odd"), "1", Right)
+    | Simple("odd"), "_" -> (BitTag("q1", "1"), "_", Left)
+          
+    | BitTag("q1", t), ">" -> (Simple("acc"), ">", Right)
+    | BitTag("q1", t), sym when t = sym -> (BitTag("q2", t), sym, Left)
+    | BitTag("q1", t), sym -> (BitTag("q1", t), sym, Left)
+          
+    | BitTag("q2", t), ">" -> (Simple("acc"), ">", Right)
+    | BitTag("q2", t), sym when t = sym -> (BitTag("q3", t), sym, Left)
+    | BitTag("q2", t), sym -> (BitTag("q1", t), sym, Left)
+          
+    | BitTag("q3", t), ">" -> (Simple("acc"), ">", Right)
+    | BitTag("q3", t), sym when t <> sym -> (BitTag("q1", t), sym, Left)
+          
+    | Simple("acc"), sym -> (Simple("acc"), sym, Right)
+    | _, sym -> (Simple("rej"), sym, Right)  in
+  let states = [ Simple("even"); Simple("odd"); Simple("acc"); Simple("rej");
+                 BitTag("q1", "0"); BitTag("q2", "0"); BitTag("q3", "0"); 
+                 BitTag("q1", "1"); BitTag("q2", "1"); BitTag("q3", "1") ]  in
+  let alph = ["0"; "1"; ">"; "_"]  in
+  let string_of st = 
+    match st with
+    | Simple(s) -> s
+    | BitTag(s,b) -> s^"|"^b  in
+  transform string_of
+    { tm_states = states;
+      tm_input_alph = ["0"; "1"];
+      tm_tape_alph = alph;
+      tm_leftmost = ">";
+      tm_blank = "_";
+      tm_delta = make_delta states alph delta;
+      tm_start = Simple("even");
+      tm_accept = Simple("acc");
+      tm_reject = Simple("rej") }
+\end{code}
+It doesn't look like it's a big win, but it makes a difference for
+larger machines, as we shall see in Problems 2 and 3 below. 
+
+There's one tiny problem with doing things that way: states are no
+longer strings---in the above example, they're elements of type
+\t{even\_odd\_sequence\_state}. This is a problem because the \t{run}
+function expects states to be strings, in order to be able to print
+configurations during execution. It's annoying, but that's the way it
+is. 
+
+The fix is to write a function \t{transform} (which you'll write in
+Problem 1) to take a Turing machine where states have some type
+$T$ and transform it into a machine where states are strings. We
+do this simply by providing a function to convert values of type $T$
+into strings. In the above example, function \t{string\_of} is what
+does the conversion. You can use pretty much anything you want as a
+conversion function, as long as it yields strings, and as long as two
+distinct states get converted to distinct strings. (What happens if
+you don't have that last property?)
+
+Here are a few sample runs of the machine:
+<pre>
+# let m = transform add1 (fun (x,y,z) -> x^"|"^(string_of_int y)^"|"^(string_of_int z));;
+val m : string tm =
+  {states =
+    ["start|-1|-1"; "start|-1|0"; "start|-1|1"; "start|0|-1"; "start|0|0";
+     "start|0|1"; "start|1|-1"; "start|1|0"; "start|1|1"; "check1|-1|-1";
+     "check1|-1|0"; "check1|-1|1"; "check1|0|-1"; "check1|0|0"; "check1|0|1";
+     "check1|1|-1"; "check1|1|0"; "check1|1|1"; "check2|-1|-1";
+     "check2|-1|0"; "check2|-1|1"; "check2|0|-1"; "check2|0|0"; "check2|0|1";
+     "check2|1|-1"; "check2|1|0"; "check2|1|1"; "rewind|-1|-1";
+     "rewind|-1|0"; "rewind|-1|1"; "rewind|0|-1"; "rewind|0|0"; "rewind|0|1";
+     "rewind|1|-1"; "rewind|1|0"; "rewind|1|1"; "go-end-1|-1|-1";
+     "go-end-1|-1|0"; "go-end-1|-1|1"; "go-end-1|0|-1"; "go-end-1|0|0";
+     "go-end-1|0|1"; "go-end-1|1|-1"; "go-end-1|1|0"; "go-end-1|1|1";
+     "go-end-2|-1|-1"; "go-end-2|-1|0"; "go-end-2|-1|1"; "go-end-2|0|-1";
+     "go-end-2|0|0"; "go-end-2|0|1"; "go-end-2|1|-1"; "go-end-2|1|0";
+     "go-end-2|1|1"; "skip|-1|-1"; "skip|-1|0"; "skip|-1|1"; "skip|0|-1";
+     "skip|0|0"; "skip|0|1"; "skip|1|-1"; "skip|1|0"; "skip|1|1";
+     "scan-1|-1|-1"; "scan-1|-1|0"; "scan-1|-1|1"; "scan-1|0|-1";
+     "scan-1|0|0"; "scan-1|0|1"; "scan-1|1|-1"; "scan-1|1|0"; "scan-1|1|1";
+     "scan-2|-1|-1"; "scan-2|-1|0"; "scan-2|-1|1"; "scan-2|0|-1";
+     "scan-2|0|0"; "scan-2|0|1"; "scan-2|1|-1"; "scan-2|1|0"; "scan-2|1|1";
+     "check-done|-1|-1"; "check-done|-1|0"; "check-done|-1|1";
+     "check-done|0|-1"; "check-done|0|0"; "check-done|0|1";
+     "check-done|1|-1"; "check-done|1|0"; "check-done|1|1"];
+   input_alphabet = ["0"; "1"; "#"];
+   tape_alphabet = ["0"; "1"; "#"; "X"; "_"; ">"]; left_marker = ">";
+   blank = "_"; delta = &lt;fun&gt;; start = "start|-1|-1"; accept = "acc|-1|-1";
+   reject = "rej|-1|-1"}
+# run m "00#01";;
+start|-1|-1       [>] 0  0  #  0  1 
+check1|-1|-1       > [0] 0  #  0  1 
+check1|-1|-1       >  0 [0] #  0  1 
+check1|-1|-1       >  0  0 [#] 0  1 
+check2|-1|-1       >  0  0  # [0] 1 
+check2|-1|-1       >  0  0  #  0 [1]
+check2|-1|-1       >  0  0  #  0  1 [_]
+rewind|-1|1        >  0  0  #  0 [1] _ 
+rewind|-1|1        >  0  0  # [0] 1  _ 
+rewind|-1|1        >  0  0 [#] 0  1  _ 
+rewind|-1|1        >  0 [0] #  0  1  _ 
+rewind|-1|1        > [0] 0  #  0  1  _ 
+rewind|-1|1       [>] 0  0  #  0  1  _ 
+go-end-1|-1|1      > [0] 0  #  0  1  _ 
+go-end-1|-1|1      >  0 [0] #  0  1  _ 
+go-end-1|-1|1      >  0  0 [#] 0  1  _ 
+scan-1|-1|1        >  0 [0] #  0  1  _ 
+skip|0|1           >  0  X [#] 0  1  _ 
+go-end-2|0|1       >  0  X  # [0] 1  _ 
+go-end-2|0|1       >  0  X  #  0 [1] _ 
+go-end-2|0|1       >  0  X  #  0  1 [_]
+scan-2|0|1         >  0  X  #  0 [1] _ 
+rewind|-1|0        >  0  X  # [0] X  _ 
+rewind|-1|0        >  0  X [#] 0  X  _ 
+rewind|-1|0        >  0 [X] #  0  X  _ 
+rewind|-1|0        > [0] X  #  0  X  _ 
+rewind|-1|0       [>] 0  X  #  0  X  _ 
+go-end-1|-1|0      > [0] X  #  0  X  _ 
+go-end-1|-1|0      >  0 [X] #  0  X  _ 
+go-end-1|-1|0      >  0  X [#] 0  X  _ 
+scan-1|-1|0        >  0 [X] #  0  X  _ 
+scan-1|-1|0        > [0] X  #  0  X  _ 
+skip|0|0           >  X [X] #  0  X  _ 
+skip|0|0           >  X  X [#] 0  X  _ 
+go-end-2|0|0       >  X  X  # [0] X  _ 
+go-end-2|0|0       >  X  X  #  0 [X] _ 
+go-end-2|0|0       >  X  X  #  0  X [_]
+scan-2|0|0         >  X  X  #  0 [X] _ 
+scan-2|0|0         >  X  X  # [0] X  _ 
+rewind|-1|0        >  X  X [#] X  X  _ 
+rewind|-1|0        >  X [X] #  X  X  _ 
+rewind|-1|0        > [X] X  #  X  X  _ 
+rewind|-1|0       [>] X  X  #  X  X  _ 
+go-end-1|-1|0      > [X] X  #  X  X  _ 
+go-end-1|-1|0      >  X [X] #  X  X  _ 
+go-end-1|-1|0      >  X  X [#] X  X  _ 
+scan-1|-1|0        >  X [X] #  X  X  _ 
+scan-1|-1|0        > [X] X  #  X  X  _ 
+scan-1|-1|0       [>] X  X  #  X  X  _ 
+check-done|-1|-1   > [X] X  #  X  X  _ 
+check-done|-1|-1   >  X [X] #  X  X  _ 
+check-done|-1|-1   >  X  X [#] X  X  _ 
+check-done|-1|-1   >  X  X  # [X] X  _ 
+check-done|-1|-1   >  X  X  #  X [X] _ 
+check-done|-1|-1   >  X  X  #  X  X [_]
+acc|-1|-1          >  X  X  #  X  X  _ [_]
+- : bool = true
+# run m "011#100";;
+start|-1|-1       [>] 0  1  1  #  1  0  0 
+check1|-1|-1       > [0] 1  1  #  1  0  0 
+check1|-1|-1       >  0 [1] 1  #  1  0  0 
+check1|-1|-1       >  0  1 [1] #  1  0  0 
+check1|-1|-1       >  0  1  1 [#] 1  0  0 
+check2|-1|-1       >  0  1  1  # [1] 0  0 
+check2|-1|-1       >  0  1  1  #  1 [0] 0 
+check2|-1|-1       >  0  1  1  #  1  0 [0]
+check2|-1|-1       >  0  1  1  #  1  0  0 [_]
+rewind|-1|1        >  0  1  1  #  1  0 [0] _ 
+rewind|-1|1        >  0  1  1  #  1 [0] 0  _ 
+rewind|-1|1        >  0  1  1  # [1] 0  0  _ 
+rewind|-1|1        >  0  1  1 [#] 1  0  0  _ 
+rewind|-1|1        >  0  1 [1] #  1  0  0  _ 
+rewind|-1|1        >  0 [1] 1  #  1  0  0  _ 
+rewind|-1|1        > [0] 1  1  #  1  0  0  _ 
+rewind|-1|1       [>] 0  1  1  #  1  0  0  _ 
+go-end-1|-1|1      > [0] 1  1  #  1  0  0  _ 
+go-end-1|-1|1      >  0 [1] 1  #  1  0  0  _ 
+go-end-1|-1|1      >  0  1 [1] #  1  0  0  _ 
+go-end-1|-1|1      >  0  1  1 [#] 1  0  0  _ 
+scan-1|-1|1        >  0  1 [1] #  1  0  0  _ 
+skip|1|1           >  0  1  X [#] 1  0  0  _ 
+go-end-2|1|1       >  0  1  X  # [1] 0  0  _ 
+go-end-2|1|1       >  0  1  X  #  1 [0] 0  _ 
+go-end-2|1|1       >  0  1  X  #  1  0 [0] _ 
+go-end-2|1|1       >  0  1  X  #  1  0  0 [_]
+scan-2|1|1         >  0  1  X  #  1  0 [0] _ 
+rewind|-1|1        >  0  1  X  #  1 [0] X  _ 
+rewind|-1|1        >  0  1  X  # [1] 0  X  _ 
+rewind|-1|1        >  0  1  X [#] 1  0  X  _ 
+rewind|-1|1        >  0  1 [X] #  1  0  X  _ 
+rewind|-1|1        >  0 [1] X  #  1  0  X  _ 
+rewind|-1|1        > [0] 1  X  #  1  0  X  _ 
+rewind|-1|1       [>] 0  1  X  #  1  0  X  _ 
+go-end-1|-1|1      > [0] 1  X  #  1  0  X  _ 
+go-end-1|-1|1      >  0 [1] X  #  1  0  X  _ 
+go-end-1|-1|1      >  0  1 [X] #  1  0  X  _ 
+go-end-1|-1|1      >  0  1  X [#] 1  0  X  _ 
+scan-1|-1|1        >  0  1 [X] #  1  0  X  _ 
+scan-1|-1|1        >  0 [1] X  #  1  0  X  _ 
+skip|1|1           >  0  X [X] #  1  0  X  _ 
+skip|1|1           >  0  X  X [#] 1  0  X  _ 
+go-end-2|1|1       >  0  X  X  # [1] 0  X  _ 
+go-end-2|1|1       >  0  X  X  #  1 [0] X  _ 
+go-end-2|1|1       >  0  X  X  #  1  0 [X] _ 
+go-end-2|1|1       >  0  X  X  #  1  0  X [_]
+scan-2|1|1         >  0  X  X  #  1  0 [X] _ 
+scan-2|1|1         >  0  X  X  #  1 [0] X  _ 
+rewind|-1|1        >  0  X  X  # [1] X  X  _ 
+rewind|-1|1        >  0  X  X [#] 1  X  X  _ 
+rewind|-1|1        >  0  X [X] #  1  X  X  _ 
+rewind|-1|1        >  0 [X] X  #  1  X  X  _ 
+rewind|-1|1        > [0] X  X  #  1  X  X  _ 
+rewind|-1|1       [>] 0  X  X  #  1  X  X  _ 
+go-end-1|-1|1      > [0] X  X  #  1  X  X  _ 
+go-end-1|-1|1      >  0 [X] X  #  1  X  X  _ 
+go-end-1|-1|1      >  0  X [X] #  1  X  X  _ 
+go-end-1|-1|1      >  0  X  X [#] 1  X  X  _ 
+scan-1|-1|1        >  0  X [X] #  1  X  X  _ 
+scan-1|-1|1        >  0 [X] X  #  1  X  X  _ 
+scan-1|-1|1        > [0] X  X  #  1  X  X  _ 
+skip|0|1           >  X [X] X  #  1  X  X  _ 
+skip|0|1           >  X  X [X] #  1  X  X  _ 
+skip|0|1           >  X  X  X [#] 1  X  X  _ 
+go-end-2|0|1       >  X  X  X  # [1] X  X  _ 
+go-end-2|0|1       >  X  X  X  #  1 [X] X  _ 
+go-end-2|0|1       >  X  X  X  #  1  X [X] _ 
+go-end-2|0|1       >  X  X  X  #  1  X  X [_]
+scan-2|0|1         >  X  X  X  #  1  X [X] _ 
+scan-2|0|1         >  X  X  X  #  1 [X] X  _ 
+scan-2|0|1         >  X  X  X  # [1] X  X  _ 
+rewind|-1|0        >  X  X  X [#] X  X  X  _ 
+rewind|-1|0        >  X  X [X] #  X  X  X  _ 
+rewind|-1|0        >  X [X] X  #  X  X  X  _ 
+rewind|-1|0        > [X] X  X  #  X  X  X  _ 
+rewind|-1|0       [>] X  X  X  #  X  X  X  _ 
+go-end-1|-1|0      > [X] X  X  #  X  X  X  _ 
+go-end-1|-1|0      >  X [X] X  #  X  X  X  _ 
+go-end-1|-1|0      >  X  X [X] #  X  X  X  _ 
+go-end-1|-1|0      >  X  X  X [#] X  X  X  _ 
+scan-1|-1|0        >  X  X [X] #  X  X  X  _ 
+scan-1|-1|0        >  X [X] X  #  X  X  X  _ 
+scan-1|-1|0        > [X] X  X  #  X  X  X  _ 
+scan-1|-1|0       [>] X  X  X  #  X  X  X  _ 
+check-done|-1|-1   > [X] X  X  #  X  X  X  _ 
+check-done|-1|-1   >  X [X] X  #  X  X  X  _ 
+check-done|-1|-1   >  X  X [X] #  X  X  X  _ 
+check-done|-1|-1   >  X  X  X [#] X  X  X  _ 
+check-done|-1|-1   >  X  X  X  # [X] X  X  _ 
+check-done|-1|-1   >  X  X  X  #  X [X] X  _ 
+check-done|-1|-1   >  X  X  X  #  X  X [X] _ 
+check-done|-1|-1   >  X  X  X  #  X  X  X [_]
+acc|-1|-1          >  X  X  X  #  X  X  X  _ [_]
+- : bool = true
+# run m "011#010";;
+start|-1|-1       [>] 0  1  1  #  0  1  0 
+check1|-1|-1       > [0] 1  1  #  0  1  0 
+check1|-1|-1       >  0 [1] 1  #  0  1  0 
+check1|-1|-1       >  0  1 [1] #  0  1  0 
+check1|-1|-1       >  0  1  1 [#] 0  1  0 
+check2|-1|-1       >  0  1  1  # [0] 1  0 
+check2|-1|-1       >  0  1  1  #  0 [1] 0 
+check2|-1|-1       >  0  1  1  #  0  1 [0]
+check2|-1|-1       >  0  1  1  #  0  1  0 [_]
+rewind|-1|1        >  0  1  1  #  0  1 [0] _ 
+rewind|-1|1        >  0  1  1  #  0 [1] 0  _ 
+rewind|-1|1        >  0  1  1  # [0] 1  0  _ 
+rewind|-1|1        >  0  1  1 [#] 0  1  0  _ 
+rewind|-1|1        >  0  1 [1] #  0  1  0  _ 
+rewind|-1|1        >  0 [1] 1  #  0  1  0  _ 
+rewind|-1|1        > [0] 1  1  #  0  1  0  _ 
+rewind|-1|1       [>] 0  1  1  #  0  1  0  _ 
+go-end-1|-1|1      > [0] 1  1  #  0  1  0  _ 
+go-end-1|-1|1      >  0 [1] 1  #  0  1  0  _ 
+go-end-1|-1|1      >  0  1 [1] #  0  1  0  _ 
+go-end-1|-1|1      >  0  1  1 [#] 0  1  0  _ 
+scan-1|-1|1        >  0  1 [1] #  0  1  0  _ 
+skip|1|1           >  0  1  X [#] 0  1  0  _ 
+go-end-2|1|1       >  0  1  X  # [0] 1  0  _ 
+go-end-2|1|1       >  0  1  X  #  0 [1] 0  _ 
+go-end-2|1|1       >  0  1  X  #  0  1 [0] _ 
+go-end-2|1|1       >  0  1  X  #  0  1  0 [_]
+scan-2|1|1         >  0  1  X  #  0  1 [0] _ 
+rewind|-1|1        >  0  1  X  #  0 [1] X  _ 
+rewind|-1|1        >  0  1  X  # [0] 1  X  _ 
+rewind|-1|1        >  0  1  X [#] 0  1  X  _ 
+rewind|-1|1        >  0  1 [X] #  0  1  X  _ 
+rewind|-1|1        >  0 [1] X  #  0  1  X  _ 
+rewind|-1|1        > [0] 1  X  #  0  1  X  _ 
+rewind|-1|1       [>] 0  1  X  #  0  1  X  _ 
+go-end-1|-1|1      > [0] 1  X  #  0  1  X  _ 
+go-end-1|-1|1      >  0 [1] X  #  0  1  X  _ 
+go-end-1|-1|1      >  0  1 [X] #  0  1  X  _ 
+go-end-1|-1|1      >  0  1  X [#] 0  1  X  _ 
+scan-1|-1|1        >  0  1 [X] #  0  1  X  _ 
+scan-1|-1|1        >  0 [1] X  #  0  1  X  _ 
+skip|1|1           >  0  X [X] #  0  1  X  _ 
+skip|1|1           >  0  X  X [#] 0  1  X  _ 
+go-end-2|1|1       >  0  X  X  # [0] 1  X  _ 
+go-end-2|1|1       >  0  X  X  #  0 [1] X  _ 
+go-end-2|1|1       >  0  X  X  #  0  1 [X] _ 
+go-end-2|1|1       >  0  X  X  #  0  1  X [_]
+scan-2|1|1         >  0  X  X  #  0  1 [X] _ 
+scan-2|1|1         >  0  X  X  #  0 [1] X  _ 
+rej|-1|-1          >  0  X  X  #  0  1 [X] _ 
+- : bool = false
+</pre>
+
+
+    <hr>
+    
+    <ol class="number">
+
+      <li> <p><b>Easy Warm Up</b></p>
+
+	<ol class="letter">
+
+<!--
+	  <li> <p>Code a function <tt class="code">???</tt> of
+	      type <tt class="code">???</tt> which...
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+-->
+
+	  <li> <p>Function <tt>pairs</tt> of type <tt>'a
+		list -> 'b list -> ('a * 'b) list</tt><p> in your
+	      homework code is basically function <tt>all_pairs</tt>
+	      from Homework 4.</p>
+
+	    <p>Code a function <tt class="code">triples</tt> of
+	      type <tt class="code">'a list -> 'b list -> 'c list ->
+	      ('a * 'b * 'c) list</tt> which...
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	  <li> 
+	    <p> Code a
+	      function <tt class="code">quads</tt> of
+	      type <tt class="code">'a list -> 'b list -> 'c list ->
+		'd list -> ('a * 'b * 'c * 'd) list</tt> which...
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+
+	  <li><p>Code a function <tt class="code">range</tt> of
+	      type <tt class="code">int -> int list</tt> which...
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	</ol>
+
+      </li>
+
+
+      <li> <p><b>Structured States</b></p>
+
+	<ol class="letter">
+
+<!--
+	  <li> <p>Code a function <tt class="code">???</tt> of
+	      type <tt class="code">???</tt> which...
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+-->
+
+	  <li> <p>Code a function <tt class="code">transformStates</tt> of
+	      type <tt class="code">'a list -> ('a -> b) -> 'b
+	      list</tt> which...  
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">find_original</tt> of
+	      type <tt class="code">'a list -> ('a -> 'b) -> 'b -> 'a</tt> which...  
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">transformDelta</tt> of
+	      type <tt class="code">('a -> 'c) -> 'a list -> ('a * 'b
+	      -> 'a * 'b * int) -> (('c * 'b) -> ('c * 'b *
+	      int)) </tt> which...   
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">transform</tt> of
+	      type <tt class="code">'a tm -> ('a -> 'b) -> 'b tm</tt>
+	      which...    
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+
+	</ol>
+      </li>
+
+      <li> <p><b>Designing Turing Machines with Structured States</b></p>
+
+        <p>In this question, I will ask you to design Turing
+	  machines. Unless you want to drive yourself insane, you are
+	  strongly encouraged to use structured states. Which means
+	  that you can test your Turing machines
+	  with the code you wrote in Question 1. </p>
+
+	<p>For submission purposes, I ask you to define those Turing
+	  machines as constants using <tt>let</tt> with a fixed
+	  name given below in each question. There is already a
+	  placeholder in <tt>homework6.ml</tt> for those answers. Just
+	  replace the placeholder with your definition.</p>
+
+	<ol class="letter">
+
+	  <li> <p>Design a Turing machine <tt class="code">permutation</tt> of
+	      type <tt class="code"><i>X</i> tm</tt> for
+	      some <tt><i>X</i></tt> which you are free to choose, and
+	      which... 
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">copies</tt> of
+	      type <tt class="code">int -> <i>X</i> tm</tt> for
+	      some <tt><i>X</i></tt> which you are free to choose, where...
+	      
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+
+	</ol>
+	
+      </li>
+
+    </ol>
+
+  </body>
+</html>
