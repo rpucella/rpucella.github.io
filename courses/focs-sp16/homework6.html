@@ -849,20 +849,22 @@ val new_delta : string * string -> string * string * int = <fun>
 
         <p>In this question, I will ask you to design Turing
 	  machines. Unless you want to drive yourself insane, you are
-	  strongly encouraged to use structured states. Which means
-	  that you can test your Turing machines
-	  with the code you wrote in Problem 2. </p>
+	  strongly encouraged to use structured states (exactly what
+	  you take those states to be is up to &mdash; I recommend
+	  tuples of some sort), and to use the <tt>transform</tt>
+	  function you created in Problem 2 to transform them
+	  into <tt>string tm</tt>. </p>
 
 	<ol class="letter">
 
 	  <li> <p>Design a total Turing machine <tt class="code">permutation</tt> of
-	      type <tt class="code"><i>X</i> tm</tt> (for whatever
-	      type <tt><i>X</i></tt> that makes your life easier) which
+	      type <tt class="code">string tm</tt> which
 	      accepts all strings over alphabet <tt>{a, ..., z,#}</tt>
 	      of the form <tt><i>u</i>#<i>v</i></tt>
 	      where <tt><i>u</i></tt> and <tt><i>v</i></tt> contain
 	      only letters and are permutations of each other. 
 	    </p>
+
 
 	    <p>The following strings should be accepted:
 	    </p>
@@ -893,9 +895,8 @@ val new_delta : string * string -> string * string * int = <fun>
 
 
 	  <li> <p>Code a function <tt class="code">copies</tt> of
-	      type <tt class="code">int -> <i>X</i> tm</tt> (for
-	      whatever type <tt><i>X</i></tt> that makes your life
-	      easier) where <tt>(copies n)</tt> returns a Turing machine
+	      type <tt class="code">int -> string tm</tt>
+	      where <tt>(copies n)</tt> returns a Turing machine 
 	      over alphabet <tt>{0,1,#}</tt> that accepts strings of
 	      the form <tt><i>u</i>#<i>u</i>#...#<i>u</i></tt>
 	      where <tt><i>u</i></tt> is a string over <tt>{0,1}</tt>
