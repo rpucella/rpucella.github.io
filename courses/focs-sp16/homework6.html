@@ -172,8 +172,23 @@ li > p { margin-top:0;}
 
 
     <p>For this homework, we use the same type of Turing machines as
-      in Homework 5. I've provided you with an implementation of
-      Turing machines that can be run via function <tt>run</tt>. As in
+      in Homework 5:</p>
+
+<pre>
+type symbol = string
+
+type 'a tm = { states : 'a list;
+	       input_alphabet : symbol list;
+	       tape_alphabet : symbol list;
+	       left_marker : symbol;
+	       blank : symbol;
+	       delta : ('a * symbol) -> ('a * symbol * int);
+	       start : 'a;
+	       accept : 'a;
+	       reject : 'a }
+</pre>
+
+    <p>I've provided you with a function <tt>run</tt> to execute those Turing machines. As in
       Homework 5, the only types of Turing machines <tt>run</tt> can
       execute are of type <tt>string tm</tt>. That's because the
       Turing machines prints information such as the state it's in at
@@ -813,7 +828,7 @@ val new_delta : string * string -> string * string * int = <fun>
 
 	    <p>
 	      As the example in the introduction shows, you can use
-	      transform to transform a Turing machine with structured
+	      <tt>transform</tt> to transform a Turing machine with structured
 	      states (i.e., states represented using tuples) into a
 	      Turing machines with strings as states which you can
 	      feed to function <tt>run</tt>.
@@ -852,28 +867,27 @@ val new_delta : string * string -> string * string * int = <fun>
 	    <p>The following strings should be accepted:
 	    </p>
 	    <pre>
-#
-a#a
-kk#kk
-hello#elhol
-obb#bob
-germany#mnayrge
-	    </pre>
+   #
+   a#a
+   kk#kk
+   hello#elhol
+   obb#bob
+   germany#mnayrge</pre>
 
 	    <p>The following strings should be rejected:
 	    </p>
 
 	    <pre>
-a#
-#a
-aaa#aaaa
-aaaa#aaa
-hello#hell
-hell#hello
-aab#bba
-a#a#a
-hello
-	    </pre>
+   &epsilon;
+   a#
+   #a
+   aaa#aaaa
+   aaaa#aaa
+   hello#hell
+   hell#hello
+   aab#bba
+   a#a#a
+   hello</pre>
 
 	  </li>
 
@@ -895,7 +909,7 @@ hello
 	    </p>
 
 <pre>
-   &lt;empty&gt;
+   &epsilon;
    1000
    0101010101</pre>
 	    <p>and reject:</p>
@@ -912,7 +926,7 @@ hello
    1001#1001#1001</pre>
 	    <p>and reject:</p>
 	    <pre>
-  &lt;empty&gt;
+   &epsilon;
    #
    ###
    0#0
