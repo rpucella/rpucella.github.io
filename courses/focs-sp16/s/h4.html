@@ -1,0 +1,183 @@
+<html>
+
+<body>
+<pre>
+
+(* 
+ * String <-> characters utility functions:
+ *
+ *   explode : string -> char list
+ *      returns the list of characters making up a string
+ *
+ *   implode : char list -> string
+ *      concatenates the list of characters into a string
+ *
+ *)
+
+let explode str = 
+  let rec acc index result = 
+    if (index<0) then result
+    else acc (index-1) ((String.get str index)::result) in
+  acc (String.length(str)-1) []
+
+let implode cs = 
+  List.fold_right (fun a r -> (String.make 1 a)^r) cs ""
+
+
+(*
+ *  The type of a DETERMINISTIC finite automaton
+ * 
+ *  Note that the delta here is _actually_ a function
+ *  from states and symbols to states
+ * 
+ *)
+
+type 'a dfa = { states: 'a list;
+                alphabet: char list;
+                delta: 'a -> char -> 'a;
+                start : 'a;
+                accepting : 'a list }
+
+(* 
+ * A sample DFA
+ * 
+ *)
+
+let dfaThreeA = { 
+  states = ["start";"one";"two"];
+  alphabet = ['a';'b'];
+  delta = (fun q a -> 
+             match (q,a) with
+               ("start",'a') -> "one"
+             | ("one",'a') -> "two"
+             | ("two",'a') -> "start"
+             | ("start",'b') -> "start"
+             | ("one",'b') -> "one"
+             | ("two",'b') -> "two"
+             | _ -> "");  (* to eliminate warning *)
+  start = "start";
+  accepting = ["start"]
+} 
+
+
+
+(* QUESTION 1 *)
+
+
+let isAccepting dfa s  = 
+  List.mem s dfa.accepting
+
+let rec steps dfa q syms = 
+   match syms with
+     [] -> q
+   | x::xs -> steps dfa (dfa.delta q x) xs
+
+let rec acceptDFA dfa input = 
+  isAccepting dfa (steps dfa dfa.start (explode input))
+
+
+
+(* This function loops through all the strings
+ * of length up to n, and prints those that are accepted by the
+ * finite automaton.
+ *
+ * This is basically the same as in the last homework
+ *)
+
+let langDFA dfa n = 
+  let rec expt a n = if n <= 0 then 1 else a*(expt a (n-1)) in
+  let rec take n default l = 
+    if n <= 0 then []
+    else (match l with
+          | [] -> default::(take (n-1) default l)
+          | x::xs -> x::(take (n-1) default xs)) in
+  let to_base_n base size n = 
+    let rec loop n = 
+      if n <= 0 then []
+      else if n mod base = 0 then 0::(loop (n / base))
+      else (n mod base)::(loop ((n - n mod base) / base))  in
+    take size 0 (loop n)  in
+  let to_string alphabet size n = 
+    let base = List.length alphabet in
+    let num_base = to_base_n base size n in
+    implode (List.map (fun i -> List.nth alphabet i) num_base) in
+  if n < 0 then ()
+  else
+    let print_str s = if s = "" then print_string "  <epsilon>\n"
+                      else print_string ("  "^s^"\n")  in
+    let rec loop i = 
+      if i <= n then 
+        let ts = to_string dfa.alphabet i  in
+        let bound = expt (List.length dfa.alphabet) i in
+        let rec loop2 j = 
+          if j < bound then (if acceptDFA dfa (ts j) 
+                               then print_str (ts j)
+                             else ();
+                             loop2 (j+1))
+          else ()  in
+        (loop2 0; loop (i+1))
+      else ()  in
+      loop 0
+
+
+
+
+
+(* QUESTION 2 *)
+
+let max_positive xs = 
+  List.fold_right (fun x r -> if x > r then x else r) xs 0
+
+let at_least n p xs = 
+  (List.fold_right (fun x r -> if (p x) then r + 1 else r) xs 0) >= n
+
+let map_funs fs x = 
+  List.map (fun f -> f x) fs
+
+let map_cross fs xs = 
+  List.fold_right (fun x r -> (map_funs fs x) @ r) xs []
+
+let all_pairings xs ys = 
+  List.fold_right (fun x r -> (List.map (fun y -> (x,y)) ys)@r) xs []
+
+
+
+(* QUESTION 3 *)
+
+let suffixes xs = 
+  List.fold_right (fun x xs' -> (x::List.hd xs')::xs') xs [[]]
+
+let prefixes xs = 
+  let prepend x yss = List.map (fun ys -> x :: ys) yss  in
+  List.fold_right (fun x yss -> [] :: (prepend x yss)) xs [[]]
+
+let rec inject a xs =
+  match xs with
+    [] -> [[a]]
+  | x :: xs' -> (a::xs) :: List.map (fun ys -> x::ys) (inject a xs')
+
+let inject a xs = 
+  (* take the list and attach to every element the sublist starting at that
+     element
+     so [1;2;3] becomes [(1,[1;2;3]),(2,[2;3])(3,[3])]  *)
+  let attachList xs = 
+    List.fold_right (fun x r ->  match r with 
+                                   [] -> [(x,[x])] 
+                                 | (y,ys)::_ -> (x,x::ys)::r)
+                        xs []  in
+  let prepend x yss = List.map (fun ys -> x :: ys) yss  in
+  List.fold_right 
+       (fun (x,xs) r -> (a::xs) :: (prepend x r))
+         (attachList xs) [[a]]
+
+
+let permutations xs = 
+  let fold1 x xss = List.fold_right (fun ys zss -> (inject x ys)@zss) xss []
+  in List.fold_right fold1 xs [[]]
+
+
+
+</pre>
+</body>
+
+</html>
