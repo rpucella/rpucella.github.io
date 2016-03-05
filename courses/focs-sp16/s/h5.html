@@ -1,0 +1,567 @@
+<html>
+
+<body>
+<pre>
+
+(* 
+ * String <-> characters utility functions:
+ *
+ *   explode : string -> string list
+ *      returns the list of characters making up a string
+ *
+ *)
+
+let explode str = 
+  let rec acc index result = 
+    if (index<0) then result
+    else acc (index-1) ((String.sub str index 1)::result) in
+  acc (String.length(str)-1) []
+
+
+(*
+ * Type for deterministic Turing machines
+ *
+ * Parameterized by type for states
+ *)
+
+type symbol = string
+
+type 'a tm = { states : 'a list;
+	       input_alphabet : symbol list;
+	       tape_alphabet : symbol list;
+	       left_marker : symbol;
+	       blank : symbol;
+	       delta : ('a * symbol) -> ('a * symbol * int);   (* 0 = Left, 1 = Right *)
+	       start : 'a;
+	       accept : 'a;
+	       reject : 'a }
+
+type 'a config = { state : 'a;
+		   before: symbol list;
+		   after: symbol list }
+      
+(*
+ * Helper function
+ *
+ * Pint a configuration (including newline) to standard output
+ * and RETURN A VALUE
+ * 
+ *)
+
+let printConfig m config value = 
+    let mw = List.fold_right (fun a r -> max (String.length a) r) m.states 0 in
+    let _ = print_string (String.sub (config.state^(String.make mw ' ')) 0 mw) in
+    let print_syms = List.iter (Printf.printf " %s ")  in
+    let _ = print_string "  "  in
+    let _ = print_syms config.before  in
+    let _ = (match config.after with 
+             | [] -> Printf.printf "[%s]" m.blank
+	     | a::v' -> let _ = Printf.printf "[%s]" a  in
+	                print_syms v') in
+    let _ = print_newline ()  in
+    value
+
+
+
+(* QUESTION 1 *)
+
+
+let startConfig m w = 
+  { state=m.start;before = [];after = m.left_marker::(explode w)}
+
+let acceptConfig m config = 
+  (config.state=m.accept)
+
+let rejectConfig m config = 
+  (config.state=m.reject)
+
+let haltConfig m c = 
+  (acceptConfig m c) || (rejectConfig m c)
+
+let step m config = 
+  let rec last u = 
+    match u with
+      [] -> failwith "Moving Left from leftmost tape position"
+    | [a] -> ([],a)
+    | x::xs -> let (u',r) = last xs  in (x::u',r)   in
+  if (haltConfig m config) 
+    then config
+  else let (a,v') = match config.after with
+                    | [] -> (m.blank,[])
+		    | a::v' -> (a,v')  in
+       let (q',b,dir) = m.delta(config.state,a) in
+       if dir = 0  (* left *)
+         then let (u',c) = last config.before in 
+              {state=q';before=u';after=c::b::v'}
+       else {state=q';before=config.before@[b];after=v'}
+
+
+let run m w = 
+  let rec loop c = 
+    let _ = printConfig m c c in
+    if  (acceptConfig m c) 
+      then true
+    else if (rejectConfig m c) 
+      then false
+    else loop (step m c)  in
+  loop (startConfig m w)
+
+
+
+(* 
+ * Some sample deterministic Turing machines
+ *
+ * asbs is the regular language {a^m b^n | m,n >= 0}
+ * anbn is the non-regular language {a^n b^n | n >= 0}
+ * anbncn is the non-regular language {a^n b^n c^n | n >= 0}
+ *
+ *)
+
+let asbs = { states = ["start"; "q1"; "acc"; "rej"];
+	     input_alphabet = ["a";"b"];
+	     tape_alphabet = ["a";"b";"_";">"];
+	     blank = "_";
+	     left_marker = ">";
+	     start = "start";
+	     accept = "acc";
+	     reject = "rej";
+	     delta = (fun inp -> match inp with
+	                 | ("start", "a") -> ("start", "a", 1)
+     			 | ("start", "b") -> ("q1", "b", 1)
+			 | ("start", ">") -> ("start", ">", 1)
+			 | ("start", "_") -> ("acc", "_", 1)
+			 | ("q1", "b") -> ("q1", "b", 1)
+			 | ("q1", "_") -> ("acc", "_", 1)
+			 | ("acc", "a") -> ("acc", "a", 1)
+			 | ("acc", "b") -> ("acc", "b", 1)
+			 | ("acc", ">") -> ("acc", ">", 1)
+			 | ("acc", "_") -> ("acc", "_", 1)
+			 | (_,c) -> ("rej",c,1))}
+
+let anbn = { states = ["start"; "q1"; "q2"; "q3"; "q4"; "acc"; "rej"];
+	     input_alphabet = ["a";"b"];
+	     tape_alphabet = ["a";"b";"X";"/";"|"];
+	     blank = "/";
+	     left_marker = "|";
+	     start = "start";
+	     accept = "acc";
+	     reject = "rej";
+	     delta = (fun inp -> match inp with
+	                 | ("start", "a") -> ("start", "a", 1)
+     			 | ("start", "b") -> ("q1", "b", 1)
+			 | ("start", "|") -> ("start", "|", 1)
+			 | ("start", "/") -> ("q2", "/", 1)
+			 | ("q1", "b") -> ("q1", "b", 1)
+			 | ("q1", "/") -> ("q2", "/", 1)
+			 | ("q2", "|") -> ("q3", "|", 1)
+			 | ("q2", "a") -> ("q2", "a", 0)
+			 | ("q2", "b") -> ("q2", "b", 0)
+			 | ("q2", "X") -> ("q2", "X", 0)
+			 | ("q2", "/") -> ("q2", "/", 0)
+			 | ("q3", "X") -> ("q3", "X", 1)
+			 | ("q3", "/") -> ("acc", "/", 1)
+			 | ("q3", "a") -> ("q4", "X", 1)
+			 | ("q4", "a") -> ("q4", "a", 1)
+			 | ("q4", "X") -> ("q4", "X", 1)
+			 | ("q4", "b") -> ("q2", "X", 1)
+			 | ("acc", "a") -> ("acc", "a", 1)
+			 | ("acc", "b") -> ("acc", "b", 1)
+			 | ("acc", "|") -> ("acc", "|", 1)
+			 | ("acc", "X") -> ("acc", "X", 1)
+			 | ("acc", "/") -> ("acc", "/", 1)
+			 | (_,c) -> ("rej",c,1))}
+
+
+let anbncn = { states = ["start";"q1";"q2";"q3";"q4";"q5";"q6";"acc";"rej"];
+	       input_alphabet = ["a";"b";"c"];
+	       tape_alphabet = ["a";"b";"c";"X";"_";">"];
+	       blank = "_";
+	       left_marker = ">";
+	       start = "start";
+	       accept = "acc";
+	       reject = "rej";
+	       delta = (fun inp -> match inp with
+	                | ("start", "a") -> ("start", "a", 1)
+     			| ("start", "b") -> ("q1", "b", 1)
+			| ("start", "c") -> ("q6", "c", 1)
+			| ("start", ">") -> ("start", ">", 1)
+			| ("start", "_") -> ("q2", "_", 1)
+			| ("q1", "b") -> ("q1", "b", 1)
+			| ("q1", "c") -> ("q6", "c", 1)
+			| ("q1", "_") -> ("q2", "_", 1)
+			| ("q2", ">") -> ("q3", ">", 1)
+			| ("q2", "a") -> ("q2", "a", 0)
+			| ("q2", "b") -> ("q2", "b", 0)
+			| ("q2", "c") -> ("q2", "c", 0)
+			| ("q2", "_") -> ("q2", "_", 0)
+			| ("q2", "X") -> ("q2", "X", 0)
+			| ("q3", "X") -> ("q3", "X", 1)
+			| ("q3", "_") -> ("acc", "_", 1)
+			| ("q3", "a") -> ("q4", "X", 1)
+			| ("q4", "a") -> ("q4", "a", 1)
+			| ("q4", "X") -> ("q4", "X", 1)
+			| ("q4", "b") -> ("q5", "X", 1)
+			| ("q5", "b") -> ("q5", "b", 1)
+			| ("q5", "X") -> ("q5", "X", 1)
+			| ("q5", "c") -> ("q2", "X", 1)
+			| ("q6", "c") -> ("q6", "c", 1)
+			| ("q6", "_") -> ("q2", "_", 1)
+		        | ("acc", "a") -> ("acc", "a", 1)
+		        | ("acc", "b") -> ("acc", "b", 1)
+		        | ("acc", "c") -> ("acc", "c", 1)
+		        | ("acc", ">") -> ("acc", ">", 1)
+		        | ("acc", "X") -> ("acc", "X", 1)
+		        | ("acc", "_") -> ("acc", "_", 1)
+			| (_,c) -> ("rej", c,1))}
+
+
+
+
+
+(* QUESTION 2 *)
+
+
+let tm_q2_a = 
+
+  (* basically: 
+   * (1) if there are no uncrossed letters on the tape, accept
+   * (2) scan from left to right, find first uncross C or D. Cross it out.
+   * (3) find last uncrossed letter, cross it out. If it doesn't match, reject
+   * (4) rewind to the start of the tape, and go to (1)
+   *)
+
+  let delta x = match x with 
+                | ("start", ">") -> ("find-first",">",1)
+
+		| ("find-first","X") -> ("find-first","X",1)
+		| ("find-first","_") -> ("acc","_",1)
+		| ("find-first","c") -> ("find-last-C","X",1)
+		| ("find-first","d") -> ("find-last-D","X",1)
+
+		| ("find-last-C","X") -> ("match-C","X",0)
+		| ("find-last-C","_") -> ("match-C","_",0)
+		| ("find-last-C","c") -> ("find-last-C","c",1)
+		| ("find-last-C","d") -> ("find-last-C","d",1)
+		      
+		| ("find-last-D","X") -> ("match-D","X",0)
+		| ("find-last-D","_") -> ("match-D",")",0)
+		| ("find-last-D","c") -> ("find-last-D","c",1)
+		| ("find-last-D","d") -> ("find-last-D","d",1)
+		      
+		| ("match-C","X") -> ("acc","X",1)
+		| ("match-C","c") -> ("rewind","X",0)
+		| ("match-D","X") -> ("acc","X",1)
+		| ("match-D","d") -> ("rewind","X",0)
+
+		| ("rewind","c") -> ("rewind","c",0)
+		| ("rewind","d") -> ("rewind","d",0)
+		| ("rewind","X") -> ("find-first","X",1)
+
+		| (_,sym) -> ("rej",sym,1)  in
+
+  { states = ["start";"acc";"rej";"find-first";"find-last-C";
+	       "find-last-D";"match-C";"match-D";"rewind"];
+    input_alphabet = ["c";"d"];
+    tape_alphabet = ["c";"d";"X";"_";">"];
+    blank = "_";
+    left_marker = ">";
+    start = "start";
+    accept = "acc";
+    reject = "rej";
+    delta = delta 
+  }
+
+
+
+let tm_q2_b = { 
+
+   (* basically, just like anbn we saw in class, except instead of matching a
+    * single a, we match three a's in a row. It's a small mod, done by two 
+    * extra states q4_1 and q4_2
+    *)
+
+   states = ["start"; "q1"; "rewind"; "q3"; "q4"; "acc"; "rej"; "q4_1";"q4_2"];
+   input_alphabet = ["a";"b"];
+   tape_alphabet = ["a";"b";"X";">";"_"];
+   blank = "_";
+   left_marker = ">";
+   start = "start";
+   accept = "acc";
+   reject = "rej";
+   delta = (fun inp -> match inp with
+                         | ("start", "b") -> ("start", "b", 1)
+                         | ("start", "a") -> ("q1", "a", 1)
+                         | ("start", ">") -> ("start", ">", 1)
+                         | ("start", "_") -> ("rewind", "_", 1)
+                         | ("q1", "a") -> ("q1", "a", 1)
+                         | ("q1", "_") -> ("rewind", "_", 1)
+
+                         | ("rewind", ">") -> ("q3", ">", 1)
+                         | ("rewind", "b") -> ("rewind", "b", 0)
+                         | ("rewind", "a") -> ("rewind", "a", 0)
+                         | ("rewind", "X") -> ("rewind", "X", 0)
+                         | ("rewind", "_") -> ("rewind", "_", 0)
+
+                         | ("q3", "X") -> ("q3", "X", 1)
+                         | ("q3", "_") -> ("acc", "_", 1)
+                         | ("q3", "b") -> ("q4", "X", 1)
+
+                         | ("q4", "b") -> ("q4", "b", 1)
+                         | ("q4", "X") -> ("q4", "X", 1)
+                         | ("q4", "a") -> ("q4_1", "X",1)
+                         | ("q4_1","a") -> ("q4_2","X",1)
+                         | ("q4_2", "a") -> ("rewind", "X", 1)
+
+                         | ("acc", "b") -> ("acc", "b", 1)
+                         | ("acc", "a") -> ("acc", "a", 1)
+                         | ("acc", ">") -> ("acc", ">", 1)
+                         | ("acc", "X") -> ("acc", "X", 1)
+                         | ("acc", "_") -> ("acc", "_", 1)
+                         | (_,c) -> ("rej",c,1))}
+
+
+
+(* QUESTION 3 *)
+
+
+(* This is the fun one. 
+ * There are several ways of doing it
+ * I find it easier to compute from right to left, by
+ * first transforming   w1#w2#w3  into  w3#w1#w2
+ *
+ * (1) check tape is of the form w1#w2#w3
+ * (2) copy w1 and w2 to the end of the tape to form w1#w2>w3#w1#w2
+ *     note the left-marker in the middle of the string this basically
+ *     tells the TM not to go any further left; as far as it is concerned
+ *     the tape starts at w3.
+ * (3) move to the end of the tape. 
+ * (4) if everything has been crossed out, and there is no carry, accept
+ * (4) if everything has been crossed out, and there is a carry, reject
+ * (5) scanning from right to left, find the last uncrossed bit of w2 
+ *       remember it, and cross it out
+ * (6) find the last uncrossed bit of w1 - remember it, and cross it out
+ * (7) find the last uncrossed bit of q3, cross it out
+ * (8) check if that bit matches the least bit of :
+ *     bit from w2 + bit from w1 + carry [*]
+ *        if not, reject
+ * (9) if [*] > 1 then new carry is 1 else new carry is 0
+ * (10) go back to (3)
+ * 
+ *)
+
+
+let binaryAddition = 
+  let delta x = 
+    match x with
+    | "start", ">" -> ("start", ">", 1)
+    | "start", "0" -> ("wf1", "0", 1)
+    | "start", "1" -> ("wf1", "1", 1)
+    | "start", sym -> ("rej", sym, 1)
+    | "wf1", "0" -> ("wf1", "0", 1)
+    | "wf1", "1" -> ("wf1", "1", 1)
+    | "wf1", "#" -> ("wf2", "#", 1)
+    | "wf1", sym -> ("rej", sym, 1)
+    | "wf2", "0" -> ("wf3", "0", 1)
+    | "wf2", "1" -> ("wf3", "1", 1)
+    | "wf2", sym -> ("rej", sym, 1)
+    | "wf3", "0" -> ("wf3", "0", 1)
+    | "wf3", "1" -> ("wf3", "1", 1)
+    | "wf3", "#" -> ("wf4", "#", 1)
+    | "wf3", sym -> ("rej", sym, 1)
+    | "wf4", "0" -> ("wf5", "0", 1)
+    | "wf4", "1" -> ("wf5", "1", 1)
+    | "wf4", sym -> ("rej", sym, 1)
+    | "wf5", "0" -> ("wf5", "0", 1)
+    | "wf5", "1" -> ("wf5", "1", 1)
+    | "wf5", "_" -> ("rewind","_",0)
+    | "wf5", sym -> ("rej", sym, 1)
+
+    | "rewind", ">" -> ("copy-#-to-end",">",1)
+    | "rewind", sym -> ("rewind",sym,0)
+
+    | "rewind-copy", ">" -> ("copy-w1",">",1)
+    | "rewind-copy", "X1" -> ("copy-w1","X1",1)
+    | "rewind-copy", "X2" -> ("copy-w2","X2",1)
+    | "rewind-copy", sym -> ("rewind-copy",sym,0)
+
+    | "copy-w1", "#" -> ("copy-#-to-end","X2",1)
+    | "copy-w1", "0" -> ("copy-0-to-end","X1",1)
+    | "copy-w1", "1" -> ("copy-1-to-end","X1",1)
+    | "copy-w2", "#" -> ("move-to-end",">",1)     (* place > on tape! *)
+    | "copy-w2", "0" -> ("copy-0-to-end","X2",1)
+    | "copy-w2", "1" -> ("copy-1-to-end","X2",1)
+
+    | "copy-0-to-end", "_" -> ("rewind-copy","0",0)
+    | "copy-0-to-end", sym -> ("copy-0-to-end",sym,1)
+    | "copy-1-to-end", "_" -> ("rewind-copy","1",0)
+    | "copy-1-to-end", sym -> ("copy-1-to-end",sym,1)
+    | "copy-#-to-end", "_" -> ("rewind-copy","#",0)
+    | "copy-#-to-end", sym -> ("copy-#-to-end",sym,1)
+    
+    | "move-to-end", "_" -> ("nocarry-start", "_", 0)
+    | "move-to-end", sym -> ("move-to-end",sym,1)
+
+    | "check-no-digits-left", ">" -> ("acc", ">", 1)
+    | "check-no-digits-left", "X" -> ("check-no-digits-left", "X", 0)
+    | "check-no-digits-left", "#" -> ("check-no-digits-left", "#", 0)
+    | "check-no-digits-left", sym -> ("rej", sym, 1)
+
+    | "nocarry-start", "X" -> ("nocarry-start", "X", 0)
+    | "nocarry-start", "0" -> ("nocarry-0", "X", 0)
+    | "nocarry-start", "1" -> ("nocarry-1", "X", 0)
+    | "nocarry-start", "#" -> ("check-no-digits-left", "#", 0)
+    | "nocarry-start", sym -> ("rej", sym, 1)
+
+    | "nocarry-0", "0" -> ("nocarry-0", "0", 0)
+    | "nocarry-0", "1" -> ("nocarry-0", "1", 0)
+    | "nocarry-0", "#" -> ("nocarry-0+?", "#", 0)
+    | "nocarry-0", sym -> ("rej", sym, 1)
+    | "nocarry-0+?", "X" -> ("nocarry-0+?", "X", 0)
+    | "nocarry-0+?", "0" -> ("nocarry-0+0", "X", 0)
+    | "nocarry-0+?", "1" -> ("nocarry-0+1", "X", 0)
+    | "nocarry-0+?", sym -> ("rej", sym, 1)
+
+    | "nocarry-0+0", "0" -> ("nocarry-0+0", "0", 0)
+    | "nocarry-0+0", "1" -> ("nocarry-0+0", "1", 0)
+    | "nocarry-0+0", "#" -> ("nocarry-0+0=0", "#", 0)
+    | "nocarry-0+0", sym -> ("rej", sym, 1)
+    | "nocarry-0+0=0", "X" -> ("nocarry-0+0=0", "X", 0)
+    | "nocarry-0+0=0", "0" -> ("move-right-nocarry", "X", 1)
+    | "nocarry-0+0=0", sym -> ("rej", sym, 1)
+
+    | "nocarry-0+1", "0" -> ("nocarry-0+1", "0", 0)
+    | "nocarry-0+1", "1" -> ("nocarry-0+1", "1", 0)
+    | "nocarry-0+1", "#" -> ("nocarry-0+1=1", "#", 0)
+    | "nocarry-0+1", sym -> ("rej", sym, 1)
+    | "nocarry-0+1=1", "X" -> ("nocarry-0+1=1", "X", 0)
+    | "nocarry-0+1=1", "1" -> ("move-right-nocarry", "X", 1)
+    | "nocarry-0+1=1", sym -> ("rej", sym, 1)
+
+    | "nocarry-1", "0" -> ("nocarry-1", "0", 0)
+    | "nocarry-1", "1" -> ("nocarry-1", "1", 0)
+    | "nocarry-1", "#" -> ("nocarry-1+?", "#", 0)
+    | "nocarry-1", sym -> ("rej", sym, 1)
+    | "nocarry-1+?", "X" -> ("nocarry-1+?", "X", 0)
+    | "nocarry-1+?", "0" -> ("nocarry-1+0", "X", 0)
+    | "nocarry-1+?", "1" -> ("nocarry-1+1", "X", 0)
+    | "nocarry-1+?", sym -> ("rej", sym, 1)
+
+    | "nocarry-1+0", "0" -> ("nocarry-1+0", "0", 0)
+    | "nocarry-1+0", "1" -> ("nocarry-1+0", "1", 0)
+    | "nocarry-1+0", "#" -> ("nocarry-1+0=1", "#", 0)
+    | "nocarry-1+0", sym -> ("rej", sym, 1)
+    | "nocarry-1+0=1", "X" -> ("nocarry-1+0=1", "X", 0)
+    | "nocarry-1+0=1", "1" -> ("move-right-nocarry", "X", 1)
+    | "nocarry-1+0=1", sym -> ("rej", sym, 1)
+
+    | "nocarry-1+1", "0" -> ("nocarry-1+1", "0", 0)
+    | "nocarry-1+1", "1" -> ("nocarry-1+1", "1", 0)
+    | "nocarry-1+1", "#" -> ("nocarry-1+1=0", "#", 0)
+    | "nocarry-1+1", sym -> ("rej", sym, 1)
+    | "nocarry-1+1=0", "X" -> ("nocarry-1+1=0", "X", 0)
+    | "nocarry-1+1=0", "0" -> ("move-right-carry", "X", 1)
+    | "nocarry-1+1=0", sym -> ("rej", sym, 1)
+
+    | "carry-start", "X" -> ("carry-start", "X", 0)
+    | "carry-start", "0" -> ("carry-0", "X", 0)
+    | "carry-start", "1" -> ("carry-1", "X", 0)
+    | "carry-start", "#" -> ("rej", "#", 0)       (* can't accept with a carry! *)
+    | "carry-start", sym -> ("rej", sym, 1)
+
+    | "carry-0", "0" -> ("carry-0", "0", 0)
+    | "carry-0", "1" -> ("carry-0", "1", 0)
+    | "carry-0", "#" -> ("carry-0+?", "#", 0)
+    | "carry-0", sym -> ("rej", sym, 1)
+    | "carry-0+?", "X" -> ("carry-0+?", "X", 0)
+    | "carry-0+?", "0" -> ("carry-0+0", "X", 0)
+    | "carry-0+?", "1" -> ("carry-0+1", "X", 0)
+    | "carry-0+?", sym -> ("rej", sym, 1)
+
+    | "carry-0+0", "0" -> ("carry-0+0", "0", 0)
+    | "carry-0+0", "1" -> ("carry-0+0", "1", 0)
+    | "carry-0+0", "#" -> ("carry-0+0=1", "#", 0)
+    | "carry-0+0", sym -> ("rej", sym, 1)
+    | "carry-0+0=1", "X" -> ("carry-0+0=1", "X", 0)
+    | "carry-0+0=1", "1" -> ("move-right-nocarry", "X", 1)
+    | "carry-0+0=1", sym -> ("rej", sym, 1)
+
+    | "carry-0+1", "0" -> ("carry-0+1", "0", 0)
+    | "carry-0+1", "1" -> ("carry-0+1", "1", 0)
+    | "carry-0+1", "#" -> ("carry-0+1=0", "#", 0)
+    | "carry-0+1", sym -> ("rej", sym, 1)
+    | "carry-0+1=0", "X" -> ("carry-0+1=0", "X", 0)
+    | "carry-0+1=0", "0" -> ("move-right-carry", "X", 1)
+    | "carry-0+1=0", sym -> ("rej", sym, 1)
+
+    | "carry-1", "0" -> ("carry-1", "0", 0)
+    | "carry-1", "1" -> ("carry-1", "1", 0)
+    | "carry-1", "#" -> ("carry-1+?", "#", 0)
+    | "carry-1", sym -> ("rej", sym, 1)
+    | "carry-1+?", "X" -> ("carry-1+?", "X", 0)
+    | "carry-1+?", "0" -> ("carry-1+0", "X", 0)
+    | "carry-1+?", "1" -> ("carry-1+1", "X", 0)
+    | "carry-1+?", sym -> ("rej", sym, 1)
+
+    | "carry-1+0", "0" -> ("carry-1+0", "0", 0)
+    | "carry-1+0", "1" -> ("carry-1+0", "1", 0)
+    | "carry-1+0", "#" -> ("carry-1+0=0", "#", 0)
+    | "carry-1+0", sym -> ("rej", sym, 1)
+    | "carry-1+0=0", "X" -> ("carry-1+0=0", "X", 0)
+    | "carry-1+0=0", "0" -> ("move-right-carry", "X", 1)
+    | "carry-1+0=0", sym -> ("rej", sym, 1)
+
+    | "carry-1+1", "0" -> ("carry-1+1", "0", 0)
+    | "carry-1+1", "1" -> ("carry-1+1", "1", 0)
+    | "carry-1+1", "#" -> ("carry-1+1=1", "#", 0)
+    | "carry-1+1", sym -> ("rej", sym, 1)
+    | "carry-1+1=1", "X" -> ("carry-1+1=1", "X", 0)
+    | "carry-1+1=1", "1" -> ("move-right-carry", "X", 1)
+    | "carry-1+1=1", sym -> ("rej", sym, 1)
+
+    | "move-right-nocarry", "_" -> ("nocarry-start", "_", 0)
+    | "move-right-nocarry", sym -> ("move-right-nocarry", sym, 1)
+    | "move-right-carry", "_" -> ("carry-start", "_", 0)
+    | "move-right-carry", sym -> ("move-right-carry", sym, 1)
+    | _, sym -> ("rej",sym,1) in
+
+  let states = [ "start"; "acc"; "rej";
+		 "wf1"; "wf2"; "wf3"; "wf4"; "wf5";
+                 "rewind"; "copy-w1"; "copy-w2";
+                 "copy-0-to-end";"copy-1-to-end";"move-to-end";
+		 "check-no-digits-left"; 
+		 "move-right-nocarry"; "move-right-carry";
+		 "nocarry-start"; 
+		 "nocarry-0"; 
+		 "nocarry-0+?";
+		 "nocarry-0+0"; "nocarry-0+0=0"; 
+		 "nocarry-0+1"; "nocarry-0+1=1";
+		 "nocarry-1"; 
+		 "nocarry-1+?"; 
+		 "nocarry-1+0"; "nocarry-1+0=1";
+		 "nocarry-1+1"; "nocarry-1+1=0";
+		 "carry-start"; 
+		 "carry-0"; 
+		 "carry-0+?";
+		 "carry-0+0"; "carry-0+0=1"; 
+		 "carry-0+1"; "carry-0+1=0";
+		 "carry-1"; 
+		 "carry-1+?"; 
+		 "carry-1+0"; "carry-1+0=0";
+		 "carry-1+1"; "carry-1+1=1" ]  in
+  let alph = ["0"; "1"; "#"; "X"; "X1"; "X2"; "_"; ">"]   in
+  { states = states;
+    input_alphabet = ["0"; "1"; "#"];
+    tape_alphabet = alph;
+    left_marker = ">";
+    blank = "_";
+    delta = delta;
+    start = "start";
+    accept = "acc";
+    reject = "rej" }
+
+
+
+</pre>
+</body>
+
+</html>
