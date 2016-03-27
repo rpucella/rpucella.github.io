@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 7</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 140%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+	pre.code {
+	   border: 1px solid #c6c6c6;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+	}
+
+/* from
+    http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
+ */
+
+ol {
+    counter-reset:li; /* Initiate a counter */
+    margin-left:0; /* Remove the default left margin */
+    padding-left:0; /* Remove the default left padding */
+    padding-top:1em;
+}
+ol > li {
+    position:relative; /* Create a positioning context */
+    margin:0 0 6px 2em; /* Give each list item a left margin to make
+    room for the numbers */
+    padding:4px 8px; /* Add some spacing around the content */
+    list-style:none; /* Disable the normal item numbering */
+    /*border-top:2px solid #666;
+    background:#f6f6f6; */
+}
+ol > li:before {
+    counter-increment:li; /* Increment the counter by 1 */
+    /* Position and style the number */
+    position:absolute;
+    top:-2px;
+    left:-2em;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    width:2em;
+    /* Some space between the number and the content in browsers that
+    support
+       generated content but not positioning it (Camino 2 is one
+    example) */
+    margin-right:8px;
+    padding:4px;
+/*    border-top:2px solid #666;
+    color:#fff;
+    background:#666; 
+    font-weight:bold; */
+/*    font-family:"Helvetica Neue", Arial, sans-serif;
+    text-align:center; */
+}
+
+ol.letter > li:before {
+    content:"(" counter(li,lower-alpha) ")"; /* Use the counter as content */
+}
+
+ol.number > li:before {
+    content:"(" counter(li,decimal) ")"; /* Use the counter as content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP16</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 7em;"></div>
+    
+    <h1 class="clear">Homework 7</h1>
+    
+    <p class="subtitle">Due date: ??, April ?? (midnight)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists your <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework6.ml"><tt>homework7.ml</tt></a> provided.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Download the file <a href="hw7-checker.ml"><tt>hw7-checker.ml</tt></a> into the same directory as your homework solution.</li>
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use "homework7.ml";;</tt></li>
+      <li>Load the homework checker via <tt>#use "hw7-checker.ml";;</tt></li>
+      <li>The homework checker checks that you've implemented all functions (or provided stubs for them) and that those functions have the type that I asked you to give them. If the checker says your types are OK, then you're fine. If the checker gives you an error, fix it. If you believe that the checker gives you an error wrongly, send me an email.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework7.ml</tt> as an attachment to <tt>focs.sp16@gmail.com</tt> with subject <i>Homework 7 submission</i>.</li>
+    </ul>
+
+    <p>If your code fails because you did not follow the instructions above (in particular, because your code fails to type check when put in presence of my automated testing rig) I'll be unhappy.</p>
+
+
+    <hr>
+
+
+    <p><i>Description of grammars</i></p>
+
+    <p><i>Code to check for generation</i></p>
+
+    
+    <hr>
+    
+    <ol class="number">
+
+      <li> <p><b>Context-Free Grammars</b></p>
+
+	<p>In this question,  I ask you to define context-free
+	grammars as constants using <tt>let</tt> with a fixed name
+	given below in each question. There is already a placeholder
+	in homework7.ml for those answers. Just replace the
+	placeholder with your definition.</p> 
+
+	<ol class="letter">
+
+<!--
+	  <li> <p>Code a function <tt class="code">???</tt> of
+	      type <tt class="code">???</tt> which...
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+-->
+
+<li><p>Define a context-free grammar <tt class="code">palindromes</tt> that generates all palindromes over alphabet {<tt>a</tt>,<tt>b</tt>,<tt>c</tt>}. Remember that a palindrome is a string that reads the same left-to-right and right-to-left, such as <tt>aba</tt> or <tt>ccddcc</tt>.</p>
+
+	  </li>
+
+<li><p>Define a context-free grammar <tt class="code">ambncmn</tt> that generates the language {<tt>a</tt><sup>m</sup><tt>b</tt><sup>n</sup><tt>c</tt><sup>m+n</sup> | m, n &ge; 0}, i.e., the set of all strings made up of <tt>a</tt>s followed by <tt>b</tt>s
+    followed by <tt>c</tt>s, where there are as many <tt>c</tt>s as <tt>a</tt>s and <tt>b</tt>s together.</p>
+      
+	  </li>
+
+
+<li><p>Define a context-free grammar <tt class="code">amcmnbn</tt> that generates the language {<tt>a</tt><sup>m</sup><tt>c</tt><sup>m+n</sup><tt>b</tt><sup>n</sup> | m, n &ge; 0}, i.e., the set of all strings made up of <tt>a</tt>s followed by <tt>c</tt>s
+    followed by <tt>b</tt>s, where there are as many <tt>c</tt>s as <tt>a</tt>s and <tt>b</tt>s together.</p>
+      
+	  </li>
+
+
+<li><p>Define a context-free grammar <tt class="code">ambncm</tt> that generates the language {<tt>a</tt><sup>m</sup><tt>b</tt><sup>n</sup><tt>c</tt><sup>m</sup> | m, n &ge; 0}, i.e., the set of all strings made up of <tt>a</tt>s followed by <tt>b</tt>s
+    followed by <tt>c</tt>s, where there are as many <tt>a</tt>s as <tt>c</tt>s.</p>
+      
+	  </li>
+
+
+<li><p>Define a context-free grammar <tt class="code">eqnum</tt> that generates all strings over {<tt>d</tt>,<tt>e</tt>} that have an equal number of <tt>d</tt>s and <tt>e</tt>s.</p>
+      
+	  </li>
+
+	</ol>
+
+      </li>
+
+
+<li> <p><b>Finite Automata and Grammars</b></p>
+
+  <p>fa and dfa</p>
+
+	<ol class="letter">
+
+<!--
+	  <li> <p>Code a function <tt class="code">???</tt> of
+	      type <tt class="code">???</tt> which...
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+-->
+
+
+	  <li> <p>Code a function <tt class="code">dfaGrammar</tt> of
+	      type <tt class="code">???</tt> which...
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+		  <li> <p>Code a function <tt class="code">faGrammar</tt> of
+	      type <tt class="code">???</tt> which...
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	</ol>
+      </li>
+
+      <li> <p><b>Unrestricted grammars</b></p>
+
+	<p>Show a sequence of transitions accepting the given string, in the comments </p>
+	
+	<ol class="letter">
+
+		  <li> <p> 1111+111=1111111
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+		  <li> <p> 2^n 
+		    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+		  
+	</ol>
+	
+      </li>
+
+    </ol>
+
+  </body>
+</html>
