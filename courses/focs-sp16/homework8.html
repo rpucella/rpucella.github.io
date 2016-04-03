@@ -157,11 +157,12 @@ li > p { margin-top:0;}
     <p>Electronic submission instructions:</p>
 
     <ul>
-      <li>Download the file <a href="hw8-checker.ml"><tt>hw8-checker.ml</tt></a> into the same directory as your homework solution.</li>
+<!--      <li>Download the file <a href="hw8-checker.ml"><tt>hw8-checker.ml</tt></a> into the same directory as your homework solution.</li> -->
       <li>Start a <i>new</i> OCaml shell.</li>
       <li>Load your homework code via <tt>#use "homework8.ml";;</tt></li>
-      <li>Load the homework checker via <tt>#use "hw8-checker.ml";;</tt></li>
-      <li>The homework checker checks that you've implemented all functions (or provided stubs for them) and that those functions have the type that I asked you to give them. If the checker says your types are OK, then you're fine. If the checker gives you an error, fix it. If you believe that the checker gives you an error wrongly, send me an email.</li>
+<!--      <li>Load the homework checker via <tt>#use "hw8-checker.ml";;</tt></li>
+      <li>The homework checker checks that you've implemented all functions (or provided stubs for them) and that those functions have the type that I asked you to give them. If the checker says your types are OK, then you're fine. If the checker gives you an error, fix it. If you believe that the checker gives you an error wrongly, send me an email.</li>-->
+      <li>Make sure the file loads without errors.</li>
       <li>When you're ready to submit, send an email with your file <tt>homework8.ml</tt> as an attachment to <tt>focs.sp16@gmail.com</tt> with subject <i>Homework 8 submission</i>.</li>
     </ul>
 
@@ -198,7 +199,7 @@ li > p { margin-top:0;}
     until the term reaches a normal form. (If a normal form is not
       reached after a given number of steps, you'll get an error.)</p>
 
-    <pre>
+    <pre class="code">
 # simplify default_defs "/x.x";;
 Term already in normal form
 - : string = "/x.x"
@@ -211,7 +212,7 @@ Term already in normal form
       reports all intermediate &lambda;-terms that arise during a
       simplification. That can be quite helpful for debugging.</p>
 
-    <pre>
+    <pre class="code">
 # simplify_verbose default_defs "(/x.(/y.y y) x) z";;
    (/x.(/y.y y) x) z
  = (/y.y y) z
@@ -231,7 +232,7 @@ Term already in normal form
       of <tt>true</tt> and <tt>false</tt>:
     </p>
 
-    <pre>
+    <pre class="code">
     ("true", "/x./y.x")
     ("false", "/x./y.y")    </pre>
 
@@ -240,7 +241,7 @@ Term already in normal form
     defines everything we did in class, including natural number
       arithmetic, complete with a predecessor function</p>
 
-<pre>
+<pre class="code">
 let default_defs = [ ("true","/x./y.x");
 		     ("false","/x./y.y");
 		     ("if","/c./x./y.c x y");
@@ -266,7 +267,7 @@ let default_defs = [ ("true","/x./y.x");
       have to create it by hand, or use the arithmetic operations:
     </p>
 
-    <pre>
+    <pre class="code">
 # simplify_verbose default_defs "plus _4 _4";;
    (/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x))))
  = (/n./f./x.(/f./x.f (f (f (f x)))) f (n f x)) (/f./x.f (f (f (f x))))
@@ -284,7 +285,7 @@ let default_defs = [ ("true","/x./y.x");
       that the number 8 you create above is zero or not, you'll get
       the resulting <tt>false</tt> in terms of how it is defined:</p>
 
-    <pre>
+    <pre class="code">
 # simplify_verbose default_defs "iszero (plus _4 _4)";;
    (/n.n (/x./x./y.y) (/x./y.x)) ((/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))))
  = (/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))) (/x./x./y.y) (/x./y.x)
@@ -308,7 +309,7 @@ let default_defs = [ ("true","/x./y.x");
     is just that, an identifier, and it is passed around as an identifier. This makes debugging
       somewhat painful. For instance, suppose you mess up the <tt>plus</tt> in the previous example:</p>
 
-    <pre>
+    <pre class="code">
 # simplify_verbose default_defs "iszero (pluss _4 _4)";;
    (/n.n (/x./x./y.y) (/x./y.x)) (pluss (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))))
  = pluss (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))) (/x./x./y.y) (/x./y.x)
@@ -318,7 +319,7 @@ let default_defs = [ ("true","/x./y.x");
 
     <p>You can of course create your own definitions that you can pass to <tt>simplify</tt> or <tt>simplify_verbose</tt>. For instance, you can define <tt>_8</tt> and use it:</p>
 
-    <pre>
+    <pre class="code">
 # simplify_verbose (default_defs @ [("_8","plus _4 _4")]) "iszero _8";;
    (/n.n (/x./x./y.y) (/x./y.x)) ((/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))))
  = (/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))) (/x./x./y.y) (/x./y.x)
@@ -334,10 +335,9 @@ let default_defs = [ ("true","/x./y.x");
     <p>In fact, all the questions below ask you to create
     definitions. For each question, you should put all your
     definitions into list of definitions that is self-contained,
-    meaning that I can pass to <tt>simplify</tt> to test your
+    meaning that I can pass it (and only it) to <tt>simplify</tt> to test your
     definitions. In practice, this means that these definitions will
-    extend the default definitions. I have predefined the environments for each question, but you should
-    feel free to add to them if you find yourself needing helper definitions.
+    extend the default definitions. Feel free to add definitions for helper functions if you need them. 
 
     <hr>
     
@@ -346,6 +346,14 @@ let default_defs = [ ("true","/x./y.x");
       <!-- -----------------------------------------------------------
       -->
       <li> <p><b>Warm Up</b></p>
+
+	<p><i>This question asks you to create definitions of
+	&lambda;-terms with a given name. There are already
+	placeholders for those definitions that you should replace
+	with your own. Remember that each definition is a name and a
+	&lambda;-term. All these definitions are automatically added to a list of
+	definitions <tt>q1_defs</tt>, which is what I'll be
+	    testing. Any supporting definitions you need must go in <tt>q1_defs</tt>. </i></p>
 
 	<ol class="letter">
 
@@ -359,6 +367,158 @@ let default_defs = [ ("true","/x./y.x");
 	  </li>
 -->
 
+          <li><p>Code a &lambda;-term with name <tt class="code">minus</tt> which
+              takes two natural numbers <i>m</i> and <i>n</i> as arguments
+              (like <tt>plus</tt>) and returns the natural
+              number <i>m - n</i>. If <i>m - n &lt 0</i>, <tt>minus</tt>
+              should return 0. All natural numbers should be in the
+              usual Chuch encoding given in class.
+	    </p>
+
+	    <pre class="code">
+# simplify q1_defs "minus _0 _0";;
+- : string = "/f./x.x"
+# simplify q1_defs "minus _1 _1";;
+- : string = "/f./x.x"
+# simplify q1_defs "minus _2 _1";;
+- : string = "/f./x.f x"
+# simplify q1_defs "minus _3 _1";;
+- : string = "/f./x.f (f x)"
+# simplify q1_defs "minus _3 _2";;
+- : string = "/f./x.f x"
+# simplify q1_defs "minus _2 _3";;
+- : string = "/f./x.x"	    </pre>
+	  </li>
+
+          <li><p>Code a &lambda;-term with name <tt class="code">geq</tt> which
+              takes two natural numbers <i>m</i> and <i>n</i> as
+              arguments (like <tt>plus</tt>) and returns <tt>true</tt>
+              if <i>m &geq; n</i> and <tt>false</tt> otherwise. All
+              Booleans and natural numbers should be in the
+              usual Chuch encoding given in class.
+	    </p>
+
+	    <pre class="code">
+# simplify q1_defs "geq _0 _0";;
+- : string = "/x./y.x"
+# simplify q1_defs "geq _1 _0";;
+- : string = "/x./y.x"
+# simplify q1_defs "geq _3 _1";;
+- : string = "/x./y.x"
+# simplify q1_defs "geq _1 _3";;
+- : string = "/x./y.y"
+# simplify q1_defs "geq _1 (plus _1 _1)";;
+- : string = "/x./y.y"	  </pre>
+	  </li>
+
+          <li><p>Code a &lambda;-term with name <tt class="code">eq</tt> which
+              takes two natural numbers <i>m</i> and <i>n</i> as
+              arguments (like <tt>plus</tt>) and returns <tt>true</tt>
+              if <i>m = n</i> and <tt>false</tt> otherwise. All
+              Booleans and natural numbers should be in the
+              usual Chuch encoding given in class.
+	    </p>
+
+	    <pre class="code">
+# simplify q1_defs "eq _0 _0";;
+- : string = "/x./y.x"
+# simplify q1_defs "eq _0 _1";;
+- : string = "/x./y.y"
+# simplify q1_defs "eq _0 _2";;
+- : string = "/x./y.y"
+# simplify q1_defs "eq _1 _2";;
+- : string = "/x./y.y"
+# simplify q1_defs "eq _2 _2";;
+- : string = "/x./y.x"
+# simplify q1_defs "eq _3 _2";;
+- : string = "/x./y.y"
+# simplify q1_defs "eq _3 _3";;
+- : string = "/x./y.x"    </pre>
+	  </li>
+
+
+	  <li><p>Let's encode pairs. Pairs are ways of packaging two
+	  values together in such a way that we can recover the two
+	      values later. The easiest way to encode a
+	  pair <i>(x,y)</i> is to
+	      represent it with a function that when given a
+	      function <i>f</i> calls <i>f</i> with both <i>x</i>
+	      and <i>y</i>. </p>
+
+	    <p>Code a &lambda;-term <tt class="code">pair</tt> which
+	      takes two arguments <i>x</i> and <i>y</i> (like <tt>plus</tt>) and returns a
+	      &lambda;-term that represents the pair <i>(x,y)</i>. </p>
+
+	    <p>To go
+	      with <tt>pair</tt>, code a
+	      &lambda;-term <tt class="code">match_pair</tt> which
+	      takes a pair representing <i>(x,y)</i> and a
+	      function <i>f</i> of
+	      two arguments and calls <i>f</i> with <i>x</i>
+	      and <i>y</i>. </p>
+
+	    <p>(Very roughly speaking, <tt>match_pair p (/x./y.M)</tt>
+	      behaves like <tt>match p with (x,y) -> M</tt> in OCaml.)</p>
+
+	    <p>Your functions should satisfy the following
+	      property: <tt>match_pair (pair a b) f</tt> = <tt>f a
+		b</tt>. </p>
+
+	    <pre class="code">
+# simplify q1_defs "match_pair (pair x y) f";;
+- : string = "f x y"
+# simplify q1_defs "match_pair (pair _1 _2) plus";;
+- : string = "/f./x.f (f (f x))"
+# simplify q1_defs "match_pair (pair true false) or";;
+- : string = "/x./y.x"
+# simplify q1_defs "match_pair (pair true false) and";;
+- : string = "/x./y.y"
+# simplify q1_defs "(/p.match_pair p (/x./y.times (succ x) (succ y))) (pair _1 _2)";;
+- : string = "/f./x.f (f (f (f (f (f x)))))"
+# simplify q1_defs "(/p.match_pair p (/x./y.eq y (succ x))) (pair _1 _2)";;
+- : string = "/x./y.x"
+# simplify q1_defs "(/p.match_pair p (/x./y.eq y (succ x))) (pair _1 _3)";;
+- : string = "/x./y.y"	    </pre>
+
+	  </li>
+
+	  <li>
+	    <p>Code two &lambda;-terms <tt class="code">fst</tt> and
+	      <tt class="code">snd</tt> which both take a pair and
+	      respectively return the first and the second element of
+	      the pair.
+	    </p>
+
+	    <pre class="code">
+# simplify q1_defs "fst (pair a b)";;
+- : string = "a"
+# simplify q1_defs "snd (pair a b)";;
+- : string = "b"
+# simplify q1_defs "fst (pair _3 (plus _1 _1))";;
+- : string = "/f./x.f (f (f x))"
+# simplify q1_defs "snd (pair _3 (plus _1 _1))";;
+- : string = "/f./x.f (f x)"	    </pre>	    
+	  </li>
+
+	  <li>
+	    <p>Code two &lambda;-terms <tt class="code">update_fst</tt> and
+	      <tt class="code">update_snd</tt> which both take a pair
+	      and a value <i>v</i> and 
+	      return the pair where the first (respectively, 
+	      second) component has been changed to <i>v</i>
+	    </p>
+
+	    <pre class="code">
+# simplify q1_defs "fst (update_fst (pair a b) c)";;
+- : string = "c"
+# simplify q1_defs "snd (update_fst (pair a b) c)";;
+- : string = "b"
+# simplify q1_defs "fst (update_snd (pair a b) c)";;
+- : string = "a"
+# simplify q1_defs "snd (update_snd (pair a b) c)";;
+- : string = "c"	    </pre>	    
+	  </li>	  
+
 	</ol>
 
       </li>
@@ -367,6 +527,132 @@ let default_defs = [ ("true","/x./y.x");
       <!-- ----------------------------------------------------------- -->
       <li> <p><b>Integers</b></p>
 
+	<p><i>This question asks you to create definitions of
+	&lambda;-terms with a given name. There are already
+	placeholders for those definitions that you should replace
+	with your own. Remember that each definition is a name and a
+	&lambda;-term. All these definitions are automatically added to a list of
+	definitions <tt>q2_defs</tt>, which is what I'll be
+	    testing. Any supporting definitions you need must go in <tt>q2_defs</tt>.</i></p>
+
+	<p>We saw in class an encoding of natural numbers
+	  0,1,2,3,... In this question, we consider an encoding of
+	  intergers, ...,-3,-2,-1,0,1,2,3,... </p>
+
+	<p>The encoding is dead simple. An integer is a pair of a
+	sign and a natural number. The sign will be represented by a
+	  Boolean value: <tt>true</tt> for positive integers,
+	  and <tt>false</tt> for negative integers. Thus,
+	  <i>(true,3)</i> is the representation of integer 3,
+	  and <i>(false,2)</i> the representation of integer
+	  -2. Integer 0 is always represented as (true,0).</p>
+
+	<p>The functions you developed in Question 1 might come in
+	  handy. Feel free to add them to <tt>q2_defs</tt> if you need to.</p>
+
+	<ol class="letter">
+
+	  <li>
+	    <p>Code a &lambda;-term <tt class="code">int</tt> which
+	      takes a natural number <i>n</i> and returns a (positive) integer
+	      <i>n</i> in the encoding described above. 
+	    </p>
+
+
+	    <pre class="code">
+# simplify q2_defs "fst (int _0)";;
+- : string = "/x./y.x"
+# simplify q2_defs "fst (int _1)";;
+- : string = "/x./y.x"
+# simplify q2_defs "fst (int _2)";;
+- : string = "/x./y.x"
+# simplify q2_defs "snd (int _0)";;
+- : string = "/f./x.x"
+# simplify q2_defs "snd (int _1)";;
+- : string = "/f./x.f x"
+# simplify q2_defs "snd (int _2)";;
+- : string = "/f./x.f (f x)"	  </pre>
+
+	  </li>	  
+	  
+	  <li>
+	    <p>Code a &lambda;-term <tt class="code">neg_int</tt> which
+	      takes an integer <i>n</i> in the encoding described
+	      above, and returns its negation. Recall that the negation of 2 is
+	      -2, and the negation of -3 is 3. 
+	    </p>
+
+	    <pre class="code">
+# simplify q2_defs "fst (neg_int (int _3))";;
+- : string = "/x./y.y"
+# simplify q2_defs "snd (neg_int (int _3))";;
+- : string = "/f./x.f (f (f x))"
+# simplify q2_defs "fst (neg_int (neg_int (int _3)))";;
+- : string = "/x./y.x"
+# simplify q2_defs "snd (neg_int (neg_int (int _3)))";;
+- : string = "/f./x.f (f (f x))"	  </pre>
+
+	  </li>	  
+
+
+
+	  <li>
+	    <p>Code a &lambda;-term <tt class="code">plus_int</tt> which
+	      takes two integers <i>m</i> and <i>n</i> in the encoding
+	      described above and returns integer <i>m+n</i>. 
+	    </p>
+
+
+	    <pre class="code">
+# simplify q2_defs "fst (plus_int (int _3) (int _2))";;
+- : string = "/x./y.x"
+# simplify q2_defs "snd (plus_int (int _3) (int _2))";;
+- : string = "/f./x.f (f (f (f (f x))))"
+# simplify q2_defs "fst (plus_int (int _3) (neg_int (int _2)))";;
+- : string = "/x./y.x"
+# simplify q2_defs "snd (plus_int (int _3) (neg_int (int _2)))";;
+- : string = "/f./x.f x"
+# simplify q2_defs "fst (plus_int (neg_int (int _3)) (int _2))";;
+- : string = "/x./y.y"
+# simplify q2_defs "snd (plus_int (neg_int (int _3)) (int _2))";;
+- : string = "/f./x.f x"
+# simplify q2_defs "fst (plus_int (neg_int (int _3)) (neg_int (int _2)))";;
+- : string = "/x./y.y"
+# simplify q2_defs "snd (plus_int (neg_int (int _3)) (neg_int (int _2)))";;
+- : string = "/f./x.f (f (f (f (f x))))"	  </pre>
+
+	  </li>	  
+
+
+	  <li>
+	    <p>Code a &lambda;-term <tt class="code">times_int</tt> which
+	      takes two integers <i>m</i> and <i>n</i> in the encoding
+	      described above and returns integer <i>m &times; n</i>. 
+	    </p>
+
+
+	    <pre class="code">
+# simplify q2_defs "fst (times_int (int _3) (int _2))";;
+- : string = "/x./y.x"
+# simplify q2_defs "snd (times_int (int _3) (int _2))";;
+- : string = "/f./x.f (f (f (f (f (f x)))))"
+# simplify q2_defs "fst (times_int (int _3) (neg_int (int _2)))";;
+- : string = "/x./y.y"
+# simplify q2_defs "snd (times_int (int _3) (neg_int (int _2)))";;
+- : string = "/f./x.f (f (f (f (f (f x)))))"
+# simplify q2_defs "fst (times_int (neg_int (int _3)) (int _2))";;
+- : string = "/x./y.y"
+# simplify q2_defs "snd (times_int (neg_int (int _3)) (int _2))";;
+- : string = "/f./x.f (f (f (f (f (f x)))))"
+# simplify q2_defs "fst (times_int (neg_int (int _3)) (neg_int (int _2)))";;
+- : string = "/x./y.x"
+# simplify q2_defs "snd (times_int (neg_int (int _3)) (neg_int (int _2)))";;
+- : string = "/f./x.f (f (f (f (f (f x)))))"	  </pre>
+
+	  </li>	  
+
+
+	</ol>
 
       </li>
 
@@ -374,7 +660,155 @@ let default_defs = [ ("true","/x./y.x");
       <!-- ----------------------------------------------------------- -->
       <li> <p><b>Lists</b></p>
 
+	<p><i>This question asks you to create definitions of
+	&lambda;-terms with a given name. There are already
+	placeholders for those definitions that you should replace
+	with your own. Remember that each definition is a name and a
+	&lambda;-term. All these definitions are automatically added to a list of
+	definitions <tt>q3_defs</tt>, which is what I'll be
+	    testing. Any supporting definitions you need must go in <tt>q3_defs</tt>.</i></p>
+
+
 	<ol class="letter">
+
+	  <li><p>Let's encode lists. The encoding is a variant of that 
+	      for pairs, with a twist. A pair was encoded as a
+	  function that took a function <i>f</i> as an argument and
+	  passed its two components to <i>f</i>. For lists, the twist
+	      is that there are two kinds of lists that need to
+	be handled differently: empty lists, and non-empty
+	lists. Therefore, a list will be encoded differently if it is
+	      an empty list or a non-empty list. But each of the
+	      encodings is a function that takes <i>two</i> arguments
+	      <i>a</i> and <i>f</i>. The encoding for an
+	      empty list simply returns <i>a</i>. The encoding for a
+	      non-empty list with head <i>h</i> and tail <i>t</i>
+	      calls <i>f</i> with <i>h</i> and <i>t</i>. </p>
+
+	    <p>Code a &lambda;-term <tt class="code">empty</tt> which
+	      represents the empty list.</p>
+
+	    <p>Code a &lambda;-term <tt class="code">cons</tt> which
+	    takes two arguments <i>h</i> and <i>t</i>
+	    (like <tt>plus</tt>) and returns the encoding of a list
+	      with first element <i>h</i> followed by
+	      elements <i>t</i>. Intuitively, <tt>cons h t</tt> plays
+	      the role of <tt>h::t</tt> in OCaml.
+
+	    <p>To go
+	      with <tt>empty</tt> and <tt>cons</tt>, code a
+	      &lambda;-term <tt class="code">match_list</tt> which
+	      takes a list <i>L</i> and two other arguments <i>a</i>
+	      and <i>f</i> and returns <i>a</i> if <i>L</i> is the
+	      empty list otherwise calls <i>f</i> with the head
+	      of <i>L</i> and the tail of <i>L</i> as arguments.</p>
+
+	    <p>(Very roughly speaking, <tt>match_list lst a (/h./t.M)</tt>
+	      behaves like <tt>match lst with [] -> a | h::t -> M</tt> in OCaml.)</p>
+
+	    <p>Your functions should satisfy the following
+	      property: <tt>match_list empty a f</tt> = <tt>a</tt>
+	      and <tt>match_list (cons h t) a f</tt> = <tt>f h t</tt>. </p>
+
+	    <pre class="code">
+# simplify q3_defs "match_list empty a f";;
+- : string = "a"
+# simplify q3_defs "match_list (cons h t) a f";;
+- : string = "f h t"
+# simplify q3_defs "match_list (cons A empty) a (/h./t.h)";;
+- : string = "A"
+# simplify q3_defs "match_list (cons A (cons B empty)) a (/h./t.h)";;
+- : string = "A"
+# simplify q3_defs "match_list (cons A (cons B empty)) a (/h./t.match_list t a (/h./t.h))";;
+- : string = "B"	    </pre>
+
+	  </li>
+
+
+
+	  <li>
+	    <p>Code a &lambda;-term <tt class="code">length</tt> which
+	      takes a list in the encoding described above and returns
+	      a natural number representing its length. 
+	    </p>
+
+	    <pre class="code">
+# simplify q3_defs "length empty";;
+- : string = "/f./x.x"
+# simplify q3_defs "length (cons A empty)";;
+- : string = "/f./x.f x"
+# simplify q3_defs "length (cons A (cons B empty))";;
+- : string = "/f./x.f (f x)"
+# simplify q3_defs "length (cons A (cons B (cons C empty)))";;
+- : string = "/f./x.f (f (f x))"	  </pre>
+
+	  </li>	  
+
+
+	  <li>
+	    <p>Code a &lambda;-term <tt class="code">sum</tt> which
+	      takes a list of natural numbers in the encoding described above and returns
+	      a natural number representing the sum of its elements.
+	    </p>
+
+	    <pre class="code">
+# simplify q3_defs "sum empty";;
+- : string = "/f./x.x"
+# simplify q3_defs "sum (cons _1 empty)";;
+- : string = "/f./x.f x"
+# simplify q3_defs "sum (cons _1 (cons _3 empty))";;
+- : string = "/f./x.f (f (f (f x)))"
+# simplify q3_defs "sum (cons _1 (cons _3 (cons _5 empty)))";;
+- : string = "/f./x.f (f (f (f (f (f (f (f (f x))))))))"	  </pre>
+
+	  </li>	  
+
+
+	  <li>
+	    <p>Code a &lambda;-term <tt class="code">append</tt> which
+	      takes two lists <i>L1</i> and <i>L2</i> in the encoding described above
+	      (like <tt>plus</tt>) and returns the list made up of all
+	      the elements of <i>L1</i> followed by all the elements
+	      of <i>L2</i>. 
+	    </p>
+
+	    <pre class="code">
+# simplify q3_defs "length (append empty empty)";;
+- : string = "/f./x.x"
+# simplify q3_defs "length (append empty (cons A (cons B empty)))";;
+- : string = "/f./x.f (f x)"
+# simplify q3_defs "length (append (cons C (cons D (cons E empty))) (cons A (cons B empty)))";;
+- : string = "/f./x.f (f (f (f (f x))))"
+# simplify q3_defs "sum (append empty empty)";;
+- : string = "/f./x.x"
+# simplify q3_defs "sum (append empty (cons _1 (cons _2 empty)))";;
+- : string = "/f./x.f (f (f x))"
+# simplify q3_defs "sum (append (cons _3 (cons _4 (cons _5 empty))) (cons _1 (cons _2 empty)))";;
+- : string =
+"/f./x.f (f (f (f (f (f (f (f (f (f (f (f (f (f (f x))))))))))))))"	  </pre>
+
+	  </li>	  
+
+
+	  <li>
+	    <p>Code a &lambda;-term <tt class="code">map</tt> which
+	      takes a function <i>f</i> and a list <i>L</i> in the
+	      encoding described above and returns the list obtained
+	      by applying function <i>f</i> to every element of <i>L</i>. 
+	    </p>
+
+	    <pre class="code">
+# simplify q3_defs "length (map (/x.plus x x) empty)";;
+- : string = "/f./x.x"
+# simplify q3_defs "length (map (/x.plus x x) (cons _1 (cons _2 (cons _3 empty))))";;
+- : string = "/f./x.f (f (f x))"
+# simplify q3_defs "sum (map (/x.plus x x) (cons _1 (cons _2 (cons _3 empty))))";;
+- : string = "/f./x.f (f (f (f (f (f (f (f (f (f (f (f x)))))))))))"
+# simplify q3_defs "match_list (map (/x.plus x x) (cons _1 (cons _2 (cons _3 empty)))) X (/h./t.h)";;
+- : string = "/f./x.f (f x)"	  </pre>
+
+	  </li>	  
+
 
 	</ol>
 	
