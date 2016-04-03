@@ -199,7 +199,7 @@ li > p { margin-top:0;}
     until the term reaches a normal form. (If a normal form is not
       reached after a given number of steps, you'll get an error.)</p>
 
-    <pre class="code">
+    <pre>
 # simplify default_defs "/x.x";;
 Term already in normal form
 - : string = "/x.x"
@@ -212,7 +212,7 @@ Term already in normal form
       reports all intermediate &lambda;-terms that arise during a
       simplification. That can be quite helpful for debugging.</p>
 
-    <pre class="code">
+    <pre>
 # simplify_verbose default_defs "(/x.(/y.y y) x) z";;
    (/x.(/y.y y) x) z
  = (/y.y y) z
@@ -232,7 +232,7 @@ Term already in normal form
       of <tt>true</tt> and <tt>false</tt>:
     </p>
 
-    <pre class="code">
+    <pre>
     ("true", "/x./y.x")
     ("false", "/x./y.y")    </pre>
 
@@ -241,7 +241,7 @@ Term already in normal form
     defines everything we did in class, including natural number
       arithmetic, complete with a predecessor function</p>
 
-<pre class="code">
+<pre>
 let default_defs = [ ("true","/x./y.x");
 		     ("false","/x./y.y");
 		     ("if","/c./x./y.c x y");
@@ -267,7 +267,7 @@ let default_defs = [ ("true","/x./y.x");
       have to create it by hand, or use the arithmetic operations:
     </p>
 
-    <pre class="code">
+    <pre>
 # simplify_verbose default_defs "plus _4 _4";;
    (/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x))))
  = (/n./f./x.(/f./x.f (f (f (f x)))) f (n f x)) (/f./x.f (f (f (f x))))
@@ -285,7 +285,7 @@ let default_defs = [ ("true","/x./y.x");
       that the number 8 you create above is zero or not, you'll get
       the resulting <tt>false</tt> in terms of how it is defined:</p>
 
-    <pre class="code">
+    <pre>
 # simplify_verbose default_defs "iszero (plus _4 _4)";;
    (/n.n (/x./x./y.y) (/x./y.x)) ((/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))))
  = (/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))) (/x./x./y.y) (/x./y.x)
@@ -309,7 +309,7 @@ let default_defs = [ ("true","/x./y.x");
     is just that, an identifier, and it is passed around as an identifier. This makes debugging
       somewhat painful. For instance, suppose you mess up the <tt>plus</tt> in the previous example:</p>
 
-    <pre class="code">
+    <pre>
 # simplify_verbose default_defs "iszero (pluss _4 _4)";;
    (/n.n (/x./x./y.y) (/x./y.x)) (pluss (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))))
  = pluss (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))) (/x./x./y.y) (/x./y.x)
@@ -319,7 +319,7 @@ let default_defs = [ ("true","/x./y.x");
 
     <p>You can of course create your own definitions that you can pass to <tt>simplify</tt> or <tt>simplify_verbose</tt>. For instance, you can define <tt>_8</tt> and use it:</p>
 
-    <pre class="code">
+    <pre>
 # simplify_verbose (default_defs @ [("_8","plus _4 _4")]) "iszero _8";;
    (/n.n (/x./x./y.y) (/x./y.x)) ((/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))))
  = (/m./n./f./x.m f (n f x)) (/f./x.f (f (f (f x)))) (/f./x.f (f (f (f x)))) (/x./x./y.y) (/x./y.x)
