@@ -372,7 +372,7 @@ let default_defs = [ ("true","/x./y.x");
               (like <tt>plus</tt>) and returns the natural
               number <i>m - n</i>. If <i>m - n &lt 0</i>, <tt>minus</tt>
               should return 0. All natural numbers should be in the
-              usual Chuch encoding given in class.
+              usual Church encoding given in class.
 	    </p>
 
 	    <pre class="code">
@@ -388,6 +388,22 @@ let default_defs = [ ("true","/x./y.x");
 - : string = "/f./x.f x"
 # simplify q1_defs "minus _2 _3";;
 - : string = "/f./x.x"	    </pre>
+
+	    <p><b>Turns out this one is a bit tricky, which is pretty
+	    unfair. So let me give you the solution. It
+	    is possible to write <tt>minus</tt> recursively, but that
+	    will make many of the other functions that might depend
+	    on <tt>minus</tt> run very slowly. A simpler solution is
+	    obtained by noticing that <i>m - n </i> is the same as
+	    applying <tt>pred</tt> <i>n</i> times to <i>m</i>. And the
+		encoding of <i>n</i> basically lets you apply a
+		function <i>n</i> times. So the simplest definition
+		of <tt>minus</tt> is:
+		<pre>
+		   /m./n.n pred m		</pre>
+		As I said, tricky. Sorry about that.
+	    </b></p>
+
 	  </li>
 
           <li><p>Code a &lambda;-term with name <tt class="code">geq</tt> which
@@ -395,7 +411,7 @@ let default_defs = [ ("true","/x./y.x");
               arguments (like <tt>plus</tt>) and returns <tt>true</tt>
               if <i>m &geq; n</i> and <tt>false</tt> otherwise. All
               Booleans and natural numbers should be in the
-              usual Chuch encoding given in class.
+              usual Church encoding given in class.
 	    </p>
 
 	    <pre class="code">
@@ -416,7 +432,7 @@ let default_defs = [ ("true","/x./y.x");
               arguments (like <tt>plus</tt>) and returns <tt>true</tt>
               if <i>m = n</i> and <tt>false</tt> otherwise. All
               Booleans and natural numbers should be in the
-              usual Chuch encoding given in class.
+              usual Church encoding given in class.
 	    </p>
 
 	    <pre class="code">
