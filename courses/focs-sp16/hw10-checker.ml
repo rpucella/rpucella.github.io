@@ -2,8 +2,8 @@
 (* To use this file:
  * 
  * (1) start a _new_ OCaml shell
- * (2) load your homework submission #use "homework9.ml";;
- * (3) load this file  #use "hw9-checker.ml";;
+ * (2) load your homework submission #use "homework10.ml";;
+ * (3) load this file  #use "hw10-checker.ml";;
  * 
  * If there are _any_ errors, go back and fix your homework. 
  *
