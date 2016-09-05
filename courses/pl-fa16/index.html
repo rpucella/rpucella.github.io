@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Programming Languages (Fall 2016)</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+        a, a:link, a:visited {
+	    color: #003d99;
+	}
+
+        code,tt,pre {
+          font-size: 130%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+    </style>
+
+    <script>
+
+window.addEventListener("load",run);
+
+function run () {
+    // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+    // actually, for anything with "scrollto" class
+    
+    // offset is given by the 'top' div (adjusted for padding)
+    var off = document.getElementById("top").clientHeight;
+    console.log(off);
+    //var elts = document.querySelectorAll("div.navbar a");
+    var elts = document.querySelectorAll("a.scrollto");
+    for (var i=0; i<elts.length; i++) {
+        var href=elts[i].getAttribute("href").slice(1);
+        elts[i].setAttribute("onclick","return false;");
+        elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+    }
+    
+    // SETUP SEND EMAIL LINK
+    document.getElementById("send_email").addEventListener("click",function(){
+        window.open("mailto:riccardo.pucella@olin.edu");
+    });
+}
+
+      </script>
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="scrollto" href="#top"><b>Programming Languages FA16</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 7em;"></div>
+    
+    <h1 class="clear">Programming Languages (Fall 2016)</h1>
+    
+    <p class="subtitle">ENGR 3599A / Tue 16:00-18:30 / AC 326</p>
+    
+    <p>This course is an introduction to the theory, design, and
+    implementation of programming languages. Topics covered may
+    include: semantics of programming languages, types, higher-order
+    functions and lambda calculus, objects, laziness, continuations,
+    monads, objects, and concurrency. Class work revolves around the
+    implementation of interpreters for a variety of small programming
+    languages.</p> 
+
+    
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <ul class="simple">
+
+      	<li>
+	  <p class="ann"><span class="hdr">Sep 1:</span>
+	    Happy start of the semester!</p>
+	</li>
+
+      </ul>
+      
+    </div>
+
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Information</h3>
+
+      <p>Prerequisites: ENGR 2510</p>
+
+      <p>Instructor: <a href="http://www.rpucella.net">Riccardo Pucella</a> (<a id="send_email" href="#">send email</a>)</p>
+
+      <p>Office hours: Tue 15:00-16:00 / MH 353</p>
+
+      <p>Textbook: We don't have a textbook. There is nothing out
+      there that captures quite what I want to do in this course. I
+      will find readings for us to supplement the lectures. 
+
+      If you're looking for reference books that cover some of the
+     topics we'll cover, the following should help:
+      <ul>
+	<li>Glynn
+	Winskell, <i><a href="https://www.amazon.com/Formal-Semantics-Programming-Languages-Winskel/dp/0262731037">Formal
+	Semantics of Programming Languages</a></i>. This book specifically
+	covers formal semantics, and not implementation. There are
+	many excellent textbooks on semantics that have been
+	published in the last few years. This one is a bit older, but
+	it's a classic, and you should be able to find good used
+	copies.</li>
+
+	<li>Shriram Krishnamurthy, 
+         <i><a href="http://cs.brown.edu/~sk/Publications/Books/ProgLangs/">Programming
+	Languages: Application and Interpretation</a></i>. This is the
+	closest book in spirit to what I want to cover in the
+	course. It is freely available online. It uses Racket, a
+	dialect of Scheme. Definitely worth a read.</li>
+
+      </ul>
+
+	
+      <p>Programming: All programming in the course will be done in
+      <a href="https://www.python.org/download/releases/2.7/">Python (version 2.7)</a>. I will assume working knowledge of the
+	language. We will largely follow
+	the <a href="http://legacy.python.org/dev/peps/pep-0008/">PEP8
+	style guide</a>, and you
+        may also want to read through <a href="https://www.memonic.com/user/pneff/folder/python/id/1bufp">this</a> as well.
+
+
+      <p>Grading: The final grade is based on weekly homeworks for the
+      first five weeks (40%), biweekly homeworks for the following four
+      weeks (30%), and a final project (30%). All work to be done in
+      teams of two. Late homeworks will be penalized (10% per 24 hours)
+      and no homework will be accepted after its solution has been
+      discussed in class.
+
+      <p>Ninjas: We have no ninjas at the moment.</p>
+
+     I expect all of us to follow the <b><a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a></b>.</p>
+
+     </div>
+
+
+
+    <hr class="section">
+    <div class="section" id="lectures">
+      <h3>Lectures and Readings</h3>
+
+      <p>Schedule and topics subject to changes.</p>
+
+      <ul class="lectures">
+	
+	<li><p><span class="hdr">Sep 6:</span><i>Introduction</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Sep 13:</span><i>Bindings and Identifiers</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Sep 20:</span><i>Surface Syntax and Parsing</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Sep 27:</span><i>First-Class Functions</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Oct 4:</span><i>Lists and Recursive Structures</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Oct 11:</span><i>State and Effects</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Oct 18:</span><i>Monads</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Oct 25:</span><i>Continuations</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Nov 1:</span><i>Objects</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Nov 8:</span><i>Types</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Nov 15:</span><i>Compilation</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Nov 29:</span><i>Concurrency</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Dec 6:</span><i>Final Projects (Part 1)</i></p>
+		<div class="lect">
+		</div>
+
+	<li><p><span class="hdr">Somewhere Dec 13-16:</span><i>Final Projects (Part 2)</i></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+      </ul>
+
+    </div>
+
+
+
+    <hr class="section">
+    <div class="section" id="homeworks">
+      <h3>Homeworks</h3>
+
+      <ul class="simple">
+      </ul>
+
+    </div>
+
+  </body>
+</html>
