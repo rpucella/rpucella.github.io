@@ -153,7 +153,12 @@ li > p { margin-top:0;}
     <p>Feel free to define helper functions if you need them.</p>
 
     <p>Please code your answers by modifying the
-      file <a href="homework1.py"><tt>homework1.py</tt></a> provided.</p>
+      file <a href="homework1.py"><tt>homework1.py</tt></a>
+      provided.</p>
+
+    <p>Questions marked <b>Extra</b> are optional. You do not have to
+    do them. But will give you more practice and sometimes more
+      insight into what is going on. Plus some of them are fun.</p>
 
     <p>Electronic submission instructions:</p>
 
@@ -164,18 +169,41 @@ li > p { margin-top:0;}
     <hr>
     
     <ol class="number">
-      <li> <p><b>Numerical functions</b></p>
 
-	<p>For the functions below, I really only care about the result they return for <i>positive integers</i>.</p>
-
+      <li> <p><b>Boolean Operations</b></p>
 
 	<ol class="letter">
 
-	  <li> <p>Code a function <tt class="code">gcd</tt> of
-	    type <tt class="code">int * int -> int</tt> which takes two
-	    integers and returns the greatest common divisor of those
-	      integers.</p>
-	    
+	  <li><p>Add an expression <tt class="code">EIsZero</tt> to
+	  the abstract representation that takes an
+	  expression <i>e</i> and evaluates to true if <i>e</i>
+	  evaluates to integer 0, and to false if <i>e</i> evaluates
+	      to an integer different from 0.</p>
+
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	  <li> <p>Add
+	    expressions <tt class="code">EAnd</tt>, <tt class="code">EOr</tt>,
+	      and <tt class="code">ENot</tt> to the abstract
+	    representation corresponding to the Boolean operations
+	      of the same name. <tt>EAnd</tt> and <tt>EOr</tt> are
+	      binary operations (they take two subexpressions)
+	    while <tt>ENot</tt> is a unary operation (taking a single
+	      subexpression). They should evaluate to the Boolean value
+	      corresponding to applying the appropriate logical operator to
+	      the result of evaluating the subexpressions.</p>
+	      
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	  <li> <p><b>Extra:</b> Implement the evaluation
+	      of <tt>EAnd</tt> and <tt>EOr</tt> so that they
+	      are <a href="https://en.wikipedia.org/wiki/Short-circuit_evaluation">short-circuiting</a>.
+	    </p>
+
 	    <pre class="code">
 	    </pre>
 	  </li>
@@ -183,6 +211,127 @@ li > p { margin-top:0;}
 	</ol>
       </li>
 
+
+
+      <li> <p><b>Vectors</b></p>
+
+	<ol class="letter">
+
+	  <li><p>Add a new class of
+	  values <tt class="code">VVector</tt> to the abstract
+	  representation, corresponding to vectors of values. Instead
+	      of a <tt>value</tt> field, an instance
+	      of <tt>VVector</tt> has a field <tt>length</tt> holding
+	      the length of the vector, and a method <tt>get(<i>n</i>)</tt>
+	  which can be used to get the <i>n</i>th value of the vector.
+	      The first element of a vector is at position 0. </p>
+
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	  <li><p>Add an expression <tt class="code">EVector</tt> to
+	  the abstract representation which takes a list of
+	      expressions <i>e<sub>1</sub></i>,
+	  ..., <i>e<sub>n</sub></i> and evaluates to the vector
+	      made up of the result of
+	      evaluating each of <i>e<sub>1</sub></i>,
+	      ..., <i>e<sub>n</sub></i>. </p>
+
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	      <li> <p>Extend the evaluation
+		  of <tt>EPlus</tt>, <tt>EMinus</tt>, <tt>EAnd</tt>, <tt>EOr</tt>,
+		  and <tt>ENot</tt> so that if given expressions
+		  evaluating to vectors, they apply the corresponding
+		  operations 
+		  pointwise to the components of the
+		  vectors. Thus, <tt>EPlus</tt> will compute vector
+		  addition, <tt>EMinus</tt> vector
+		  subtraction, and so on.</p>
+	      
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	      <li> <p>Extend the evaluation of <tt>ETimes</tt> so that
+		  if given expressions evaluating to vectors of
+		  integers as arguments, it computes the inner product
+		  of those vectors.</p>
+	      
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	      <li> <p><b>Extra:</b> Extend the evaluation
+		  of <tt>EPlus</tt>, <tt>ETimes</tt>, <tt>EMinus</tt>,
+		  <tt>EAnd</tt>, and <tt>EOr</tt> so that when given
+	      expressions evaluating to a 
+	      vector and a scalar (i.e., an integer or a Boolean), in
+	      either order, the
+	      corresponding operation is applied to every element of
+	      the vector and the scalar, yielding a vector of the results.
+	    </p>
+
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	</ol>
+      </li>
+      
+
+      <li> <p><b>Rational Numbers</b></p>
+
+	<ol class="letter">
+
+	  <li><p>Add a new class of
+	  values <tt class="code">VRational</tt> to the abstract
+	  representation, corresponding to rational numbers (i.e.,
+	      fractions). Instead of a <tt>value</tt> field, an
+	      instance of <tt>VRational</tt> has a
+	  field <tt>numer</tt> holding the numerator of the rational
+	      number, and a field <tt>denom</tt> holding the
+	      denominator. </p>
+
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	  <li><p>Add an expression <tt class="code">EDiv</tt> to
+	  the abstract representation which takes two expressions
+	  and evaluates to the rational 
+	  number obtained by dividing the result of evaluating the
+	  first to the result of evaluating the second. Division
+	  should work with both integers and rational numbers.</p>
+
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	  <li> <p><b>Extra:</b> Ensure that the rational number
+	      obtained by evaluating <tt>EDiv</tt> is in simplified
+	      form (i.e., 2/3, instead of 4/6, and 4 instead of 4/1).</p>
+	      
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+	  <li> <p><b>Extra:</b> Make your code in question 2
+	      works with vectors of rational numbers, and extend 
+	      <tt>EDiv</tt> so that it works with both vectors and
+	      scalars (in any combination, as in 2(c) and 2(e). </p> 
+	      
+	    <pre class="code">
+	    </pre>
+	  </li>
+
+
+	</ol>
+      </li>
+      
     </ol>
     
 
