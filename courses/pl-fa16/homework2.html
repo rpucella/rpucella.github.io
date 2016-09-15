@@ -248,7 +248,7 @@ and
   let* (x = 10, y = 20, z = 30)
     (x+y)*z
 </pre>
-which would evaluate the same as if we would have written
+which would evaluate the same as if we had written
 <pre>
   let (x = 10)
     let (y = 20)
@@ -331,10 +331,107 @@ and the result evaluated.
 	</ol>
 </li>
 
-<li> <p><b>Value-Substituting Lets</b></p>
 
-  <p><i>Coming later today</i></p>
 
+
+<li> <p><b>Alternative Evaluation Models for Let</b></p>
+
+	<ol class="letter">
+
+	  <li><p>The way we evaluate a <tt>let</tt> using the
+	  substitution model we saw in class may feel a bit
+	      wasteful.</p>
+
+	    <p>For instance, an expression such as 
+<pre>
+  let (a = <i>&lt;some large expression X&gt;</i>)
+    <i>&lt;E&gt;</i>
+</pre>
+where <tt><i>&lt;E&gt;</i></tt> is some expression with several <tt>a</tt>s
+appearing in it, will evaluate by substituting the large
+expression <tt><i>X</i></tt> for
+every single <tt>a</tt>. This means that evaluating the resulting body
+of the <tt>let</tt> will require us to evaluate over and over again
+the large expression <tt><i>X</i></tt>.
+	    </p>
+
+	    <p>Here is one alternative. We introduce a new kind of
+	    let-binding, <tt>letv</tt>. To evaluate an expression
+<pre>
+  letv (x = e1) e2
+</pre>
+instead of simply substituting <tt>e1</tt> for every occurrence
+of identifier <tt>x</tt> in <tt>e2</tt>, we first evaluate <tt>e1</tt>
+down to a value <tt>v</tt>, and then substitute <tt>v</tt> for every
+occurrence of <tt>x</tt> in <tt>e2</tt>, evaluating the result. This
+kind of evaluation is called <i>eager</i> (whereas the
+original one, based on a straight up substitution, is
+called <i>lazy</i> &mdash; can you see where the terms might come
+from?). </p>
+
+	    <p>Add an Expression node <tt>ELetV</tt> to the abstract
+	    representation which implements the eager evaluation described
+	    in the previous paragraph. Make it as in Q1(a) above,
+	    allowing it to handle multiple simultaneous
+	      bindings. Thus, <tt>ELetV</tt> should take two
+	    arguments, a list of pairs (each a pair of an identifier
+	    name and an expression) and an expression (the body of the
+	      let).</p>
+
+<p>(There is a trickiness to implementing eager evaluation, which I hope you will notice. Make
+  whatever modification to the abstract representation you feel you
+  need to.)</p>
+
+<pre class="code">
+</pre>
+
+	    <p><i>Meditation question: is there any other difference
+	    between eager evaluation and lazy evaluation aside from
+	      the fact that one seems to do less work? Can they
+	      actually behave differently, or return different
+		results?</i></p>
+
+	  </li>
+
+	  <li> <p><b>Extra:</b> Here is yet another way of
+	  implementing evaluation, midway between the full lazy
+	      evaluation presented in class and the eager evaluation
+	  for <tt>ELetV</tt> in the previous question. Consider a new
+	  kind of let-binding we could write:
+<pre>
+  letn (x = e1) e2
+</pre>	      
+which evaluates as follows: you substitute <tt>e1</tt> for <tt>x</tt>
+in <tt>e2</tt> in more or less the usual way, but you make it so that
+the first time you ever evaluate an <tt>e1</tt> in the course of
+evaluating the substituted body <tt>e2</tt>, you remember the value
+<tt>v</tt> that <tt>e1</tt> evaluates to so that if ever find yourself
+needing to evaluate <tt>e1</tt> again elsewhere in <tt>e2</tt>, you
+can just use <tt>v</tt> without needing to re-evaluate that new
+occurrence of <tt>e2</tt>. Basically, you pay the cost of
+evaluating <tt>e1</tt> at most once (but you may never pay it if you
+never need to evaluate <tt>e1</tt>). </p>
+
+<p>Add an Expression node <tt>ELetN</tt> to the abstract
+	    representation which implements this third kind of
+	    evaluation, described
+	    in the previous paragraph. Make it as in Q1(a) above,
+	    allowing it to handle multiple simultaneous
+	      bindings. Thus, <tt>ELetN</tt> should take two
+	    arguments, a list of pairs (each a pair of an identifier
+	    name and an expression) and an expression (the body of the
+  let).</p>
+
+	    <p>Note that there are <i>many</i> ways of implementing
+	      this. I'd like to see what you come up with.</p>
+
+<pre class="code">
+</pre>
+
+
+	  </li>
+
+	</ol>
       </li>
 
 <li> <p><b>User-Defined Functions</b></p>
