@@ -371,12 +371,12 @@ from?). </p>
 
 	    <p>Add an Expression node <tt>ELetV</tt> to the abstract
 	    representation which implements the eager evaluation described
-	    in the previous paragraph. Make it as in Q1(a) above,
+	    in the previous paragraph. <del>Make it as in Q1(a) above,
 	    allowing it to handle multiple simultaneous
 	      bindings. Thus, <tt>ELetV</tt> should take two
 	    arguments, a list of pairs (each a pair of an identifier
 	    name and an expression) and an expression (the body of the
-	      let).</p>
+		let).</del> <ins>For simplicity, implement it to deal with a single binding, the way we did <tt>ELet</tt> in class, with three arguments: an identifier, an expression to bind to the identifier, and the body of the let.</ins></p>
 
 <p>(There is a trickiness to implementing eager evaluation, which I hope you will notice. Make
   whatever modification to the abstract representation you feel you
@@ -415,12 +415,12 @@ never need to evaluate <tt>e1</tt>). </p>
 <p>Add an Expression node <tt>ELetN</tt> to the abstract
 	    representation which implements this third kind of
 	    evaluation, described
-	    in the previous paragraph. Make it as in Q1(a) above,
+	    in the previous paragraph. <del>Make it as in Q1(a) above,
 	    allowing it to handle multiple simultaneous
 	      bindings. Thus, <tt>ELetN</tt> should take two
 	    arguments, a list of pairs (each a pair of an identifier
 	    name and an expression) and an expression (the body of the
-  let).</p>
+  let).</del> <ins>For simplicity, implement it to deal with a single binding, the way we did <tt>ELet</tt> in class, with three arguments: an identifier, an expression to bind to the identifier, and the body of the let.</ins></p>
 
 	    <p>Note that there are <i>many</i> ways of implementing
 	      this. I'd like to see what you come up with.</p>
