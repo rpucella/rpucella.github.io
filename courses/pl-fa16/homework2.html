@@ -371,12 +371,12 @@ from?). </p>
 
 	    <p>Add an Expression node <tt>ELetV</tt> to the abstract
 	    representation which implements the eager evaluation described
-	    in the previous paragraph. <del>Make it as in Q1(a) above,
+	    in the previous paragraph. Make it as in Q1(a) above,
 	    allowing it to handle multiple simultaneous
 	      bindings. Thus, <tt>ELetV</tt> should take two
 	    arguments, a list of pairs (each a pair of an identifier
 	    name and an expression) and an expression (the body of the
-		let).</del> <ins>For simplicity, implement it to deal with a single binding, the way we did <tt>ELet</tt> in class, with three arguments: an identifier, an expression to bind to the identifier, and the body of the let.</ins></p>
+	      let).</p>
 
 <p>(There is a trickiness to implementing eager evaluation, which I hope you will notice. Make
   whatever modification to the abstract representation you feel you
@@ -415,12 +415,12 @@ never need to evaluate <tt>e1</tt>). </p>
 <p>Add an Expression node <tt>ELetN</tt> to the abstract
 	    representation which implements this third kind of
 	    evaluation, described
-	    in the previous paragraph. <del>Make it as in Q1(a) above,
+	    in the previous paragraph. Make it as in Q1(a) above,
 	    allowing it to handle multiple simultaneous
 	      bindings. Thus, <tt>ELetN</tt> should take two
 	    arguments, a list of pairs (each a pair of an identifier
 	    name and an expression) and an expression (the body of the
-  let).</del> <ins>For simplicity, implement it to deal with a single binding, the way we did <tt>ELet</tt> in class, with three arguments: an identifier, an expression to bind to the identifier, and the body of the let.</ins></p>
+  let).</p>
 
 	    <p>Note that there are <i>many</i> ways of implementing
 	      this. I'd like to see what you come up with.</p>
@@ -432,15 +432,97 @@ never need to evaluate <tt>e1</tt>). </p>
 	  </li>
 
 	</ol>
-      </li>
+</li>
 
-<li> <p><b>User-Defined Functions</b></p>
+<li> <p><b>Defined Functions</b></p>
+  
+<p>In this question, we'll add defined functions to our
+    language that can be called during the evaluation of an
+    expression. In contrast with primitive operations, which are
+    implemented in Python (our implementation language), defined
+    functions are defined with our language itself.</p>
 
-  <p><i>Coming later today</i></p>
+      <p>A defined function is represented as a
+	dictionary <tt>{"params":<i>L</i>, "body":<i>exp</i>}</tt>
+	where <tt><i>L</i></tt> is a list of parameter names (the
+	parameters to the function) and <tt><i>exp</i></tt> is an
+	expression (in our abstract representation) representing the body of the function which gets
+	evaluated to return a result from the function.</p>
 
-      </li>
+      <p>For example, here is the definition of a function to add one
+	to its input:
+<pre>
+  { 
+    "params": ["x"],
+    "body": EPrimCall("+",[EId("x"),EInteger(1)])
+  }
+</pre>
+while here is the definition of a function that squares its input:
+<pre>
+  {
+    "params": ["y"],
+    "body": EPrimCall("*",[EId("y"),EId("y")])
+  }
+</pre>
+More interesting examples may require additional primitive
+operations, because you're limited in what you can do with only basic
+arithmetic. If you have a primitive operation "zero?" that tests whether
+an integer is zero (it's easy enough to add to the primitive
+dictionary) you can define an equality function as follows:
+<pre>
+  { 
+    "params": ["a","b"],
+    "body": EPrimCall("zero?",[EPrimCall("-",[EId("a"),EId("b")])])
+  }
+</pre>
 
-      
+<p>To use defined functions, we need a way to call them with arguments.</p>
+
+      <p>Your main task is to add a new Expression node <tt>ECall</tt>
+	to the abstract representation. <tt>ECall</tt> looks very much
+	like <tt>EPrimCall</tt>: it takes two arguments, the name of a
+	function to call, and a list of expressions corresponding to
+	the arguments of the function call. Evaluating a function
+	call requires looking up the function definition,
+	substituting the argument expressions for the corresponding
+	parameters in the body of the function, and evaluating the
+	body.</p>
+
+      <p>Where do we look up the function definition? We're going to
+      use the same trick we used with primitive operations. We are
+      going to use a dictionary which we'll call the function
+      dictionary and which will map function names to function
+      definitions (where a function definition is a dictionary as
+      above, with keys <tt>params</tt> and <tt>body</tt>). Thus, here
+      is a function dictionary containing the above definitions, with
+      reasonable names:
+<pre>
+  { "inc": { 
+             "params": ["x"],
+             "body": EPrimCall("+",[EId("x"),EInteger(1)])
+           },
+    "square: {
+               "params": ["y"],
+               "body": EPrimCall("*",[EId("y"),EId("y")])
+             },
+    "=": {
+           "params": ["a","b"],
+           "body": EPrimCall("zero?",[EPrimCall("-",[EId("a"),EId("b")])])
+         }
+  }
+</pre>
+</p>
+
+<p>We will pass such a function dictionary at the same time as
+  the primitive dictionary, in every <tt>eval()</tt>
+  call. Thus, <tt>eval()</tt> will now take two arguments, the
+  primitives dictionary, and the functions dictionary.
+</p>
+
+<pre class="code">
+</pre>
+
+</li>
 
     </ol>
     
