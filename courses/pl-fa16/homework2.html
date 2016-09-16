@@ -650,6 +650,14 @@ dictionary) you can define an equality function as follows:
 </p>
 
 <pre class="code">
+# we need a zero? operation in the initial primitives dictionary
+>>> def oper_zero (v1):
+       if v1.type == "integer":
+           return VBoolean(v1.value==0)
+       raise Exception ("Runtime error: type error in zero?")
+
+>>> INITIAL_PRIM_DICT["zero?"] = oper_zero
+
 # here's a function dictionary
 >>> FUN_DICT = {
       "square": {"params":["x"],
