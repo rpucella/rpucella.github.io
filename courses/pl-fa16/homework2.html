@@ -230,7 +230,31 @@ and
             EPrimCall("-",[EId("a"),EId("b")])))
 </pre>
   
-	    <pre class="code">
+<pre class="code">
+>>> ELet([("a",EInteger(99))],EId("a")).eval(INITIAL_PRIM_DICT).value
+99
+>>> ELet([("a",EInteger(99)),
+          ("b",EInteger(66))],EId("a")).eval(INITIAL_PRIM_DICT).value
+99
+>>> ELet([("a",EInteger(99)),
+          ("b",EInteger(66))],EId("b")).eval(INITIAL_PRIM_DICT).value
+66
+>>> ELet([("a",EInteger(99))],
+         ELet([("a",EInteger(66)),
+               ("b",EId("a"))],
+              EId("a"))).eval(INITIAL_PRIM_DICT).value
+66
+>>> ELet([("a",EInteger(99))],
+         ELet([("a",EInteger(66)),
+               ("b",EId("a"))],
+              EId("b"))).eval(INITIAL_PRIM_DICT).value
+99
+>>> ELet([("a",EInteger(5)),
+          ("b",EInteger(20))],
+         ELet([("a",EId("b")),
+               ("b",EId("a"))],
+              EPrimCall("-",[EId("a"),EId("b")]))).eval(INITIAL_PRIM_DICT).value
+15
 </pre>
 	  </li>
 
@@ -289,6 +313,30 @@ would evaluate to 0, since it should be equivalent to writing
 	    </p>
     
 <pre class="code">
+>>> ELetS([("a",EInteger(99))],EId("a")).eval(INITIAL_PRIM_DICT).value
+99
+>>> ELetS([("a",EInteger(99)),
+           ("b",EInteger(66))],EId("a")).eval(INITIAL_PRIM_DICT).value
+99
+>>> ELetS([("a",EInteger(99)),
+           ("b",EInteger(66))],EId("b")).eval(INITIAL_PRIM_DICT).value
+66
+>>> ELet([("a",EInteger(99))],
+         ELetS([("a",EInteger(66)),
+                ("b",EId("a"))],
+               EId("a"))).eval(INITIAL_PRIM_DICT).value
+66
+>>> ELet([("a",EInteger(99))],
+         ELetS([("a",EInteger(66)),
+                ("b",EId("a"))],
+               EId("b"))).eval(INITIAL_PRIM_DICT).value
+66
+>>> ELetS([("a",EInteger(5)),
+           ("b",EInteger(20))],
+          ELetS([("a",EId("b")),
+                 ("b",EId("a"))],
+                EPrimCall("-",[EId("a"),EId("b")]))).eval(INITIAL_PRIM_DICT).value
+0
 </pre>
 	  </li>
 
@@ -324,7 +372,51 @@ and the result evaluated.
     into an equivalent sequence of <tt>ELet</tt>.
 </p>
 
-	    <pre class="code">
+<pre class="code">
+>>> print(ELetS([("a",EInteger(99))],EId("a")).expand())
+ELet([(a,EInteger(99))],EId(a))
+>>> print(ELetS([("a",EInteger(99)),
+                 ("b",EInteger(66))],EId("a")).expand())
+ELet([(a,EInteger(99))],
+     ELet([(b,EInteger(66))],
+          EId(a)))
+>>> print(ELetS([("a",EInteger(99)),
+                 ("b",EInteger(66))],EId("b")).expand())
+ELet([(a,EInteger(99))],
+     ELet([(b,EInteger(66))],
+          EId(b)))
+>>> print(ELet([("a",EInteger(99))],
+               ELetS([("a",EInteger(66)),
+                      ("b",EId("a"))],
+                     EId("a"))).expand())
+ELet([(a,EInteger(99))],
+     ELet([(a,EInteger(66))],
+          ELet([(b,EId(a))],
+               EId(a))))
+>>> print(ELet([("a",EInteger(99))],
+               ELetS([("a",EInteger(66)),
+                      ("b",EId("a"))],
+                     EId("b"))).expand())
+ELet([(a,EInteger(99))],
+     ELet([(a,EInteger(66))],
+          ELet([(b,EId(a))],
+               EId(b))))
+>>> print(ELetS([("a",EInteger(5)),
+                 ("b",EInteger(20))],
+                ELetS([("a",EId("b")),
+                       ("b",EId("a"))],
+                      EPrimCall("-",[EId("a"),EId("b")]))).expand())
+ELet([(a,EInteger(5))],
+     ELet([(b,EInteger(20))],
+          ELet([(a,EId(b))],
+               ELet([(b,EId(a))],
+                    EPrimCall(-,[EId(a),EId(b)])))))
+>>> ELetS([("a",EInteger(5)),
+           ("b",EInteger(20))],
+          ELetS([("a",EId("b")),
+                 ("b",EId("a"))],
+                EPrimCall("-",[EId("a"),EId("b")]))).expand().eval(INITIAL_PRIM_DICT).value
+0
 </pre>
 	  </li>
 
@@ -371,18 +463,37 @@ from?). </p>
 
 	    <p>Add an Expression node <tt>ELetV</tt> to the abstract
 	    representation which implements the eager evaluation described
-	    in the previous paragraph. Make it as in Q1(a) above,
+	    in the previous paragraph. <del>Make it as in Q1(a) above,
 	    allowing it to handle multiple simultaneous
 	      bindings. Thus, <tt>ELetV</tt> should take two
 	    arguments, a list of pairs (each a pair of an identifier
 	    name and an expression) and an expression (the body of the
-	      let).</p>
+		let).</del> <ins>For simplicity, implement <tt>ELetV</tt> so that it deals with a single binding, just like the original <tt>ELet</tt> I 
+gave in class did. Thus, <tt>ELetV</tt> should take three arguments: a string indicated the name of the identifier in the binding, an expression to be bound, and an expression to evaluate in the context of that binding for the identifier.</ins></p>
 
 <p>(There is a trickiness to implementing eager evaluation, which I hope you will notice. Make
   whatever modification to the abstract representation you feel you
   need to.)</p>
 
 <pre class="code">
+# The tests are particularly uninteresting
+# Basically, ELetV should evaluate just like ELet
+
+>>> ELetV("a",EInteger(10),EId("a")).eval(INITIAL_PRIM_DICT).value
+10
+>>> ELetV("a",EInteger(10),
+          ELetV("b",EInteger(20),EId("a"))).eval(INITIAL_PRIM_DICT).value
+10
+>>> ELetV("a",EInteger(10),
+          ELetV("a",EInteger(20),EId("a"))).eval(INITIAL_PRIM_DICT).value
+20
+>>> ELetV("a",EPrimCall("+",[EInteger(10),EInteger(20)]),
+          ELetV("b",EInteger(20),EId("a"))).eval(INITIAL_PRIM_DICT).value
+30
+>>> ELetV("a",EPrimCall("+",[EInteger(10),EInteger(20)]),
+          ELetV("b",EInteger(20),
+                EPrimCall("*",[EId("a"),EId("a")]))).eval(INITIAL_PRIM_DICT).value
+900
 </pre>
 
 	    <p><i>Meditation question: is there any other difference
@@ -415,17 +526,36 @@ never need to evaluate <tt>e1</tt>). </p>
 <p>Add an Expression node <tt>ELetN</tt> to the abstract
 	    representation which implements this third kind of
 	    evaluation, described
-	    in the previous paragraph. Make it as in Q1(a) above,
+	    in the previous paragraph. <del>Make it as in Q1(a) above,
 	    allowing it to handle multiple simultaneous
 	      bindings. Thus, <tt>ELetN</tt> should take two
 	    arguments, a list of pairs (each a pair of an identifier
 	    name and an expression) and an expression (the body of the
-  let).</p>
+  let).</del> <ins>For simplicity, implement <tt>ELetN</tt> so that it deals with a single binding, just like the original <tt>ELet</tt> I 
+gave in class did. Thus, <tt>ELetN</tt> should take three arguments: a string indicated the name of the identifier in the binding, an expression to be bound, and an expression to evaluate in the context of that binding for the identifier.</ins></p>
 
 	    <p>Note that there are <i>many</i> ways of implementing
 	      this. I'd like to see what you come up with.</p>
 
 <pre class="code">
+# Again, the tests are particularly uninteresting
+# Basically, ELetN should evaluate just like ELet
+
+>>> ELetN("a",EInteger(10),EId("a")).eval(INITIAL_PRIM_DICT).value
+10
+>>> ELetN("a",EInteger(10),
+          ELetN("b",EInteger(20),EId("a"))).eval(INITIAL_PRIM_DICT).value
+10
+>>> ELetN("a",EInteger(10),
+          ELetN("a",EInteger(20),EId("a"))).eval(INITIAL_PRIM_DICT).value
+20
+>>> ELetN("a",EPrimCall("+",[EInteger(10),EInteger(20)]),
+          ELetN("b",EInteger(20),EId("a"))).eval(INITIAL_PRIM_DICT).value
+30
+>>> ELetN("a",EPrimCall("+",[EInteger(10),EInteger(20)]),
+          ELetN("b",EInteger(20),
+                EPrimCall("*",[EId("a"),EId("a")]))).eval(INITIAL_PRIM_DICT).value
+900
 </pre>
 
 
@@ -497,7 +627,7 @@ dictionary) you can define an equality function as follows:
       is a functions dictionary containing the above definitions, with
       reasonable names:
 <pre>
-  { "inc": { 
+  { "+1": { 
              "params": ["x"],
              "body": EPrimCall("+",[EId("x"),EInteger(1)])
            },
@@ -520,6 +650,38 @@ dictionary) you can define an equality function as follows:
 </p>
 
 <pre class="code">
+# here's a function dictionary
+>>> FUN_DICT = {
+      "square": {"params":["x"],
+                 "body":EPrimCall("*",[EId("x"),EId("x")])},
+      "=": {"params":["x","y"],
+            "body":EPrimCall("zero?",[EPrimCall("-",[EId("x"),EId("y")])])},
+      "+1": {"params":["x"],
+             "body":EPrimCall("+",[EId("x"),EValue(VInteger(1))])},
+      "sum_from_to": {"params":["s","e"],
+                      "body":EIf(ECall("=",[EId("s"),EId("e")]),
+                                 EId("s"),
+                                 EPrimCall("+",[EId("s"),
+                                                ECall("sum_from_to",[ECall("+1",[EId("s")]),
+                                                                     EId("e")])]))}
+    }
+
+>>> ECall("inc",
+          [EInteger(100)]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
+101
+>>> ECall("inc",
+          [EPrimCall("+",[EInteger(100),EInteger(200)])]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
+301
+>>> ECall("inc",
+          [ECall("inc",
+                 [EInteger(100)])]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
+102
+>>> ECall("=",[EInteger(1),EInteger(2)]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
+False
+>>> ECall("=",[EInteger(1),EInteger(1)]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
+True
+>>> ECall("sum_from_to",[EInteger(0),EInteger(10)]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
+55
 </pre>
 
 </li>
