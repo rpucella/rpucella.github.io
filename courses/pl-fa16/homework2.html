@@ -674,14 +674,14 @@ dictionary) you can define an equality function as follows:
                                                                      EId("e")])]))}
     }
 
->>> ECall("inc",
+>>> ECall("+1",
           [EInteger(100)]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
 101
->>> ECall("inc",
+>>> ECall("+1",
           [EPrimCall("+",[EInteger(100),EInteger(200)])]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
 301
->>> ECall("inc",
-          [ECall("inc",
+>>> ECall("+1",
+          [ECall("+1",
                  [EInteger(100)])]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
 102
 >>> ECall("=",[EInteger(1),EInteger(2)]).eval(INITIAL_PRIM_DICT,FUN_DICT).value
