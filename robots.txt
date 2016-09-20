@@ -1,3 +1,4 @@
 User-agent: *
 Disallow: /courses/focs-sp16/s/
+Disallow: /courses/pl-fa16/s/
 Disallow: /temp/
