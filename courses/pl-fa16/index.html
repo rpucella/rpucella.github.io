@@ -15,8 +15,12 @@
 
         a, a:link, a:visited {
 	    color: #003d99;
-            font-weight: bold;
+          /* font-weight: bold; */
 	}
+
+	a:hover {
+  	  text-decoration: underline;
+	} 
 
         code,tt,pre {
           font-size: 130%;
@@ -108,6 +112,10 @@ function run () {
       <h3>Announcements</h3>
 
       <ul class="simple">
+
+	<li><p class="ann"><span class="hdr">Sep 20:</span>
+	    Slides and code for the lecture on surface syntax are available below.
+	    I've simplified and corrected the slides somewhat; the recursive-descent parser pseudocode now correctly tracks the tokens left unparsed. I've also added a bunch of relevant links. Please install <a href="http://pyparsing.wikispaces.com/">Pyparsing</a> and start reading the docs. </p></li>
 
 	<li><p class="ann"><span class="hdr">Sep 15:</span> I just realized that a change that I made to the homework last night didn't actually commit. It's a simplifying change. For <tt>ELetV</tt> and <tt>ELetN</tt> in Question 2, you do not need to support simultaneous bindings. Just have <tt>ELetV</tt> and <tt>ELetN</tt> handle a single binding, the way my original <tt>ELet</tt> worked before you modified it in Question 1.</p>
 </li>
@@ -234,12 +242,25 @@ function run () {
 		    <a href="http://www.dalkescientific.com/writings/NBN/list_comps.html">here</a>,
 		    and <a href="http://treyhunner.com/2015/12/python-list-comprehensions-now-in-color/">here</a>. 
 
-<!--		  <p><a href="homework2.html">Homework 2</a>, due next Monday.</p>-->
+		  <p><a href="homework2.html">Homework 2</a>, due next Monday.</p>
 		</div>
 	</li>	  
 
-	<li><p><span class="hdr">Sep 20:</span><i>Surface Syntax and Parsing</i></p>
-		<div class="lect">
+	<li><p><span class="hdr">Sep 20:</span><b>Surface Syntax and Parsing</b></p>
+	  <div class="lect">
+	    <p><a href="./lect-03-surface-syntax.pdf">Slides from the lecture.</a></p>
+	    <p><a href="./code-lect-03-calc-parser.py">Sample code</a> from the lecture, including a parser for our calc language</p>
+	    <p>We are going to use <a href="http://pyparsing.wikispaces.com/">Pyparsing</a> as our parsing library in Python. It implements a form of parser combinators. It is not the only one available for Python &mdash; <a href="https://github.com/vlasovskikh/funcparserlib">Funcparserlib</a> is another possibility.</p>
+	    <p>(If you're interested in some of the underlying theory underlying parser combinators, a good starting point is Graham Hutton's <a href="http://www.cs.nott.ac.uk/~pszgmh/parsing.pdf"><i>Higher-Order Functions for Parsing</i></a> tutorial.)</p>
+	    <p><a href="https://docs.python.org/2/library/re.html">Regular expressions</a> in Python.</p>
+	    <p>For a while at least, the languages we will create will resemble a dialect of <a href="http://www.schemers.org/Documents/Standards/R5RS/HTML/">Scheme</a>, itself a dialect of <a href="https://en.wikipedia.org/wiki/Lisp_(programming_language)">LISP</a>. Until we decide to ditch S-expressions as a surface syntax, that is.</p>
+	      
+	    <p>An overview of <a href="https://en.wikipedia.org/wiki/Recursive_descent_parser">recursive-descent parsing</a>.</p>
+	    <p>More than you ever wanted to know about how to handle <a href="http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm">operator precedence in a recursive-descent parser</a>, by Theodore Norvell.</p>
+	    <p>Quick overview of <a href="https://en.wikipedia.org/wiki/Left_recursion">how to remove left recursion in a grammar</a>. Warning: it gets more and more complex the more complex the grammar is.</p>
+	    <p><a href="https://en.wikipedia.org/wiki/Lex_(software)">Lex</a> and <a href="https://en.wikipedia.org/wiki/Yacc">Yacc</a> are the classical tools for generating efficient lexers and bottom-up parsers. David Beazley has an implementation of those tools in Python as <a href="http://www.dabeaz.com/ply/">PLY</a>.
+
+	    <!-- <p><a href="homework3.html">Homework 3</a>, due next Monday.</p> -->
 		</div>
 	</li>	  
 
