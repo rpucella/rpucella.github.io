@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 3</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 130%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+	pre.code {
+	   border: 1px solid #c6c6c6;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+	}
+
+/* from
+    http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
+ */
+
+ol {
+    counter-reset:li; /* Initiate a counter */
+    margin-left:0; /* Remove the default left margin */
+    padding-left:0; /* Remove the default left padding */
+    padding-top:1em;
+}
+ol > li {
+    position:relative; /* Create a positioning context */
+    margin:0 0 6px 2em; /* Give each list item a left margin to make
+    room for the numbers */
+    padding:4px 8px; /* Add some spacing around the content */
+    list-style:none; /* Disable the normal item numbering */
+    /*border-top:2px solid #666;
+    background:#f6f6f6; */
+}
+ol > li:before {
+    counter-increment:li; /* Increment the counter by 1 */
+    /* Position and style the number */
+    position:absolute;
+    top:-2px;
+    left:-2em;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    width:2em;
+    /* Some space between the number and the content in browsers that
+    support
+       generated content but not positioning it (Camino 2 is one
+    example) */
+    margin-right:8px;
+    padding:4px;
+/*    border-top:2px solid #666;
+    color:#fff;
+    background:#666; 
+    font-weight:bold; */
+/*    font-family:"Helvetica Neue", Arial, sans-serif;
+    text-align:center; */
+}
+
+ol.letter > li:before {
+    content:"(" counter(li,lower-alpha) ")"; /* Use the counter as content */
+}
+
+ol.number > li:before {
+    content:"(" counter(li,decimal) ")"; /* Use the counter as content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Programming Languages FA16</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 7em;"></div>
+    
+    <h1 class="clear">Homework 3</h1>
+    
+    <p class="subtitle">Due date: Monday, Sep 26 (11:59:59pm)</p>
+
+
+    <p><b>Note on integrity:</b> This homework is meant to be done in teams of two. 
+    You may discuss problems with fellow students, but
+    all work must be entirely that of your team, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists <span style="text-decoration:underline;">the members of your team</span>, your <span style="text-decoration:underline;">email addresses</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in Python 2.7.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework3.py"><tt>homework3.py</tt></a>
+      provided.</p>
+
+    <p>Questions marked <b>Extra</b> are optional. You do not have to
+    do them. But will give you more practice and sometimes more
+      insight into what is going on. Plus some of them are fun.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Send an email with your file <tt>homework3.py</tt> as an attachment to <tt>pl.fa16.olin@gmail.com</tt> with subject <i>Homework 3 submission</i>. Only one email per team, please.</li>
+    </ul>
+
+    <hr>
+    
+    <ol class="number">
+
+
+      <!--   QUESTION 1    -->
+
+
+      <li> <p><b>Extending the S-expressions parser</b></p>
+
+	<ol class="letter">
+
+	  <li><p>The Expression node <tt>ELet</tt> in the abstract representation in <tt>homework3.py</tt> supports simultaneous bindings as we saw in homework 2, but the parser can only handle a single binding, as in <tt>(let ((x 10)) <i>expr</i>)</tt>. </p>
+
+	    <p>Extend the parser (function <tt>parse</tt>) so that it can parse <tt>let</tt> expressions with multiple bindings, such as
+<pre>
+  (let ((x 10) 
+        (y 20) 
+        (z 30)) 
+    (+ x (* y z)))
+</pre>
+or 
+<pre>
+  (let ((a 10)) 
+    (let ((sq (* a a))
+          (db (+ a a))) 
+      (+ sq db)))
+</pre>
+
+<pre class="code">
+</pre></p>
+	  </li>
+
+
+	  <li><p>The only operations the parser in <tt>homework3.py</tt> can handle are <tt>+</tt> and <tt>*</tt>. Extend the parser so that it can deal with the following additional rule in the grammar for calling an arbitrary user-defined functions:
+<pre>
+
+   &lt;expr&gt; ::=  ...
+               ( &lt;name&gt; &lt;expr-seq&gt; )
+
+   &lt;expr-seq&gt; ::=  &lt;expr&gt;
+                   &lt;expr&gt; &lt;expr-seq&gt;
+</pre>
+In other words, an expression of the form <tt>( <i>name</i> <i>e<sub>1</sub></i> ... <i>e<sub>k</sub></i> )</tt> should be parsable and return abstract representation <tt>ECall(<i>name</i>,[<i>a<sub>1</sub></i>,...,<i>a<sub>k</sub></i>])</tt> where <tt><i>a<sub>i</sub></i></tt> is the abstract representation obtained by parsing <tt><i>e<sub>i</sub></i></tt>.</p>
+
+<p>Thus,
+<pre>
+  (zero? (+ 10 20))
+</pre>
+should parse
+into <tt>ECall("zero?",[ECall("+",[EInteger(10),EInteger(20)])])</tt>
+and when evaluated yield <tt>false</tt>, while
+<pre>
+  (zero? (- 20 20))
+</pre>
+should parse
+into <tt>ECall("zero?",[ECall("-",[EInteger(20),EInteger(20)])])</tt>
+and when evaluated yield <tt>true</tt>.
+Note that 
+<pre>
+  (some-unknown-function 10 20 30)
+</pre>
+should parse successfully into 
+<pre>
+  ECall("some-unknown-function",[EInteger(10),EInteger(20),EInteger(30)])
+</pre>
+but of course should fail during <i>evaluation</i> if there is no
+function <tt>some-unknown-function</tt> in the functions
+dictionary.</p>  
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li><p> <b>Extra:</b> As it stands, the current language only
+	    supports passing exactly two integers to <tt>+</tt>
+	    and <tt>*</tt>. It's easy enough to modify the primitive
+	    operation for <tt>+</tt> and <tt>*</tt>
+	    (functions <tt>oper_plus</tt> and <tt>oper_times</tt>
+	    in <tt>homework3.py</tt>) to support more than 2
+	      arguments. But there's another approach we can use.</p>
+
+	    <p>Intuitively, we can express addition with more than two
+	      arguments as a nested sequence of additions with only
+	      two arguments. For instance, <tt>(+ 1 2 3 4)</tt> is
+	      equivalent to <tt>(+ 1 (+ 2 (+ 3 4)))</tt>. So one way
+	      to support addition with more than two arguments is to
+	      parse it into an abstract representation that uses nested
+	      additions with two arguments.</p>
+
+	    <p>Modify the parser in function <tt>parse</tt> so
+	      that it can parse expressions of the
+	      form <tt>(+ <i>e<sub>1</sub></i>
+	      ... <i>e<sub>k</sub></i>)</tt>, and for those returns
+	      the same abstract representation as if we had written
+	      <tt>(+ <i>e<sub>1</sub></i> (+ <i>e<sub>2</sub></i> (+
+		... (+ <i>e<sub>k-1</sub></i> <i>e<sub>k</sub></i>)
+		...)))</tt>. </p>
+
+	    <p>Do the same for <tt>*</tt> as well.</p>
+	  
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	</ol>
+
+      </li>
+
+
+
+
+      <!--   QUESTION 2    -->
+
+
+      <li> <p><b>Definitions</b></p>
+
+	<ol class="letter">
+
+	  <li>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	</ol>
+
+      </li>
+
+
+
+
+
+      <!--   QUESTION 3 - parsing natural syntax    -->
+
+
+      <li> <p><b>A natural syntax parser</b></p>
+
+	<ol class="letter">
+
+	  <li>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	</ol>
+
+      </li>
+
+
+    </ol>
+    
+
+  </body>
+</html>
