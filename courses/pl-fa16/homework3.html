@@ -289,7 +289,7 @@ dictionary.</p>
 	<ol class="letter">
 
 	  <li><p>If you look at the implementation of the simple shell
-	      in function <tt>shell</tt>, you see that the function
+	      in function <tt>shell</tt>, you see that the functions
 	      dictionary used to evaluate the expression parsed is
 	      always the same, <tt>INITIAL_FUN_DICT</tt>. It would be
 	      nice if there was a way to <i>add</i> definitions to the
@@ -299,7 +299,7 @@ dictionary.</p>
 	  <p>This means that the parser when given a string will
 	      either parse it into an expression (which the shell will
 	      evaluate) or into a function defnition (which the shell will
-	      add to the function dictionary it uses. Recall that the 
+	      add to the functions dictionary it uses. Recall that the 
 	      representation of a defined function we use is as a
 	      dictionary <tt>{"params":<i>L</i>, "body":<i>exp</i>}</tt>
 	      where <tt><i>L</i></tt> is a list of parameter names (the
@@ -328,19 +328,18 @@ input:
 	    expression or a function definition, and return an
 	    abstract representation in the first case, or a function
 	    definition in the second case (basically, a dictionary with
-	    fields <tt>params</tt> and <tt>body</tt>). Feel free to
+	    fields <tt>params</tt> and <tt>body</tt>).<del> Feel free to
 	    solve the problem of returning either an abstract
 	    representation or a function definition in whatever way
 	    you choose. I do not specify a return type for
-	    the <tt>parse</tt> function. 
+	      the <tt>parse</tt> function.</del> <ins>To ease the problem of testing your parser, let me prescribe what the parsing should return. If the result of parsing is an expression that should be evaluated, <tt>parse</tt> should return a dictionary <tt>{"result":"expression", "expr":<i>e</i>}</tt> where <tt><i>e</i></tt> is the abstract representation of the expression just parsed. If the result of parsing is a function definition that should be added to the functions dictionary, <tt>parse</tt> should return a dictionary <tt>{"result":"function", "name": <i>n</i>, "params": <i>L</i>, "body":<i>e</i>}</tt>, where <tt><i>n</i></tt> is the name of the function (a string), <tt><i>L</i></tt> is a list of parameters names (each a string), and <tt><i>e</i></tt> is the abstract representation of the body of the function.</ins>
 	  </p>
 
 	    <p>Your second challenge is to modify
 	    function <tt>shell</tt> so that when the input string
-	    parses into an abstract representation, that abstract
-	    representation gets evaluated an the result printed (the
+	    parses into an expression, that expression gets evaluated an the result printed (the
 	    way it is now), but when the input string parses into a function
-	    definition, that function definition is added to the
+	    definition, that function definition is added to the functions
 	    dictionary that evaluation uses instead.
 	    </p>
 
