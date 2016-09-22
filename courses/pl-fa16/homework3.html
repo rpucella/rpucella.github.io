@@ -207,7 +207,7 @@ or
                ( &lt;name&gt; &lt;expr-seq&gt; )
 
    &lt;expr-seq&gt; ::=  &lt;expr&gt;
-                   &lt;expr&gt; , &lt;expr-seq&gt;
+                   &lt;expr&gt; &lt;expr-seq&gt;
 </pre>
 In other words, an expression of the form <tt>( <i>name</i> <i>e<sub>1</sub></i> ... <i>e<sub>k</sub></i> )</tt> should be parsable and return abstract representation <tt>ECall(<i>name</i>,[<i>a<sub>1</sub></i>,...,<i>a<sub>k</sub></i>])</tt> where <tt><i>a<sub>i</sub></i></tt> is the abstract representation obtained by parsing <tt><i>e<sub>i</sub></i></tt>.</p>
 
@@ -415,7 +415,7 @@ expression it evaluates to <tt>30</tt>.</p>
                  &lt;name&gt; = &lt;expr&gt; , &lt;bindings&gt;
 
   &lt;expr-seq&gt; ::= &lt;expr&gt;
-                 &lt;expr&gt; &lt;expr-seq&gt;
+                 &lt;expr&gt; , &lt;expr-seq&gt;
 </pre>
 	</p>
 
