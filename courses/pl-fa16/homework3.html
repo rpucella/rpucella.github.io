@@ -244,7 +244,7 @@ dictionary.</p>
 	  <li><p> <b>Extra:</b> As it stands, the current language only
 	    supports passing exactly two integers to <tt>+</tt>
 	    and <tt>*</tt>. It's easy enough to modify the primitive
-	    operation for <tt>+</tt> and <tt>*</tt>
+	    operations for <tt>+</tt> and <tt>*</tt>
 	    (functions <tt>oper_plus</tt> and <tt>oper_times</tt>
 	    in <tt>homework3.py</tt>) to support more than 2
 	      arguments. But there's another approach we can use.</p>
@@ -284,15 +284,95 @@ dictionary.</p>
       <!--   QUESTION 2    -->
 
 
-      <li> <p><b>Definitions</b></p>
+      <li> <p><b>Shell definitions</b></p>
 
 	<ol class="letter">
 
-	  <li>
+	  <li><p>If you look at the implementation of the simple shell
+	      in function <tt>shell</tt>, you see that the function
+	      dictionary used to evaluate the expression parsed is
+	      always the same, <tt>INITIAL_FUN_DICT</tt>. It would be
+	      nice if there was a way to <i>add</i> definitions to the
+	      dictionary, the way for instance we can do it in Python
+	      using <tt>def</tt>.</p>
+
+	  <p>This means that the parser when given a string will
+	      either parse it into an expression (which the shell will
+	      evaluate) or into a function defnition (which the shell will
+	      add to the function dictionary it uses. Recall that the 
+	      representation of a defined function we use is as a
+	      dictionary <tt>{"params":<i>L</i>, "body":<i>exp</i>}</tt>
+	      where <tt><i>L</i></tt> is a list of parameter names (the
+	      parameters to the function) and <tt><i>exp</i></tt> is an
+	      expression (in our abstract representation) representing the body of the function which gets
+	      evaluated to return a result from the function.</p>
+
+
+	  <p>Here are the grammar rules for function definitions:
+<pre>
+  &lt;def&gt; ::= ( defun &lt;name&gt; ( &lt;params&gt; ) &lt;expr&gt; )
+
+  &lt;params&gt; ::= &lt;name&gt;
+               &lt;name&gt; &lt;params&gt;
+</pre>
+Thus, for example, the following defines a function that adds 1 to its
+input:
+<pre>
+  (defun increment (x) 
+    (+ x 1))
+</pre>
+	  </p>
+
+	  <p>So your first challenge is to modify the parser in
+	    function <tt>parse</tt> so that it can parse either an
+	    expression or a function definition, and return an
+	    abstract representation in the first case, or a function
+	    definition in the second case (basically, a dictionary with
+	    fields <tt>params</tt> and <tt>body</tt>). Feel free to
+	    solve the problem of returning either an abstract
+	    representation or a function definition in whatever way
+	    you choose. I do not specify a return type for
+	    the <tt>parse</tt> function. 
+	  </p>
+
+	    <p>Your second challenge is to modify
+	    function <tt>shell</tt> so that when the input string
+	    parses into an abstract representation, that abstract
+	    representation gets evaluated an the result printed (the
+	    way it is now), but when the input string parses into a function
+	    definition, that function definition is added to the
+	    dictionary that evaluation uses instead.
+	    </p>
 
 <pre class="code">
 </pre>
 	  </li>
+
+
+
+	  <li><p><b>Extra:</b> It would be nice if we could also
+	  define <i>constant values</i>. For instance, we could
+	      write
+<pre>
+  (define a (+ 10 20))
+</pre>
+in the shell, and
+	      from that point on whenever you refer to <tt>a</tt> in some
+expression it evaluates to <tt>30</tt>.</p>
+
+	    <p>aYou will need to
+	  modify the
+	  parser so that it accepts these kind of definitions, modify
+	  the evaluation method of Expression nodes so that it takes an additional
+	      <i>values dictionary</i>, and 
+	  modify the shell so that it can add constant definitions to
+	  that dictionary when it recognizes them.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
 
 	</ol>
 
@@ -306,8 +386,9 @@ dictionary.</p>
 
 
       <li> <p><b>A natural syntax parser</b></p>
+	<p><i>Coming soon</i></p>
 
-	<ol class="letter">
+<!--	<ol class="letter">
 
 	  <li>
 
@@ -316,6 +397,8 @@ dictionary.</p>
 	  </li>
 
 	</ol>
+-->
+
 
       </li>
 
