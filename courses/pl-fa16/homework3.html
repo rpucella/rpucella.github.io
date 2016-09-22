@@ -386,22 +386,96 @@ expression it evaluates to <tt>30</tt>.</p>
 
 
       <li> <p><b>A natural syntax parser</b></p>
-	<p><i>Coming soon</i></p>
 
-<!--	<ol class="letter">
+	<ol class="letter">
 
 	  <li>
 
+	<p>As I mentioned in class, the reason why we'll be using S-expressions as our surface syntax
+	  is for simplicity. It'll be easy to add features to our language without having to fight with the parser too too much. </p>
+	
+	<p>To get a sense of the challenges that a more natural syntax poses, we'll develop an alternate surface syntax for our calculator language, based on more standard
+	  mathematical notation. </p>
+
+	<p>Here is the base grammar I have in mind:
+
+<pre>
+  &lt;expr&gt; ::= &lt;integer&gt;
+             true
+             false
+             &lt;identifier&gt;
+             ( expr )
+             &lt;expr&gt; ? &lt;expr&gt; : &lt;expr&gt;
+             let ( &lt;bindings&gt; ) &lt;expr&gt;
+             &lt;expr&gt; + &lt;expr&gt;
+             &lt;expr&gt; * &lt;expr&gt;
+             &lt;expr&gt; - &lt;expr&gt;
+             &lt;name&gt; ( &lt;expr-seq&gt; )
+
+  &lt;bindings&gt; ::= &lt;name&gt; = &lt;expr&gt;
+                 &lt;name&gt; = &lt;expr&gt; , &lt;bindings&gt;
+
+  &lt;expr-seq&gt; ::= &lt;expr&gt;
+                 &lt;expr&gt; &lt;expr-seq&gt;
+</pre>
+	</p>
+
+	<p>Write a function <tt>parse_natural</tt> that does
+	what <tt>parse</tt> does, but parsing according to the above
+	grammar instead of S-expressions. It should return an abstract
+	  representation of the parsed expression.</p>
+
+	<p>In order to be able to use Pyparsing and parser
+	combinators, you will need to modify the above grammar so that
+	it is, at the very least, not left recursive. You may need to
+	make other modifications to the grammar as well. Just make
+	sure that the parser you write in the end accepts the same
+	  inputs as the grammar above.</p>
+
+	<p>The
+	resulting abstract representation should represent the input
+	expression subject to the usual rules of operator
+	precedence: <tt>*</tt> groups more tightly than
+	either <tt>+</tt> or <tt>-</tt>. Treat <tt>*</tt>, <tt>+</tt>,
+	and <tt>-</tt> as associative operations. (They are, in fact,
+	except for <tt>-</tt>. If you feel adventurous,
+	make <tt>-</tt> right associative).  That is, <tt>10 * 20 +
+	30</tt> should parse as though you had written <tt>(10 * 20) +
+	30</tt>, and <tt>10 + 20 + 30</tt> can parse as either <tt>(10
+	+ 20) + 30</tt> or <tt>10 + (20 + 30)</tt> and I don't care
+	which.  
+	</p>
+
+	<p>Write a function <tt>shell_natural</tt> that does
+	  what <tt>shell</tt> does except it
+	  uses <tt>parse_natural</tt> instead of <tt>parse</tt>. 
+	</p>
+
 <pre class="code">
 </pre>
+
+<i>Note: if you hit a wall and cannot make any progress with the
+  surface syntax I'm asking you to implement, you can make changes to
+  the surface syntax to make it easier to parse. Document your
+  changes, and explains why you had to do things that way. Try
+  to keep it as close as possible to a natural syntax.</i>
+
+	  </li>
+
+	  <li><p><b>Extra:</b> Come up with a reasonable natural
+	      syntax for function definitions, and redo Question 2(a)
+	      above except with <tt>parse_natural</tt> and your syntax
+	      for function definitions.
+
+
+<pre class="code">
+</pre>
+
 	  </li>
 
 	</ol>
--->
-
 
       </li>
-
 
     </ol>
     
