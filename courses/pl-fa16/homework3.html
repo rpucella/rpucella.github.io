@@ -196,6 +196,37 @@ or
 </pre>
 
 <pre class="code">
+<i># sample outputs using the Calc shell
+# note that it gives the parsed abstract representation, which is what I'll be checking
+# I've sometimes indented the abstract representation for ease of reading</i>
+
+>>> shell()
+Homework 3 - Calc Language
+calc> (let ((x 10) (y 20)) (+ x y))
+Abstract representation: ELet([(x,EInteger(10)),
+                               (y,EInteger(20))],
+                              ECall(+,[EId(x),ECall(+,[EId(y),EInteger(0)])]))
+30
+calc> (let ((a (let ((x 1) (y 2)) x)) (b (let ((x 1) (y 2)) y))) (let ((b a) (a b)) a))
+Abstract representation: ELet([(a,ELet([(x,EInteger(1)),
+                                        (y,EInteger(2))],
+                                       EId(x))),
+                               (b,ELet([(x,EInteger(1)),
+                                        (y,EInteger(2))],
+                                       EId(y)))],
+                              ELet([(b,EId(a)),
+                                    (a,EId(b))],
+                                   EId(a)))
+2
+calc> (let ((a 1) (b 2) (c 3) (d 4) (e 5) (f 6)) f)
+Abstract representation: ELet([(a,EInteger(1)),
+                               (b,EInteger(2)),
+                               (c,EInteger(3)),
+                               (d,EInteger(4)),
+                               (e,EInteger(5)),
+                               (f,EInteger(6))],
+                              EId(f))
+6
 </pre></p>
 	  </li>
 
@@ -237,6 +268,41 @@ function <tt>some-unknown-function</tt> in the functions
 dictionary.</p>  
 
 <pre class="code">
+<i># sample outputs using the Calc shell
+# note that it gives the parsed abstract representation, which is what I'll be checking
+# I've sometimes indented the abstract representation for ease of reading</i>
+
+>>> shell()
+Homework 3 - Calc Language
+calc> (zero? 0)
+Abstract representation: ECall(zero?,[EInteger(0)])
+true
+calc> (zero? 1)
+Abstract representation: ECall(zero?,[EInteger(1)])
+false
+calc> (zero? (- 10 20))
+Abstract representation: ECall(zero?,[ECall(-,[EInteger(10),EInteger(20)])])
+false
+calc> (zero? (let ((a 1) (b 1)) (- a b)))
+Abstract representation: ECall(zero?,[ELet([(a,EInteger(1)),
+                                            (b,EInteger(1))],
+                                           ECall(-,[EId(a),EId(b)]))])
+true
+calc> (+1 10)
+Abstract representation: ECall(+1,[EInteger(10)])
+11
+calc> (if (= 3 3) 1 2)
+Abstract representation: EIf(ECall(=,[EInteger(3),EInteger(3)]),EInteger(1),EInteger(2))
+1
+calc> (if (= 3 4) 1 2)
+Abstract representation: EIf(ECall(=,[EInteger(3),EInteger(4)]),EInteger(1),EInteger(2))
+2
+calc> (- 30 (- 20 15))
+Abstract representation: ECall(-,[EInteger(30),ECall(-,[EInteger(20),EInteger(15)])])
+25
+calc> (+1 (if (zero? 0) 10 20))
+Abstract representation: ECall(+1,[EIf(ECall(zero?,[EInteger(0)]),EInteger(10),EInteger(20))])
+11
 </pre>
 	  </li>
 
@@ -264,12 +330,43 @@ dictionary.</p>
 	      the same abstract representation as if we had written
 	      <tt>(+ <i>e<sub>1</sub></i> (+ <i>e<sub>2</sub></i> (+
 		... (+ <i>e<sub>k-1</sub></i> <i>e<sub>k</sub></i>)
-		...)))</tt>. </p>
+		...)))</tt>, or something equivalent. </p>
 
 	    <p>Do the same for <tt>*</tt> as well.</p>
 	  
 
 <pre class="code">
+<i># sample outputs using the Calc shell
+# note that it gives the parsed abstract representation, which is what I'll be checking
+# I've sometimes indented the abstract representation for ease of reading</i>
+
+calc> (+ 1 2 3)
+Abstract representation: ECall(+,[EInteger(1),
+                                  ECall(+,[EInteger(2),
+                                           ECall(+,[EInteger(3),
+                                                    EInteger(0)])])])
+6
+calc> (+ 1 2 3 4 5)
+Abstract representation: ECall(+,[EInteger(1),
+                                  ECall(+,[EInteger(2),
+                                           ECall(+,[EInteger(3),
+                                                    ECall(+,[EInteger(4),
+                                                             ECall(+,[EInteger(5),
+                                                                      EInteger(0)])])])])])
+15
+calc> (* 1 2 3)
+Abstract representation: ECall(*,[EInteger(1),
+                                  ECall(*,[EInteger(2),
+                                           ECall(*,[EInteger(3),
+                                                    EInteger(1)])])])
+6
+calc> (* 1 2 3 4)
+Abstract representation: ECall(*,[EInteger(1),
+                                  ECall(*,[EInteger(2),
+                                           ECall(*,[EInteger(3),
+                                                    ECall(*,[EInteger(4),
+                                                             EInteger(1)])])])])
+24
 </pre>
 	  </li>
 
@@ -312,8 +409,8 @@ dictionary.</p>
 <pre>
   &lt;def&gt; ::= ( defun &lt;name&gt; ( &lt;params&gt; ) &lt;expr&gt; )
 
-  &lt;params&gt; ::= &lt;name&gt;
-               &lt;name&gt; &lt;params&gt;
+  &lt;params&gt; ::= &lt;name&gt; &lt;params&gt;
+               &lt;name&gt;
 </pre>
 Thus, for example, the following defines a function that adds 1 to its
 input:
@@ -344,6 +441,36 @@ input:
 	    </p>
 
 <pre class="code">
+>>> parse("(let ((x 10)) (+1 x))")
+{'expr': <__main__.ELet object at 0x101887090>, 'result': 'expression'}
+>>> print(parse("(let ((x 10)) (+1 x))")["expr"])
+ELet([(x,EInteger(10))],ECall(+1,[EId(x)]))
+>>> parse("(defun decrement (x) (- x 1))")
+{'body': <__main__.ECall object at 0x1018873d0>, 'params': ['x'], 'result': 'function', 'name': 'decrement'}
+>>> print(parse("(defun decrement (x) (- x 1))")["body"])
+ECall(-,[EId(x),EInteger(1)])
+
+<i># sample outputs using the Calc shell
+# note that it gives the parsed abstract representation, which is what I'll be checking
+# I've sometimes indented the abstract representation for ease of reading</i>
+
+>>> shell()
+Homework 3 - Calc Language
+calc> (defun decrement (x) (- x 1))
+Function decrement added to functions dictionary
+calc> (decrement 123)
+Abstract representation: ECall(decrement,[EInteger(123)])
+122
+calc> (defun decr2 (x) (decrement (decrement x)))
+Function decr2 added to functions dictionary
+calc> (decr2 11)
+Abstract representation: ECall(decr2,[EInteger(11)])
+9
+calc> (defun sum-of-squares (x y) (+ (square x) (square y)))
+Function sum-of-squares added to functions dictionary
+calc> (sum-of-squares 10 5)
+Abstract representation: ECall(sum-of-squares,[EInteger(10),EInteger(5)])
+125
 </pre>
 	  </li>
 
@@ -368,8 +495,8 @@ expression it evaluates to <tt>30</tt>.</p>
 	  that dictionary when it recognizes them.
 	    </p>
 
-<pre class="code">
-</pre>
+<!-- <pre class="code">
+</pre> -->
 	  </li>
 
 
@@ -451,6 +578,48 @@ expression it evaluates to <tt>30</tt>.</p>
 	</p>
 
 <pre class="code">
+<i># sample outputs using the Calc shell
+# note that it gives the parsed abstract representation, which is what I'll be checking
+# I've sometimes indented the abstract representation for ease of reading</i>
+
+>>> shell_natural()
+Homework 3 - Calc Language (Natural syntax)
+calc/nat> let (x = 10) x + 1
+Abstract representation: ELet([(x,EInteger(10))],
+                              ECall(+,[EId(x),EInteger(1)]))
+11
+calc/nat> let (x = 10 , y = 20) x + y * y
+Abstract representation: ELet([(x,EInteger(10)),
+                               (y,EInteger(20))],
+                              ECall(+,[EId(x),ECall(*,[EId(y),EId(y)])]))
+410
+calc/nat> zero? (1)
+Abstract representation: ECall(zero?,[EInteger(1)])
+false
+calc/nat> zero? (10 - 10)
+Abstract representation: ECall(zero?,[ECall(-,[EInteger(10),EInteger(10)])])
+true
+calc/nat> zero? (0) ? 1 : 2
+Abstract representation: EIf(ECall(zero?,[EInteger(0)]),EInteger(1),EInteger(2))
+1
+calc/nat> (zero? (0) ? 1 : 2) + 55
+Abstract representation: ECall(+,[EIf(ECall(zero?,[EInteger(0)]),EInteger(1),EInteger(2)),
+                                  EInteger(55)])
+56
+calc/nat> (zero? (1) ? 1 : 2) + 55
+Abstract representation: ECall(+,[EIf(ECall(zero?,[EInteger(1)]),EInteger(1),EInteger(2)),
+                                  EInteger(55)])
+57
+calc/nat> let (x = 4 + 5 * 6) let (y = x * 2) square(y)
+Abstract representation: ELet([(x,ECall(+,[EInteger(4),ECall(*,[EInteger(5),EInteger(6)])]))],
+                              ELet([(y,ECall(*,[EId(x),EInteger(2)]))],
+                                   ECall(square,[EId(y)])))
+4624
+<i># double-checking...</i>
+calc/nat> (34 * 2) * (34 * 2)
+Abstract representation: ECall(*,[ECall(*,[EInteger(34),EInteger(2)]),
+                                  ECall(*,[EInteger(34),EInteger(2)])])
+4624
 </pre>
 
 <i>Note: if you hit a wall and cannot make any progress with the
@@ -468,6 +637,20 @@ expression it evaluates to <tt>30</tt>.</p>
 
 
 <pre class="code">
+<i># sample outputs using the Calc shell
+# note that it gives the parsed abstract representation, which is what I'll be checking
+# I've sometimes indented the abstract representation for ease of reading</i>
+
+calc/nat> function decrement (x) x - 1
+Function decrement added to functions dictionary
+calc/nat> decrement(10)
+Abstract representation: ECall(decrement,[EInteger(10)])
+9
+calc/nat> function sum_of_squares (x,y) square(x) + square(y)
+Function sum_of_squares added to functions dictionary
+calc/nat> sum_of_squares(10,5)
+Abstract representation: ECall(sum_of_squares,[EInteger(10),EInteger(5)])
+125
 </pre>
 
 	  </li>
