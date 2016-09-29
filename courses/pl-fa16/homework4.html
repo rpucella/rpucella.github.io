@@ -327,7 +327,7 @@ true
       <i>H</i>)))</pre>
 
 	    <p>Change the parser in <tt>parse()</tt> to correctly
-	      parse <tt>(let* ((<i>n</i> <i>E</i>) ...) <i>F</i>)</tt> and produce 
+	      parse <tt>(let* ((<i>n</i> <i>E</i>) ...) <i>F</i>)</tt> and produce an
 	      equivalent abstract representation in terms
 	      of <tt>let</tt> as described above.</p>
 
@@ -370,7 +370,7 @@ Abstract representation: ELet([(x,EInteger(10))],
 
 	    <p>An interesting special
 	  form is one that lets us do a conditional on several
-	  different conditions and return different values in each
+	  conditions and return a different value in each
 	  case. Special form <tt>(cond (<i>C</i> <i>E</i>) ...)</tt>
 	  takes a sequence of clauses <tt>(<i>C</i> <i>E</i>)</tt>
 	  where each <tt><i>C</i></tt> and <tt><i>E</i></tt> is an
