@@ -564,19 +564,187 @@ false
 
 
       <li> <p><b>The Environment Model</b></p>
-	<i>coming soon</i>
 
-<!--
-	<ol class="letter">
+	<p>If you look at our implementation of evaluation for our
+	  expressions up until now, you know that the evaluation of
+	  a <tt>let</tt> relies on substitution: to evaluate an
+	  expression such as <tt>(let ((x 10)) <i>E</i>)</tt>, we
+	  substitute <tt>10</tt> for <tt>x</tt> in <tt><i>E</i></tt>
+	  and evaluate the resulting <tt><i>E</i></tt>. (Substitution
+	  also arises when we evaluate a function call, but we know
+	  that because the majority of you have implemented the
+	  evaluation of a function call using a <tt>let</tt>!)</p>
 
-	  <li>
+	<p>Using substitution to implement the evaluation
+	of <tt>let</tt> (and function calls) matches our intuition and
+	is reasonably clean, but it's also horribly inefficient. We
+	  can do a lot better, without too much effort.</p>
 
-<pre class="code">
+	<p>The intuition for an alternative implementation model is
+	  that when we evaluate an expression such as <tt>(let ((x
+	    10)) <i>E</i>)</tt>, instead of substituting <tt>10</tt>
+	  for <tt>x</tt> in <tt><i>E</i></tt>, we instead remember
+	  that <tt>x</tt> &rightarrow; <tt>10</tt>, and then we
+	  evaluate <tt><i>E</i></tt>: during evaluation
+	  of <tt><i>E</i></tt>, if we encounter <tt>x</tt>, we
+	  return value <tt>10</tt>. </p>
+
+	<p>This way of evaluating <tt>let</tt> is called the
+	  <i>environment model</i> of evaluation, because the way we remember
+	  that <tt>x</tt> &rightarrow; <tt>10</tt> is to put that information
+	  in an <i>environment</i>, which records all the bindings that we've
+	  seen that pertain to the current evaluation.</p>
+
+	<p>The environment acts like a stack: when you evaluate
+	a <tt>let</tt>, you push the bindings on top of the
+	  environment. When you finish evaluating the body of
+	the <tt>let</tt>, you pop those bindings from the environment,
+	returning the environment to what it looked like before you
+	  started evaluating the <tt>let</tt>. This is necessary
+	because when you evaluate an expression such as:
+<pre>
+(let ((x 10))
+   (+ (let ((y 20)) 
+         (* y y))
+      x))</pre>
+the binding for <tt>y</tt> is only relevant to evaluate <tt>(* y
+   y)</tt>. This is what the substitution model tells you, and the
+   environment model should return the same result as the substitution
+   model (it is just a more efficient implementation of the same
+thing).</p>
+
+<p>For a more complex example, consider the expression
+<pre>
+(let ((x 10))
+   (+ (let ((x 20)) 
+         (* x x))
+      x))
 </pre>
-	  </li>
+</p>
 
-	</ol>
--->
+<p>
+The substitution model tells you that this evaluates to 
+<pre>
+   (+ (let ((x 20))
+         (* x x))
+      10)
+</pre>
+which evaluates to
+<pre>
+   (+ 400
+      10)
+</pre>
+that is <tt>410</tt>. </p>
+
+<p>The environment tells you that to evaluate
+<pre>
+(let ((x 10))
+   (+ (let ((x 20))
+         (* x x))
+      x))
+</pre>
+you add <tt>x</tt> &rightarrow; <tt>10</tt> to the environment, and
+then evaluate 
+<pre>
+  (+ (let ((x 20))
+        (* x x))
+     x)
+</pre>
+which evaluates by first evaluating both arguments to the <tt>+</tt>
+<b>in the environment containing <tt>x</tt> &rightarrow; <tt>10</tt></b>.
+
+The first argument is
+<pre>
+  (let ((x 20))
+     (* x x))
+</pre>
+which first adds <tt>x</tt> &rightarrow; <tt>20</tt> to the
+environment (which is now [<tt>x</tt>
+&rightarrow; <tt>20</tt>; <tt>x</tt> &rightarrow; <tt>10</tt>], with
+the stack growing to the left) and then evaluates <tt>(* x x)</tt> in
+that new environment. That requires looking up the value
+of <tt>x</tt>, which you do from the top of the stack. The first
+binding for <tt>x</tt> you find is <tt>x</tt>
+&rightarrow; <tt>20</tt>, and thus <tt>(* x x)</tt> evaluates
+to <tt>400</tt>. 
+</p>
+
+<p>
+The second argument to <tt>+</tt> is
+<pre>
+  x
+</pre>
+which is to be evaluated, remember, in the environment
+where <tt>x</tt> &rightarrow;<tt>10</tt>. This evaluates
+to <tt>10</tt>, and thus we have <tt>(+ 400 10)</tt> which
+yields <tt>410</tt>, the result we got from evaluation in the
+substitution model. </p>
+
+	<p>Does that make sense?</p>
+
+	<p>Here is a simpler example: 
+<pre>
+(let ((x 10))
+  (let ((y (+ x 1)))
+    (let ((x (* y 2)))
+      (* x x))))
+</pre>
+Again, to evaluate this expression, we first add a binding <tt>x</tt>
+&rightarrow; <tt>10</tt> to the environment, then we evaluate the body
+of the <tt>let</tt>. It is an other <tt>let</tt>, so we evaluate the
+binding in the environment to get <tt>y</tt>
+&rightarrow; <tt>11</tt>. We add this binding to the environment which now looks like [<tt>y</tt>
+&rightarrow; <tt>11</tt>; <tt>x</tt> &rightarrow; <tt>10</tt>]. We
+then evaluate the body of the <tt>let</tt>, which is again
+a <tt>let</tt>. We evaluate the binding in the environment to
+get <tt>x</tt> &rightarrow; <tt>22</tt>. We add this binding to the
+environment which now looks like [<tt>x</tt> &rightarrow; <tt>22</tt>; <tt>y</tt>
+&rightarrow; <tt>11</tt>; <tt>x</tt> &rightarrow; <tt>10</tt>]. We
+then evaluate the body <tt>(* x x)</tt> of the let in that
+environment, where we need to look up the value bound to <tt>x</tt> in
+the environment, and we find the first one (remember, the top of the
+stack is on the left) with value <tt>22</tt>, meaning that the final result
+of the evaluation is <tt>484</tt>.</p>
+
+
+	<p><b>Your first challenge for this question</b> is to add a
+	  method <tt>evalEnv()</tt> to every Expression
+	  node. Method <tt>evalEnv()</tt> takes
+	  two arguments, a functions dictionary <tt><i>d</i></tt> as before, as well as an
+	  environment <tt><i>env</i></tt>, and evaluates the
+	  Expression node in environment <tt><i>env</i></tt> (and
+	  resolving function names using functions
+	  dictionary <tt><i>d</i></tt> as
+	  before). Your <tt>evalEnv()</tt> methods should not call
+	  the <tt>eval()</tt> method &mdash; <tt>evalEnv()</tt> should
+	  be defined in terms of recursive <tt>evalEnv()</tt> when
+	  needed.</p>
+
+	<p>You can implement the environment however you want. A
+	simple list of bindings, a more complex structure, it's up to you. As long as
+	it behaves as I've indicated above, and more importantly, as
+	  long as calling <tt>evalEnv()</tt> on any expression you can
+	  write gives you the same result as calling <tt>eval()</tt>,
+	  you should be fine. The key thing is that when you evaluate
+	  the body of a <tt>let</tt>, you do so in an environment
+	where you've added a binding to the original environment in
+	  which you were evaluating the <tt>let</tt>.</p>
+
+	<p><b>Your second challenge</b> is to implement a function <tt>shellEnv()</tt> that
+	  works just like <tt>shell()</tt> except it
+	  uses <tt>evalEnv()</tt> to evaluate the expressions you
+	  enter, instead of <tt>eval()</tt>. Any top-level expression
+	  you evaluate should be evaluated in the empty environment,
+	  whatever that may mean for your choice of representation for
+	  the environment.</p>
+
+	<p><i>Note: If you search for "environment model of evaluation" you
+	will find a lot of links online, some more useful than
+	others. Many of them spend most of their time on the problem of implementing
+	the environment model of evaluation for first-class functions, which we will not see
+	    deeply until next lecture.</i></p>
+  
+
       </li>
 
 
