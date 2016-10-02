@@ -682,13 +682,18 @@ substitution model. </p>
 
 	<p>Does that make sense?</p>
 
-	<p>Here is a simpler example: 
+	<p><ins>NOTE: I strongly suggest you implement the "eager" version of let, what we called
+	    <tt>ELetV</tt> in homework 2. It will let you avoid running into capture problems. The environment should record the binding of names to values.
+	</ins></p>
+
+	<p>Here is a different example: 
 <pre>
 (let ((x 10))
   (let ((y (+ x 1)))
     (let ((x (* y 2)))
       (* x x))))
 </pre>
+
 Again, to evaluate this expression, we first add a binding <tt>x</tt>
 &rightarrow; <tt>10</tt> to the environment, then we evaluate the body
 of the <tt>let</tt>. It is an other <tt>let</tt>, so we
