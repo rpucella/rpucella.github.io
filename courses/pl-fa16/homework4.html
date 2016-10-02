@@ -691,20 +691,21 @@ substitution model. </p>
 </pre>
 Again, to evaluate this expression, we first add a binding <tt>x</tt>
 &rightarrow; <tt>10</tt> to the environment, then we evaluate the body
-of the <tt>let</tt>. It is an other <tt>let</tt>, so we evaluate the
-binding in the environment to get <tt>y</tt>
-&rightarrow; <tt>11</tt>. We add this binding to the environment which now looks like [<tt>y</tt>
-&rightarrow; <tt>11</tt>; <tt>x</tt> &rightarrow; <tt>10</tt>]. We
-then evaluate the body of the <tt>let</tt>, which is again
-a <tt>let</tt>. We evaluate the binding in the environment to
-get <tt>x</tt> &rightarrow; <tt>22</tt>. We add this binding to the
-environment which now looks like [<tt>x</tt> &rightarrow; <tt>22</tt>; <tt>y</tt>
+of the <tt>let</tt>. It is an other <tt>let</tt>, so we
+evaluate <tt>(+ x 1)</tt> to get the new binding <tt>y</tt>
+&rightarrow; <tt>11</tt>. We add this binding to the environment which
+now looks like [<tt>y</tt> &rightarrow; <tt>11</tt>; <tt>x</tt>
+&rightarrow; <tt>10</tt>]. We then evaluate the body of
+the <tt>let</tt>, which is again a <tt>let</tt>. We evaluate <tt>(* y 2)</tt> to get the new
+binding <tt>x</tt>
+&rightarrow; <tt>22</tt>. We add this binding to the environment which
+now looks like [<tt>x</tt> &rightarrow; <tt>22</tt>; <tt>y</tt>
 &rightarrow; <tt>11</tt>; <tt>x</tt> &rightarrow; <tt>10</tt>]. We
 then evaluate the body <tt>(* x x)</tt> of the let in that
 environment, where we need to look up the value bound to <tt>x</tt> in
 the environment, and we find the first one (remember, the top of the
-stack is on the left) with value <tt>22</tt>, meaning that the final result
-of the evaluation is <tt>484</tt>.</p>
+stack is on the left) with value <tt>22</tt>, meaning that the final
+result of the evaluation is <tt>484</tt>.</p>
 
 
 	<p><b>Your first challenge for this question</b> is to add a
