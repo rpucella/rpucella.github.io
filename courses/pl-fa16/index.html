@@ -283,13 +283,37 @@ function run () {
 	<li><p><span class="hdr">Sep 27:</span><i>Cancelled</i></p>
 	  <div class="lect">
 	    <p><a href="homework4.html">Homework 4</a>, due next Monday.</p>
+	    <p>The first question of the homework involves front-end
+	      transformations. Basically, we can add surface syntax
+	      expressions that does not require an associated abstract
+	      representation, if we transform what is expressed in the
+	      surface syntax into simpler expressions for which we do
+	      have abstract representations.  How do those kind of
+	      transformations relate to syntax extensions (or macros)
+	      as implemented
+	      by <a href="https://www.cs.indiana.edu/scheme-repository/R4RS/r4rs_12.html">Scheme</a>
+	      or
+	      by <a href="https://static.rust-lang.org/doc/master/book/macros.html">Rust</a>?
+	      The short answer: those kind of syntax extensions
+	      are <i>exactly</i> the sort of transformations that we
+	      can implement by hacking the parser in the way I
+	      described. What those language do is that they allow
+	      transformations to be expressed <i>within the
+	      language</i>, and their parser can look up those
+	      transformations while parsing, instead of requiring the
+	      transformations to be hard-wired into the parser. Same
+	      process, slightly more flexible approach. (There's a
+	      cost to that approach: the parser needs to be more
+	      complex because it needs to look up applicable
+	      transformations at suitable points. It might be a very nice project to figure out ways of doing just that.)
 	    
 	  </div>
 	</li>	  
 
-	<li><p><span class="hdr">Oct 4:</span><b>Higher-Order Functions</b></p>
+	<li><p><span class="hdr">Oct 4:</span><b>First-Class Functions</b></p>
 		<div class="lect">
 		  <p><a href="./lect-04-higher-order-functions.pdf">Slides from the lecture.</a></p>
+		  <p>A good overview of some advantages of the functional programming approach is given by John Hughes' <a href="http://www.cse.chalmers.se/~rjmh/Papers/whyfp.html"><i>Why Functional Programming Matters.</i></a> The first three sections at least should be pretty accessible.</p>
 	<!--	  <p><a href="homework5.html">Homework 5</a>, due next Monday.</p>-->
 		</div>
 	</li>	  
