@@ -175,11 +175,6 @@ li > p { margin-top:0;}
       
       <li> <p><b>Multi-argument functions</b></p>
 
-	<ol class="letter">
-
-	  <!-- ---------------------------------------- -->
-	  
-	  <li>
 	    <p>The code in <tt>homework5.py</tt> contains an
 	      implementation of functions that only handles
 	      single-argument
@@ -213,10 +208,29 @@ li > p { margin-top:0;}
 	    completed this question if you want to try out some examples in the shell.</p>
 
 <pre class="code">
+>>> shell()
+Homework 5 - Func Language
+#quit to quit
+func> (function (x y) (+ x y))
+Abstract representation: EFunction([x,y],ECall(EId(+),[EId(x),EId(y)]))
+&lt;function [x,y] ECall(EId(+),[EId(x),EId(y)])&gt;
+func> ((function (x y) (+ x y)) 10 20)
+Abstract representation: ECall(EFunction([x,y],ECall(EId(+),[EId(x),EId(y)])),[EValue(10),EValue(20)])
+30
+func> (defun sum2 (x y) (+ x y))
+Function sum2 added to top-level environment
+func> (sum2 10 20)
+Abstract representation: ECall(EId(sum2),[EValue(10),EValue(20)])
+30
+func> (defun sum3 (x y z) (+ x (+ y z)))
+Function sum3 added to top-level environment
+func> (sum3 10 20 30)
+Abstract representation: ECall(EId(sum3),[EValue(10),EValue(20),EValue(30)])
+60
+func> (sum3 (sum2 10 20) 30 40)
+Abstract representation: ECall(EId(sum3),[ECall(EId(sum2),[EValue(10),EValue(20)]),EValue(30),EValue(40)])
+100
 </pre>
-	  </li>
-
-	</ol>
 
       </li>
 
@@ -271,6 +285,29 @@ li > p { margin-top:0;}
 	      
 
 <pre class="code">
+>>> shell()
+Homework 5 - Func Language
+#quit to quit
+func> (let ((x 10)) x)
+Abstract representation: ECall(EFunction([x],EId(x)),[EValue(10)])
+10
+func> (let ((x 10)) (+ x 1))
+Abstract representation: ECall(EFunction([x],ECall(EId(+),[EId(x),EValue(1)])),[EValue(10)])
+11
+func> (let ((x 10) (y 20)) (+ x y))
+Abstract representation: ECall(EFunction([x,y],ECall(EId(+),[EId(x),EId(y)])),[EValue(10),EValue(20)])
+30
+func> (let ((x (* 2 3)) (y (* 4 5))) (+ x y))
+Abstract representation: ECall(EFunction([x,y],ECall(EId(+),[EId(x),EId(y)])),
+                               [ECall(EId(*),[EValue(2),EValue(3)]),ECall(EId(*),[EValue(4),EValue(5)])])
+26
+func> (let ((x 1) (y 2) (z 3)) (+ x (* y z)))
+Abstract representation: ECall(EFunction([x,y,z],ECall(EId(+),[EId(x),ECall(EId(*),[EId(y),EId(z)])])),
+                               [EValue(1),EValue(2),EValue(3)])
+7
+func> (let ((x (let ((y 10)) y))) x)
+Abstract representation: ECall(EFunction([x],EId(x)),[ECall(EFunction([y],EId(y)),[EValue(10)])])
+10
 </pre>
 	  </li>
 
@@ -323,6 +360,34 @@ You call such a function with <tt>(foo 10 20)</tt>.</p>
 	      primitive operations that uses curried functions.</p>
 	      
 <pre class="code">
+>>> shell_curry()
+Homework 5 - Func Language
+#quit to quit
+func/curry> +
+Abstract representation: EId(+)
+&lt;function [x] EFunction([y],EPrimCall(&lt;prim&gt;,[EId(x),EId(y)]))&gt;
+func/curry> (+ 10 20)
+Abstract representation: ECall(ECall(EId(+),[EValue(10)]),[EValue(20)])
+30
+func/curry> (* 2 3)
+Abstract representation: ECall(ECall(EId(*),[EValue(2)]),[EValue(3)])
+6
+func/curry> ((function (x y) (+ x y)) 10 20)
+Abstract representation: ECall(ECall(EFunction([x],EFunction([y],ECall(ECall(EId(+),[EId(x)]),[EId(y)]))),
+                                     [EValue(10)]),
+                               [EValue(20)])
+30
+func/curry> (function (x y) (+ x y))
+Abstract representation: EFunction([x],EFunction([y],ECall(ECall(EId(+),[EId(x)]),[EId(y)])))
+&lt;function [x] EFunction([y],ECall(ECall(EId(+),[EId(x)]),[EId(y)]))&gt;
+func/curry> (defun test (x y z) (+ x (+ y z)))
+Function test added to top-level environment
+func/curry> test
+Abstract representation: EId(test)
+&lt;function [x] EFunction([y],EFunction([z],ECall(ECall(EId(+),[EId(x)]),[ECall(ECall(EId(+),[EId(y)]),[EId(z)])])))&gt;
+func/curry> (test 1 2 3)
+Abstract representation: ECall(ECall(ECall(EId(test),[EValue(1)]),[EValue(2)]),[EValue(3)])
+6
 </pre>
 	  </li>
 
@@ -336,10 +401,150 @@ You call such a function with <tt>(foo 10 20)</tt>.</p>
       
       <li> <p><b>Recursive Anonymous Functions</b></p>
 
-	<p>Coming soon</p>
+	<p>Anonymous functions cannot be recursive, at least not as we
+	have them now. In order to write a recursive function, you
+	need to know the name of the function, and the point of an
+	  anonymous function is that we do not give it a name!</p>
 
+	<p>That may not seem like such a bad limitation, but it also
+	means that we cannot define local recursive functions. The one
+	way
+	  we can define a local function right now is
+	  via <tt>let</tt>, such as:
+<pre>
+  (let ((double (function (x) (* 2 x))))
+    (double (double 10)))
+</pre>
+        But because this relies on the use of an anonymous function,
+we cannot write a recursive function in this manner.</p>
+
+	<p>There are a couple of ways around this limitation. One is
+	  to define a slightly different form of <tt>let</tt> that
+	  somehow lets us make the binding that we are
+	  creating <i>visible</i> within the expression that we are
+	  binding. Such a <tt>let</tt> is called a <tt>letrec</tt>. We
+	  are not going to pursue that approach, but you
+	  can <a href="http://www.cs.rpi.edu/academics/courses/fall00/ai/scheme/reference/schintro-v14/schintro_126.html">read
+	    about it</a>.</p>
+
+	<p>No, the approach we are going to use is to allow the
+	writing of recursive anonymous function by giving the
+	anonymous function an internal name by which it can refer to itself
+	  within its own body. For example, here is a recursive
+	  anonymous function to sum up all the integers from 0
+	  to <i>n</i>:
+<pre>
+  (function me (n) (if (zero? n) 0 (+ n (me (- n 1)))))
+</pre>
+	This creates an anonymous function &mdash; it evaluates to a
+closure &mdash; but within the function body, the internal name <tt>me</tt> refers to the
+anonymous function itself. There is nothing special about
+the <tt>me</tt> symbol. Anything can be chosen:
+<pre>
+  (function hello (n) (if (zero? n) 0 (+ n (hello (- n 1)))))
+</pre>
+represents exactly the same function.
+	</p>
+
+	<p>With the ability to write recursive anonymous functions, we
+	  can now locally define recursive function. For instance,
+<pre>
+  (let ((sum (function me (n) (if (zero? n)
+                                  0
+                                  (+ n (me (- n 1)))))))
+    (sum 50))	    
+</pre>
+Note that the function is referred to as <tt>me</tt> within its own
+body, but is bound to the name <tt>sum</tt> by which it can be
+referred to elsewhere in the code. In other words, the internal name
+doesn't need to be the same as the name to which you ultimately bind the
+function.</p>
+
+	<ol class="letter">
+
+	<li>
+	<p>Your first task is to extend <tt>EFunction</tt> so that
+	  it takes a third (optional) argument representing the
+	internal name of the function. By default, if an internal name
+	is not supplied to <tt>EFunction</tt>, then it evaluates to a
+	normal closure the way we have it now. If an internal
+	name <i>is</i> supplied to <tt>EFunction</tt>, then it
+	evaluates to a closure whose environment has a binding for
+	  that internal name that refers to the closure
+	  itself. (Convince yourself that this is enough to give you
+	  recursion.) There
+	  are a few ways of achieving that, but I'll let you figure
+	  them out.</p>
+
+	<p><b>Hint:</b> the cleanest way I found is to change <tt>VClosure</tt> so that instead of accessing
+	  the stored environment as a field, you access it via a method <tt>env()</tt>.</p>
+
+	<p>
+	  (If you change the interface of <tt>VClosure</tt>,
+	  make sure Questions 1 and 2 still works with your
+	  new <tt>VClosure</tt>! I'll be testing your code as a whole.)</p>
+
+<pre class="code">
+# let's define the recusive function above
+>>> e = EFunction(["n"],
+                  EIf(ECall(EId("zero?"),[EId("n")]),
+		      EValue(VInteger(0)),
+		      ECall(EId("+"),[EId("n"),
+		                      ECall(EId("me"),[ECall(EId("-"),[EId("n"),EValue(VInteger(1))])])])),
+                  name="me")
+# evaluate the function to get a closure value
+>>> f = e.eval(initial_env())
+# call the closure with argument 10
+>>> ECall(EValue(f),[EValue(VInteger(10))]).eval([]).value
+55
+</pre>
+	</li>
+
+	<li>
+	<p>Your second task is to extend the surface syntax to account
+	  for an internal name. Extend the parser <tt>parse</tt> so
+	  that it parses not only the form <tt>(function (<i>name<sub>1</sub></i>
+	    ...) <i>expr</i>)</tt> as before, but also the recursive
+	  form <tt>(function <i>name<sub>int</sub></i> (<i>name<sub>1</sub></i>
+	    ...) <i>expr</i>)</tt> which should parse to
+	  an <tt>EFunction</tt> with the specified internal
+	  name <tt><i>name<sub>int</sub></i></tt>. 
+	</p>
+<pre class="code">
+func> ((function (x y) (+ x y)) 10 20)
+Abstract representation: ECall(EFunction([x,y],ECall(EId(+),[EId(x),EId(y)])),[EValue(10),EValue(20)])
+30
+func> ((function me (n) (if (zero? n) 0 (+ n (me (- n 1))))) 10)
+Abstract representation: ECall(EFunction([n],
+                                         EIf(ECall(EId(zero?),[EId(n)]),
+                                             EValue(0),
+					     ECall(EId(+),
+					           [EId(n),ECall(EId(me),[ECall(EId(-),[EId(n),EValue(1)])])]))),
+                               [EValue(10)])
+55
+func> (let ((sum (function me (n) (if (zero? n) 0 (+ n (me (- n 1))))))) (sum 100))
+Abstract representation: ECall(EFunction([sum],
+                                         ECall(EId(sum),[EValue(100)])),
+	                       [EFunction([n],
+			                  EIf(ECall(EId(zero?),[EId(n)]),
+					      EValue(0),
+					      ECall(EId(+),
+					            [EId(n),ECall(EId(me),[ECall(EId(-),[EId(n),EValue(1)])])])))])
+5050
+func> ((function me2 (n1 n2) (if (= n2 n1) n2 (+ n2 (me2 n1 (- n2 1))))) 0 20)
+Abstract representation: ECall(EFunction([n1,n2],
+                                         EIf(ECall(EId(=),[EId(n2),EId(n1)]),
+					     EId(n2),
+					     ECall(EId(+),
+					           [EId(n2),ECall(EId(me2),
+						                  [EId(n1),ECall(EId(-),[EId(n2),EValue(1)])])]))),
+                               [EValue(0),EValue(20)])
+210
+</pre>
+	</li>
+	  
       </li>
-      
+
 
     </ol>
     
