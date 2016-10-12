@@ -476,8 +476,8 @@ function.</p>
 	  are a few ways of achieving that, but I'll let you figure
 	  them out.</p>
 
-	<p><b>Hint:</b> the cleanest way I found is to change <tt>VClosure</tt> so that instead of accessing
-	  the stored environment as a field, you access it via a method <tt>env()</tt>.</p>
+	<p><del><b>Hint:</b> the cleanest way I found is to change <tt>VClosure</tt> so that instead of accessing
+	    the stored environment as a field, you access it via a method <tt>env()</tt>.</del> <ins>hint no longer needed given the new <tt>initial_env()</tt> and <tt>initial_env_curry()</tt> functions constructing saner top-level environments.</ins></p>
 
 	<p>
 	  (If you change the interface of <tt>VClosure</tt>,
