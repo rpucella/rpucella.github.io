@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 6</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 130%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+	pre.code {
+	   border: 1px solid #c6c6c6;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+	}
+
+/* from
+    http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
+ */
+
+ol {
+    counter-reset:li; /* Initiate a counter */
+    margin-left:0; /* Remove the default left margin */
+    padding-left:0; /* Remove the default left padding */
+    padding-top:1em;
+}
+ol > li {
+    position:relative; /* Create a positioning context */
+    margin:0 0 6px 2em; /* Give each list item a left margin to make
+    room for the numbers */
+    padding:4px 8px; /* Add some spacing around the content */
+    list-style:none; /* Disable the normal item numbering */
+    /*border-top:2px solid #666;
+    background:#f6f6f6; */
+}
+ol > li:before {
+    counter-increment:li; /* Increment the counter by 1 */
+    /* Position and style the number */
+    position:absolute;
+    top:-2px;
+    left:-2em;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    width:2em;
+    /* Some space between the number and the content in browsers that
+    support
+       generated content but not positioning it (Camino 2 is one
+    example) */
+    margin-right:8px;
+    padding:4px;
+/*    border-top:2px solid #666;
+    color:#fff;
+    background:#666; 
+    font-weight:bold; */
+/*    font-family:"Helvetica Neue", Arial, sans-serif;
+    text-align:center; */
+}
+
+ol.letter > li:before {
+    content:"(" counter(li,lower-alpha) ")"; /* Use the counter as content */
+}
+
+ol.number > li:before {
+    content:"(" counter(li,decimal) ")"; /* Use the counter as content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Programming Languages FA16</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 7em;"></div>
+    
+    <h1 class="clear">Homework 6</h1>
+    
+    <p class="subtitle">Due date: Thursday, Oct 27, 2016 (11:59:59pm)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done in teams of two. 
+    You may discuss problems with fellow students, but
+    all work must be entirely that of your team, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists <span style="text-decoration:underline;">the members of your team</span>, your <span style="text-decoration:underline;">email addresses</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in Python 2.7.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework6.py"><tt>homework6.py</tt></a>
+      provided.</p>
+
+    <p>Questions marked <b>Extra</b> are optional. You do not have to
+    do them. But will give you more practice and sometimes more
+      insight into what is going on. Plus some of them are fun.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Send an email with your file <tt>homework6.py</tt> as an attachment to <tt>pl.fa16.olin@gmail.com</tt> with subject <i>Homework 6 submission</i>. Only one email per team, please.</li>
+    </ul>
+
+    <hr>
+
+    <p>In this homework, you will be extending our IMP language we saw in the <i>Mutable State</i> lecture, the language with expressions and statements.</p>
+    
+    <ol class="number">
+
+      <li> <p><b>C-Style For Loop</b></p>
+
+	<p>Add a C-style <tt>for</tt> loop to language IMP. This is the same kind of <tt>for</tt> loop you find in Javascript. See <a href="https://www.tutorialspoint.com/cprogramming/c_for_loop.htm">here</a> for a description in case you're fuzzy on the details.</p>
+
+	
+<!--
+<pre class="code">
+</pre>
+-->
+
+      </li>
+
+      <li> <p><b>Strings</b></p>
+
+	<p>Add immutable strings to language IMP.</p>
+	
+	<ol class="letter">
+
+	  <li><p>Add a new value type <tt>VString</tt> for strings.</p></li>
+
+	  <li><p>Add syntax for string literals, of the form <tt>"Hi, I'm a string"</tt>.
+	      Figure out a way to allow double-quotes inside string literals.</p></li>
+
+	  <li><p>Implement primitive operations on strings, and make them available in the top level environment. Implement at least the following operations:
+	      <ul>
+		<li><tt>length</tt> (returns the length of a
+		  string)</li>
+		<li><tt>substring</tt> (returns part of a string
+		  as a new string)</li>
+		<li><tt>concat</tt> (concatenate two
+		  strings into a new one)</li>
+		<li><tt>startswith</tt> (check if
+		a string starts with another
+		  string)</li>
+		<li><tt>endswith</tt> (check if a string ends
+		  with another string)</li>
+		<li><tt>lower</tt> (converts every
+		character of a string into lowercase, returning a new
+		  string)</li>
+		<li><tt>upper</tt> (converts every character of a
+		string into uppercase, returning a new
+		  string).</li>
+	      </ul>
+	  </p></li>  
+
+
+<!-- <pre class="code">
+</pre>
+-->
+	  </li>
+
+	</ol>
+
+      </li>
+
+      <li> <p><b>Procedures</b></p>
+
+
+	<p>Functions in language IMP have expressions as bodies. This
+	  means that you cannot do updates or perform actions (such as
+	  print) within functions. That's a bit limiting. We're going
+	  to implement a new kind of function, called
+	  a <i>procedure</i>, that has a statement body, and therefore
+	  does not return a value. Therefore, calling it will be a
+	  statement, and not an expression.</p>
+
+	<p><a href="http://www.irietools.com/iriepascal/linux/progref160.html">Here</a>
+	is a delightfully old-fashioned description of the distinction
+	  between functions and procedures in Pascal, to emphasize
+	  what I said above.</p>
+
+	<ol class="letter">
+
+	  <li><p>Add new syntax for declaring procedures, as a new
+	      form of declaration in a statement
+	      block (similar to a <tt>var <i>name</i> =
+		...</tt>):
+	      <pre>
+   procedure <i>name</i> (<i>param<sub>1</sub></i>, <i>param<sub>2</sub></i>, ...) <i>stmt</i>
+</pre>
+	      which declares a procedure called <tt><i>name</i></tt>
+	      taking the specified parameters, and whose body is the
+	      specified statement.</p></li>
+
+	  <li><p>Make sure your new kind of declaration works in the
+	      shell too.</p></li>
+
+	  <li><p>Add a new kind of statement that represents a
+	  procedure call with arguments, so that the following is a
+	      valid statement: <tt>foo(1,2,3);</tt>, or <tt>foo((+ 1
+		2),(+ 3 4),(+ 5 6));</tt>.
+	  </p></li>
+
+	  <li><p><b>(Challenging)</b> Make procedures first class, so
+	  that they are values like any other. Which means that you
+	  should make it so that procedure calls should permit an
+	      expression to be used in place of a procedure name.</p>
+
+	    <p>
+	      Also make sure that you cannot call a procedure from an
+	      <i>expression context</i>, that is, if <tt>foo</tt> is a
+	  procedure, the following should cause an error: <tt>(+ (foo
+		10) 30)</tt>. </p>
+
+	    <p>(Calling a function from
+	      a <i>statement</i> context should not cause a problem
+	      (<b>why?</b>), so that if <tt>bar</tt> is a function,
+	      then having a statement <tt>bar(1,2,3);</tt> can either
+	  report an error or not, which is up to you.)</p></li>
+	  
+	</ol>	  
+
+<!--
+<pre class="code">
+</pre>
+-->
+
+      </li>
+      
+
+      <li> <p><b>Array Objects</b></p>
+
+	<p>After Tuesday's class...</p>
+
+
+      </li>
+
+</ol>
+    
+
+  </body>
+</html>
