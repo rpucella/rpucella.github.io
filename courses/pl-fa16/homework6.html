@@ -291,10 +291,112 @@ li > p { margin-top:0;}
       </li>
       
 
-      <li> <p><b>Array Objects</b></p>
+      <li> <p><b>Mutable Array Objects</b></p>
 
-	<p>After Tuesday's class...</p>
+	<ol class="letter">
 
+	  <li><p>Add mutable array objects to the language. An array object is created by the <b>expression</b>:
+<pre>
+  (new-array <i>e</i>)
+</pre>
+Expression <tt><i>e</i></tt> should evaluate to a number that will be taken as the length of the array created. The array is initially filled with <tt>VNone</tt> values. </p>
+
+	    <p>
+	      You update an array using the <b>statement</b>
+<pre>
+  <i>e<sub>array</sub></i>[<i>e<sub>1</sub></i>] <- <i>e<sub>2</sub></i>;
+</pre>
+where
+<tt><i>e<sub>array</sub></i></tt> should evaluate to an array, <tt><i>e<sub>1</sub></i></tt> to a number representing the position in the array to update, and <tt><i>e<sub>2</sub></i></tt> to a value to be stored in the array at the given position. 
+	    </p>
+	    
+	    <p>I know, we can't access the elements of an array
+	      yet. See next question.</p>
+
+	    <p><i>You do not have to implement a complete object system. There is no need to define classes and the likes (though you can if you want). The only kind of objects I care about in the language is mutable arrays.</i>
+	  </li>
+
+
+	  <li>
+	    <p>
+	    Array objects have methods. Methods are functions, meaning
+	    that they return values and do not perform actions. The
+	    body of a method is an expression to be evaluated. (We
+	    could generalize this to also allow procedure methods as
+	    well, but we won't.)
+	    </p>
+
+	    <p>Add the following methods to array
+	      objects: 
+	      <ul>
+		<li><tt>(index <i>e</i>)</tt>: return the value stored
+		  in the array at index obtained by evaluating <i>e</i>;
+		<li><tt>(length)</tt>: returns the length of the array
+		(note that this is a zero-arguments methods, and not a
+		field...) ;
+		<li><tt>(map <i>f</i>)</tt>: returns a new array obtained by
+		  applying function <tt><i>f</i></tt> to every element
+		  of the array.</li>
+	      </ul>
+	    </p>
+
+<p>
+	      As we saw in class, you access the methods of an array
+	      object by using the <b>expression</b>:
+<pre>
+  (with <i>e<sub>array</sub></i> <i>e</i>)
+</pre>
+where <tt><i>e<sub>array</sub></i></tt> should evaluate to an array
+and make its methods available in the environment used to
+evaluate <tt><i>e</i></tt>. Thus, for example, if <tt>x</tt> is an
+array of length at least 2, then 
+<pre>
+  (with x (+ (index 0) (index 1)))
+</pre>
+should evaluate to the sum of the first two values in <tt>x</tt>. 
+	    </p>
+
+<p>
+Here is a more complete example, a function that sums all the
+elements of an array (why am I using recursion here instead of a for
+loop or a while loop?):
+<pre>
+var sum = 
+  (function (arr) (let ((loop (function loop (i result)
+                                 (if (= i (with arr (length)))
+                                     result
+                                     (loop (+ i 1) 
+                                           (+ result (with arr (index i))))))))
+                     (loop 0 0))));
+var a <- (new-array 3);
+a[0] <- 1;
+a[1] <- 10;
+a[2] <- 100;
+print (sum a);
+</pre>
+  which should print 111 when executed in the shell. (The above
+assumes that we have <tt>=</tt> in the initial environment.)
+	  </p></li>
+
+	  <li><p>I'm assuming that you got procedures to work in the
+	  previous question. (Not necessarily first-class procedures,
+	  just procedures.) Implement QuickSort in a procedure that
+	    takes an array as input and that sorts the array in
+	    place: calling <tt>quicksort(x);</tt> will result
+	      in array <tt>x</tt> holding the sorted values.</p>
+
+	    <p>You'll need to add primitive operations to the initial
+	    environment to get this to work. Add all the operations
+	      you need.</p>
+
+	    <p><i>Please don't try to be clever: no adding a primitive
+		operation <tt>sort</tt> to the initial environment
+		that calls Python's sorting function and use that in
+		your <tt>quicksort</tt>. The intent here is to
+		implement the QuickSort algorithm in our object language.</i></p>
+
+	</ol>
+	
 
       </li>
 
