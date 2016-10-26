@@ -447,7 +447,7 @@ def parse_imp (input):
 
     pQUIT = Keyword("#quit")
     pQUIT.setParseAction(lambda result: {"result":"quit"})
-    
+
     pTOP = (pQUIT | pABSTRACT | pTOP_DECL | pTOP_STMT )
 
     result = pTOP.parseString(input)[0]
@@ -462,10 +462,18 @@ def shell_imp ():
     print "#quit to quit, #abs to see abstract representation"
     env = initial_env_imp()
 
-        
     while True:
         inp = raw_input("imp> ")
 
+        if inp.startswith("#multi"):
+            # multi-line statement
+            line = ""
+            inp = raw_input(".... ")
+            while inp:
+                line += inp + " "
+                inp = raw_input(".... ")
+            inp = line
+            
         try:
             result = parse_imp(inp)
 
@@ -485,7 +493,6 @@ def shell_imp ():
                 v = expr.eval(env)
                 env.insert(0,(name,VRefCell(v)))
                 print "{} defined".format(name)
-                
-                
+                    
         except Exception as e:
             print "Exception: {}".format(e)
