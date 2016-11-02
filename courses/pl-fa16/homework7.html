@@ -48,8 +48,17 @@
 	border-radius: 5px;
 	padding: 10px;
 	font-size:100%;
-	}
+      }
 
+      pre.blue {
+      color: blue;
+      }
+
+      span.comment {
+      color:#aaaaaa;
+      font-style:italic;
+      }
+      
 /* from
     http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
  */
@@ -157,90 +166,127 @@ li > p { margin-top:0;}
       <li>Send an email with your file <tt>homework7.py</tt> as an attachment to <tt>pl.fa16.olin@gmail.com</tt> with subject <i>Homework 7 submission</i>. Only one email per team, please.</li>
     </ul>
 
-    <p><b>Additional instructions for Homework 7 submission:</b> Along with your usual submission of the <tt>homework6.py</tt> file containing your source code, please describe in your submission email (or a subsequent email if you've already submitted <tt>homework6.py</tt>) how you answered the various questions. More specifically
+    <p><b>Additional instructions for Homework 7 submission:</b> Along with your usual submission of the <tt>homework7.py</tt> file containing your source code, please describe in your submission email (or a subsequent email if you've already submitted <tt>homework7.py</tt>) 
 
     <hr>
 
-    <p>In this homework, we bring everything we learned about interpretation together. Your goal is to implement an interpreter for a simple imperative language with first class functions, mutable variables, mutable arrays, and dictionaries. You should definitely reuse most of the stuff we did in class. Let's call our language PJ (for Python/JavaScript).</p>
+    <p>In this homework, we bring together everything we learned about interpretation to implement an interpreter for a reasonably complete programming language I'm going to call PJ (for Python/JavaScript): imperative, with first-class functions, mutable variables, mutable arrays (lists), and dictionaries.</p>
 
-    <p>Syntax: </p>
+    <p>In contrast with all previous homeworks, I'm not going to give you any starting code. But you are <i>strongly</i> encouraged to pull from all the various interpreters we've written the pieces that you'll need to put this one together. You should not have to reinvent the abstract representation, or the evaluation process, unless you really want to.</p>
 
-<!--    <table>
-      <tr>
-	<td><tt><i>expr</i></tt> ::= </td>
-	<td><i>integer</i></td>
-      </tr>
-      <tr>
-	<td></td>
-	<td><i>boolean</i></td>
-      </tr>
-    </table>
--->
+    <h3>The Language</h3>
 
-<pre>
-  <i>expr</i> ::= <i>integer literal</i>
-           <i>boolean literal</i>
-	   <i>string literal</i>
- 	   <i>identifier</i>
-	   <i>expr</i> <b>+</b> <i>expr</i>
+    <p>Here is the desired syntax.</p>
+
+    <p>Expressions evaluate to values:</p>
+
+<pre class="blue">
+  <i>expr</i> ::= <i>integer literal</i>                       <span class="comment"># of the form 123 or -456</span>
+           <i>boolean literal</i>                       <span class="comment"># true , false</span>
+	   <i>string literal</i>                        <span class="comment"># of the form "xyz"</span>
+ 	   <i>id</i>                                    <span class="comment"># starts with a letter or _</span>
+	   <i>expr</i> <b>+</b> <i>expr</i>                           <span class="comment"># adds integers / concatenates arrays / concatenates strings</span>
 	   <i>expr</i> <b>*</b> <i>expr</i>
 	   <i>expr</i> <b>-</b> <i>expr</i>
-	   <i>expr</i> <b>==</b> <i>expr</i>
-	   <i>expr</i> <b>></b> <i>expr</i>
-	   <i>expr</i> <b>>=</b> <i>expr</i>
-	   <i>expr</i> <b><</b> <i>expr</i>
-	   <i>expr</i> <b><=</b> <i>expr</i>
-	   <i>expr</i> <b><></b> <i>expr</i>
-	   <i>expr</i> <b>and</b> <i>expr</i>
-	   <i>expr</i> <b>or</b> <i>expr</i>
-	   <b>not</b> <i>expr</i>
-	   <b>let</b> <b>(</b> <i>identifier</i> <b>=</b> <i>expr</i> <b>,</b> ... <b>)</b> <i>expr</i>
-	   <i>expr</i> <b>?</b> <i>expr</i> <b>:</b> <i>expr</i>
-	   <i>expr</i> <b>(</b> <i>expr</i> <b>,</b> ... <b>)</b>
+	   <i>expr</i> <b>==</b> <i>expr</i>                          <span class="comment"># equality (all types)</span>
+	   <i>expr</i> <b>></b> <i>expr</i>                           <span class="comment"># for integers and strings (lexicographic order)</span>
+	   <i>expr</i> <b>>=</b> <i>expr</i>                          <span class="comment"># for integers and strings (lexicographic order)</span>
+	   <i>expr</i> <b><</b> <i>expr</i>                           <span class="comment"># for integers and strings (lexicographic order)</span>
+	   <i>expr</i> <b><=</b> <i>expr</i>                          <span class="comment"># for integers and strings (lexicographic order)</span>
+	   <i>expr</i> <b><></b> <i>expr</i>                          <span class="comment"># this is "not equal" (all types)</span>
+	   <i>expr</i> <b>and</b> <i>expr</i>                         <span class="comment"># short-circuiting</span>
+	   <i>expr</i> <b>or</b> <i>expr</i>                          <span class="comment"># short-circuiting</span>
+	   <b>not</b> <i>expr</i>                                     
+	   <b>let</b> <b>(</b> <i>id</i> <b>=</b> <i>expr</i> <b>,</b> ... <b>)</b> <i>expr</i>
+	   <i>expr</i> <b>?</b> <i>expr</i> <b>:</b> <i>expr</i>                    <span class="comment"># conditional</span>
+	   <i>expr</i> <b>(</b> <i>expr</i> <b>,</b> ... <b>)</b>                   <span class="comment"># function call</span>
 	   <b>(</b> <i>expr</i> <b>)</b>
-	   <b>[</b> <i>expr</i> <b>,</b> ... <b>]</b>
-	   <b>function</b> <b>(</b> <i>identifier</i> <b>,</b> ... <b>)</b> <i>stmt</i>
-	   <b>{</b> <i>identifier</i> <b>:</b> <i>expr</i> <b>,</b> ... <b>}</b>
-	   <i>expr</i> <b>[</b> <i>expr</i> <b>]</b>
-	   <b>print</b> <i>expr</i> <b>,</b> ...
-
-  <i>stmt</i> ::= <i>expr</i> <b>;</b>
-           <i>identifier</i> <b>=</b> <i>expr</i> <b>;</b>
-	   <i>expr</i> <b>[</b> <i>expr</i> <b>]</b> <b>=</b> <i>expr</i> <b>;</b>
-           <b>if</b> <b>(</b> <i>expr</i> <b>)</b> <i>stmt</i> <b>else</b> <i>stmt</i>
-	   <b>while</b> <b>(</b> <i>expr</i> <b>)</b> <i>stmt</i>
-	   <b>for</b> <b>(</b> <i>identifier</i> <b>in</b> <i>expr</i> <b>)</b> <i>stmt</i>
-	   <b>{</b> <i>decl</i> ... <i>stmt</i> ... <b>}</b>
-
-  <i>decl</i> ::= <b>var</b> <i>identifier</i> <b>;</b>
-           <b>var</b> <i>identifier</i> <b>=</b> <i>expr</i> <b>;</b>
+	   <b>[</b> <i>expr</i> <b>,</b> ... <b>]</b>                        <span class="comment"># creates an array</span>
+	   <b>fun</b> <b>(</b> <i>id</i> <b>,</b> ... <b>)</b> <i>body</i>            <span class="comment"># anonymous function</span>
+	   <b>fun</b> <i>id</i> <b>(</b> <i>id</i> <b>,</b> ... <b>)</b> <i>body</i>         <span class="comment"># recursive anonymous function</span>
+	   <b>{</b> <i>id</i> <b>:</b> <i>expr</i> <b>,</b> ... <b>}</b>                   <span class="comment"># dictionary (record)</span>
+	   <i>expr</i> <b>[</b> <i>expr</i> <b>]</b>                         <span class="comment"># array or string (<i>a[2]</i>) or dictionary (<i>a["x"]</i>) indexing</span>  
 </pre>
 
-    <p>Predefined functions in the initial environment should include <tt>len</tt> to compute the length of an array or of a string. </p>
+    <p>Statements do not return values, but they are used to perform actions:</p>
+<pre class="blue">
+  <i>stmt</i> ::= <i>expr</i> <b>;</b>                                <span class="comment"># evaluate expression (drop the result)</span>
+           <i>id</i> <b>=</b> <i>expr</i> <b>;</b>                           <span class="comment"># assignment to a variable</span>
+	   <b>print</b> <i>expr</i> <b>,</b> ... <b>;</b>                    <span class="comment"># print values on the same line</span>
+	   <i>expr</i> <b>[</b> <i>expr</i> <b>]</b> <b>=</b> <i>expr</i> <b>;</b>                <span class="comment"># assign to array or dictionary element</span>
+           <b>if</b> <b>(</b> <i>expr</i> <b>)</b> <i>body</i>                      <span class="comment"># conditional</span>
+           <b>if</b> <b>(</b> <i>expr</i> <b>)</b> <i>body</i> <b>else</b> <i>body</i>            <span class="comment"># conditional</span>
+	   <b>while</b> <b>(</b> <i>expr</i> <b>)</b> <i>body</i>                   <span class="comment"># loop </span>
+	   <b>for</b> <b>(</b> <i>id</i> <b>in</b> <i>expr</i> <b>)</b> <i>body</i>               <span class="comment"># iteration over elements of an array</span>
 
-    <p>A <i>program</i> is a sequence of declarations, such as the following:
+  <i>body</i> ::= <b>{</b> <i>decl</i> ... <i>stmt</i> ... <b>}</b>         <span class="comment"># zero of more declarations followed by zero or more statements</span>
+</pre>
 
+    <p>A statement is ended either by a semicolon <tt><b>;</b></tt> or by a closing brace <tt><b>}</b></tt> when that statement has a body. I think The only times a closing brace has to be following by a semicolon is when you assign a function to a variable, such as:</p>
+      <pre>
+  f = fun(a,b) { a+b;};</pre>
+
+    <p>Note that a naked expression <tt><i>expr;</i></tt> can be a statement. This is useful in two ways.</p>
+
+    <p>
+      First, we can use it to call a function as a statement: since
+      the body of a function is a statement or block of statements,
+      calling a function can perform actions (like in Javascript and
+      Python, and unlike what we did in Homework 6 &mdash; compare and
+      constrast).</p>
+
+    <p>Second, we can use it to return a value from a function. Note that we don't have a <tt>return</tt> statement. It would be nice if we did, but it turns out to be a major pain to implement using the techniques that we've seen. So how do we return values from functions? If the last thing a function does is to evaluate a naked expression, then that naked expression is the result of the function call. The following anonymous function, for instance, simply returns its argument:</p>
+    <pre>
+  var identity = fun (x) { x; }</pre>
+
+    <p>The following function, in constrast, is our usual definition of <tt>sum()</tt> as an anonymous recursive function:</p>
+    <pre>
+  var sum = fun s (n) {
+    if (n == 0) {
+      0;
+    } else {
+      n + s(n-1);
+    }
+  }</pre>
+
+    <p>I'll provide more examples below.</p>
+    
+    <p>Declarations define new variables (via <tt>var</tt>) or recursive functions (via <tt>def</tt>). Declaring a variable or function that already exists does not destroy the previous variables or functions of the same name, it hides them. Variables and functions defined within a body are local to that body,  and disappear when the body finishes executing.</p>
+<pre class="blue">
+  <i>decl</i> ::= <b>var</b> <i>id</i> <b>;</b>
+           <b>var</b> <i>id</i> <b>=</b> <i>expr</i> <b>;</b>
+           <b>def</b> <i>id</i> <b>(</b> <i>id</i> <b>,</b> ... <b>)</b> <i>body</i>       <span class="comment"># function definition</span>
+</pre>
+
+    <p>The initial environment contains predefined functions. The only function I'm requiring you to put in the initial environment is <tt>len(<i>x</i>)</tt>, which computes the length of an array or of a string. Feel free to add whichever other predefined functions you find useful to the initial environment.</p>
+
+    <h3>Programs</h3>
+    
+    <p>A <i>program</i> is a sequence of declarations. For example:</p>
 <pre>
-var count_to_zero = function(n) {
-  while (n >= 0) {
-    print n;
-    n = n - 1;
-  }
-}
-
-var main = function() {
-  print "Hello, world!";
-  count_to_zero(10);
-}
+   def count_to_zero (n) {
+     while (n >= 0) {
+       print n;
+       n = n - 1;
+     }
+   }
+   
+   def main () {
+     print "Hello, world!";
+     count_to_zero(10);
+   }
 </pre>
-</p>
+    <p>Programs should define a function <tt>main()</tt> of no arguments. Intuitively, executing a program means calling <tt>main()</tt>.</p>
 
-    <p>Write a function <tt class="code">execute(<i>filename</i>)</tt> that takes a filename containing a program as an argument, and executes function <tt>main()</tt> contained in the program. Of course, this should invoke an interpreter that you have to write that will execute function <tt>main()</tt>.</p>
+    <h3>The Interpreter</h3>
+    
+    <p>The main interface to your interpreter should be a function <tt class="code">execute(<i>filename</i>)</tt> that takes a filename containing a program as an argument, and executes function <tt>main()</tt> contained in the program. Of course, this should invoke an interpreter that you have to write that will execute the code in the program.</p>
 
-      <p>If you want to be fancy, write your <tt>homework7.py</tt> code in such a way that you can invoke <tt>execute()</tt> directly from the command-line, so that for instance:
+    <p>Write your <tt>homework7.py</tt> code in such a way that you can invoke the interpreter directly from the command-line, so that for instance:
 <pre>
   python homework7.py test.pj
 </pre>
+would run the interpreter on the program in <tt>test.pj</tt>
 </p>
 </body>
 </html>
