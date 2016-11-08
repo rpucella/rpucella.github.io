@@ -249,7 +249,7 @@ class VVector (Value):
         self.type = "vector"
 
     def __str__ (self):
-        return "< {} >".format(", ".join([ str(v) for v in self._elts]))
+        return "&lt; {} >".format(", ".join([ str(v) for v in self._elts]))
 
     def get (self,n):
         return self._elts[n]
