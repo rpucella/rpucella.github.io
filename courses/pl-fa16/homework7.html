@@ -143,7 +143,7 @@ li > p { margin-top:0;}
     
     <h1 class="clear">Homework 7</h1>
     
-    <p class="subtitle">Due date: ??, Nov ??, 2016 (11:59:59pm)</p>
+    <p class="subtitle">Due date: Friday, Nov 18, 2016 (11:59:59pm)</p>
 
     <p><b>Note on integrity:</b> This homework is meant to be done in teams of two. 
     You may discuss problems with fellow students, but
@@ -158,7 +158,7 @@ li > p { margin-top:0;}
 
     <p>All programming is to be done in Python 2.7.</p>
 
-    <p>Feel free to define helper functions if you need them.</p>
+    <!-- <p>Feel free to define helper functions if you need them.</p> -->
 
     <p>Electronic submission instructions:</p>
 
@@ -166,13 +166,25 @@ li > p { margin-top:0;}
       <li>Send an email with your file <tt>homework7.py</tt> as an attachment to <tt>pl.fa16.olin@gmail.com</tt> with subject <i>Homework 7 submission</i>. Only one email per team, please.</li>
     </ul>
 
-    <p><b>Additional instructions for Homework 7 submission:</b> Along with your usual submission of the <tt>homework7.py</tt> file containing your source code, please describe in your submission email (or a subsequent email if you've already submitted <tt>homework7.py</tt>) 
+    <p><b>Additional instructions for Homework 7 submission:</b> Along
+    with your usual submission of the <tt>homework7.py</tt> file
+    containing your source code, please put in a comment at the top of
+    your file describing any deviation you have made from this
+    specification. I will test your code by running it on sample
+    programs, and I want to make sure that you do not get penalized
+    for, say, failing to successfully parse a program (and therefore
+    execute it) because you decided to change the grammar of the
+    language slightly. </p>
 
     <hr>
 
     <p>In this homework, we bring together everything we learned about interpretation to implement an interpreter for a reasonably complete programming language I'm going to call PJ (for Python/JavaScript): imperative, with first-class functions, mutable variables, mutable arrays (lists), and dictionaries.</p>
 
-    <p>In contrast with all previous homeworks, I'm not going to give you any starting code. But you are <i>strongly</i> encouraged to pull from all the various interpreters we've written the pieces that you'll need to put this one together. You should not have to reinvent the abstract representation, or the evaluation process, unless you really want to.</p>
+    <p>In contrast with all previous homeworks, I'm not going to give
+    you any starting code. But you are <i>strongly</i> encouraged to
+    pull from all the various interpreters we've written the pieces
+    that you'll need to put this one together. You should not have to
+    reinvent the parser, the abstract representation, or the evaluation process, unless you really want to.</p>
 
     <h3>The Language</h3>
 
@@ -197,22 +209,24 @@ li > p { margin-top:0;}
 	   <i>expr</i> <b>and</b> <i>expr</i>                         <span class="comment"># short-circuiting</span>
 	   <i>expr</i> <b>or</b> <i>expr</i>                          <span class="comment"># short-circuiting</span>
 	   <b>not</b> <i>expr</i>                                     
-	   <b>let</b> <b>(</b> <i>id</i> <b>=</b> <i>expr</i> <b>,</b> ... <b>)</b> <i>expr</i>
+	   <b>let</b> <b>(</b> <i>id</i> <b>=</b> <i>expr</i> <b>,</b> ... <b>)</b> <i>expr</i>          <span class="comment"># local binding</span>
 	   <i>expr</i> <b>?</b> <i>expr</i> <b>:</b> <i>expr</i>                    <span class="comment"># conditional</span>
 	   <i>expr</i> <b>(</b> <i>expr</i> <b>,</b> ... <b>)</b>                   <span class="comment"># function call</span>
 	   <b>(</b> <i>expr</i> <b>)</b>
 	   <b>[</b> <i>expr</i> <b>,</b> ... <b>]</b>                        <span class="comment"># creates an array</span>
-	   <b>fun</b> <b>(</b> <i>id</i> <b>,</b> ... <b>)</b> <i>body</i>            <span class="comment"># anonymous function</span>
-	   <b>fun</b> <i>id</i> <b>(</b> <i>id</i> <b>,</b> ... <b>)</b> <i>body</i>         <span class="comment"># recursive anonymous function</span>
+	   <b>fun</b> <b>(</b> <i>id</i> <b>,</b> ... <b>)</b> <i>body</i>                 <span class="comment"># anonymous function</span>
+	   <b>fun</b> <i>id</i> <b>(</b> <i>id</i> <b>,</b> ... <b>)</b> <i>body</i>              <span class="comment"># recursive anonymous function</span>
 	   <b>{</b> <i>id</i> <b>:</b> <i>expr</i> <b>,</b> ... <b>}</b>                   <span class="comment"># dictionary (record)</span>
 	   <i>expr</i> <b>[</b> <i>expr</i> <b>]</b>                         <span class="comment"># array or string (<i>a[2]</i>) or dictionary (<i>a["x"]</i>) indexing</span>  
 </pre>
+
+    <p>Values include: integers, Booleans, strings, arrays, dictionaries (records), and functions (closures). It may be useful to have a <tt>none</tt> value, and a literal for it. 
 
     <p>Statements do not return values, but they are used to perform actions:</p>
 <pre class="blue">
   <i>stmt</i> ::= <i>expr</i> <b>;</b>                                <span class="comment"># evaluate expression (drop the result)</span>
            <i>id</i> <b>=</b> <i>expr</i> <b>;</b>                           <span class="comment"># assignment to a variable</span>
-	   <b>print</b> <i>expr</i> <b>,</b> ... <b>;</b>                    <span class="comment"># print values on the same line</span>
+	   <b>print</b> <i>expr</i> <b>,</b> ... <b>;</b>                    <span class="comment"># print values (on the same line)</span>
 	   <i>expr</i> <b>[</b> <i>expr</i> <b>]</b> <b>=</b> <i>expr</i> <b>;</b>                <span class="comment"># assign to array or dictionary element</span>
            <b>if</b> <b>(</b> <i>expr</i> <b>)</b> <i>body</i>                      <span class="comment"># conditional</span>
            <b>if</b> <b>(</b> <i>expr</i> <b>)</b> <i>body</i> <b>else</b> <i>body</i>            <span class="comment"># conditional</span>
@@ -235,11 +249,16 @@ li > p { margin-top:0;}
       Python, and unlike what we did in Homework 6 &mdash; compare and
       constrast).</p>
 
-    <p>Second, we can use it to return a value from a function. Note that we don't have a <tt>return</tt> statement. It would be nice if we did, but it turns out to be a major pain to implement using the techniques that we've seen. So how do we return values from functions? If the last thing a function does is to evaluate a naked expression, then that naked expression is the result of the function call. The following anonymous function, for instance, simply returns its argument:</p>
+    <p>Second, we can use it to return a value from a function. The
+    rule is that a naked expressions evaluates to a value but that
+    value is not used, <i>unless</i> it is the last thing a
+    function does before finishing, in which case the result of the
+    evaluation is the result of the function call. The following
+    anonymous function, for instance, simply returns its argument:</p>  
     <pre>
   var identity = fun (x) { x; }</pre>
 
-    <p>The following function, in constrast, is our usual definition of <tt>sum()</tt> as an anonymous recursive function:</p>
+    <p>The following function is our usual definition of <tt>sum()</tt> as an anonymous recursive function:</p>
     <pre>
   var sum = fun s (n) {
     if (n == 0) {
@@ -250,14 +269,20 @@ li > p { margin-top:0;}
   }</pre>
 
     <p>I'll provide more examples below.</p>
+
+    <p>The <tt>for</tt> loop is like the one in Python. A
+      statement <tt>for (x in arr) <i>body</i></tt> creates a new binding
+      for <tt>x</tt> and then for every element of array <tt>arr</tt>
+      going from left to right 
+      binds <tt>x</tt> to that element and executes <i>body</i>. 
     
-    <p>Declarations define new variables (via <tt>var</tt>) or recursive functions (via <tt>def</tt>). Declaring a variable or function that already exists does not destroy the previous variables or functions of the same name, it hides them. Variables and functions defined within a body are local to that body,  and disappear when the body finishes executing.</p>
+    <p>Declarations define new variables (via <tt>var</tt>) or recursive functions (via <tt>def</tt>):</p>
 <pre class="blue">
   <i>decl</i> ::= <b>var</b> <i>id</i> <b>;</b>
            <b>var</b> <i>id</i> <b>=</b> <i>expr</i> <b>;</b>
            <b>def</b> <i>id</i> <b>(</b> <i>id</i> <b>,</b> ... <b>)</b> <i>body</i>       <span class="comment"># function definition</span>
 </pre>
-
+<p>Declaring a variable or function that already exists does not destroy the previous variables or functions of the same name, it hides them. Variables and functions defined within a body are local to that body,  and disappear when the body finishes executing.</p>
     <p>The initial environment contains predefined functions. The only function I'm requiring you to put in the initial environment is <tt>len(<i>x</i>)</tt>, which computes the length of an array or of a string. Feel free to add whichever other predefined functions you find useful to the initial environment.</p>
 
     <h3>Programs</h3>
