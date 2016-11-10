@@ -2,7 +2,7 @@
   <body>
     <pre>
 ############################################################
-# solutions to homework 3
+# solutions to homework 4
 #
 
 import sys
@@ -32,6 +32,9 @@ class EValue (Exp):
     def substitute (self,id,new_e):
         return self
 
+    def evalEnv (self,fun_dict,env):
+        return self._value
+
 
 class EInteger (Exp):
     # Integer literal
@@ -48,6 +51,9 @@ class EInteger (Exp):
     def substitute (self,id,new_e):
         return self
 
+    def evalEnv (self,fun_dict,env):
+        return VInteger(self._integer)
+
 
 class EBoolean (Exp):
     # Boolean literal
@@ -63,6 +69,9 @@ class EBoolean (Exp):
 
     def substitute (self,id,new_e):
         return self
+
+    def evalEnv (self,fun_dict,env):
+        return VBoolean(self._boolean)
 
 
 class EPrimCall (Exp):
@@ -85,6 +94,10 @@ class EPrimCall (Exp):
     def substitute (self,id,new_e):
         new_es = [ e.substitute(id,new_e) for e in self._exps]
         return EPrimCall(self._prim,new_es)
+
+    def evalEnv (self,fun_dict,env):
+        vs = [ e.evalEnv(fun_dict,env) for e in self._exps ]
+        return apply(self._prim,vs)
 
 
 class EIf (Exp):
@@ -112,11 +125,20 @@ class EIf (Exp):
                    self._then.substitute(id,new_e),
                    self._else.substitute(id,new_e))
 
+    def evalEnv (self,fun_dict,env):
+        v = self._cond.evalEnv(fun_dict,env)
+        if v.type != "boolean":
+            raise Exception ("Runtime error: condition not a Boolean")
+        if v.value:
+            return self._then.evalEnv(fun_dict,env)
+        else:
+            return self._else.evalEnv(fun_dict,env)
+
 
 class ELet (Exp):
     # local binding
     # allow multiple bindings
-    # eager (call-by-avlue)
+    # eager (call-by-value)
 
     def __init__ (self,bindings,e2):
         self._bindings = bindings
@@ -139,6 +161,13 @@ class ELet (Exp):
             return ELet(new_bindings, self._e2)
         return ELet(new_bindings, self._e2.substitute(id,new_e))
 
+    def evalEnv (self,fun_dict,env):
+        # by this point, all substitutions in bindings expressions have happened already (!)
+        new_env = {}
+        for (id,e) in self._bindings:
+            new_env[id] = e.evalEnv(fun_dict,env)
+        return self._e2.evalEnv(fun_dict,[new_env]+env)   # this may fail
+
 
 class EId (Exp):
     # identifier
@@ -156,6 +185,12 @@ class EId (Exp):
         if id == self._id:
             return new_e
         return self
+
+    def evalEnv (self,fun_dict,env):
+        for sub in env:
+            if self._id in sub:
+                return sub[self._id]
+        raise Exception("Runtime error: unknown identifier {}".format(self._id))
 
 
 class ECall (Exp):
@@ -182,8 +217,18 @@ class ECall (Exp):
         new_es = [ e.substitute(var,new_e) for e in self._exps]
         return ECall(self._name,new_es)
 
+    def evalEnv (self,fun_dict,env):
+        params = fun_dict[self._name]["params"]
+        if len(params) != len(self._exps):
+            raise Exception("Runtime error: wrong number of argument calling function {}".format(self._name))
+        body = fun_dict[self._name]["body"]
+        new_env = {}
+        for (p,e) in zip(params,self._exps):
+            new_env[p] = e.evalEnv(fun_dict,env)
+        return body.evalEnv(fun_dict,[new_env])
+        
 
-    
+
 #
 # Values
 #
@@ -320,22 +365,81 @@ def parse (input):
     pEXPRS = ZeroOrMore(pEXPR)
     pEXPRS.setParseAction(lambda result: [result])
 
-    def mkOper (op,unit,es):
-        result = EInteger(unit)
-        for index in reversed(range(len(es))):
-            result = ECall(op,[es[index],result])
-        return result
-
-    pPLUS = "(" + Keyword("+") + pEXPRS + ")"
-    pPLUS.setParseAction(lambda result: mkOper("+",0,result[2]))
-
-    pTIMES = "(" + Keyword("*") + pEXPRS + ")"
-    pTIMES.setParseAction(lambda result: mkOper("*",1,result[2]))
-
     pCALL = "(" + pNAME + pEXPRS + ")"
     pCALL.setParseAction(lambda result: ECall(result[1],result[2]))
 
-    pEXPR &lt;&lt; (pINTEGER | pBOOLEAN | pIDENTIFIER | pIF | pLET | pPLUS | pTIMES | pCALL)
+    def processAnds (lst):
+        if len(lst) == 0:
+            return EBoolean(True)
+        if len(lst) == 1:
+            return lst[0]
+        result = lst[-1]
+        for e in reversed(lst[:-1]):
+            result = EIf(e,result,EBoolean(False))
+        return result
+
+    def processOrs (lst):
+        if len(lst) == 0:
+            return EBoolean(False)
+        if len(lst) == 1:
+            return lst[0]
+        result = lst[-1]
+        for e in reversed(lst[:-1]):
+            result = EIf(e,EBoolean(True),result)
+        return result
+
+    def processLetStar (bindings,body):
+        result = body
+        for e in reversed(bindings):
+            result = ELet([e],result)
+        return result
+
+    pAND = "(" + Keyword("and") + pEXPRS + ")"
+    pAND.setParseAction(lambda result: processAnds(result[2]))
+
+    pOR = "(" + Keyword("or") + pEXPRS + ")"
+    pOR.setParseAction(lambda result:processOrs(result[2]))
+
+    pLETS = "(" + Keyword("let*") + "(" + pBINDINGS + ")" + pEXPR + ")"
+    pLETS.setParseAction(lambda result: processLetStar(result[3],result[5]))
+
+    def processCond (clauses):
+        #print clauses
+        result = EBoolean(False)
+        for (c,r) in reversed(clauses):
+            result = EIf(c,r,result)
+        return result
+
+    pCLAUSE = "(" + pEXPR + pEXPR + ")"
+    pCLAUSE.setParseAction(lambda result: (result[1],result[2]))
+
+    pCLAUSES = ZeroOrMore(pCLAUSE)
+    pCLAUSES.setParseAction(lambda result: [result])
+
+    pCOND = "(" + Keyword("cond") + pCLAUSES + ")"
+    pCOND.setParseAction(lambda result: processCond(result[2]))
+
+    def processCase (exp,cases):
+        #print exp
+        #print cases
+        result = EBoolean(False)
+        for (cs,r) in cases:
+            result = EIf(processOrs([ ECall("=",[EId("___case___"),c]) for c in cs]),r,result)
+        return ELet([("___case___",exp)],result)
+
+    pINTEGERLIST = "(" + ZeroOrMore(pINTEGER) + ")"
+    pINTEGERLIST.setParseAction(lambda result: [result[1:-1]])
+
+    pONECASE = "(" + pINTEGERLIST + pEXPR + ")"
+    pONECASE.setParseAction(lambda result: (result[1],result[2]))
+
+    pCASES = ZeroOrMore(pONECASE)
+    pCASES.setParseAction(lambda result: [result])
+
+    pCASE = "(" + Keyword("case") + pEXPR + pCASES + ")"
+    pCASE.setParseAction(lambda result: processCase(result[2],result[3]))
+
+    pEXPR &lt;&lt; (pINTEGER | pBOOLEAN | pIDENTIFIER | pIF | pLET | pAND | pOR | pLETS | pCOND | pCASE | pCALL)  # | pOR | pNOT | pLETS 
 
     # can't attach a parse action to pEXPR because of recursion, so let's duplicate the parser
     pTOPEXPR = pEXPR.copy()
@@ -357,7 +461,7 @@ def shell ():
     # A simple shell
     # Repeatedly read a line of input, parse it, and evaluate the result
 
-    print "Homework 3 - Calc Language"
+    print "Homework 4 - Calc Language"
 
     # work on a copy because we'll be adding to it
     fun_dict = INITIAL_FUN_DICT.copy()
@@ -382,130 +486,35 @@ def shell ():
 sys.setrecursionlimit(10000)
 
 
-def append (l1,l2):
-    # hack because pyparsing hijacks + operation on lists
-    result = l1.copy()
-    result.extend(l2)
-    return result
+#shell()
 
 
-def parse_natural (input):
-    # parse a string into an element of the abstract representation
-
-
-    idChars = alphas+"_+*-?!=&lt;>"
-
-    pIDENTIFIER = Word(idChars, idChars+"0123456789")
-    pIDENTIFIER.setParseAction(lambda result: EId(result[0]))
-
-    # A name is like an identifier but it does not return an EId...
-    pNAME = Word(idChars,idChars+"0123456789")
-
-
-    pNAME_comma = "," + pNAME
-    pNAME_comma.setParseAction(lambda result: result[1])
-
-    pNAMES = pNAME + ZeroOrMore(pNAME_comma)
-    pNAMES.setParseAction(lambda result: [result])
-
-    pINTEGER = Word("-0123456789","0123456789")
-    pINTEGER.setParseAction(lambda result: EInteger(int(result[0])))
-
-    pBOOLEAN = Keyword("true") | Keyword("false")
-    pBOOLEAN.setParseAction(lambda result: EBoolean(result[0]=="true"))
-
-    pEXPR = Forward()
-
-    pPAREN = "(" + pEXPR + ")"
-    pPAREN.setParseAction(lambda result: result[1])
-
-    pEXPR_comma = "," + pEXPR
-    pEXPR_comma.setParseAction(lambda result: result[1])
-
-    pEXPRS = pEXPR + ZeroOrMore(pEXPR_comma)
-    pEXPRS.setParseAction(lambda result: [result])
-    
-    pCALL = pNAME + "(" + pEXPRS + ")"
-    pCALL.setParseAction(lambda result: ECall(result[0],result[2]))
-
-    pCORE = ( pINTEGER | pBOOLEAN | pCALL | pIDENTIFIER | pPAREN )
-
-    pFACTOR = Forward()
-
-    pTIMES = (pCORE + "*" + pFACTOR)
-    pTIMES.setParseAction(lambda result: ECall("*",[result[0],result[2]]))
-
-    pFACTOR &lt;&lt; (pTIMES | pCORE)
-
-    pTERM = Forward()
-    
-    pPLUS = (pFACTOR + "+" + pTERM)
-    pPLUS.setParseAction(lambda result: ECall("+",[result[0],result[2]]))
-
-    pMINUS = (pFACTOR + "-" + pTERM)
-    pMINUS.setParseAction(lambda result: ECall("-",[result[0],result[2]]))
-
-    pTERM &lt;&lt; (pPLUS | pMINUS | pFACTOR)
-
-    pIF = pTERM + "?" + pEXPR + ":" + pEXPR
-    pIF.setParseAction(lambda result: EIf(result[0],result[2],result[4]))
-
-    pBINDING = pNAME + "=" + pEXPR
-    pBINDING.setParseAction(lambda result: (result[0],result[2]))
-
-    pBINDING_comma = "," + pBINDING
-    pBINDING_comma.setParseAction(lambda result: result[1])
-
-    pBINDINGS = pBINDING + ZeroOrMore(pBINDING_comma)
-    pBINDINGS.setParseAction(lambda result: [ result ])
-
-    pLET = Keyword("let") + "(" + pBINDINGS + ")" + pEXPR
-    pLET.setParseAction(lambda result: ELet(result[2],result[4]))
-
-    pEXPR &lt;&lt; ( pIF | pLET | pTERM )
-
-    # can't attach a parse action to pEXPR because of recursion, so let's duplicate the parser
-    pTOPEXPR = pEXPR.copy()
-    pTOPEXPR.setParseAction(lambda result: {"result":"expression","expr":result[0]})
-    
-    pDEFUN = Keyword("function") + pNAME + "(" + pNAMES + ")" + pEXPR
-    pDEFUN.setParseAction(lambda result: {"result":"function",
-                                          "name":result[1],
-                                          "params":result[3],
-                                          "body":result[5]})
-
-    
-
-    pTOP = (pDEFUN | pTOPEXPR)
-
-    result = pTOP.parseString(input)[0]
-    return result    # the first element of the result is the expression
-
-
-def shell_natural ():
+def shellEnv ():
     # A simple shell
     # Repeatedly read a line of input, parse it, and evaluate the result
 
-    print "Homework 3 - Calc Language (Natural syntax)"
+    print "Homework 4 - Calc Language"
 
     # work on a copy because we'll be adding to it
     fun_dict = INITIAL_FUN_DICT.copy()
     
     while True:
-        inp = raw_input("calc/nat> ")
+        inp = raw_input("calc> ")
         if not inp:
             return
-        result = parse_natural(inp)
+        result = parse(inp)
         if result["result"] == "expression":
             exp = result["expr"]
             print "Abstract representation:", exp
-            v = exp.eval(fun_dict)
+            v = exp.evalEnv(fun_dict,[])
             print v
         elif result["result"] == "function":
             # a result is already of the right form to put in the
             # functions dictionary
             fun_dict[result["name"]] = result
             print "Function {} added to functions dictionary".format(result["name"])
-    </pre>
+	     </pre>
   </body>
 </html>
+
+	     
