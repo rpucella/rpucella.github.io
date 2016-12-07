@@ -112,6 +112,12 @@ function run () {
 
       <ul class="simple">
 
+	<li><p class="ann"><span class="hdr">Dec 6:</span>Links and
+	    sample code for the lecture on program verification available below.</p></li>
+
+	<li><p class="ann"><span class="hdr">Nov 30:</span>Links and
+	    sample code for the lecture on concurrency available below.</p></li>
+
 	<li><p class="ann"><span class="hdr">Nov 16:</span>
 	    Notes and sample code for the lecture on types now
 	    available below.
@@ -505,13 +511,35 @@ which
 		events for concurrency</a>. It is worth looking into if you're
 	    interested in concurrency. It is available as part of the
 	      <a href="http://smlnj.org/">SML/NJ compiler</a>. </p>
+
+	    <p>I mentioned <a href="https://www.erlang.org/">Erlang</a> as an interesting concurrent language. <a href="https://golang.org/">Go</a> is another language taking concurrency as a primitive.</p>
 	    
 	  </div>
 	</li>	  
 
-	<li><p><span class="hdr">Dec 6:</span><i>Program verification</i></p>
-		<div class="lect">
-		</div>
+	<li><p><span class="hdr">Dec 6:</span><b>Program verification</b></p>
+	  <div class="lect">
+	    <p>A pretty thorough <a href="http://www.cl.cam.ac.uk/~mjcg/Teaching/2011/Hoare/Notes/Notes.pdf">introduction to Hoare Logic</a> by Mike Gordon.</p>
+	    <p><a href="https://en.wikipedia.org/wiki/ESC/Java">ESC/Java</a>, which extends type extending for Java with a form of pre- and post-conditions checking inspired by Hoare Logic.</p>
+	    <p>Here is the encoding for lists using functions that I
+	      showed in class:
+	      <pre>
+  (defun cons (x xs) (function (f g) (g x xs)))
+
+  (defun nil () (function (f g) (f)))
+
+  (defun head (lst) (lst (function () false) (function (x xs) x)))
+
+  (defun tail (lst) (lst (function () false) (function (x xs) xs)))
+
+  (defun length (lst) (if (endp lst) 0 (+ 1 (length (cdr lst)))))
+	      </pre></p>
+	    <p>The <a href="https://www.cs.utexas.edu/users/moore/acl2/">ACL2</a> theorem prover (and its easier to use <a href="http://acl2s.ccs.neu.edu/acl2s/doc/">ACL2 Sedan</a>
+		version that I used in class), and the code for <a href="./isort.lisp">proving the
+		correcteness of insertion sort</a>.</p>
+	    <p>Two theorem provers based on type theory: <a href="https://coq.inria.fr/">Coq</a> and <a href="http://wiki.portal.chalmers.se/agda">Agda</a>.</p>
+	    <p>A fantastic <a href="https://www.cis.upenn.edu/~bcpierce/sf/current/index.html">online textbook on using Coq</a> for proving theorems, including theorems about interpreters!</p>
+	  </div>
 
 	<li><p><span class="hdr">Dec 13:</span><i>Final Projects</i></p>
 		<div class="lect">
@@ -536,6 +564,7 @@ which
 	<li><a href="homework5.html">Homework 5</a> - due Thursday Oct 13.</li>
 	<li><a href="homework6.html">Homework 6</a> - due Thursday Oct 26.</li>
 	<li><a href="homework7.html">Homework 7</a> - due Friday Nov 18.</li>
+	<li><a href="project.html">Final project</a> - due ??.</li>
       </ul>
 
     </div>
