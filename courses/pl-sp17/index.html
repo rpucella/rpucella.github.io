@@ -12,6 +12,10 @@
     <script src="autoscroll.js"></script>
     
     <style>
+
+      ul.normal li {
+      margin-bottom: 5px;
+      }
       
         code,tt,pre {
           font-size: 110%;
@@ -92,10 +96,15 @@
     <p class="subtitle">CS 152 / Tue-Thu 09:00-10:30 / Maxwell Dworkin G125</p>
     
     <p>
-    </p>
+      This course is an introduction to the theory, design, and
+      implementation of programming languages. Topics covered in this
+      course include: formal semantics of programming languages
+      (operational, axiomatic, denotational, and translational), type
+      systems, higher-order functions and lambda calculus, laziness,
+      continuations, monads, as well as formal reasoning about
+      programs using proof assistants. </p>
 
 
-    
     <hr class="section">
     <div class="section" id="announcements">
       <h3>Announcements</h3>
@@ -112,43 +121,91 @@
     <div class="section" id="info">
       <h3>Course Information</h3>
 
-      <p><b>Prerequisites:</b> </p>
+      <p><b>Prerequisites:</b> CS 51. CS 121 is recommended. (1) this is <b>not</b> an introduction to programming; you should already know how to program, ideally in at least couple of languages; (2) we'll be doing math &mdash; you must be very comfortable with recursion, proofs, basic mathematical ideas and notations, including sets, relations, functions, and <b>especially</b> induction.</p> 
+
 
       <p><b>Instructor:</b> <a href="http://www.rpucella.net">Riccardo Pucella</a> (<a id="send_email" href="#">send email</a>)</p>
 
-      <p><b>Office hours:</b> Tue-Thu 10:30-11:15 / ??</p>
+      <p><b>Office hours:</b> Tue 10:30-11:30 / ??</p>
 
       <p><b>Textbooks:</b> There is no required textbook for the
-      course. We will be working off notes and online references. 
-      <ul>
-	<li>J. C. Mitchell, <i>Foundations for Programming Languages</i></li>
-	<li>G. Winskel, <i>The Formal Semantics of Programming Languages: An Introduction</i></li>
-	<li>S. Krishnamurthi, <i>Programming Languages: Application and Interpretation</i></li>
-	<li>B. C. Pierce,  <i>Types and Programming Languages</i></li>
-	<li>Harper,  <i>Practical Foundations for Programming Languages</i></li>
+      course. We will be working off class notes and online references.</p>
+
+      <p>While there is no required textbook, there are excellent texts about the topic of the course, which you should definitely seek out if you feel you need the extra help:
+      <ul class="normal">
+	<li>J. C. Mitchell, <b>Foundations for Programming Languages</b>, Cambridge University Press, 2003.<br>
+	  <i>Available <a href="http://nrs.harvard.edu/urn-3:hul.ebook:NLIB_112510">online</a> through Harvard University Libraries eContent Collection. To view on a Mac, follow <a href="http://ezp-prod1.hul.harvard.edu/login?url=http://www.netlibrary.com/Help/DisplayTopic.aspx?Name=ViewingOnline/MacintoshInformation">these instructions</a>.</i>
+	  </li>
+	<li>R. Harper,  <b>Practical Foundations for Programming Languages</b>, Cambridge University Press, 2016.</li>
+	<li>B. C. Pierce,  <b>Types and Programming Languages</b>, MIT Press, 2002.<br>
+	  <i>Available on reserve at the library.</i></li>
+	<li>G. Winskel, <b>The Formal Semantics of Programming Languages: An Introduction</b>, MIT Press, 1993.<br>
+	  <i>Available on reserve at the library.</i></li>
+	<li>S. Krishnamurthi, <b>Programming Languages: Application and Interpretation</a></b><br>
+<i>Available <a href="http://cs.brown.edu/~sk/Publications/Books/ProgLangs/">from the author's web page</a></i>.</li>
       </ul>
+      </p>
 	
+      <p><b>Grading:</b> 
+
+      There will be an in-class midterm and a final exam. There will be 6 homework assignments. 
+	Your grade will be determined by a weighted average of your
+	scores on homework assignments (50%), the midterm exam (20%),
+	the final exam (25%), and class participation (5%). The
+	weights are meant to be indicative and are subject to
+	change. Participation includes attendance and participation in
+	class, section, and office hours, and contributing to online
+	discussion.</p>
+
+<p>We have some <a href="policies.html">policies on lateness and
+    collaboration</a>.</p>
+
       <p><b>Programming:</b>
-<!--	All programming in this course will be done
-	using the programming
-	language <a href="https://ocaml.org/">OCaml</a>. The OCaml
-	interpreter can be downloaded from the web site, and
-	supports installations on most common systems.
-	Here are a couple of reasonable books on OCaml that you might
-	want to get your hands on if you prefer learning your
-	programming language from a book instead of the web:
--->
+
+	Most assignments will contain a programming component in OCaml
+	and later in Coq. Prior knowledge of these languages is not
+	required. 
       </p>
 
-      <p><b>Grading:</b> 
-<!-- The final grade is based on weekly homework (60%)
-      and two exams (20% each). All work will be done
-      individually. Late homeworks will be penalized (10% per 24 hours)
-      and no homework will be accepted after its solution has been
-      discussed in class.
--->
+    <p>OCaml is available from the <a href="https://ocaml.org">language's
+    webpage</a>. Some useful links:
+<ul class="normal">
+  <li><a href="https://ocaml.org/docs/install.html">Installation instructions</a></li>
+  <li>Useful <a href="https://github.com/realworldocaml/book/wiki/Installation-Instructions">tools</a> including UTop and Tuareg, an Emacs mode.</li>
+  <li>The OCaml <a href="http://caml.inria.fr/pub/docs/manual-ocaml/libref/index.html">Standard Library</a></li>
+  <li>The <a href="http://caml.inria.fr/pub/docs/manual-ocaml/index.html">official manual</a></li>
+  <li><a href="http://ocaml.org/learn/tutorials/99problems.html">Code examples</a></li>
+</ul>
 
-      <p><b>Teaching Fellows:</b> 
+
+Here are a couple of reasonable books on OCaml that you might
+      want to get your hands on if you prefer learning your
+      programming language from a book instead of the web:</p>
+      
+      <ul>
+	<li>J. Hickey, <b><a href="http://courses.cms.caltech.edu/cs134/cs134b/book.pdf">Introduction
+	      to Objective Caml</a></b> (PDF)</li>
+	<li>Y. Minsky, A. Madhavapeddy, J. Hickey, <b><a href="https://realworldocaml.org/v1/en/html/index.html">Real World
+	  OCaml</a></b>, O'Reilly, 2013.</li>
+      </ul>
+      </p>
+
+<p>Information about Coq will be given when we get to it in the later
+  part of the course.</p>
+
+      <p><b>Course staff:</b> 
+	We have three teaching fellows: Arianna Benson, Eric Lu, and
+	Karen Mardini. Office hours will be posted soon.</p>
+
+      <p>You should send all questions and issues related to
+	assignments, course content, etc., to <a href="mailto:CS152
+	Course
+	Staff <cs152-staff@seas.harvard.edu>">cs152-staff@seas.harvard.edu</a>
+	or post them on <a href="#">Piazza</a>. You should direct all
+	questions related to grades, special consideration, etc. to
+	Prof. Pucella. In general, sending email to individual course
+	staff will delay a response. Note that course staff may take
+	up to 48 hours to respond. 
       </p>
 
      </div>

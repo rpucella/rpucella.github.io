@@ -114,8 +114,14 @@ a.imageanchor:link {
 }
 a:link {
     text-decoration: none;
+    font-weight: bold;
     color: rgb(0, 51, 160);
 }
+
+div.navbar a:link { 
+    font-weight: normal;
+}
+
 a:visited {
     text-decoration: none;
     color: rgb(0, 51, 160);
