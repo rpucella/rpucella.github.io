@@ -16,12 +16,22 @@
   <body>
 
     <h1>Notes on OCaml</h1>
+
+    <h3>Basic Expressions and Types</h3>
     
     <p>OCaml is an expression-oriented language: everything (except
       top-level definitions) is an expression that evaluates to a value.</p>
+
+    <p>OCaml is <i>statically typed</i>, that is, every expression has
+      a type (the type of the value that it evaluates to) and 
+      expressions are checked for type correctness before being
+      evaluated. OCaml also uses <i>type inference</i>, that is, it
+      will try to determine automatically what the type of an expression
+      is.</p>
+
     
-    <p>Values are split into types. The basic types are integers,
-      floating point numbers, booleans, strings, and characters.</p>
+    <p>The basic types are integers, floating point numbers, booleans,
+      strings, and characters.</p>
     
     <p>Integers and floating point numbers are numeric types.</p>
 
@@ -57,8 +67,9 @@ Error: This expression has type float but an expression was expected of type
       operations, <tt>+.</tt>, <tt>-.</tt>, <tt>*.</tt>,
       and <tt>/.</tt>.</p>
 
-    <p>Function <tt>float</tt> can be used to
-      convert an integer to a floating point number.</p>
+    <p>Conversion functions are used to convert values from one type
+      to another. For instance, function <tt>float</tt> converts an
+      integer to a floating point number.</p>
 
 <pre>
 # 5.0 +. 10.0;;
@@ -127,14 +138,17 @@ Characters 0-1:
 Error: Syntax error
 </pre>
 
-<p>Expressions are the things that OCaml evaluates to get values. A
+
+<h3>Conditional and Local Definition Expressions</h3>
+
+<p>OCaml evaluates expressions to get values. A
   primitive value is an expression. An operation such as <tt>+</tt>
   applies to expressions is an expression. A function such
   as <tt>float</tt> applied to an expression is an expression.</p>
 
 
 <p>There are two other ways of forming expressions: conditionals, and
-  temporary names.</p>
+  local definitions.</p>
 
 <p>A conditional expression is an expression of the
   form <tt><b>if</b> <i>condition</i> <b>then</b> <i>expr1</i> <b>else</b> <i>expr2</i></tt>
@@ -169,7 +183,7 @@ Error: Syntax error
 - : int = 12
 </pre>
 
-<p>A temporary name expression (or local definition expression) lets you
+<p>A local definition expression lets you
 evaluate an expression to a value to which you can give a name and use
 in another expression: <tt><b>let</b> <i>n</i>
   = <i>expr1</i> <b>in</b> <i>expr2</i></tt> first
@@ -182,8 +196,8 @@ the fact that <tt><i>n</i></tt> has value <tt><i>v</i></tt> is only
 <pre>
 # let a = 10 in 2 * a;;
 - : int = 20
-# let a = 20 + 20 in 2 * a;;
-- : int = 80
+# 100 + (let a = 20 + 20 in 2 * a);;
+- : int = 180
 # let a = 10 in let b = 20 in a * b;;
 - : int = 200
 # a;;
@@ -193,16 +207,12 @@ Characters 0-1:
 Error: Unbound value a
 </pre>
 
-    <p>OCaml is <i>statically typed</i>, that is, every expression has
-      a type (the type of the value that it evaluates to) and 
-      expressions are checked for type correctness before being
-      evaluated. OCaml also uses <i>type inference</i>, that is, it
-      will try to determine automatically what the type of an expression
-      is.</p>
+
+<h3>Definitions</h3>
 
 <p>Expressions evaluate to values, and that's the driving engine of
-  OCaml. The other things you can do is create <i>top-level</i>
-  definitions, defining constants and functions. </p>
+  OCaml. Beside evaluating expressions, you can also write <i>top-level</i> 
+  definitions, which define constants and functions. </p>
 
     <p>A constant is defined by the top-level
       definition <tt><b>let</b> <i>n</i> = <i>expr</i></tt>. Note that
@@ -275,8 +285,6 @@ val c_to_f : float -> float = &lt;fun&gt;
 - : float = 32.
 # c_to_f (37.0);;
 - : float = 98.6
-# (c_to_f) 100.0;;
-- : float = 212.
 
 # let add x y = x + y;;
 val ad1 : int -> int -> int = &lt;fun&gt;
@@ -348,13 +356,23 @@ val sumto : int -> int = &lt;fun&gt;
   and the above translates to an OCaml definition immediately:</p>
 
 <pre>
-# let rec sumto2 n = 
-    if n = 0 then 0 else sumto2 (n-1) + n;;
-val sumto2 : int -> int = &lt;fun&gt;
-# sumto2 10;;
+# let rec sumto' n = 
+    if n = 0 then 0 else sumto' (n-1) + n;;
+val sumto' : int -> int = &lt;fun&gt;
+# sumto' 10;;
 - : int = 55
 </pre>
 
+    <p>Note that <tt>'</tt> (prime) is an acceptable character in a
+    name, as long as it is at the end of the name. This usage is
+    similar to the use of prime symbols in mathematics. Note that
+    prime symbol does not have any special meaning &mdash; it is just
+    a symbol like any other.</p>
+
+
+    
+    <h3>Structured Data</h3>
+    
 <p>Tuples and lists let use package values together.</p>
 
 <p>A tuple is created using parentheses and commas to separate the
@@ -462,6 +480,8 @@ Error: This expression has type int but an expression was expected of type
 </pre>
     <p>The <tt>h</tt> and <tt>t</tt> are user-selected names that get bound to the head
       and the tail of the list, respectively</p>
+
+    <p>(You can also add match cases if you want to, to deal with special cases, such as <tt>[x]</tt> for a one-element list, or <tt>x::(y::xs)</tt> for a list with at least two elements.</p>
 
 <p>Here's a function to sum the elements of a list of integers. Note
   the type of the function, which makes it clear it expects a list of integers.</p>
