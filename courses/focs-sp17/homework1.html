@@ -378,13 +378,13 @@ patterns to the match to capture some special cases.</p>
 	      an exception using <tt>failwith <i>string</i></tt>.</p>
 
 <pre class="code">
-# nth (0,["a";"b";"c"]);;
+# nth 0 ["a";"b";"c"];;
 - : string = "a"
-# nth (1,["a";"b";"c"]);;
+# nth 1 ["a";"b";"c"];;
 - : string = "b"
-# nth (2,["a";"b";"c"]);;
+# nth 2 ["a";"b";"c"];;
 - : string = "c"
-# nth (0,["a";"b";"c"]);;
+# nth 0 ["a";"b";"c"];;
 - : string = "a"
 </pre>
 
