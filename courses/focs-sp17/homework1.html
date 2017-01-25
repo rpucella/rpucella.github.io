@@ -130,6 +130,17 @@ li > p { margin-top:0;}
 
     <hr>
 
+    <h3>Updates</h3>
+    <ul class="simple">
+      <li>Jan 21: changed sample outputs for <tt>nth</tt> to match type of the functon.</li>
+      <li>Jan 23: changed last sample output for <tt>multM</tt> to a more meaningful one.</li>
+      <li>Jan 24: fixed incorrect outer product outputs.</li>
+    </ul>
+
+	
+
+    <hr>
+
     <ol class="question">
       <li> <p><b>Numerical functions</b></p>
 
@@ -530,9 +541,9 @@ Another possibility is to match on both
 # outer [10] [20];;
 - : int list list = [[200]]
 # outer [1;2;3] [4;5;6];;
-- : int list list = [[4; 8; 12]; [5; 10; 15]; [6; 12; 18]]
+- : int list list = [[4; 5; 6]; [8; 10; 12]; [12; 15; 18]]
 # outer [1;2;3] [10; 100; 1000];;
-- : int list list = [[10; 20; 30]; [100; 200; 300]; [1000; 2000; 3000]]</pre>
+- : int list list = [[10; 100; 1000]; [20; 200; 2000]; [30; 300; 3000]]</pre>
 	  </li>
 
 	</ol>
