@@ -21,17 +21,19 @@
           font-size: 110%;
         }
 	
-        div.lect {
+	ul.annoucements p { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+        }
+
+	ul.annoucement p span {
+   	  padding-right: 1em
+	}
+
+      div.lect {
 	  padding-top: 0;
        	  padding-left: 3em;
 	  margin-top:0;
-        }
-    	p.ann { 
-    	  padding-left: 3em;
-    	  text-indent: -3em; 
-    	}
-	p.ann_ctd{
-	  padding-left: 3em;
         }
     	span.hdr {
    	  padding-right: 1em
@@ -109,8 +111,14 @@
     <div class="section" id="announcements">
       <h3>Announcements</h3>
 
-      <ul class="simple">
+      <ul class="simple annoucements">
 
+      	<li>
+	  <p><span>Jan 25:</span>
+	    Notes from the introductory lecture presenting small-step operational semantics available from the schedule below.
+	  </p>
+	</li>
+	
       </ul>
       
     </div>
@@ -220,10 +228,12 @@ Here are a couple of reasonable books on OCaml that you might
       
       <ul class="lectures">
 	
-	<li><p><i>SEMANTICS</i></p></li>
+	<li><p><b>SEMANTICS</b></p></li>
 	
-	<li><p><span class="hdr">Jan 24:</span><i>Introduction to semantics</i></p>
+	<li><p><span class="hdr">Jan 24:</span><b>Introduction to semantics</b></p>
 	  <div class="lect">
+	    <a href="lec01-intro.pdf">Notes</a> from the lecture.
+	    
 	  </div>
 	</li>	  
 
