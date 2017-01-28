@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 2</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+	pre.code {
+	   border: 1px solid #c6c6c6;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+	}
+
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP17</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 2</h1>
+    
+    <p class="subtitle">Due date: Friday, Feb 3 (23:59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists your <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework2.ml"><tt>homework2.ml</tt></a> provided.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Download the file <a href="hw2-checker.ml"><tt>hw2-checker.ml</tt></a> into the same directory as your homework solution.</li>
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use "homework2.ml";;</tt></li>
+      <li>Load the homework checker via <tt>#use "hw2-checker.ml";;</tt></li>
+      <li>The homework checker checks that you've implemented all functions (or provided stubs for them) and that those functions have the type that I asked you to give them. If the checker says your types are OK, then you're fine. If the checker gives you an error, fix it. If you believe that the checker gives you an error wrongly, send me an email.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework2.ml</tt> as an attachment to <tt>focs.sp17@gmail.com</tt> with subject <i>Homework 2 submission</i>.</li>
+    </ul>
+
+    <hr>
+
+    <p class="subtitle">Updates</p>
+<!--    <ul class="simple">
+      <li>Jan 21: changed sample outputs for <tt>nth</tt> to match type of the functon.</li>
+      <li>Jan 23: changed last sample output for <tt>multM</tt> to a more meaningful one.</li>
+      <li>Jan 24: fixed incorrect outer product outputs.</li>
+    </ul>
+-->
+	
+
+    <hr>
+
+    <ol class="question">
+      <li> <p><b>Set functions</b></p>
+
+	<p>A <i>set</i> is a collection of elements in
+	which repetition and order is irrelevant; the sets {1,1,2,3}
+	and {2,3,3,1} are considered to be equal.</p> 
+
+	<p>We use lists as a representation for sets. We
+	define set operations that work with that list representation.
+	  You should implement the representation so that there are no repeated elements &mdash; because it will make the next question a bit more manageable. However, your functions should work even if the lists representing sets given as arguments do have repeated elements. This is most relevant when defining <tt>sizeS</tt>.</p>
+
+
+	<ol class="subquestion">
+
+	  <li><p>
+	    Code a function <tt class="code">inS</tt> of
+	    type <tt class="code">'a -> 'a list -> bool</tt>
+	    where <tt>inS a s</tt> returns true if element
+	    <tt>a</tt> is an element of set <tt>s</tt>, and false
+	    otherwise. </p>
+
+<pre class="code">
+# inS  1 [];;
+- : bool = false
+# inS  1 [2;3];;
+- : bool = false
+# inS 1 [1;2;3];;
+- : bool = true
+# inS 1 [3;4;4;1;1];;
+- : bool = true
+# inS "a" ["b";"a";"b"];;
+- : bool = true</pre>
+	  </li>
+
+	  <li><p>Recall that a set S is a subset of T when every
+	      element of S is an element of T.</p>
+
+	    <p>
+	    Code a function <tt class="code">subsetS</tt> of
+	      type <tt class="code">'a list -> 'a list -> bool</tt>
+	    where <tt>subsetS s t</tt> returns true if <tt>s</tt>
+	    is a subset of <tt>t</tt> when <tt>s</tt> and <tt>t</tt>
+	    are interpreted as sets, and false otherwise.</p>
+
+<pre class="code">
+# subsetS [] [];;
+- : bool = true
+# subsetS [] [1;1;1];;
+- : bool = true
+# subsetS [1] [1;1;1];;
+- : bool = true
+# subsetS [1;1;] [1;1;1];;
+- : bool = true
+# subsetS [1;1] [1;2;3];;
+- : bool = true
+# subsetS [1;1;] [2;3];;
+- : bool = false
+# subsetS [1] [];;
+- : bool = false
+# subsetS ["a"] ["a";"b"];;
+- : bool = true</pre>
+	  </li>
+
+	  <li><p>
+	    Code a function <tt class="code">equalS</tt> of
+	    type <tt class="code">'a list -> 'a list -> bool</tt>
+	    where <tt>equalS s t</tt>
+	    returns true if <tt>s</tt> and <tt>t</tt> are equal when
+	    interpreted as sets, and false otherwise.</p>
+
+<pre class="code">
+# equalS [] [];;
+- : bool = true
+# equalS [1] [1];;
+- : bool = true
+# equalS [1] [1;1;1];;
+- : bool = true
+# equalS [1;1;1] [1;1];;
+- : bool = true
+# equalS [1;2] [1;2;3];;
+- : bool = false
+# equalS [2;3] [1;2;3];;
+- : bool = false
+# equalS [1;2;3] [1;2];;
+- : bool = false
+# equalS [1;2] [2;1];;
+- : bool = true
+# equalS [1;1;2] [2;2;1];;
+- : bool = true
+# equalS ["a";"b"] ["b";"a"];;
+- : bool = true</pre>
+
+	  </li>
+
+	  <li><p>Code a function <tt class="code">unionS</tt> of
+	    type <tt class="code">'a list -> 'a list -> 'a list</tt>
+	    where <tt>unionS s t</tt> returns a list representing the
+	      union of <tt>s</tt> and <tt>t</tt> interpreted as
+	    sets.</p>
+
+<pre class="code">
+# equalS (unionS [] []) [];;
+- : bool = true
+# equalS (unionS [] [1;1]) [1];;
+- : bool = true
+# equalS (unionS [1;2] []) [2;1];;
+- : bool = true
+# equalS (unionS [1;2;3] [4;5;6]) [1;2;3;4;5;6];;
+- : bool = true
+# equalS (unionS [1;2] [2;3;3]) [1;2;3];;
+- : bool = true
+# equalS (unionS [1;2] [2;1]) [1;2];;
+- : bool = true
+# equalS (unionS [1] [2]) [1];;
+- : bool = false
+# equalS (unionS [1] [2]) [2];;
+- : bool = false
+# equalS (unionS ["a"] ["b"]) ["a";"b"];;
+- : bool = true</pre>
+
+	  </li>
+
+	  <li><p>Code a function <tt class="code">interS</tt> of
+	    type <tt class="code">'a list -> 'a list -> 'a list</tt>
+	    where <tt>interS s t</tt> returns a list representing the
+	      intersection of <tt>s</tt> and <tt>t</tt> interpreted as
+	    sets.</p>
+
+<pre class="code">
+# equalS (interS [] []) [];;
+- : bool = true
+# equalS (interS [1;2] [1]) [1];;
+- : bool = true
+# equalS (interS [1;2] [2;3]) [2];;
+- : bool = true
+# equalS (interS [1;2;3] [3;3;2;2]) [2;3];;
+- : bool = true
+# equalS (interS [] [1;2;3]) [];;
+- : bool = true
+# equalS (interS [1;2;3] []) [];;
+- : bool = true
+# equalS (interS [1;2] [2]) [1];;
+- : bool = false
+# equalS (interS [1;2] [2;3]) [1;3];;
+- : bool = false
+# equalS (interS ["a";"b"] ["c";"b"]) ["b"];;
+- : bool = true</pre>
+
+	  </li>
+
+	  <li><p>Code a function <tt class="code">sizeS</tt> of
+	    type <tt class="code">'a list -> int</tt>
+	    where <tt>sizeS s</tt> returns the number of elements
+	      in <tt>s</tt> when interpreted as a set.</p>
+
+<pre class="code">
+# sizeS [];;
+- : int = 0
+# sizeS [1];;
+- : int = 1
+# sizeS [1;2;3];;
+- : int = 3
+# sizeS [1;1;1;2;2;2;3;3;3;4;4;4];;
+- : int = 4
+# sizeS [1;2;3;2;1];;
+- : int = 3
+# sizeS ["a";"a";"b"];;
+- : int = 2</pre>
+
+	  </li>
+
+	</ol>
+
+      </li>
+
+
+
+      <li> <p><b>Language functions</b></p>
+
+	<p>A language is a set of strings, which following the last question will be represented as a value <tt>string list</tt>.</p>
+
+	<p>This question will be much easier to debug if you ensure that your set representations do not have repeated elements.</p>
+
+	<p>Note that the order (or repetitions) of elements in the sample outputs may differ from yours. I will be testing your code using <tt>equalS</tt> anyway, so as long as your results have the same strings, everything will be okay.</p>
+
+	<ol class="subquestion">
+
+	  <li><p>
+	    Code a function <tt class="code">atMost</tt> of
+	    type <tt class="code">int -> string list -> string
+		list</tt> that takes an integer <tt>n</tt> and a language <tt>ss</tt> and returns the language of all strings
+	    in <tt>ss</tt> of length at
+	    most <tt>n</tt>. Function <tt>String.length</tt> in the
+	    OCaml built-in library might be useful.</p>
+
+<pre class="code">
+# atMost 4 [];;
+- : string list = []
+# atMost 4 ["a";"b"];;
+- : string list = ["a"; "b"]
+# atMost 0 ["a";"b"];;
+- : string list = []
+# atMost 1 ["a";"b"];;
+- : string list = ["a"; "b"]
+# atMost 1 ["a";"b";"abc"];;
+- : string list = ["a"; "b"]
+# atMost 2 ["a";"b";"abc"];;
+- : string list = ["a"; "b"]
+# atMost 3 ["a";"b";"abc"];;
+- : string list = ["a"; "b"; "abc"]</pre>
+	  </li>
+
+
+	  <li><p>
+	    Code a function <tt class="code">unionL</tt> of
+	    type <tt class="code">int -> string list -> string list -> string
+		list</tt> that takes an integer <tt>n</tt> and two languages  and returns the language of all strings
+	    in either languages of length at most <tt>n</tt>.</p>
+
+<pre class="code">
+# unionL 4 [] [];;
+- : string list = []
+# unionL 4 ["a";"b"] ["c";"d"];;
+- : string list = ["a"; "b"; "c"; "d"]
+# unionL 4 ["a";"b"] ["abc";"abcd";"abcde"];;
+- : string list = ["a"; "b"; "abc"; "abcd"]
+# unionL 4 ["abc";"abcd";"abcde"] ["a";"b"];;
+- : string list = ["abc"; "abcd"; "a"; "b"]
+# unionL 4 ["abc";"abcd";"abcde"] [];;
+- : string list = ["abc"; "abcd"]
+# unionL 4 [] ["abc";"abcd";"abcde"];;
+- : string list = ["abc"; "abcd"]</pre>
+	  </li>
+
+	  <li><p>
+	    Code a function <tt class="code">concatL</tt> of
+	    type <tt class="code">int -> string list -> string list -> string
+		list</tt> that takes an integer <tt>n</tt> and two languages <tt>ss1</tt>
+	    and <tt>ss2</tt> and returns the language of all strings
+of length at most <tt>n</tt>
+	    obtained by 
+	    concatenating a string from <tt>ss1</tt> to a string
+	    from <tt>ss2</tt>. Recall that <tt>^</tt> is string concatenation in OCaml.</p>
+
+<pre class="code">
+# concatL 4 [] [];;
+- : string list = []
+# concatL 4 ["a";"b"] [];;
+- : string list = []
+# concatL 4 [] ["c";"d"];;
+- : string list = []
+# concatL 4 ["c";"d"] [""];;
+- : string list = ["c"; "d"]
+# concatL 4 [""] ["c";"d"];;
+- : string list = ["c"; "d"]
+# concatL 4 ["a";"b"] ["c";"d"];;
+- : string list = ["ac"; "ad"; "bc"; "bd"]
+# concatL 4 ["ab";"abb"] ["c";"cc";"ccc"];;
+- : string list = ["abc"; "abcc"; "abbc"]</pre>
+	  </li>
+
+
+	  <li><p>
+	    Code a function <tt class="code">starL</tt> of
+	    type <tt class="code">int -> string list -> string
+		list</tt> that takes an integer <tt>n</tt> and a language <tt>ss</tt> and returns the language of all strings
+	    of length at most <tt>n</tt>
+	    obtained by concatenating an arbitrary (possibly zero) number of strings
+	    from <tt>ss</tt>.</p>
+
+<pre class="code">
+# starL 4 [];;
+- : string list = [""]
+# starL 4 ["a"];;
+- : string list = [""; "a"; "aa"; "aaa"; "aaaa"]
+# starL 4 ["a";"b"];;
+- : string list =
+[""; "a"; "b"; "aa"; "ab"; "aaa"; "aab"; "aaaa"; "aaab"; "aaba"; "aabb";
+ "aba"; "abb"; "abaa"; "abab"; "abba"; "abbb"; "ba"; "bb"; "baa"; "bab";
+ "baaa"; "baab"; "baba"; "babb"; "bba"; "bbb"; "bbaa"; "bbab"; "bbba";
+ "bbbb"]
+# starL 4 ["a";"b";"c"];;
+- : string list =
+[""; "a"; "b"; "c"; "aa"; "ab"; "ac"; "aaa"; "aab"; "aac"; "aaaa"; "aaab";
+ "aaac"; "aaba"; "aabb"; "aabc"; "aaca"; "aacb"; "aacc"; "aba"; "abb"; "abc";
+ "abaa"; "abab"; "abac"; "abba"; "abbb"; "abbc"; "abca"; "abcb"; "abcc";
+ "aca"; "acb"; "acc"; "acaa"; "acab"; "acac"; "acba"; "acbb"; "acbc"; "acca";
+ "accb"; "accc"; "ba"; "bb"; "bc"; "baa"; "bab"; "bac"; "baaa"; "baab";
+ "baac"; "baba"; "babb"; "babc"; "baca"; "bacb"; "bacc"; "bba"; "bbb"; "bbc";
+ "bbaa"; "bbab"; "bbac"; "bbba"; "bbbb"; "bbbc"; "bbca"; "bbcb"; "bbcc";
+ "bca"; "bcb"; "bcc"; "bcaa"; "bcab"; "bcac"; "bcba"; "bcbb"; "bcbc"; "bcca";
+ "bccb"; "bccc"; "ca"; "cb"; "cc"; "caa"; "cab"; "cac"; "caaa"; "caab";
+ "caac"; "caba"; "cabb"; "cabc"; "caca"; "cacb"; "cacc"; "cba"; "cbb"; "cbc";
+ "cbaa"; "cbab"; "cbac"; "cbba"; "cbbb"; "cbbc"; "cbca"; "cbcb"; "cbcc";
+ "cca"; "ccb"; "ccc"; "ccaa"; "ccab"; "ccac"; "ccba"; "ccbb"; "ccbc"; "ccca";
+ "cccb"; "cccc"]
+# starL 4 ["a";"bc"];;
+- : string list =
+[""; "a"; "bc"; "aa"; "abc"; "aaa"; "aabc"; "aaaa"; "abca"; "bca"; "bcbc";
+ "bcaa"]
+# starL 4 ["a";"bc";"def"];;
+- : string list =
+[""; "a"; "bc"; "def"; "aa"; "abc"; "adef"; "aaa"; "aabc"; "aaaa"; "abca";
+ "bca"; "bcbc"; "bcaa"; "defa"]</pre>
+	  </li>
+
+	</ol>
+      </li>
+
+
+
+
+      <li> <p><b>Regular expressions</b></p>
+
+	<p>In file <tt>homework2.ml</tt>, I've implement some
+	code to manipulate regular expressions. In particular, I've
+	  given you a function 
+<pre>
+  lang : int -> string -> string list</pre>
+that takes an integer <tt>n</tt> and a regular expression and returns the list of strings in the language of the 
+regular expression of length at most <tt>n</tt>. Function 
+<pre>
+  show : string list -> unit</pre>
+	can be used to display the strings in a language in a way
+	  that's a bit more convenient. It doesn't show repeated elements.</p>
+
+	<p>Note that function <tt>lang</tt> will <b>not</b> work until
+	  you complete question 2 correctly. You can still work on this question even if you haven't done question 2, of
+	  course. You just won't be able to test your answers.</p>
+
+	<p>The syntax of regular expression corresponds to what we saw
+	in class: the alphabet is restricted to be alphabetical
+	characters (a,b,c,d,...,z,A,B,...,Z), and 0, 1, (, ), *, + all
+	  have meaning. For example, <tt>ab+ac</tt> is a valid regular
+	  expression, as is <tt>a(b+c)</tt> and <tt>a*(b+c)*</tt> and
+	  so on.</p>
+
+	<p>Here's a sample interaction:</p>
+
+<pre class="code">
+# lang 4 "ab+bc";;
+- : string list = ["ab"; "bc"]
+# show(lang 4 "ab+bc");;
+  ab
+  bc
+- : unit = ()
+# show(lang 4 "a(b+c)*");;
+  a
+  ab
+  ac
+  abb
+  abc
+  abbb
+  abbc
+  abcb
+  abcc
+  acb
+  acc
+  acbb
+  acbc
+  accb
+  accc
+- : unit = ()
+# show(lang 4 "a*(b+c)*");;
+  &lt;empty string&gt;
+  b
+  c
+  bb
+  bc
+  bbb
+  bbc
+  bbbb
+  bbbc
+  bbcb
+  bbcc
+  bcb
+  bcc
+  bcbb
+  bcbc
+  bccb
+  bccc
+  cb
+  cc
+  cbb
+  cbc
+  cbbb
+  cbbc
+  cbcb
+  cbcc
+  ccb
+  ccc
+  ccbb
+  ccbc
+  cccb
+  cccc
+  a
+  ab
+  ac
+  abb
+  abc
+  abbb
+  abbc
+  abcb
+  abcc
+  acb
+  acc
+  acbb
+  acbc
+  accb
+  accc
+  aa
+  aab
+  aac
+  aabb
+  aabc
+  aacb
+  aacc
+  aaa
+  aaab
+  aaac
+  aaaa
+- : unit = ()</pre>	
+
+        <p>In this question, I will ask you to come up with regular
+        expressions. You can test your regular expressions  using
+          the function <tt>lang</tt> above. </p>
+
+	<p>For submission purposes, I ask you to define those regular
+	  expressions as constants using <tt>let</tt> with a fixed
+	  name given below in each question. There is already a
+	  placeholder in <tt>homework2.ml</tt> for those answers. Just
+	  replace the placeholder with your definition.</p>
+
+	<ol class="letter">
+
+	  <li><p>
+	      Come up with a regular expression <tt class="code">regexp_a</tt> for the language
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> of length exactly 4.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular expression <tt class="code">regexp_b</tt> for the language
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> of
+	      odd length.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular expression <tt class="code">regexp_c</tt> for the language
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> with
+	      exactly two <tt>d</tt>s in then.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular
+	      expression <tt class="code">regexp_d</tt> for the
+	      language 
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> with
+	      an odd number of <tt>d</tt>s in them.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular
+	      expression <tt class="code">regexp_e</tt> for the
+	      language 
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> in
+	      which every <tt>d</tt> is immediately followed by
+	      two <tt>e</tt>s.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+	</ol>
+      </li>
+
+
+    </ol>
+	
+    
+
+  </body>
+</html>
