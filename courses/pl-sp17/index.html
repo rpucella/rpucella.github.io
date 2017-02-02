@@ -39,6 +39,29 @@
    	  padding-right: 1em
     	}
 
+      table.schedule {
+      width:100%;
+      border-collapse: collapse; 
+      border-spacing: 0px;      
+      }
+
+      table.schedule th {
+      background: #dddddd;
+      text-align: left;
+      margin: 0;
+      padding: 5px;
+      }
+
+      table.schedule td {
+      border: 1px solid #cccccc;
+      padding: 5px;
+      vertical-align: top;
+      }
+
+      table.schedule tr.not-yet { 
+      font-style: italic;
+      }
+
     </style>
 
     <script>
@@ -114,6 +137,14 @@
       <ul class="simple annoucements">
 
       	<li>
+	  <p><span>Feb 1:</span>
+	    Posted all the notes for the semantics part of the course, rather than dribbling them out. Subject to change based on what we actually cover in class.
+	  </p>
+
+	  <p><span>Jan 27:</span>
+	    Notes from on inductive definitions posted.
+	  </p>
+
 	  <p><span>Jan 25:</span>
 	    Notes from the introductory lecture presenting small-step operational semantics available from the schedule below.
 	  </p>
@@ -228,187 +259,184 @@ Here are a couple of reasonable books on OCaml that you might
       <h3>Lectures and Readings</h3>
 
       <p>Schedule and topics subject to changes.</p>
+      <p>Readings are not required, but they may help your understanding of the lecture material.</p>
       
       <ul class="lectures">
 	
 	<li><p><b>SEMANTICS</b></p></li>
+
+	<table class="schedule">
+	  <tr>
+	    <th>When</th>
+	    <th style="width:50%;">What</th>
+	    <th style="width:30%;">Readings</th>
+	    <th style="width:10%;">Notes</th>
+	  </tr>
+	  <tr>
+	    <td>Jan 24</td>
+	    <td>Intro to semantics<br> small-step operational semantics</td>
+	    <td rowspan="5">Winskell 2,3,4; Pierce 2.4,3; Harper 2</td>
+	    <td rowspan="6"><a href="semantics.pdf">PDF notes</a></td>
+	  </tr>
+
+	  <tr>
+	    <td>Jan 26</td>
+	    <td>Inductive definitions and inductive proofs</td>
+	  </tr>
+
+	  <tr>
+	    <td>Jan 31</td>
+	    <td>Inductive definitions and inductive proofs (ctd)</td>
+	  </tr>
+
+	  <tr>
+	    <td>Feb 2</td>
+	    <td>Large-step operational semantics</td>
+
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Feb 7</td>
+	    <td>IMP</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Feb 9</td>
+	    <td>Denotational semantics</td>
+	  </tr>
+	</table>
 	
-	<li><p><span class="hdr">Jan 24:</span><b>Small-step operational semantics</b></p>
-	  <div class="lect">
-	    <a href="lec01-intro.pdf">Notes from the lecture.</a>
 
-	    <p>Reading: Winskell 2,3,4; Pierce 2.4,3; Harper 2. These readings cover the first lectures up to denotational semantics.</p>
-
-	    <p>(Readings are not required, but they may help your understanding of the lecture material.)</p>
-	    
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Jan 26:</span><b>Inductive definitions and inductive proofs</b></p>
-	  <div class="lect">
-	    <p><a href="lec02-induction.pdf">Notes from the lecture.</a> We left at the example in section 4.2. We'll pick up there next lecture.</p>
-	   
-	    <p>Readings: See Jan 24 lecture.</p>
-	    
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Jan 31:</span><i>Large-step operational
-	semantics</i></p>
-	  <div class="lect">
-	    <p>Readings: See Jan 24 lecture.</p>
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Feb 2:</span><i>Equivalence of small-step and large-step operational semantics</i></p>
-	  <div class="lect">
-	    <p>Readings: See Jan 24 lecture.</p>
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Feb 7:</span><i>Simple imperative
-	language IMP</i></p>
-	  <div class="lect">
-	    <p>Readings: See Jan 24 lecture.</p>
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Feb 9:</span><i>Denotational
-	semantics</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
 
 
 	
-	<li><p><i>LAMBDA CALCULUS</i></p></li>
-	
-	<li><p><span class="hdr">Feb 14:</span><i>Lambda calculus</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	<li><p><b>LAMBDA CALCULUS</b></p></li>
 
+	<table class="schedule">
+	  <tr>
+	    <th style="width:10%;">When</th>
+	    <th style="width:50%;">What</th>
+	    <th style="width:30%;">Readings</th>
+	    <th style="width:10%;">Notes</th>
+	  </tr>
 
-	<li><p><span class="hdr">Feb 16:</span><i>Encodings and recursion</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	  <tr class="not-yet">
+	    <td>Feb 14</td>
+	    <td>Lambda calculus</td>
+	  </tr>
 
-	
-	<li><p><span class="hdr">Feb 21:</span><i>Definitional translations</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	  <tr class="not-yet">
+	    <td>Feb 16</td>
+	    <td>Encodings and recursion</td>
+	  </tr>
 
-	
-	<li><p><span class="hdr">Feb 23:</span><i>Denotational
-	semantics of lambda calculus</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	  <tr class="not-yet">
+	    <td>Feb 21</td>
+	    <td>Definitional translations</td>
+	  </tr>
 
-	
-	<li><p><span class="hdr">Feb 28:</span><i>References and continuations</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	  <tr class="not-yet">
+	    <td>Feb 23</td>
+	    <td>Denotational semantics of lambda calculus</td>
+	  </tr>
 
-	
-	<li><p><span class="hdr">Mar 2:</span><i>MIDTERM EXAMINATION</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	  <tr class="not-yet">
+	    <td>Feb 28</td>
+	    <td>References and continuations</td>
+	  </tr>
 
-	
-	<li><p><i>TYPES</i></p></li>
+	  <tr class="not-yet">
+	    <td>Mar 2</td>
+	    <td>MIDTERM EXAMINATION</td>
+	  </tr>
 
-	<li><p><span class="hdr">Mar 7:</span><i>Simply-typed lambda calculus (1)</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	</table>
 
 	
-	<li><p><span class="hdr">Mar 9:</span><i>Simply-typed lambda calculus (2)</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+
+	<li><p><b>TYPES</b></p></li>
+
+	<table class="schedule">
+	  <tr>
+	    <th style="width:10%;">When</th>
+	    <th style="width:50%;">What</th>
+	    <th style="width:30%;">Readings</th>
+	    <th style="width:10%;">Notes</th>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Mar 7</td>
+	    <td>Simply-typed lambda calculus (1)</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Mar 9</td>
+	    <td>Simply-typed lambda calculus (2)</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Mar 21</td>
+	    <td>Type inference</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Mar 23</td>
+	    <td>Parametric polymorphism, records, subtyping</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Mar 28</td>
+	    <td>Curry-Howard isomorphism</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Mar 30</td>
+	    <td>Substructural type systems</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Apr 4</td>
+	    <td>Algebraic structures</td>
+	  </tr>
+
+	</table>
 
 	
-	<li><p><span class="hdr">Mar 21:</span><i>Type inference</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	<li><b><b>FORMAL REASONING</b></b></li>
 
+	<table class="schedule">
+	  <tr>
+	    <th style="width:10%;">When</th>
+	    <th style="width:50%;">What</th>
+	    <th style="width:30%;">Readings</th>
+	    <th style="width:10%;">Notes</th>
+	  </tr>
 	
-	<li><p><span class="hdr">Mar 23:</span><i>Parametric
-	polymorphism, records, subtyping</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
-
+	  <tr class="not-yet">
+	    <td>Apr 6</td>
+	  </tr>
 	
-	<li><p><span class="hdr">Mar 28:</span><i>Curry-Howard
-	isomorphism, existential types</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	  <tr class="not-yet">
+	    <td>Apr 11</td>
+	  </tr>
 
-	
-	<li><p><span class="hdr">Mar 30:</span><i>Substructural type systems</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	  <tr class="not-yet">
+	    <td>Apr 13</td>
+	  </tr>
 
-	
-	<li><p><span class="hdr">Apr 4:</span><i>Algebraic structures</i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	  <tr class="not-yet">
+	    <td>Apr 18</td>
+	  </tr>
 
+	  <tr class="not-yet">
+	    <td>Apr 20</td>
+	  </tr>
 
-	
-	<li><p><i>FORMAL REASONING</i></p></li>
+	  <tr class="not-yet">
+	    <td>Apr 25</td>
+	  </tr>
 
-	
-	<li><p><span class="hdr">Apr 6:</span><i></i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Apr 11:</span><i></i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Apr 13:</span><i></i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Apr 18:</span><i></i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Apr 20:</span><i></i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
-
-	
-	<li><p><span class="hdr">Apr 25:</span><i></i></p>
-	  <div class="lect">
-	  </div>
-	</li>	  
+	</table>
 
       </ul>
 
