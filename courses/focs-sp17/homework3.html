@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 3</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+	pre.code {
+	   border: 1px solid #c6c6c6;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+	}
+
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP17</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 3</h1>
+    
+    <p class="subtitle">Due date: Friday, Feb 10 (23:59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists your <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework3.ml"><tt>homework3.ml</tt></a> provided.</p>
+
+
+    <p>Please <b>do not change the types in the signature of the
+	function stubs I provide</b>. Doing so will make it
+	impossible to load your code into the testing infrastructure,
+      and make me unhappy.</p>
+
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+<!--      <li>Download the --
+  --      file <a href="hw3-checker.ml"><tt>hw3-checker.ml</tt></a> --
+  --      into the same directory as your homework solution.</li> -->
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use
+      "homework3.ml";;</tt></li>
+      <li>If there are any error, do not submit. I can't test what I
+	can't <tt>#use</tt>.</li>
+<!--      <li>Load the homework checker via <tt>#use "hw3-checker.ml";;</tt></li>
+      <li>The homework checker checks that you've implemented all
+      functions (or provided stubs for them) and that those functions
+      have the type that I asked you to give them. If the checker says
+      your types are OK, then you're fine. If the checker gives you an
+      error, fix it. If you believe that the checker gives you an
+      error wrongly, send me an email.</li> -->
+      <li>When you're ready to submit, send an email with your file <tt>homework3.ml</tt> as an attachment to <tt>focs.sp17@gmail.com</tt> with subject <i>Homework 3 submission</i>.</li>
+    </ul>
+
+    <hr>
+
+    <p class="subtitle">Updates</p>
+<!--    <ul class="simple">
+      <li>Jan 21: changed sample outputs for <tt>nth</tt> to match type of the functon.</li>
+      <li>Jan 23: changed last sample output for <tt>multM</tt> to a more meaningful one.</li>
+      <li>Jan 24: fixed incorrect outer product outputs.</li>
+    </ul>
+-->
+	
+    <hr>
+
+    <p>Consider the following type for finite automata:</p>
+    <pre>
+   type 'a fa = { states: 'a list;
+                  alphabet: char list;
+                  delta: ('a * char * 'a) list;
+                  start : 'a;
+                  final : 'a list }
+</pre>
+<p>A finite automaton  is described by a record with fields holding the various
+components of the automaton: the set of states, the alphabet, the
+transition relation &Delta;, the start state, and the set of final states. Lists are  
+used to represent sets. The transition relation is represented using
+  list of triples (<i>p</i>,<i>a</i>,<i>q</i>), stating that in
+  state <i>p</i>, reading symbol 
+  <i>a</i> makes the machine transition to state <i>q</i>. The automaton itself is
+parameterized over the type of states. (That means that you can use
+               strings, or integers, or anything you want to represent
+               states.)  
+</p>
+
+<p>Records are basically dictionaries, except that they are statically
+    typed, and the fields available in a record are part of its
+    type. For information how to work with records in
+    OCaml, <a href="http://www.cs.cornell.edu/courses/cs3110/2011sp/recitations/rec02-ocaml/ocaml.htm">check
+    out this 
+    link</a> and scroll down to the <i>Records</i> section. Note that
+    aside from pattern matching, you can also access the fields of a
+  record using the <tt>.</tt> notation: <tt>record.fld</tt> will
+  return the value of field <tt>fld</tt> of <tt>record</tt>.
+</p>
+
+<p>Here is an example of a finite automaton that accepts the
+  language of all strings over <tt>{a,b,c}</tt> whose last three
+  symbols are <tt>b</tt>s. </p>
+
+<pre>
+   let faLastThreeB = {
+     states = [0;1;2;3];
+     alphabet = ['a';'b';'c'];
+     delta = [ (0,'a',0);
+               (0,'b',0);
+               (0,'c',0);
+               (0,'b',1);
+               (1,'b',2);
+               (2,'b',3); ];
+     start = 0;
+     final = [3]
+   } 
+</pre>
+
+<p>Here is an example of a (deterministic) finite automaton that accepts
+  the set of all strings over <tt>{a,b}</tt> that contains a number
+  of <tt>a</tt>s that is a multiple of 3. 
+</p>
+
+<pre>
+   let faThreeA = { 
+     states = ["start";"one";"two"];
+     alphabet = ['a';'b'];
+     delta = [ ("start",'a',"one");
+               ("one",'a',"two");
+               ("two",'a',"start");
+               ("start",'b',"start");
+               ("one",'b',"one");
+               ("two",'b',"two") ];
+     start = "start";
+     final = ["start"]
+   } 
+</pre>
+
+    <hr>
+
+    <ol class="question">
+      <li> <p><b>Finite Automata</b></p>
+
+	<ol class="subquestion">
+
+	  <li><p>
+	      Code a function <tt class="code">hasFinal</tt> of
+	    type <tt class="code">'a fa -> 'a list -> bool</tt>
+	    where <tt>hasFinal m qs</tt> returns true if one of the
+	      states in <tt>qs</tt> is a final state of
+	      automaton <tt>m</tt>, and false
+	    otherwise. </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li><p>
+	      Code a function <tt class="code">reachableStates</tt> of
+	    type <tt class="code">'a fa -> 'a -> char -> 'a list</tt>
+	    where <tt>reachableStates m q a</tt> returns the list of
+	      states of <tt>m</tt> that can be reached by a transition 
+	      labeled <tt>a</tt> from state <tt>q</tt>.</p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li><p>
+	      Code a function <tt class="code">follow</tt> of
+	    type <tt class="code">'a fa -> 'a list -> char -> 'a list</tt>
+	    where <tt>follow m qs a</tt> returns the list of
+	      states of <tt>m</tt> that are reachable by following a transition 
+	      labeled <tt>a</tt> from any of the states
+	      in <tt>qs</tt>.</p>
+
+	    <p>(For your own sanity, you should make
+	      sure that the resulting list has no duplicate
+	      states. Execution of later functions may slow to a
+	      crawl otherwise. The easiest way to do so is to
+	      implement a function that adds states to an existing list
+	      of states but making sure that it only adds a state if
+	      it isn't already in the list.)</p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li><p>
+	      Code a function <tt class="code">followAll</tt> of
+	    type <tt class="code">'a fa -> 'a list -> char list -> 'a list</tt>
+	    where <tt>followAll m qs as</tt> returns the list of
+	      states of <tt>m</tt> that are reachable by following a
+	      sequence of transitions labeled by the symbols
+	      in <tt>as</tt> (in order) starting from any of the states
+	      in <tt>qs</tt>.</p>
+
+	    <p>(Again, for your own sanity, you should make
+	      sure that the resulting list has no duplicate
+	      states.)</p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li><p>
+	      Code a function <tt class="code">accept</tt> of
+	    type <tt class="code">'a fa -> string -> bool</tt>
+	    where <tt>accept m s</tt> returns true if and only if
+	      finite automaton <tt>m</tt> accepts the
+	      string <tt>s</tt>. That is, it returns true exactly if
+	      there is a way to follow the transitions of <tt>m</tt>
+	      labeled by the symbols in <tt>s</tt>
+	      from the start state to a final state.</p>
+
+	    <p>You can use function <tt>explode</tt> (provided in the homework
+	    code) to turn a string into a list of characters. You
+	      should probably also use <tt>followAll</tt>...</p>
+
+	    <p>For testing purposes, I've provided you with a function <tt>lang</tt>
+	      where <tt>lang m k</tt> prints out all the strings of length up to <tt>k</tt>
+	      accepted by finite automaton <tt>m</tt>. Note that it calls 
+	      <tt>accept</tt>, so it won't work correctly until you
+	      implement that function. </p>
+
+<pre class="code">
+</pre>
+
+	  </li>
+
+
+	</ol>
+
+      </li>
+
+
+
+      <li> <p><b>Designing Finite Automata</b></p>
+
+        <p>In this question, I will ask you to come up with finite
+	  automata. You can test your automata
+	  with the code you wrote in Question 1. </p>
+
+	<p>For submission purposes, I ask you to define those finite
+	  automata as constants using <tt>let</tt> with a fixed
+	  name given below in each question. There is already a
+	  placeholder in <tt>homework3.ml</tt> for those answers. Just
+	  replace the placeholder with your definition.</p>
+
+	<ol class="subquestion">
+
+	  <li><p>
+	      Design a finite automaton <tt class="code">fa_q2_a</tt> for
+	      the language consisting of all strings over the alphabet
+	      <tt>{d,e,f}</tt> of length at least three where the third
+	      symbol from the end is an <tt>f</tt>.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+	  <li><p>
+	      Design a finite automaton
+	      <tt class="code">fa_q2_b</tt> for
+	      the language consisting of all strings over the
+	      alphabet <tt>{d,e,f}</tt> in which every
+	      <tt>f</tt> is always immediately followed by an <tt>f</tt>.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li><p>
+	      Design a finite automaton
+	      <tt class="code">fa_q2_c</tt> for
+	      the language consisting of all strings over the alphabet
+	      <tt>{d,e,f}</tt> in which there are never more than
+	      two consecutive <tt>d</tt>s and never more than two
+	      consecutive <tt>e</tt>s in a row.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li><p>
+	      Design a finite automaton
+	      <tt class="code">fa_q2_d</tt> for
+	      the language consisting of all strings over the alphabet
+	      <tt>{d,e,f}</tt> in which there are an even number
+	      of <tt>d</tt>s and an odd number of <tt>e</tt>s.
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+	  <li><p>
+	      Design a finite automaton <tt class="code">fa_q2_e</tt> for
+	      the language consisting of all strings over the alphabet
+	      <tt>{d,e,f}</tt> in which there are an even number
+	      of <tt>d</tt>s, an odd number of <tt>e</tt>s, and
+	      exactly two <tt>f</tt>s. 
+	    </p>
+
+<pre class="code">
+</pre>
+	  </li>
+
+
+
+	</ol>
+      </li>
+
+
+
+
+      <li> <p><b>Finite Automata and Matrices</b></p>
+
+
+	<ol class="subquestion">
+
+	</ol>
+      </li>
+
+
+    </ol>
+	
+    
+
+  </body>
+</html>
