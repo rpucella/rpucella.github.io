@@ -243,6 +243,20 @@ parameterized over the type of states. (That means that you can use
 	    otherwise. </p>
 
 <pre class="code">
+# hasFinal faLastThreeB [];;
+- : bool = false
+# hasFinal faLastThreeB [0];;
+- : bool = false
+# hasFinal faLastThreeB [0;1];;
+- : bool = false
+# hasFinal faLastThreeB [0;1;2];;
+- : bool = false
+# hasFinal faLastThreeB [0;1;2;3];;
+- : bool = true
+# hasFinal faLastThreeB [3];;
+- : bool = true
+# hasFinal faThreeA ["start";"one"];;
+- : bool = true
 </pre>
 	  </li>
 
@@ -255,6 +269,24 @@ parameterized over the type of states. (That means that you can use
 	      labeled <tt>a</tt> from state <tt>q</tt>.</p>
 
 <pre class="code">
+# reachableStates faLastThreeB 0 'a';;
+- : int list = [0]
+# reachableStates faLastThreeB 0 'b';;
+- : int list = [0; 1]
+# reachableStates faLastThreeB 1 'a';;
+- : int list = []
+# reachableStates faLastThreeB 1 'b';;
+- : int list = [2]
+# reachableStates faLastThreeB 2 'a';;
+- : int list = []
+# reachableStates faLastThreeB 2 'b';;
+- : int list = [3]
+# reachableStates faLastThreeB 3 'a';;
+- : int list = []
+# reachableStates faLastThreeB 3 'b';;
+- : int list = []
+# reachableStates faThreeA "start" 'a';;
+- : string list = ["one"]
 </pre>
 	  </li>
 
@@ -276,6 +308,20 @@ parameterized over the type of states. (That means that you can use
 	      it isn't already in the list.)</p>
 
 <pre class="code">
+# follow faThreeA [] 'a';;
+- : string list = []
+# follow faThreeA ["start"] 'a';;
+- : string list = ["one"]
+# follow faThreeA ["start"] 'b';;
+- : string list = ["start"]
+# follow faThreeA ["start"; "one"] 'a';;
+- : string list = ["one"; "two"]
+# follow faThreeA ["start"; "one"] 'b';;
+- : string list = ["start"; "one"]
+# follow faLastThreeB [0;1] 'a';;
+- : int list = [0]
+# follow faLastThreeB [0;1] 'b';;
+- : int list = [0; 1; 2]
 </pre>
 	  </li>
 
@@ -294,6 +340,28 @@ parameterized over the type of states. (That means that you can use
 	      states.)</p>
 
 <pre class="code">
+# followAll faThreeA [] [];;
+- : string list = []
+# followAll faThreeA [] ['a'];;
+- : string list = []
+# followAll faThreeA [] ['a';'b'];;
+- : string list = []
+# followAll faThreeA ["start"] [];;
+- : string list = ["start"]
+# followAll faThreeA ["start"] ['a'];;
+- : string list = ["one"]
+# followAll faThreeA ["start"] ['a';'b'];;
+- : string list = ["one"]
+# followAll faThreeA ["start"] ['a';'a'];;
+- : string list = ["two"]
+# followAll faThreeA ["start";"one"] ['a';'a'];;
+- : string list = ["two"; "start"]
+# followAll faThreeA ["start";"one"] ['a';'a';'b'];;
+- : string list = ["two"; "start"]
+# followAll faThreeA ["start";"one"] ['a';'a';'b';'a'];;
+- : string list = ["start"; "one"]
+# followAll faLastThreeB [0;1] ['a';'b';'b';'b'];;
+- : int list = [0; 1; 2; 3]
 </pre>
 	  </li>
 
@@ -319,6 +387,60 @@ parameterized over the type of states. (That means that you can use
 	      implement that function. </p>
 
 <pre class="code">
+# accept faThreeA "babab";;
+- : bool = false
+# accept faThreeA "bababa";;
+- : bool = true
+# accept faThreeA "bababab";;
+- : bool = true
+# accept faLastThreeB "abb";;
+- : bool = false
+# accept faLastThreeB "abbb";;
+- : bool = true
+# accept faLastThreeB "abbbb";;
+- : bool = true
+# lang faLastThreeB 6;;
+  bbb
+  abbb
+  bbbb
+  cbbb
+  aabbb
+  babbb
+  cabbb
+  abbbb
+  bbbbb
+  cbbbb
+  acbbb
+  bcbbb
+  ccbbb
+  aaabbb
+  baabbb
+  caabbb
+  ababbb
+  bbabbb
+  cbabbb
+  acabbb
+  bcabbb
+  ccabbb
+  aabbbb
+  babbbb
+  cabbbb
+  abbbbb
+  bbbbbb
+  cbbbbb
+  acbbbb
+  bcbbbb
+  ccbbbb
+  aacbbb
+  bacbbb
+  cacbbb
+  abcbbb
+  bbcbbb
+  cbcbbb
+  accbbb
+  bccbbb
+  cccbbb
+- : unit = ()
 </pre>
 
 	  </li>
