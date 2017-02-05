@@ -1648,8 +1648,69 @@ parameterized over the type of states. (That means that you can use
 
       <li> <p><b>Finite Automata and Matrices</b></p>
 
+	
+	<p>There is another way to think about finite automata: linear
+	algebra. We can represent the transitions of a finite
+	automaton using matrices, and following transitions based on
+	  the symbols in the input strings can be captured by matrix
+	  multiplication. Here is the idea.</p>
+
+	<p>Let M=(Q,&Sigma;,&Delta;,s,F) be a finite automaton, and
+	  let q<sub>1</sub>, ..., q<sub>N</sub> be an arbitrary but
+	  fixed ordering of the states in Q.</p>
+
+	<p> To every symbol
+	  &alpha;&in;&Sigma; we can associate an N&times;N matrix T<sub>&alpha;</sub>
+	  representing the transitions of M on symbol &alpha;, which has a 1
+	  at row R and column C  when there is a transition
+	  from q<sub>R</sub> to q<sub>C</sub> labeled &alpha; in
+	  &Delta;, and a 0 otherwise.</p>
+
+	<p>The matrices T<sub>&alpha;</sub> for every
+	&alpha;&in;&Sigma; have the property that the product matrix
+	T<sub>&alpha;<sub>1</sub></sub>T<sub>&alpha;<sub>2
+</sub></sub>...T<sub>&alpha;<sub>K</sub></sub> has a value > 0 in row
+	  R and column C exactly when there is a path from
+	  q<sub>R</sub> to q<sub>C</sub> following a sequence of
+	  transitions labeled &alpha;<sub>1</sub>,
+	  &alpha;<sub>2</sub>, ..., &alpha;<sub>K</sub>. (Question for
+	  you if you want to dig deeper: what does the number at row R
+	  and column C actually represent?)</p>
+
+	<p>This is nearly all we need to determine if finite automaton M
+	  can accept an input string.</p>
+
+	<p>We can make things even easier by defining a vector
+	  V<sub>F</sub> to represent the final states: the value at position C of
+	  V<sub>F</sub> is 1 when q<sub>C</sub> is a final state in F; it is zero
+	  otherwise. Therefore, the column vector
+	(T<sub>&alpha;<sub>1</sub></sub>T<sub>&alpha;<sub>2
+	  </sub></sub>...T<sub>&alpha;<sub>K</sub></sub>)(V<sub>F</sub>)<sup>T</sup> has a value > 0 in row
+	  R exactly when there is a path from
+	  q<sub>R</sub> to a final state of M following a sequence of
+	  transitions labeled &alpha;<sub>1</sub>,
+	  &alpha;<sub>2</sub>, ..., &alpha;<sub>K</sub>.</p>
+
+	<p>We can also define a vector V<sub>I</sub> representing the initial
+	state: the value at position C of V<sub>I</sub> is 1 when q<sub>C</sub>
+	  is the initial state s, and 0 otherwise. Therefore, the product (V<sub>I</sub>)(T<sub>&alpha;<sub>1</sub></sub>T<sub>&alpha;<sub>2
+	  </sub></sub>...T<sub>&alpha;<sub>K</sub></sub>)(V<sub>F</sub>)<sup>T</sup>
+	  (which is a 1x1 matrix!) has a value > 0 exactly when there
+	  is a path from the initial state of M to a final state of M
+	  following a sequence of transitions labeled
+	  &alpha;<sub>1</sub>, &alpha;<sub>2</sub>, ...,
+	  &alpha;<sub>K</sub> &mdash; that is, when M accepts string
+	  &alpha;<sub>1</sub>&alpha;<sub>2</sub>...&alpha;<sub>K</sub>.</p>
+
+	<p>Boom! To determine is M accepts a string, construct the
+	matrices V<sub>I</sub>, V<sub>F</sub>, and T<sub>&alpha;</sub> for
+	every &alpha; in the string, multiply as above, and check if
+	  the result is > 0. </p>
+
 
 	<ol class="subquestion">
+
+
 
 	</ol>
       </li>
