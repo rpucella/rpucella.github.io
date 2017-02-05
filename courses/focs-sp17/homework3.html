@@ -1648,7 +1648,6 @@ parameterized over the type of states. (That means that you can use
 
       <li> <p><b>Finite Automata and Matrices</b></p>
 
-<!--	
 	<p>There is another way to think about finite automata: linear
 	algebra. We can represent the transitions of a finite
 	automaton using matrices, and following transitions based on
@@ -1699,17 +1698,157 @@ parameterized over the type of states. (That means that you can use
 	  is a path from the initial state of M to a final state of M
 	  following a sequence of transitions labeled
 	  &alpha;<sub>1</sub>, &alpha;<sub>2</sub>, ...,
-	  &alpha;<sub>K</sub> &mdash; that is, when M accepts string
+	  &alpha;<sub>K</sub> &mdash; that is, exactly when M accepts string
 	  &alpha;<sub>1</sub>&alpha;<sub>2</sub>...&alpha;<sub>K</sub>.</p>
 
 	<p>Boom! To determine is M accepts a string, construct the
 	matrices V<sub>I</sub>, V<sub>F</sub>, and T<sub>&alpha;</sub> for
 	every &alpha; in the string, multiply as above, and check if
 	  the result is > 0. </p>
--->
+
 
 	<ol class="subquestion">
 
+	  <li><p>
+	      Code a function <tt class="code">matTrans</tt> of
+	    type <tt class="code">'a fa -> char -> int list list</tt>
+	    where <tt>matTrans m a</tt> returns the matrix
+	      T<sub>a</sub> described above corresponding to finite
+	      automaton <tt>m</tt>.</p>
+
+	    <p>A matrix is represented as a list of rows, each row a
+	      list of integers, the way we did in Homework 1.</p>
+
+	    <p>It makes sense to use as an ordering of the states the
+	      order in which they appear in <tt>m.states</tt>. That's
+	      the order I'm using in the examples below.</p>
+
+
+<pre class="code">
+# matTrans faThreeA 'a';;
+- : int list list = [[0; 1; 0]; [0; 0; 1]; [1; 0; 0]]
+# matTrans faThreeA 'b';;
+- : int list list = [[1; 0; 0]; [0; 1; 0]; [0; 0; 1]]
+# matTrans faLastThreeB 'a';;
+- : int list list = [[1; 0; 0; 0]; [0; 0; 0; 0]; [0; 0; 0; 0]; [0; 0; 0; 0]]
+# matTrans faLastThreeB 'b';;
+- : int list list = [[1; 1; 0; 0]; [0; 0; 1; 0]; [0; 0; 0; 1]; [0; 0; 0; 0]]
+# matTrans faLastThreeB 'c';;
+- : int list list = [[1; 0; 0; 0]; [0; 0; 0; 0]; [0; 0; 0; 0]; [0; 0; 0; 0]]
+</pre>
+	  </li>
+
+	  <li><p>
+	      Code a function <tt class="code">matInit</tt> of
+	    type <tt class="code">'a fa -> int list list</tt>
+	    where <tt>matInit m</tt> returns a matrix representing
+	      the row vector V<sub>I</sub> described
+	      above corresponding to finite automaton <tt>m</tt>.</p>
+
+<pre class="code">
+# matInit faThreeA;;
+- : int list list = [[1; 0; 0]]
+# matInit faLastThreeB;;
+- : int list list = [[1; 0; 0; 0]]
+</pre>
+	  </li>
+
+
+	  <li><p>
+	      Code a function <tt class="code">matFinal</tt> of
+	    type <tt class="code">'a fa -> int list list</tt>
+	    where <tt>matFinal m</tt> returns a matrix representing
+	      the column vector (V<sub>F</sub>)<sup>T</sup> described
+	      above corresponding to finite automaton <tt>m</tt>.</p>
+
+<pre class="code">
+# matFinal faThreeA;;
+- : int list list = [[1]; [0]; [0]]
+# matFinal faLastThreeB;;
+- : int list list = [[0]; [0]; [0]; [1]]
+</pre>
+	  </li>
+
+	  <li><p>
+	      Code a function <tt class="code">matAccept</tt> of
+	    type <tt class="code">'a fa -> string -> bool</tt>
+	    where <tt>matAccept m u</tt> returns true exactly when
+	      finite automaton <tt>m</tt> accepts
+	      string <tt>u</tt>. This function should work by applying
+	      the matrix-based algorithm described above: constructing
+	      the appropriate matrices, multiplying them
+	      together, and testing the result.</p>
+
+	    <p>To help you, I've supplied an implementation
+	      of matrix multiplication <tt>multM</tt> taken from
+	      Homework 1.</p>
+
+	    <p>You can use function <tt>explode</tt> (provided in the homework
+	    code) to turn a string into a list of characters.</p>
+	    
+	    <p>For testing purposes, I've provided you with a function <tt>matLang</tt>
+	      where <tt>matLang m k</tt> prints out all the strings of length up to <tt>k</tt>
+	      accepted by finite automaton <tt>m</tt>. Note that it calls 
+	      <tt>matAccept</tt>, so it won't work correctly until you
+	      implement that function. </p>
+
+
+<pre class="code">
+# matAccept faThreeA "babab";;
+- : bool = false
+# matAccept faThreeA "bababa";;
+- : bool = true
+# matAccept faThreeA "bababab";;
+- : bool = true
+# matAccept faLastThreeB "abb";;
+- : bool = false
+# matAccept faLastThreeB "abbb";;
+- : bool = true
+# matAccept faLastThreeB "abbbb";;
+- : bool = true
+# matLang faLastThreeB 6;;
+  bbb
+  abbb
+  bbbb
+  cbbb
+  aabbb
+  babbb
+  cabbb
+  abbbb
+  bbbbb
+  cbbbb
+  acbbb
+  bcbbb
+  ccbbb
+  aaabbb
+  baabbb
+  caabbb
+  ababbb
+  bbabbb
+  cbabbb
+  acabbb
+  bcabbb
+  ccabbb
+  aabbbb
+  babbbb
+  cabbbb
+  abbbbb
+  bbbbbb
+  cbbbbb
+  acbbbb
+  bcbbbb
+  ccbbbb
+  aacbbb
+  bacbbb
+  cacbbb
+  abcbbb
+  bbcbbb
+  cbcbbb
+  accbbb
+  bccbbb
+  cccbbb
+</pre>
+	  </li>
 
 
 	</ol>
