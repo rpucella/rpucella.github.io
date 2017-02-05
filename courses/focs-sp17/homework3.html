@@ -43,13 +43,35 @@
            background: #e6e6e6;
         }
 
-	pre.code {
-	   border: 1px solid #c6c6c6;
-	border-radius: 5px;
-	padding: 10px;
-	font-size:100%;
-	}
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
 
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+      
 ol.question {
     padding-top:1em;
     list-style-type: decimal;
@@ -58,7 +80,6 @@ ol.question {
 ol.subquestion {
     list-style-type: upper-alpha;
 }
-
 
 ol > li {
     padding:4px 8px; /* Add some spacing around the content */
@@ -69,7 +90,19 @@ li ul {margin-top:6px;}
 
 li > p { margin-top:0;}
 
+
     </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
 
   </head>
 
@@ -242,7 +275,9 @@ parameterized over the type of states. (That means that you can use
 	      automaton <tt>m</tt>, and false
 	    otherwise. </p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # hasFinal faLastThreeB [];;
 - : bool = false
 # hasFinal faLastThreeB [0];;
@@ -258,6 +293,7 @@ parameterized over the type of states. (That means that you can use
 # hasFinal faThreeA ["start";"one"];;
 - : bool = true
 </pre>
+</div>
 	  </li>
 
 
@@ -268,7 +304,9 @@ parameterized over the type of states. (That means that you can use
 	      states of <tt>m</tt> that can be reached by a transition 
 	      labeled <tt>a</tt> from state <tt>q</tt>.</p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # reachableStates faLastThreeB 0 'a';;
 - : int list = [0]
 # reachableStates faLastThreeB 0 'b';;
@@ -288,6 +326,7 @@ parameterized over the type of states. (That means that you can use
 # reachableStates faThreeA "start" 'a';;
 - : string list = ["one"]
 </pre>
+	  </div>
 	  </li>
 
 
@@ -307,7 +346,9 @@ parameterized over the type of states. (That means that you can use
 	      of states but making sure that it only adds a state if
 	      it isn't already in the list.)</p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # follow faThreeA [] 'a';;
 - : string list = []
 # follow faThreeA ["start"] 'a';;
@@ -323,7 +364,7 @@ parameterized over the type of states. (That means that you can use
 # follow faLastThreeB [0;1] 'b';;
 - : int list = [0; 1; 2]
 </pre>
-	  </li>
+	  </div>	  </li>
 
 
 	  <li><p>
@@ -339,7 +380,9 @@ parameterized over the type of states. (That means that you can use
 	      sure that the resulting list has no duplicate
 	      states.)</p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # followAll faThreeA [] [];;
 - : string list = []
 # followAll faThreeA [] ['a'];;
@@ -363,7 +406,7 @@ parameterized over the type of states. (That means that you can use
 # followAll faLastThreeB [0;1] ['a';'b';'b';'b'];;
 - : int list = [0; 1; 2; 3]
 </pre>
-	  </li>
+	  </div>	  </li>
 
 
 	  <li><p>
@@ -386,7 +429,9 @@ parameterized over the type of states. (That means that you can use
 	      <tt>accept</tt>, so it won't work correctly until you
 	      implement that function. </p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # accept faThreeA "babab";;
 - : bool = false
 # accept faThreeA "bababa";;
@@ -441,7 +486,7 @@ parameterized over the type of states. (That means that you can use
   bccbbb
   cccbbb
 </pre>
-
+</div>
 	  </li>
 
 
@@ -472,7 +517,9 @@ parameterized over the type of states. (That means that you can use
 	      symbol from the end is an <tt>f</tt>.
 	    </p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # lang fa_q2_a 6;;
   fdd
   fed
@@ -835,7 +882,10 @@ parameterized over the type of states. (That means that you can use
   efffff
   ffffff
 </pre>
+	  </div>
 	  </li>
+
+
 	  <li><p>
 	      Design a finite automaton
 	      <tt class="code">fa_q2_b</tt> for
@@ -844,7 +894,9 @@ parameterized over the type of states. (That means that you can use
 	      <tt>f</tt> is always immediately followed by an <tt>f</tt>.
 	    </p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # lang fa_q2_b 6;;
   f
   df
@@ -967,6 +1019,7 @@ parameterized over the type of states. (That means that you can use
   efffff
   ffffff
 </pre>
+	  </div>
 	  </li>
 
 
@@ -979,7 +1032,9 @@ parameterized over the type of states. (That means that you can use
 	      consecutive <tt>e</tt>s in a row.
 	    </p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # lang fa_q2_c 5;;
   <epsilon>
   d
@@ -1292,6 +1347,7 @@ parameterized over the type of states. (That means that you can use
   effff
   fffff
 </pre>
+	  </div>
 	  </li>
 
 
@@ -1303,7 +1359,9 @@ parameterized over the type of states. (That means that you can use
 	      of <tt>d</tt>s and an odd number of <tt>e</tt>s.
 	    </p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # lang fa_q2_d 6;;
   e
   fe
@@ -1579,6 +1637,7 @@ parameterized over the type of states. (That means that you can use
   feffff
   efffff
 </pre>
+	  </div>
 	  </li>
 
 
@@ -1590,7 +1649,9 @@ parameterized over the type of states. (That means that you can use
 	      exactly two <tt>f</tt>s. 
 	    </p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # lang fa_q2_e 6;;
   ffe
   fef
@@ -1636,6 +1697,7 @@ parameterized over the type of states. (That means that you can use
   ddeff
   eeeff
 </pre>
+	  </div>
 	  </li>
 
 
@@ -1724,7 +1786,9 @@ parameterized over the type of states. (That means that you can use
 	      the order I'm using in the examples below.</p>
 
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # matTrans faThreeA 'a';;
 - : int list list = [[0; 1; 0]; [0; 0; 1]; [1; 0; 0]]
 # matTrans faThreeA 'b';;
@@ -1736,6 +1800,7 @@ parameterized over the type of states. (That means that you can use
 # matTrans faLastThreeB 'c';;
 - : int list list = [[1; 0; 0; 0]; [0; 0; 0; 0]; [0; 0; 0; 0]; [0; 0; 0; 0]]
 </pre>
+	  </div>
 	  </li>
 
 	  <li><p>
@@ -1745,12 +1810,15 @@ parameterized over the type of states. (That means that you can use
 	      the row vector V<sub>I</sub> described
 	      above corresponding to finite automaton <tt>m</tt>.</p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # matInit faThreeA;;
 - : int list list = [[1; 0; 0]]
 # matInit faLastThreeB;;
 - : int list list = [[1; 0; 0; 0]]
 </pre>
+	  </div>
 	  </li>
 
 
@@ -1761,12 +1829,15 @@ parameterized over the type of states. (That means that you can use
 	      the column vector (V<sub>F</sub>)<sup>T</sup> described
 	      above corresponding to finite automaton <tt>m</tt>.</p>
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # matFinal faThreeA;;
 - : int list list = [[1]; [0]; [0]]
 # matFinal faLastThreeB;;
 - : int list list = [[0]; [0]; [0]; [1]]
 </pre>
+	  </div>
 	  </li>
 
 	  <li><p>
@@ -1793,7 +1864,9 @@ parameterized over the type of states. (That means that you can use
 	      implement that function. </p>
 
 
-<pre class="code">
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
 # matAccept faThreeA "babab";;
 - : bool = false
 # matAccept faThreeA "bababa";;
@@ -1848,6 +1921,7 @@ parameterized over the type of states. (That means that you can use
   bccbbb
   cccbbb
 </pre>
+	  </div>
 	  </li>
 
 
