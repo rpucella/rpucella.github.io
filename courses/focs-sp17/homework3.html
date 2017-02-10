@@ -181,12 +181,9 @@ li > p { margin-top:0;}
     <hr>
 
     <p class="subtitle">Updates</p>
-<!--    <ul class="simple">
-      <li>Jan 21: changed sample outputs for <tt>nth</tt> to match type of the functon.</li>
-      <li>Jan 23: changed last sample output for <tt>multM</tt> to a more meaningful one.</li>
-      <li>Jan 24: fixed incorrect outer product outputs.</li>
+    <ul class="simple">
+      <li>Feb 9: Added some precision to the acceptance requirement to Question 2 Exercise b. And fixed the sample output which did not match either the old requirement, or the new one!</li>
     </ul>
--->
 	
     <hr>
 
@@ -890,18 +887,33 @@ parameterized over the type of states. (That means that you can use
 	      Design a finite automaton
 	      <tt class="code">fa_q2_b</tt> for
 	      the language consisting of all strings over the
-	      alphabet <tt>{d,e,f}</tt> in which every
-	      <tt>f</tt> is always immediately followed by an <tt>f</tt>.
+	      alphabet <tt>{d,e,f}</tt> in which every <i>non-final</i>
+	      <tt>f</tt> is always immediately followed by an <tt>f</tt>. (A final symbol is the last symbol in a string.)
 	    </p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
   <pre>
 # lang fa_q2_b 6;;
+  &lt;epsilon&gt;
+  d
+  e
   f
+  dd
+  ed
+  de
+  ee
   df
   ef
   ff
+  ddd
+  edd
+  ded
+  eed
+  dde
+  ede
+  dee
+  eee
   ddf
   edf
   def
@@ -909,6 +921,22 @@ parameterized over the type of states. (That means that you can use
   dff
   eff
   fff
+  dddd
+  eddd
+  dedd
+  eedd
+  dded
+  eded
+  deed
+  eeed
+  ddde
+  edde
+  dede
+  eede
+  ddee
+  edee
+  deee
+  eeee
   dddf
   eddf
   dedf
@@ -924,6 +952,38 @@ parameterized over the type of states. (That means that you can use
   dfff
   efff
   ffff
+  ddddd
+  edddd
+  deddd
+  eeddd
+  ddedd
+  ededd
+  deedd
+  eeedd
+  ddded
+  edded
+  deded
+  eeded
+  ddeed
+  edeed
+  deeed
+  eeeed
+  dddde
+  eddde
+  dedde
+  eedde
+  ddede
+  edede
+  deede
+  eeede
+  dddee
+  eddee
+  dedee
+  eedee
+  ddeee
+  edeee
+  deeee
+  eeeee
   ddddf
   edddf
   deddf
@@ -955,6 +1015,70 @@ parameterized over the type of states. (That means that you can use
   dffff
   effff
   fffff
+  dddddd
+  eddddd
+  dedddd
+  eedddd
+  ddeddd
+  ededdd
+  deeddd
+  eeeddd
+  dddedd
+  eddedd
+  dededd
+  eededd
+  ddeedd
+  edeedd
+  deeedd
+  eeeedd
+  dddded
+  eddded
+  dedded
+  eedded
+  ddeded
+  ededed
+  deeded
+  eeeded
+  dddeed
+  eddeed
+  dedeed
+  eedeed
+  ddeeed
+  edeeed
+  deeeed
+  eeeeed
+  ddddde
+  edddde
+  deddde
+  eeddde
+  ddedde
+  ededde
+  deedde
+  eeedde
+  dddede
+  eddede
+  dedede
+  eedede
+  ddeede
+  edeede
+  deeede
+  eeeede
+  ddddee
+  edddee
+  deddee
+  eeddee
+  ddedee
+  ededee
+  deedee
+  eeedee
+  dddeee
+  eddeee
+  dedeee
+  eedeee
+  ddeeee
+  edeeee
+  deeeee
+  eeeeee
   dddddf
   eddddf
   dedddf
@@ -1036,7 +1160,7 @@ parameterized over the type of states. (That means that you can use
   <p onClick="toggleShowHide(this)">Show sample output</p>
   <pre>
 # lang fa_q2_c 5;;
-  <epsilon>
+  &lt;epsilon&gt;
   d
   e
   f
