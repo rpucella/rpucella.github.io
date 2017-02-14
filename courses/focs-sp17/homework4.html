@@ -213,136 +213,95 @@ li > p { margin-top:0;}
 	    <tt>for_all</tt>), or at least one element of the list satisfies
 	    the predicate (for <tt>exists</tt>).</p>
 
-	    <p>Code a function <tt class="code">at_least</tt> of
-	      type <tt class="code">int -> ('a -> bool) -> 'a list -> bool</tt>
-	      where <tt>at_least n p xs</tt> returns <tt>true</tt> exactly when there are
-	      at least <tt>n</tt> elements in <tt>xs</tt> that satisfy predicate <tt>p</tt>.</p>
-
+	    <p>Code a function <tt class="code">count</tt> of
+	      type <tt class="code">('a -> bool) -> 'a list -> int</tt>
+	      where <tt>count p xs</tt> returns the number of
+	      elements in <tt>xs</tt> that satisfy
+	      predicate <tt>p</tt>.</p> 
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
-  <pre>
-# hasFinal faLastThreeB [];;
-- : bool = false
-# hasFinal faLastThreeB [0];;
-- : bool = false
-# hasFinal faLastThreeB [0;1];;
-- : bool = false
-# hasFinal faLastThreeB [0;1;2];;
-- : bool = false
-# hasFinal faLastThreeB [0;1;2;3];;
-- : bool = true
-# hasFinal faLastThreeB [3];;
-- : bool = true
-# hasFinal faThreeA ["start";"one"];;
-- : bool = true
+<pre>
+# count (fun x -> x) [];;
+- : int = 0
+# count (fun x -> x) [true];;
+- : int = 1
+# count (fun x -> x) [false];;
+- : int = 0
+# count (fun x -> x) [false;true;false;true];;
+- : int = 2
+# count (fun x -> x > 0) [];;
+- : int = 0
+# count (fun x -> x > 0) [1];;
+- : int = 1
+# count (fun x -> x > 0) [1;-2];;
+- : int = 1
+# count (fun x -> x > 0) [1;-2;3;-4;5];;
+- : int = 3
 </pre>
 </div>
-
-<pre class="code">
-# at_least 0 (fun x -> x) [];;
-- : bool = true
-# at_least 1 (fun x -> x) [];;
-- : bool = false
-# at_least 0 (fun x -> x) [true;true;false];;
-- : bool = true
-# at_least 1 (fun x -> x > 0) [2;3;0];;
-- : bool = true
-# at_least 2 (fun x -> x > 0) [2;3;0];;
-- : bool = true
-# at_least 3 (fun x -> x > 0) [2;3;0];;
-- : bool = false
-</pre>
 	  </li>
 
 	  <li>
-	    <p>Code a function <tt class="code">max_positive</tt> of
+	    <p>Code a function <tt class="code">maxp</tt> of
 	      type <tt class="code">int list -> int</tt>
-	      where <tt>max_positive xs</tt> returns the maximum
-	      positive element in list <tt>xs</tt> if one
+	      where <tt>maxp xs</tt> returns the largest
+	      positive (&ge; 0) element in list <tt>xs</tt> if one
 	      exists, and 0 otherwise.</p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# max_positive [];;
+# maxp [];;
 - : int = 0
-# max_positive [4];;
+# maxp [4];;
 - : int = 4
-# max_positive [4;5];;
+# maxp [4;5];;
 - : int = 5
-# max_positive [5;4];;
+# maxp [5;4];;
 - : int = 5
-# max_positive [4;6;5];;
+# maxp [4;6;5];;
 - : int = 6
-# max_positive [-1;-2;-3];;
+# maxp [4;-6;5];;
+- : int = 5
+# maxp [-1;-2;-3];;
 - : int = 0
 </pre>
 	  </div>
 	  </li>
 
-	  <li>
-	    <p>Code a function <tt class="code">map_funs</tt> of
-	      type <tt>('a -> 'b) list -> 'a -> 'b list</tt>
-	      where <tt>map_funs fs x</tt> returns the results of
-	      applying every function in <tt>fs</tt> to <tt>x</tt>.</p>
-
-<div class="code">
-  <p onClick="toggleShowHide(this)">Show sample output</p>
-<pre class="code">
-# let dbl x = "double of "^(string_of_int x);;
-val dbl : int -> string = <fun>
-# let neg x = "negation of "^(string_of_int x);;
-val neg : int -> string = <fun>
-
-# map_funs [] 3;;
-- : 'a list = []
-# map_funs [dbl] 3;;
-- : string list = ["double of 3"]
-# map_funs [dbl;neg] 3;;
-- : string list = ["double of 3"; "negation of 3"]
-# map_funs [dbl;neg;dbl] 3;;
-- : string list = ["double of 3"; "negation of 3"; "double of 3"]
-# map_funs [(fun x -> x * 2); (fun x -> x * x)] 10;;
-- : int list = [20; 100]
-# map_funs [(fun x -> "+"^x); (fun x -> "-"^x)] "hello";;
-- : string list = ["+hello"; "-hello"]
-</pre>
-	  </div>
-	  </li>
-
 
 	  <li>
-	    <p>Code a function <tt class="code">map_cross</tt> of type
+	    <p>Code a function <tt class="code">mapf</tt> of type
 	      <tt class="code">('a -> 'b) list -> 'a list -> 'b
-		list</tt> where <tt>map_cross fs xs</tt> returns all the results of
+		list</tt> where <tt>mapf fs xs</tt> returns all the results of
 	      applying a function in <tt>fs</tt> to a value
 	      in <tt>xs</tt>. </p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# let dbl x = "double of "^(string_of_int x);;
+# let dbl x = "double "^(string_of_int x);;
 val dbl : int -> string = <fun>
-# let neg x = "negation of "^(string_of_int x);;
+# let neg x = "negation "^(string_of_int x);;
 val neg : int -> string = <fun>
 
-# map_cross [] [];;
+# mapf [] [];;
 - : 'a list = []
-# map_cross [] [1;2;3];;
+# mapf [] [1;2;3];;
 - : 'a list = []
-# map_cross [dbl; neg] [];;
+# mapf [dbl; neg] [];;
 - : string list = []
-# map_cross [dbl] [3];;
-- : string list = ["double of 3"]
-# map_cross [dbl] [1;2;3];;
-- : string list = ["double of 1"; "double of 2"; "double of 3"]
-# map_cross [dbl;neg] [3];;
-- : string list = ["double of 3"; "negation of 3"]
-# map_cross [dbl;neg] [1;2;3];;
+# mapf [dbl] [3];;
+- : string list = ["double 3"]
+# mapf [dbl] [1;2;3];;
+- : string list = ["double 1"; "double 2"; "double 3"]
+# mapf [dbl;neg] [3];;
+- : string list = ["double 3"; "negation 3"]
+# mapf [dbl;neg] [1;2;3];;
 - : string list =
-["double of 1"; "negation of 1"; "double of 2"; "negation of 2"; "double of 3"; "negation of 3"]
-# map_cross [(fun x -> "+"^x);(fun x -> "-"^x)] ["hello";"world"];;
+["double 1"; "negation 1"; "double 2"; "negation 2"; "double 3"; "negation 3"]
+# mapf [(fun x -> "+"^x);(fun x -> "-"^x)] ["hello";"world"];;
 - : string list = ["+hello"; "-hello"; "+world"; "-world"]
 </pre>
 	  </div>
@@ -350,31 +309,60 @@ val neg : int -> string = <fun>
 
 
 	  <li>
-	    <p>Code a function <tt class="code">all_pairings</tt> of type
+	    <p>Code a function <tt class="code">pairs</tt> of type
 	      <tt class="code">'a list -> 'b list -> ('a * 'b)
-	      list</tt> where <tt>all_pairings xs ys</tt> returns all
+	      list</tt> where <tt>pairs xs ys</tt> returns all
 	      the ways of pairing up an element of <tt>xs</tt> with an
 	      element of <tt>ys</tt>.</p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# all_pairings [] [];;
+# pairs [] [];;
 - : ('a * 'b) list = []
-# all_pairings [1;2] [];;
+# pairs [1;2] [];;
 - : (int * 'a) list = []
-# all_pairings [] ["a";"b";"c"];;
+# pairs [] ["a";"b";"c"];;
 - : ('a * string) list = []
-# all_pairings [1] ["a";"b";"c"];;
+# pairs [1] ["a";"b";"c"];;
 - : (int * string) list = [(1, "a"); (1, "b"); (1, "c")]
-# all_pairings [1;2] ["a"];;
+# pairs [1;2] ["a"];;
 - : (int * string) list = [(1, "a"); (2, "a")]
-# all_pairings [1;2] ["a";"b";"c"];;
+# pairs [1;2] ["a";"b";"c"];;
 - : (int * string) list =
 [(1, "a"); (1, "b"); (1, "c"); (2, "a"); (2, "b"); (2, "c")]
 </pre>
 	  </div>
 	  </li>
+
+
+	<li>
+	  <p>Code a function <tt class="code">prepend</tt> of
+	    type <tt class="code">'a -> 'a list list -> 'a list list</tt>
+	    where <tt>preprend x xss</tt> returns the list 
+	    obtained by prepending <tt>x</tt> to every list in <tt>xss</tt>.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# prepend 1 [];;
+- : int list list = []
+# prepend 1 [[]];;
+- : int list list = [[1]]
+# prepend 1 [[66]];;
+- : int list list = [[1; 66]]
+# prepend 1 [[66];[99]];;
+- : int list list = [[1; 66]; [1; 99]]
+# prepend 1 [[66];[99];[]];;
+- : int list list = [[1; 66]; [1; 99]; [1]]
+# prepend 1 [[66];[99];[];[66;99]];;
+- : int list list = [[1; 66]; [1; 99]; [1]; [1; 66; 99]]
+# prepend "+" [["hello";"world"];["goodbye"]];;
+- : string list list = [["+"; "hello"; "world"]; ["+"; "goodbye"]]
+</pre>
+</div>
+
+	</li>
 
 
 	<li>
@@ -403,31 +391,6 @@ val neg : int -> string = <fun>
 
 	</li>
 
-
-	<li>
-	  <p>Code a function <tt class="code">suffixes</tt> of
-	    type <tt class="code">'a list -> 'a list list</tt>
-	    where <tt>suffixes xs</tt> returns the list of all
-	    suffixes of <tt>xs</tt>: if <tt>xs</tt> is <tt>[x1; x2; x3]</tt> then the suffixes of <tt>xs</tt>
-	    are <tt>[x1; x2; x3]</tt>, <tt>[x2; x3]</tt>, <tt>[x3]</tt>, and <tt>[]</tt>. (Note that
-	    the empty list is a suffix of every list.)</p>
-
-<div class="code">
-  <p onClick="toggleShowHide(this)">Show sample output</p>
-<pre class="code">
-# suffixes [];;
-- : 'a list list = [[]]
-# suffixes [1];;
-- : int list list = [[1]; []]
-# suffixes [1;2;3;4];;
-- : int list list = [[1; 2; 3; 4]; [2; 3; 4]; [3; 4]; [4]; []]
-# suffixes ["a";"b";"c"];;
-- : string list list = [["a"; "b"; "c"]; ["b"; "c"]; ["c"]; []]
-</pre>
-</div>
-	</li>
-
-
 	<li>
 	  <p>Code a function <tt class="code">inject</tt> of
 	    type <tt class="code">'a -> 'a list -> 'a list list</tt>
@@ -450,30 +413,26 @@ val neg : int -> string = <fun>
 - : string list list = [["X"; "a"; "b"]; ["a"; "X"; "b"]; ["a"; "b"; "X"]]
 </pre>
 	  </div>
-	  <p><i>
-	    This is probably the most difficult question on all the
-	    homeworks until now. My suggestion: come up with a recursive definition for
-	    <tt>inject</tt>, then complete the rest of this
-	    question. When you're done, come back to this one and try
-	    to write <tt>inject</tt> without explicit recursion. There
-	    are a couple of ways of doing it. If you go the route that
-	    I always go down, you'll notice that at some point you
-	    need information that you do not have, and you'll need to
-	    figure out a way to get that information, somehow. (Yes, I
-	    could be more nebulous, but that would require effort, and
-	    it's late.)</i></p>
+	  <p><i> This is probably the most difficult question on all
+	      the homeworks until now. The easiest way to do it is to
+	      use two <tt>fold_right</tt>, one to augment the original list
+	      with extra information, and the other to compute the
+	      actual result of <tt>inject</tt>.I'll let you figure
+	      out what extra information you might need. </i>
+	  </p>
 
 	</li>
 
 
-	  <li><b>(Bonus question, worth absolutely zero points!)</b>
+	  <li><b>(Bonus question if you thought <tt>inject</tt> was
+	  too easy &mdash; worth absolutely zero points!)</b>
 
 	  <p>Code a function <tt class="code">permutations</tt> of type
 	  <tt class="code">'a list -> 'a list list</tt> where <tt>permutations
 	    xs</tt> returns the list of all permutations
-	    of <tt>xs</tt>. (A permutation of a list is a list
+	    of <tt>xs</tt>. A permutation of a list is a list
 	    containing the exact same elements, but in a different
-	  order, treating repeated elements as distinct.) </p>
+	  order, treating repeated elements as distinct. <b>Hint:</b> use <tt>inject</tt>.</p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
