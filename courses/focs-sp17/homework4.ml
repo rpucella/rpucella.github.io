@@ -275,5 +275,5 @@ let tm_q2_b : string tm = dummyTM
 (* QUESTION 4 *)
 
 
-let binaryAddition : string tm = dummyTM
+let triple: string tm = dummyTM
 
