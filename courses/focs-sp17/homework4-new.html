@@ -502,7 +502,8 @@ val neg : int -> string = <fun>
 - : int list list = [[99; 1; 2]; [1; 99; 2]; [1; 2; 99]]
 # inject 99 [1;2;3;4];;
 - : int list list =
-[[99; 1; 2; 3; 4]; [1; 99; 2; 3; 4]; [1; 2; 99; 3; 4]; [1; 2; 3; 99; 4]; [1; 2; 3; 4; 99]]
+[[99; 1; 2; 3; 4]; [1; 99; 2; 3; 4]; [1; 2; 99; 3; 4]; [1; 2; 3; 99; 4]; 
+ [1; 2; 3; 4; 99]]
 # inject "X" ["a";"b"];;
 - : string list list = [["X"; "a"; "b"]; ["a"; "X"; "b"]; ["a"; "b"; "X"]]
 </pre>
@@ -600,14 +601,18 @@ val neg : int -> string = <fun>
 	  <li> 
 	    <p>
 	      Code
-  functions <tt class="code">acceptConfig</tt>, <tt class="code">rejectConfig</tt>,
-	      and <tt class="code">haltConfig</tt>, each of
+  functions <tt class="code">acceptConfig</tt> and <tt class="code">rejectConfig</tt>
+	      each of
 	      type <tt class="code">'a tm -> 'a config -> bool</tt>
-	      where <tt>acceptConfig m c</tt> (resp., <tt>rejectConfig
-		m c</tt>, <tt>haltConfig m c</tt>)
+	      where <tt>acceptConfig m c</tt> 
   returns <tt>true</tt> if and only if <tt>c</tt> is an accepting
-  (resp., rejecting, halting) configuration for Turing machine 
-	      <tt>m</tt>. 
+	      configuration for Turing machine 
+	      <tt>m</tt>,
+and
+	      <tt>rejectConfig m c</tt> 
+  returns <tt>true</tt> if and only if <tt>c</tt> is a rejecting
+	      configuration for Turing machine 
+	      <tt>m</tt>.
 	    </p>
 
 <pre class="code">
@@ -627,18 +632,22 @@ val neg : int -> string = <fun>
 - : bool = false
 # rejectConfig asbs {state="rej"; before=["b"]; after=[">";"a";"_"]};;
 - : bool = true
-# haltConfig asbs {state="start"; before=[]; after=["_"]};;
-- : bool = false
-# haltConfig asbs {state="q1"; before=[]; after=[">";"a";"_"]};;
-- : bool = false
-# haltConfig asbs {state="acc"; before=["b"]; after=[">";"a";"_"]};;
-- : bool = true
-# haltConfig asbs {state="rej"; before=["b"]; after=[">";"a";"_"]};;
-- : bool = true
 </pre>
 
 	  </li>
 
+	  <li>
+	    <p>Code a function <tt class="code">replace_nth</tt> with
+	      type <tt class="code">'a list -> int -> 'a</tt>
+	      where <tt>replace_nth xs n x</tt> returns a new
+	      list which looks just like <tt>xs</tt> except the
+	      element in <tt>n</tt><sup>th</sup> position
+	      is <tt>x</tt>. (The first element of the list is at
+	      position 0.)</p>
+
+<pre class="code">
+</pre>
+	  </li>
 
 	  <li> 
 	    <p>
@@ -856,78 +865,22 @@ rej     |  X  X  X  X  b [b] /  /
 
         <p>In this question and the next, I will ask you to design Turing
 	  machines. You can test your Turing machines
-	  with the code you wrote in Question 1. </p>
+	  with the code you wrote in Question 2. </p>
 
 	<p>For submission purposes, I ask you to define those Turing
 	  machines as constants using <tt>let</tt> with a fixed
 	  name given below in each question. There is already a
-	  placeholder in <tt>homework5.ml</tt> for those answers. Just
+	  placeholder in <tt>homework4.ml</tt> for those answers. Just
 	  replace the placeholder with your definition.</p>
 
 	<ol class="subquestion">
 
 	  <li><p>
-	      Recall that a palindrome is a string that reads the same
-	      from left to right and from right to left; <tt>cddc</tt>
-	      is a palindrome, as is <tt>ccdcc</tt>.</p>
-
-	    <p>
-	      Design a Turing machine <tt class="code">tm_q2_a</tt>
-	      that decides
-	      the language consisting of all palindromes over the
-	      alphabet <tt>{c,d}</tt>.
-	    </p>
-
-<pre class="code">
-# run tm_q2_a "";;
-start  [>]
-...
-- : bool = true
-# run tm_q2_a "c";;
-start  [>] c 
-...
-- : bool = true
-# run tm_q2_a "cc";;
-start  [>] c  c 
-...
-- : bool = true
-# run tm_q2_a "dd";;
-start  [>] d  d 
-...
-- : bool = true
-# run tm_q2_a "cddc";;
-start  [>] c  d  d  c 
-...
-- : bool = true
-# run tm_q2_a "cdc";;
-start  [>] c  d  c 
-...
-- : bool = true
-# run tm_q2_a "ccdcc";;
-start  [>] c  c  d  c  c 
-...
-- : bool = true
-# run tm_q2_a "ccdccc";;
-start  [>] c  c  d  c  c  c 
-...
-- : bool = false
-# run tm_q2_a "ccdc";;
-start  [>] c  c  d  c 
-...
-- : bool = false
-# run tm_q2_a "dcdc";;
-start  [>] d  c  d  c 
-...
-- : bool = false
-</pre>
-	      
-
-	  <li><p>
 	      Design a Turing machine
-	      <tt class="code">tm_q2_b</tt> that decides
+	      <tt class="code">tm_q2_a</tt> that decides
 	      the language consisting of all strings over the
-	      alphabet <tt>{a,b}</tt> of the
-	      form <tt>b<sup>n</sup>a<sup>3n</sup></tt> for any n&ge;0.
+	      alphabet <tt>{c,d}</tt> of the
+	      form <tt>c<sup>n</sup>d<sup>2n</sup></tt> for any n&ge;0.
 	    </p>
 
 <pre class="code">
@@ -976,6 +929,66 @@ start  [>] a  b  b  b
 ...
 - : bool = false
 </pre>
+
+	  </li>
+
+	  <li>
+
+	    <p>
+	      Design a Turing machine <tt class="code">tm_q2_b</tt>
+	      that decides
+	      the language over alphabet <tt>{c,d}</tt> consisting of
+	      all strings of 
+	      even length with the property that the two middle
+	      symbols of the string are the same (i.e., for all
+	      strings <i>w</i>=<i>w<sub>1</sub>w<sub>2</sub>...w<sub>2n</sub></i> of length <i>2n</i> we
+	      have <i>w<sub>n</sub></i> = <i>w<sub>i+n</sub></i>.
+	    </p>
+
+<pre class="code">
+# run tm_q2_a "";;
+start  [>]
+...
+- : bool = true
+# run tm_q2_a "c";;
+start  [>] c 
+...
+- : bool = true
+# run tm_q2_a "cc";;
+start  [>] c  c 
+...
+- : bool = true
+# run tm_q2_a "dd";;
+start  [>] d  d 
+...
+- : bool = true
+# run tm_q2_a "cddc";;
+start  [>] c  d  d  c 
+...
+- : bool = true
+# run tm_q2_a "cdc";;
+start  [>] c  d  c 
+...
+- : bool = true
+# run tm_q2_a "ccdcc";;
+start  [>] c  c  d  c  c 
+...
+- : bool = true
+# run tm_q2_a "ccdccc";;
+start  [>] c  c  d  c  c  c 
+...
+- : bool = false
+# run tm_q2_a "ccdc";;
+start  [>] c  c  d  c 
+...
+- : bool = false
+# run tm_q2_a "dcdc";;
+start  [>] d  c  d  c 
+...
+- : bool = false
+</pre>
+	      
+	  </li>
 
 	</ol>
 
