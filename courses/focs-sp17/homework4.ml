@@ -265,15 +265,16 @@ let dummyTM = { states = ["x"];
 		delta = (fun (x,y) -> (x,y,0))}
     
 
-let tm_q2_a : string tm = dummyTM
+let tm_q3_a : string tm = dummyTM
 
 
-let tm_q2_b : string tm = dummyTM
+let tm_q3_b : string tm = dummyTM
 
 
 
 (* QUESTION 4 *)
 
 
-let triple: string tm = dummyTM
+let tm_q4_not : string tm = dummyTM
 
+let tm_q4_and : string tm = dummyTM

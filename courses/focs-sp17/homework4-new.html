@@ -264,10 +264,10 @@ and
 </p>
 
 <p>
-Recall from lecture that a configuration records the content of the
-tape of a Turing machine, the current state, and the position of the  
-tape. Type <tt> 'a config</tt> is the type of a configuration, defined
-as follows:</p>
+Recall from lecture that a configuration records the current state of
+a Turing machine, the content of the tape, and the position of the
+tape head. Type <tt> 'a config</tt> is the type of a configuration,
+defined as follows:</p>
 
 <pre>
 type 'a config = { state : 'a;
@@ -569,33 +569,30 @@ val neg : int -> string = <fun>
 	    <p>
 	      Code a function <tt class="code">startConfig</tt> with
 	      type <tt class="code">'a tm -> string -> 'a config</tt> 
-	      where <tt>startConfig m w</tt> yields the starting
+	      where <tt>startConfig m w</tt> returns the starting
 	      configuration for Turing machine <tt>m</tt>
-	      with <tt>w</tt> as input string.  (Note that OCaml 
-	      may report the type <tt>symbol</tt> as <tt>string</tt>
-	      &mdash; that's okay, since they are equivalent. So don't
-	      worry about that.) 
+	      with <tt>w</tt> as input string.
 	    </p>
 
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
 # startConfig asbs "";;
-- : string config = {state = "start"; before = []; after = [">"]}
+- : string config = {state = "start"; tape = [">"]; position = 0}
 # startConfig asbs "ab";;
-- : string config = {state = "start"; before = []; after = [">"; "a"; "b"]}
-# startConfig asbs "aaaabbbaa";;
-- : string config =
-{state = "start"; before = [];
- after = [">"; "a"; "a"; "a"; "a"; "b"; "b"; "b"; "a"; "a"]}
+- : string config = {state = "start"; tape = [">"; "a"; "b"]; position = 0}
+# startConfig asbs "aaabbbaa";;
+- : string config = {state = "start"; tape = [">"; "a"; "a"; "a"; "b"; "b"; "b"; "a"; "a"];
+                     position = 0}
 # startConfig anbn "";;
-- : string config = {state = "start"; before = []; after = ["|"]}
+- : string config = {state = "start"; tape = ["|"]; position = 0}
 # startConfig anbn "aabb";;
-- : string config =
-{state = "start"; before = []; after = ["|"; "a"; "a"; "b"; "b"]}
-# startConfig anbn "aabbaa";;
-- : string config =
-{state = "start"; before = []; after = ["|"; "a"; "a"; "b"; "b"; "a"; "a"]}
+- : string config = {state = "start"; tape = ["|"; "a"; "a"; "b"; "b"]; position = 0}
+# startConfig anbn "aabbaa";;;
+- : string config = {state = "start"; tape = ["|"; "a"; "a"; "b"; "b"; "a"; "a"];
+                     position = 0}
 </pre>
-
+</div>
 	  </li>
 
 	  <li> 
@@ -615,25 +612,27 @@ and
 	      <tt>m</tt>.
 	    </p>
 
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# acceptConfig asbs {state="start"; before=[]; after=["_"]};;
+# acceptConfig asbs {state="start"; tape=["_"]; position=0};;
 - : bool = false
-# acceptConfig asbs {state="q1"; before=[]; after=[">";"a";"_"]};;
+# acceptConfig asbs {state="q1"; tape=[">";"a";"_"]; position=0};;
 - : bool = false
-# acceptConfig asbs {state="acc"; before=["b"]; after=[">";"a";"_"]};;
+# acceptConfig asbs {state="acc"; tape=["b";">";"a";"_"]; position=1};;
 - : bool = true
-# acceptConfig asbs {state="rej"; before=["b"]; after=[">";"a";"_"]};;
+# acceptConfig asbs {state="rej"; tape=["b";">";"a";"_"]; position=1};;
 - : bool = false
-# rejectConfig asbs {state="start"; before=[]; after=["_"]};;
+# rejectConfig asbs {state="start"; tape=["_"]; position=0};;
 - : bool = false
-# rejectConfig asbs {state="q1"; before=[]; after=[">";"a";"_"]};;
+# rejectConfig asbs {state="q1"; tape=[">";"a";"_"]; position=0};;
 - : bool = false
-# rejectConfig asbs {state="acc"; before=["b"]; after=[">";"a";"_"]};;
+# rejectConfig asbs {state="acc"; tape=["b";">";"a";"_"]; position=1};;
 - : bool = false
-# rejectConfig asbs {state="rej"; before=["b"]; after=[">";"a";"_"]};;
+# rejectConfig asbs {state="rej"; tape=["b";">";"a";"_"]; position=1};;
 - : bool = true
 </pre>
-
+</div>
 	  </li>
 
 	  <li>
@@ -645,8 +644,23 @@ and
 	      is <tt>x</tt>. (The first element of the list is at
 	      position 0.)</p>
 
+	    <p>If <tt>n</tt> is not a valid position in the list, the list should be returned unchanged.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
+# replace_nth [] 0 "x";;
+- : string list = []
+# replace_nth ["a";"b";"c";"d"] 0 "x";;
+- : string list = ["x"; "b"; "c"; "d"]
+# replace_nth ["a";"b";"c";"d"] 1 "x";;
+- : string list = ["a"; "x"; "c"; "d"]
+# replace_nth ["a";"b";"c";"d"] 2 "x";;
+- : string list = ["a"; "b"; "x"; "d"]
+# replace_nth ["a";"b";"c";"d"] 3 "x";;
+- : string list = ["a"; "b"; "c"; "x"]
 </pre>
+</div>
 	  </li>
 
 	  <li> 
@@ -657,27 +671,29 @@ and
 	      obtained by taking one step of Turing machine <tt>m</tt> from
 	      configuration <tt>c</tt>. 
 	      Function <tt>step m</tt> is basically the relation
-	      <tt>C    &#8594;<sup>1</sup> D</tt> described in lecture.</p>
+	      <tt>C &#8594; D</tt> described in lecture.</p>
 
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# step asbs {state="start"; before=[]; after=["_"]};;
-- : string config = {state = "acc"; before = ["_"]; after = []}
-# step asbs {state="start"; before=[">";"a"]; after=["b";"b"]};;
-- : string config = {state = "q1"; before = [">"; "a"; "b"]; after = ["b"]}
-# step asbs {state="q1"; before=[">";"a"]; after=["a";"b"]};;
-- : string config = {state = "rej"; before = [">"; "a"; "a"]; after = ["b"]}
-# step asbs {state="q1"; before=[">";"a"]; after=["b";"b"]};;
-- : string config = {state = "q1"; before = [">"; "a"; "b"]; after = ["b"]}
-# step anbn {state="q1"; before=["|";"a";"b"]; after=["/"]};;
-- : string config = {state = "q2"; before = ["|"; "a"; "b"; "/"]; after = []}
-# step anbn {state="q2"; before=["|";"a";"b"]; after=["/"]};;
-- : string config = {state = "q2"; before = ["|"; "a"]; after = ["b"; "/"]}
-# step anbn {state="q3"; before=["|"]; after=["a";"b"]};;
-- : string config = {state = "q4"; before = ["|"; "X"]; after = ["b"]}
-# step anbn {state="q4"; before=["|";"X"]; after=["b"]};;
-- : string config = {state = "q2"; before = ["|"; "X"; "X"]; after = []}
+# step asbs {state="start"; tape=["_"]; position=0};;
+- : string config = {state = "acc"; tape = ["_"; "_"]; position = 1}
+# step asbs {state="start"; tape=[">";"a";"b";"b"]; position=2};;
+- : string config = {state = "q1"; tape = [">"; "a"; "b"; "b"]; position = 3}
+# step asbs {state="q1"; tape=[">";"a";"a";"b"]; position=2};;
+- : string config = {state = "rej"; tape = [">"; "a"; "a"; "b"]; position = 3}
+# step asbs {state="q1"; tape=[">";"a";"b";"b"]; position=2};;
+- : string config = {state = "q1"; tape = [">"; "a"; "b"; "b"]; position = 3}
+# step anbn {state="q1"; tape=["|";"a";"b";"/"]; position=3};;
+- : string config = {state = "q2"; tape = ["|"; "a"; "b"; "/"; "/"]; position = 4}
+# step anbn {state="q2"; tape=["|";"a";"b";"/"]; position=3};;
+- : string config = {state = "q2"; tape = ["|"; "a"; "b"; "/"]; position = 2}
+# step anbn {state="q3"; tape=["|";"a";"b"]; position=1};;
+- : string config = {state = "q4"; tape = ["|"; "X"; "b"]; position = 2}
+# step anbn {state="q4"; tape=["|";"X";"b"]; position=2};;
+- : string config = {state = "q2"; tape = ["|"; "X"; "X"; "/"]; position = 3}
 </pre>
-
+</div>
 	  </li>
 
 
@@ -692,7 +708,7 @@ and
 	      rejects input string <tt>w</tt>. The 
 	      function should, as a side effect, also print the sequence of
 	      configurations that Turing machine <tt>m</tt> goes
-	      through during its computation. 
+	      through during its computation. This is going to help you debug your Turing machines in the following questions.
 	    </p>
 
 	    <p>
@@ -706,6 +722,8 @@ and
 	      value <tt>v</tt>.  
 	    </p>
 
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
 # run asbs "aab";;
 start  [>] a  a  b 
@@ -851,7 +869,7 @@ q3      |  X  X  X  X [b] b  /  /
 rej     |  X  X  X  X  b [b] /  / 
 - : bool = false
 </pre>
-
+</div>
 	  </li>
 
 	</ol>
@@ -865,7 +883,11 @@ rej     |  X  X  X  X  b [b] /  /
 
         <p>In this question and the next, I will ask you to design Turing
 	  machines. You can test your Turing machines
-	  with the code you wrote in Question 2. </p>
+	  with the code you wrote in Question 2. Because of the type
+	  of <tt>run</tt> requires Turing machines with states as
+	  strings (so that they can be printed out during execution
+	  for ease of debugging!), the machines in this question and
+	  the next should be of type <tt>string tm</tt> </p>
 
 	<p>For submission purposes, I ask you to define those Turing
 	  machines as constants using <tt>let</tt> with a fixed
@@ -877,117 +899,107 @@ rej     |  X  X  X  X  b [b] /  /
 
 	  <li><p>
 	      Design a Turing machine
-	      <tt class="code">tm_q2_a</tt> that decides
+	      <tt class="code">tm_q3_a</tt> that decides
 	      the language consisting of all strings over the
 	      alphabet <tt>{c,d}</tt> of the
 	      form <tt>c<sup>n</sup>d<sup>2n</sup></tt> for any n&ge;0.
 	    </p>
 
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# run tm_q2_b "";;
+(* This sample output does not show traces *)
+
+# run tm_q3_a "";;
 start  [>]
-...
 - : bool = true
-# run tm_q2_b "baaa";;
-start  [>] b  a  a  a 
-...
+# run tm_q3_a "cdd";;
+start  [>] c  d  d
 - : bool = true
-# run tm_q2_b "bbaaaaaa";;
-start  [>] b  b  a  a  a  a  a  a 
-...
+# run tm_q3_a "ccdddd";;
+start  [>] c  c  d  d  d  d
 - : bool = true
-# run tm_q2_b "bbbaaaaaaaaa";;
-start  [>] b  b  b  a  a  a  a  a  a  a  a  a 
-...
+# run tm_q3_a "cccdddddd";;
+start  [>] c  c  c  d  d  d  d  d  d
 - : bool = true
-# run tm_q2_b "b";;
-start  [>] b 
-...
+# run tm_q3_a "c";;
+start  [>] c 
 - : bool = false
-# run tm_q2_b "ba";;
-start  [>] b  a 
-...
+# run tm_q3_a "cd";;
+start  [>] c  d 
 - : bool = false
-# run tm_q2_b "baa";;
-start  [>] b  a  a 
-...
+# run tm_q3_a "cddd";;
+start  [>] c  d  d d
 - : bool = false
-# run tm_q2_b "baaaa";;
-start  [>] b  a  a  a  a 
-...
+# run tm_q3_a "ccddddd";;
+start  [>] c  c  d  d  d  d  d
 - : bool = false
-# run tm_q2_b "bbaaaaaaa";;
-start  [>] b  b  a  a  a  a  a  a  a 
-...
+# run tm_q3_a "dd";;
+start  [>] d  d 
 - : bool = false
-# run tm_q2_b "aaa";;
-start  [>] a  a  a 
-...
-- : bool = false
-# run tm_q2_b "abbb";;
-start  [>] a  b  b  b 
-...
+# run tm_q3_a "dcc";;
+start  [>] d  c  c
 - : bool = false
 </pre>
-
+</div>
 	  </li>
 
 	  <li>
 
 	    <p>
-	      Design a Turing machine <tt class="code">tm_q2_b</tt>
+	      Design a Turing machine <tt class="code">tm_q3_b</tt>
 	      that decides
 	      the language over alphabet <tt>{c,d}</tt> consisting of
 	      all strings of 
 	      even length with the property that the two middle
 	      symbols of the string are the same (i.e., for all
-	      strings <i>w</i>=<i>w<sub>1</sub>w<sub>2</sub>...w<sub>2n</sub></i> of length <i>2n</i> we
-	      have <i>w<sub>n</sub></i> = <i>w<sub>i+n</sub></i>.
+	      strings <i>w</i>=<i>a<sub>1</sub>a<sub>2</sub>...a<sub>2n</sub></i> of length <i>2n</i> we
+	      have <i>a<sub>n</sub></i> = <i>a<sub>n+1</sub></i>).
 	    </p>
 
-<pre class="code">
-# run tm_q2_a "";;
-start  [>]
-...
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre class="code">
+(* This sample output does not show traces *)
+
+# run tm_q3_b "cc";;
+start  [>] c  c
 - : bool = true
-# run tm_q2_a "c";;
+# run tm_q3_b "dd";;
+start  [>] d  d
+- : bool = true
+# run tm_q3_b "cccd";;
+start  [>] c  c  c  d 
+- : bool = true
+# run tm_q3_b "cdddcd";;
+start  [>] c  d  d  d  c  d
+- : bool = true
+# run tm_q3_b "cccccddd";;
+start  [>] c  c  c  c  c  d  d  d 
+- : bool = true
+# run tm_q3_b "dcdcdddccc";;
+start  [>] d  c  d  c  d  d  d  c  c  c
+- : bool = true
+# run tm_q3_b "";;
+start  [>] 
+- : bool = false
+# run tm_q3_b "c";;
 start  [>] c 
-...
-- : bool = true
-# run tm_q2_a "cc";;
-start  [>] c  c 
-...
-- : bool = true
-# run tm_q2_a "dd";;
-start  [>] d  d 
-...
-- : bool = true
-# run tm_q2_a "cddc";;
-start  [>] c  d  d  c 
-...
-- : bool = true
-# run tm_q2_a "cdc";;
-start  [>] c  d  c 
-...
-- : bool = true
-# run tm_q2_a "ccdcc";;
-start  [>] c  c  d  c  c 
-...
-- : bool = true
-# run tm_q2_a "ccdccc";;
-start  [>] c  c  d  c  c  c 
-...
 - : bool = false
-# run tm_q2_a "ccdc";;
-start  [>] c  c  d  c 
-...
+# run tm_q3_b "dcd";;
+start  [>] d  c  d
 - : bool = false
-# run tm_q2_a "dcdc";;
-start  [>] d  c  d  c 
-...
+# run tm_q3_b "dcdd";;
+start  [>] d  c  d  d
+- : bool = false
+# run tm_q3_b "cdcddcd";;
+start  [>] c  d  c  d  d  c  d
+- : bool = false
+# run tm_q3_b "cdcdcdcd";;
+start  [>] c  d  c  d  c  d  c  d
 - : bool = false
 </pre>
-	      
+</div>	      
 	  </li>
 
 	</ol>
@@ -995,91 +1007,134 @@ start  [>] d  c  d  c
 
       </li>
 
-      <li> <p><b>Triple</b></p>
+      <li> <p><b>Boolean Operations</b></p>
 
-	  <p>
-	    Consider the language <i>Triple</i> of all strings over
-	    an alphabet {0,1,#} of the
-	    form <tt><i>u</i>#<i>v</i></tt>, where 
-	    <i>u</i> and <i>v</i>> are nonempty strings over
-	    {0,1} all of the same length such
-	    that <i>u</i> is three times <i>v</i> when viewed as binary
-	    numbers.</p>
+	<ol class="subquestion">
 
-	  <p>Design a Turing machine <tt class="code">triple</tt>
-	    deciding language <i>Triple</i>. </p>
+	  <li>
+	    <p>
+	      Consider the language <i>NOT</i> of all strings over
+	      an alphabet {0,1,#} of the
+	      form <tt><i>u</i>#<i>v</i></tt>, where 
+	      <i>u</i> and <i>v</i> are nonempty strings over {0,1}
+	      all of the same length such that <i>u</i> is the
+	      pointwise <i>not</i> of <i>v:</i> if
+	      the <i>i<sup>th</sup></i> bit of <i>u</i> is <i>b</i> then the
+	      <i>i<sup>th</sup></i> bit of <i>v</i> is <i>&not;b</i>,
+	      where &not;0 is 1 and &not;1 is 0.</p>
 
+	  <p>Design a Turing machine <tt class="code">tm_q4_not</tt>
+	    deciding language <i>NOT</i>. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# run binaryAddition "";;
-start  [>] 
-...
-- : bool = false
-# run binaryAddition "##";;
-start  [>] # # 
-...
-- : bool = false
-# run binaryAddition "000";;
-start  [>] 0 0 0 
-...
-- : bool = false
-# run binaryAddition "000#000";;
-start  [>] 0 0 0 # 0 0 0 
-...
-- : bool = false
-# run binaryAddition "000##000";;
-start  [>] 0 0 0 # # 0 0 0 
-...
-- : bool = false
-# run binaryAddition "000#000#000";;
-start  [>] 0 0 0 # 0 0 0 # 0 0 0 
-...
-- : bool = true
-# run binaryAddition "001#000#001";;
-start  [>] 0 0 1 # 0 0 0 # 0 0 1 
-...
-- : bool = true
-# run binaryAddition "000#001#000";;
-start  [>] 0 0 1 # 0 0 0 # 0 0 0 
-...
-- : bool = false
-# run binaryAddition "000#001#001";;
-start  [>] 0 0 1 # 0 0 1 # 0 0 0 
-...
-- : bool = true
-# run binaryAddition "001#000#011";;
-start  [>] 0 0 1 # 0 0 0 # 0 1 1
-...
-- : bool = false
-# run binaryAddition "001#001#010";;
-start  [>] 0 0 1 # 0 0 1 # 0 1 0 
-...
-- : bool = true
-# run binaryAddition "001#001#011";;
-start  [>] 0 0 1 # 0 0 1 # 0 1 1 
-...
-- : bool = false
-# run binaryAddition "001#001#110";;
-start  [>] 0 0 1 # 0 0 1 # 1 1 0 
-...
-- : bool = false
-# run binaryAddition "101#001#110";;
-start  [>] 1 0 1 # 0 0 1 # 1 1 0 
-...
-- : bool = true
-# run binaryAddition "101#010#111";;
-start  [>] 1 0 1 # 0 1 0 # 1 1 1 
-...
-- : bool = true
-# run binaryAddition "00111#10101#11110";;
-start  [>] 0 0 1 1 1 # 1 0 1 0 1 # 1 1 1 1 0 
-...
-- : bool = false
-# run binaryAddition "00111#10101#11100";;
-start  [>] 0 0 1 1 1 # 1 0 1 0 1 # 1 1 1 0 0 
-...
-- : bool = true
-</pre>
+(* This sample output does not show traces *)
 
+# run tm_q4_not "0#1";;
+start  [>] 0  #  1
+- : bool = true
+# run tm_q4_not "000#111";;
+start  [>] 0  0  0  #  1  1  1
+- : bool = true
+# run tm_q4_not "010#101";;
+start  [>] 0  1  0  #  1  0  1
+- : bool = true
+# run tm_q4_not "010101#101010";;
+start  [>] 0  1  0  1  0  1  #  1  0  1  0  1  0
+- : bool = true
+# run tm_q4_not "000111000#111000111";;
+start  [>] 0  0  0  1  1  1  0  0  0  #  1  1  1  0  0  0  1  1  1
+- : bool = true
+# run tm_q4_not "0#1#01";;
+start  [>] 0  #  1  #  0
+- : bool = false
+# run tm_q4_not "0#11";;
+start  [>] 0  #  1  1
+- : bool = false
+# run tm_q4_not "00#1";;
+start  [>] 0  0  #  1
+- : bool = false
+# run tm_q4_not "1#1";;
+start  [>] 1  #  1
+- : bool = false
+# run tm_q4_not "0#0";;
+start  [>] 0  #  0
+- : bool = false
+# run tm_q4_not "010#100";;
+start  [>] 0  1  0  #  1  0  0
+- : bool = false
+# run tm_q4_not "010#001";;
+start  [>] 0  1  0  #  0  0  1
+- : bool = false
+</pre>
+</div>
+	  </li>
+
+
+	  <li>
+	    <p>
+	      Consider the language <i>AND</i> of all strings over
+	      an alphabet {0,1,#} of the
+	      form <tt><i>u</i>#<i>v</i>#<i>w</i></tt>, where 
+	      <i>u</i>, <i>v</i>, and <i>w</i> are nonempty strings over {0,1}
+	      all of the same length such that <i>w</i> is the
+	      pointwise <i>and</i> of <i>u</i> and <i>v:</i> if
+	      the <i>i<sup>th</sup></i> bit of <i>u</i>
+	      is <i>b<sub>1</sub></i> and
+	      the <i>i<sup>th</sup></i> bit of <i>v</i>
+	      is <i>b<sub>2</sub></i> then the
+	      <i>i<sup>th</sup></i> bit of <i>w</i>
+	      is <i>b<sub>1</sub></i> &and; <i>b<sub>2</sub></i>,
+	      where <i>x</i> &and; <i>y</i> is 1 when both <i>x</i>
+	      and <i>y</i> are 1, and 0 otherwise.</p>
+
+	  <p>Design a Turing machine <tt class="code">tm_q4_and</tt>
+	    deciding language <i>AND</i>. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+(* This sample output does not show traces *)
+
+# run tm_q4_and "0#0#0";;
+start  [>] 0  #  0  #  0
+- : bool = true
+# run tm_q4_and "0#1#0";;
+start  [>] 0  #  1  #  0
+- : bool = true
+# run tm_q4_and "1#0#0";;
+start  [>] 1  #  0  #  0
+- : bool = true
+# run tm_q4_and "1#1#1";;
+start  [>] 1  #  1  #  1
+- : bool = true
+# run tm_q4_and "101#010#000";;
+start  [>] 1  0  1  #  0  1  0  #  0  0  0
+- : bool = true
+# run tm_q4_and "1110#0111#0110";;
+start  [>] 1  1  1  0  #  0  1  1  1  #  0  1  1  0
+- : bool = true
+# run tm_q4_and "0#0"
+start  [>] 0  #  0
+- : bool = false
+# run tm_q4_and "0#01#1"
+start  [>] 0  #  0  1  #  1
+- : bool = false
+# run tm_q4_and "00#11#11"
+start  [>] 0  0  #  1  1  #  1  1
+- : bool = false
+# run tm_q4_and "001#001#000"
+start  [>] 0  0  1  #  0  0  1  #  0  0  0
+- : bool = false
+# run tm_q4_and "001#001#011"
+start  [>] 0  0  1  #  0  0  1  #  0  1  1
+- : bool = false
+</pre>
+</div>
+	  </li>
+
+	</ol>
 
 
       </li>
