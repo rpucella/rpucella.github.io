@@ -102,7 +102,7 @@
 	<li><a class="scrollto" href="#announcements">Announcements</a></li>
 	<li><a class="scrollto" href="#info">Course Info</a></li>
 	<li><a class="scrollto" href="#lectures">Lectures</a></li>
-	<li><a class="scrollto" href="#homeworks">Homeworks</a></li>
+	<li><a class="scrollto" href="#sections">Sections</a></li>
       </ul>
     </div>
 
@@ -138,7 +138,7 @@
     <div class="section" id="info">
       <h3>Course Information</h3>
 
-      <p><b>Prerequisites:</b> CS 51. CS 121 is recommended. (1) this is <b>not</b> an introduction to programming; you should already know how to program, ideally in at least couple of languages; (2) we'll be doing math &mdash; you must be very comfortable with recursion, proofs, basic mathematical ideas and notations, including sets, relations, functions, and <b>especially</b> induction.</p> 
+      <p><b>Prerequisites:</b> CS 51. CS 121 is recommended. (1) this is <b>not</b> an introduction to programming; you should already know how to program, ideally in at least couple of languages; (2) we'll be doing math &mdash; you must be very comfortable with recursion, proofs, basic mathematical ideas and notations, including sets, relations, functions, and especially induction.</p> 
 
 
       <p><b>Instructor:</b> <a href="http://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x73;&#x65;&#x61;&#x73;&#x2E;&#x68;&#x61;&#x72;&#x76;&#x61;&#x72;&#x64;&#x2E;&#x65;&#x64;&#x75;)</p>
@@ -228,6 +228,13 @@ Here are a couple of reasonable books on OCaml that you might
 	up to 48 hours to respond. 
       </p>
 
+<p><b>Assignments:</b>
+Assignments are available through <a href="https://canvas.harvard.edu">Canvas</a>.
+</p>
+
+
+
+
      </div>
 
 
@@ -246,14 +253,15 @@ Here are a couple of reasonable books on OCaml that you might
 	<table class="schedule">
 	  <tr>
 	    <th>When</th>
-	    <th style="width:40%;">What</th>
-	    <th style="width:25%;">Readings</th>
+	    <th style="width:30%;">What</th>
+	    <th style="width:20%;">Readings</th>
 	    <th style="width:25%;">Notes</th>
+	    <th style="width:15%;">Assignments</th>
 	  </tr>
 	  <tr>
 	    <td>Jan 24</td>
 	    <td rowspan="5">Operational semantics<br>(Small-step, Large-step)<br>Induction principles<br>IMP</td>
-	    <td rowspan="5">Winskell 2,3,4; Pierce 2.4,3; Harper 2</td>
+	    <td rowspan="5">Winskell 2,3,4<br>Pierce 2.4,3<br>Harper 2</td>
 	    <td rowspan="5">- <a href="semantics.pdf">Notes on Semantics</a><br>
 	      - <a href="induction.pdf">Proving the induction principle</a></td>
 	  </tr>
@@ -264,6 +272,7 @@ Here are a couple of reasonable books on OCaml that you might
 
 	  <tr>
 	    <td>Jan 31</td>
+	    <td>Asg 1 out</td>
 	  </tr>
 
 	  <tr>
@@ -277,10 +286,14 @@ Here are a couple of reasonable books on OCaml that you might
 	  <tr>
 	    <td>Feb 14</td>
 	    <td rowspan="2">Denotational semantics</td>
+	    <td rowspan="2">Winskell 5<br>Mitchell 4.3</td>
+	    <td rowspan="2"></td>
 	  </tr>
 
 	  <tr>
 	    <td>Feb 16</td>
+	    <td>Asg 1 due<br>Asg 2 out</td>
+	    
 	  </tr>
 
 	</table>
@@ -294,38 +307,39 @@ Here are a couple of reasonable books on OCaml that you might
 	<table class="schedule">
 	  <tr>
 	    <th>When</th>
-	    <th style="width:40%;">What</th>
-	    <th style="width:25%;">Readings</th>
+	    <th style="width:30%;">What</th>
+	    <th style="width:20%;">Readings</th>
 	    <th style="width:25%;">Notes</th>
-	  </tr>
-
-	  <tr class="not-yet">
-	    <td>Feb 14</td>
-	    <td>Lambda calculus</td>
-	  </tr>
-
-	  <tr class="not-yet">
-	    <td>Feb 16</td>
-	    <td>Encodings and recursion</td>
+	    <th style="width:15%;">Assignments</th>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Feb 21</td>
-	    <td>Definitional translations</td>
+	    <td rowspan="5">Lambda calculus<br>Encodings and recursion<br>Definitional translations<br>References and continuations<br>
+Denotational semantics</td>
+	    <td rowspan="5"></td>
+	    <td rowspan="5"></td>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Feb 23</td>
-	    <td>Denotational semantics of lambda calculus</td>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Feb 28</td>
-	    <td>References and continuations</td>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Mar 2</td>
+	    <td>Asg 2 due (Mar 3)<br>Asg 3 out</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Mar 7</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Mar 9</td>
 	    <td>MIDTERM EXAMINATION</td>
 	  </tr>
 
@@ -338,44 +352,49 @@ Here are a couple of reasonable books on OCaml that you might
 	<table class="schedule">
 	  <tr>
 	    <th>When</th>
-	    <th style="width:40%;">What</th>
-	    <th style="width:25%;">Readings</th>
+	    <th style="width:30%;">What</th>
+	    <th style="width:20%;">Readings</th>
 	    <th style="width:25%;">Notes</th>
-	  </tr>
-
-	  <tr class="not-yet">
-	    <td>Mar 7</td>
-	    <td>Simply-typed lambda calculus (1)</td>
-	  </tr>
-
-	  <tr class="not-yet">
-	    <td>Mar 9</td>
-	    <td>Simply-typed lambda calculus (2)</td>
+	    <th style="width:15%;">Assignments</th>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Mar 21</td>
-	    <td>Type inference</td>
+	    <td rowspan="7">Simply-typed lambda calculus<br>
+	    Type inference<br>
+	    Parametric polymorphism<br>
+	    Records, subtyping<br>
+	    Curry-Howard isomorphism<br>
+	    Substructural type systems<br>
+	    Algebraic structures</td>
+	    <td rowspan="7"></td>
+	    <td rowspan="7"></td>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Mar 23</td>
-	    <td>Parametric polymorphism, records, subtyping</td>
+	    <td>Asg 3 due<br>Asg 4 out</td>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Mar 28</td>
-	    <td>Curry-Howard isomorphism</td>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Mar 30</td>
-	    <td>Substructural type systems</td>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Apr 4</td>
-	    <td>Algebraic structures</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Apr 6 </td>
+	    <td>Asg 4 due<br>Asg 5 out</td>
+	  </tr>
+
+	  <tr class="not-yet">
+	    <td>Apr 11</td>
 	  </tr>
 
 	</table>
@@ -386,25 +405,22 @@ Here are a couple of reasonable books on OCaml that you might
 	<table class="schedule">
 	  <tr>
 	    <th>When</th>
-	    <th style="width:40%;">What</th>
-	    <th style="width:25%;">Readings</th>
+	    <th style="width:30%;">What</th>
+	    <th style="width:20%;">Readings</th>
 	    <th style="width:25%;">Notes</th>
+	    <th style="width:15%;">Assignments</th>
 	  </tr>
 	
-	  <tr class="not-yet">
-	    <td>Apr 6</td>
-	  </tr>
-	
-	  <tr class="not-yet">
-	    <td>Apr 11</td>
-	  </tr>
-
 	  <tr class="not-yet">
 	    <td>Apr 13</td>
+	    <td rowspan="4"></td>
+	    <td rowspan="4"></td>
+	    <td rowspan="4"></td>
 	  </tr>
 
 	  <tr class="not-yet">
 	    <td>Apr 18</td>
+	    <td>Asg 5 due<br>Asg 6 out</td>
 	  </tr>
 
 	  <tr class="not-yet">
@@ -413,9 +429,12 @@ Here are a couple of reasonable books on OCaml that you might
 
 	  <tr class="not-yet">
 	    <td>Apr 25</td>
+	    <td>Asg 6 due</td>
 	  </tr>
 
 	</table>
+
+	<p>&nbsp;</p>
 
       </ul>
 
@@ -424,10 +443,18 @@ Here are a couple of reasonable books on OCaml that you might
 
 
     <hr class="section">
-    <div class="section" id="homeworks">
-      <h3>Homeworks</h3>
+    <div class="section" id="sections">
+      <h3>Sections</h3>
 
-      <p>Homeworks are available through <a href="https://canvas.harvard.edu">Canvas</a>.</p>
+      <p>We have recitation sections every Friday 14:00-15:00 in Pierce 100f.</p>
+
+	<table class="schedule">
+	  <tr>
+	    <th>When</th>
+	    <th style="width:70%;">Notes</th>
+	  </tr>
+	</table>
+
 
     </div>
 
