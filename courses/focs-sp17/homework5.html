@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 5</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+/*           background: #e6e6e6; */
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+      
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+      ol.question > li {
+      font-weight: bold;
+      }
+
+      ol.question > li > * {
+      font-weight: normal;
+      }
+      
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP17</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 5</h1>
+    
+    <p class="subtitle">Due date: Friday, ?? (23:59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists your <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework5.ml"><tt>homework5.ml</tt></a> provided.</p>
+
+    <p>Please <b>do not change the types in the signature of the
+	function stubs I provide</b>. Doing so will make it
+	impossible to load your code into the testing infrastructure,
+      and make me unhappy.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+<!--      <li>Download the --
+  --      file <a href="hw3-checker.ml"><tt>hw3-checker.ml</tt></a> --
+  --      into the same directory as your homework solution.</li> -->
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use
+      "homework5.ml";;</tt></li>
+      <li>If there are any error, do not submit. I can't test what I
+	can't <tt>#use</tt>.</li>
+<!--      <li>Load the homework checker via <tt>#use "hw3-checker.ml";;</tt></li>
+      <li>The homework checker checks that you've implemented all
+      functions (or provided stubs for them) and that those functions
+      have the type that I asked you to give them. If the checker says
+      your types are OK, then you're fine. If the checker gives you an
+      error, fix it. If you believe that the checker gives you an
+      error wrongly, send me an email.</li> -->
+      <li>When you're ready to submit, send an email with your
+      file <tt>homework5.ml</tt> as an attachment
+      to <tt>focs.sp17@gmail.com</tt> with subject <i>Homework 5
+      submission</i>.</li> 
+    </ul>
+
+ <!--
+    <hr>
+
+    <p class="subtitle">Updates</p>
+    <ul class="simple">
+      <li>Feb 17: Questions 2 to 4 added. Note that I've made some
+      small changes to <tt>homework4.ml</tt> pertaining to questions 2
+      to 4, so <a href="homework4.ml"><b>I will ask you to download
+      the latest version</b></a>. If you already have solutions to
+      question 1 (which I hope you have!) you should simply transfer
+      your answers to the new file. It'll make everything easier. I
+      apologize about the minor complexities this causes.</li> 
+    </ul>
+    -->
+ 
+    <hr>
+
+
+    <p>For this homework, we use the same type of Turing machines as
+      in Homework 5:</p>
+
+<pre>
+type symbol = string
+
+type 'a tm = { states : 'a list;
+	       input_alphabet : symbol list;
+	       tape_alphabet : symbol list;
+	       left_marker : symbol;
+	       blank : symbol;
+	       delta : ('a * symbol) -> ('a * symbol * int);
+	       start : 'a;
+	       accept : 'a;
+	       reject : 'a }
+</pre>
+
+    <p>I've provided you with a function <tt>run</tt> to execute those Turing machines. As in
+      Homework 5, the only types of Turing machines <tt>run</tt> can
+      execute are of type <tt>string tm</tt>. That's because the
+      Turing machines prints information such as the state it's in at
+      every step, and that forces the states to be something specific,
+      here, strings. (We're going to fix that problem here, among other
+      things.) </p>
+
+    <p>In this homework, we'll explore a slightly easier way to program Turing
+      machines.</p>
+
+<p>
+Depending on how you implemented the Turing machine for negation and
+conjunction in the last question of Homework 4, you probably noticed that there
+was some redundancy in the state transitions. In particular, in the
+case of negation, when finding a 0 on the left, you had to match a 1
+on the right, and when finding a 1 on the left, you had to match a 0
+on the right. The logic in both cases was the same, but you needed
+distinct states to implement that logic for the 0 case and for the 1
+case &mdash; intuitively, the states had to remember whether you had seen a 0
+   or a 1. This was even worse in the conjunction case, where you had
+to remember the two bits you had seen before knowing what to match on
+the right.
+We can make it easier to express that kind of structure when writing
+the transition function of a Turing machine by making encoding this
+kind of information into the states easier.
+</p>
+
+<p>
+To illustrate, let's consider a different language. Consider
+the language <i>Add1</i>, consisting of all strings of the
+form <tt><i>u</i><i>#v</i></tt> where <tt><i>u</i></tt>
+and <tt><i>v</i></tt> are non-empty strings of the same length over <tt>{0,1}</tt> and
+<tt><i>v</i></tt> is <tt><i>u</i></tt>+1 in binary. The Turing machine
+implementing this language has the same structure as the Turing
+machine
+you implemented for binary negation, but shares similar
+features. In particular, you need to match a symbol after
+the <tt>#</tt> that depends on the symbol you saw before
+the <tt>#</tt>, and you additionally need to remember a carry in some cases. 
+</p>
+
+<p>
+A possible structure for the Turing machine is as follows:
+<ul>
+<li>Scan from left to right, making sure the string has the right
+  shape</li>
+<li>Scan from left to right, finding the last <tt>0</tt>
+or <tt>1</tt> before the <tt>#</tt>, crossing it out, and then
+scanning past the <tt>#</tt> to find the last <tt>0</tt> or <tt>1</tt>
+before the end of the string, and checking that it matches the value
+  seen before the <tt>#</tt> plus any carry from the previous
+  iteration.</li>
+<li>Continue until all the symbols have been crossed out (accept) or
+  you exhaust the symbols before or after the <tt>#</tt> (reject). 
+</li>
+</ul>
+</p>
+
+<p>
+Here is a Turing machine that implements the above, where the states
+are not just strings, but 
+rather <i>structured</i> values. For this particular example, I chose
+a state to be a tuple of 
+the form <i>(name,m,c)</i> where <i>name</i> is a name for the
+state, <i>m</i> is either 99 (the uninitialized value) or 0 or 1 (representing
+whether or not the symbol read before the <tt>#</tt> when scanning was
+a <tt>0</tt> or a <tt>1</tt>), and <i>c</i> is the carry from
+iteration to iteration, set to 99 (uninitialized) or to 0 or 1 when there is
+no carry or a carry, respectively. Other choices are possible. 
+</p>
+
+<pre>
+let add1 = 
+  { states = tuples3 ["start";"check1";"check2";"rewind";"go-end-1";"go-end-2";
+                      "skip";"scan-1";"scan-2";"check-done"]
+                     [99;0;1] [99;0;1];
+    input_alphabet = ["0";"1";"#"];
+    tape_alphabet = ["0";"1";"#";"X";"_";">"];
+    blank = "_";
+    left_marker = ">";
+    start = ("start",99,99);
+    accept = ("acc",99,99);
+    reject = ("rej",99,99);
+    delta = (fun x -> match x with
+    | (("start",99,99),">") -> (("check1",99,99),">",1)
+    | (("check1",99,99),"0") -> (("check1",99,99),"0",1)
+    | (("check1",99,99),"1") -> (("check1",99,99),"1",1)
+    | (("check1",99,99),"#") -> (("check2",99,99),"#",1)
+    | (("check2",99,99),"0") -> (("check2",99,99),"0",1)
+    | (("check2",99,99),"1") -> (("check2",99,99),"1",1)
+    | (("check2",99,99),"_") -> (("rewind",99,1),"_",0)   (* start with a carry of 1! *)
+
+    | (("rewind",99,carry),">") -> (("go-end-1",99,carry),">",1)
+    | (("rewind",99,carry),"0") -> (("rewind",99,carry),"0",0)
+    | (("rewind",99,carry),"1") -> (("rewind",99,carry),"1",0)
+    | (("rewind",99,carry),"#") -> (("rewind",99,carry),"#",0)
+    | (("rewind",99,carry),"X") -> (("rewind",99,carry),"X",0)
+
+    | (("go-end-1",99,carry),"#") -> (("scan-1",99,carry),"#",0)
+    | (("go-end-1",99,carry),sym) -> (("go-end-1",99,carry),sym,1)
+
+    | (("scan-1",99,carry),"X") -> (("scan-1",99,carry),"X",0)
+    | (("scan-1",99,carry),"0") -> (("skip",0,carry),"X",1)
+    | (("scan-1",99,carry),"1") -> (("skip",1,carry),"X",1)
+    | (("scan-1",99,0),">") -> (("check-done",99,99),">",1)  (* carry should be 0 to accept *)
+
+    | (("skip",v,carry),"#") -> (("go-end-2",v,carry),"#",1)
+    | (("skip",v,carry),"X") -> (("skip",v,carry),"X",1)
+
+    | (("go-end-2",v,carry),"_") -> (("scan-2",v,carry),"_",0)
+    | (("go-end-2",v,carry),sym) -> (("go-end-2",v,carry),sym,1)
+
+    | (("scan-2",v,carry),"X") -> (("scan-2",v,carry),"X",0)
+    | (("scan-2",v,carry),"0") when (v+carry) mod 2 = 0 -> (("rewind",99,(v+carry) / 2),"X",0)
+    | (("scan-2",v,carry),"1") when (v+carry) mod 2 = 1 -> (("rewind",99,(v+carry) / 2),"X",0)
+
+    | (("check-done",99,99),"_") -> (("acc",99,99),"_",1)
+    | (("check-done",99,99),"X") -> (("check-done",99,99),"X",1)
+    | (("check-done",99,99),"#") -> (("check-done",99,99),"#",1)
+
+    | (_,sym) -> (("rej",99,99),sym,1))}
+</pre>
+
+    <p>The states are constructed via a
+    function <tt>tuples3</tt> that is provided as a helper function. It
+    basically takes the cross product of its three arguments. So the
+      above machine has 90 states, which is a finite number of states,
+    so we have a genuine Turing machine. </p>
+
+    <p>The transition function, and this is key, can use
+    pattern-matching and variables to represent a whole swat of
+    transitions when the transition doesn't depend on part of the
+    state. In <tt>add1</tt>, most of the
+    transitions during the iteration do not depend on the carry part
+    of the state. So we can just match on the name of the state, and
+    pass the carry part through to the resulting state. We could spell
+    it out by having different transitions for all the possible values
+    of the carry (99,0,1), but we don't need to. That's where we gain
+    a lot of the simplification. Look at the code for matching in
+    state named <tt>scan-2</tt>. Those two rules take the place of the
+    four rules that would be needed otherwise (one for every possible
+    choice of <tt>v</tt> and <tt>carry</tt>) and not only is it
+    shorter but it's also easier to see what's happening.</p>
+
+    <p>There's only one problem with the above. The resulting machine
+      has type <tt>(string * int * int) tm</tt>. Which is fine, except
+      that our <tt>run</tt> function expects a <tt>string tm</tt>, as
+      I mentioned above. </p>
+
+    <p>The way we're going to fix that annoyance (Problem 2 below) is
+      by implementing a function to <i>transform</i> a Turing
+      machine with structured states into an equivalent Turing machine
+      where the states are just strings. We'll need to provide a
+      transformation function that can transform a tuple into a string
+      (which can be anything but to be readable, we'll just flatten
+      the representation into a string), and modify the transitions of
+      the Turing machine to work with those new states.
+    </p>
+
+    <p>
+    Here are a few sample runs of the machine with a correctly
+    implemented <tt>transform</tt> function. Note the state
+    transformation function, which uses <tt>^</tt> to concatenate
+    strings, and <tt>string_of_int</tt> to convert an integer into a
+    string.</p>
+
+    <pre>
+# let tr state =
+    match state with
+    | (x,y,z) -> x^"|"^(string_of_int y)^"|"^(string_of_int z);;
+val tr : (string * int * int) -> string = &lt;fun>
+# let m = transform add1 tr;;
+val m : string tm =
+  {states =
+    ["start|99|99"; "start|99|0"; "start|99|1"; "start|0|99"; "start|0|0";
+     "start|0|1"; "start|1|99"; "start|1|0"; "start|1|1"; "check1|99|99";
+     "check1|99|0"; "check1|99|1"; "check1|0|99"; "check1|0|0"; "check1|0|1";
+     "check1|1|99"; "check1|1|0"; "check1|1|1"; "check2|99|99";
+     "check2|99|0"; "check2|99|1"; "check2|0|99"; "check2|0|0"; "check2|0|1";
+     "check2|1|99"; "check2|1|0"; "check2|1|1"; "rewind|99|99";
+     "rewind|99|0"; "rewind|99|1"; "rewind|0|99"; "rewind|0|0"; "rewind|0|1";
+     "rewind|1|99"; "rewind|1|0"; "rewind|1|1"; "go-end-1|99|99";
+     "go-end-1|99|0"; "go-end-1|99|1"; "go-end-1|0|99"; "go-end-1|0|0";
+     "go-end-1|0|1"; "go-end-1|1|99"; "go-end-1|1|0"; "go-end-1|1|1";
+     "go-end-2|99|99"; "go-end-2|99|0"; "go-end-2|99|1"; "go-end-2|0|99";
+     "go-end-2|0|0"; "go-end-2|0|1"; "go-end-2|1|99"; "go-end-2|1|0";
+     "go-end-2|1|1"; "skip|99|99"; "skip|99|0"; "skip|99|1"; "skip|0|99";
+     "skip|0|0"; "skip|0|1"; "skip|1|99"; "skip|1|0"; "skip|1|1";
+     "scan-1|99|99"; "scan-1|99|0"; "scan-1|99|1"; "scan-1|0|99";
+     "scan-1|0|0"; "scan-1|0|1"; "scan-1|1|99"; "scan-1|1|0"; "scan-1|1|1";
+     "scan-2|99|99"; "scan-2|99|0"; "scan-2|99|1"; "scan-2|0|99";
+     "scan-2|0|0"; "scan-2|0|1"; "scan-2|1|99"; "scan-2|1|0"; "scan-2|1|1";
+     "check-done|99|99"; "check-done|99|0"; "check-done|99|1";
+     "check-done|0|99"; "check-done|0|0"; "check-done|0|1";
+     "check-done|1|99"; "check-done|1|0"; "check-done|1|1"];
+   input_alphabet = ["0"; "1"; "#"];
+   tape_alphabet = ["0"; "1"; "#"; "X"; "_"; ">"]; left_marker = ">";
+   blank = "_"; delta = &lt;fun&gt;; start = "start|99|99"; accept = "acc|99|99";
+   reject = "rej|99|99"}
+# run m "00#01";;
+start|99|99       [>] 0  0  #  0  1 
+check1|99|99       > [0] 0  #  0  1 
+check1|99|99       >  0 [0] #  0  1 
+check1|99|99       >  0  0 [#] 0  1 
+check2|99|99       >  0  0  # [0] 1 
+check2|99|99       >  0  0  #  0 [1]
+check2|99|99       >  0  0  #  0  1 [_]
+rewind|99|1        >  0  0  #  0 [1] _ 
+rewind|99|1        >  0  0  # [0] 1  _ 
+rewind|99|1        >  0  0 [#] 0  1  _ 
+rewind|99|1        >  0 [0] #  0  1  _ 
+rewind|99|1        > [0] 0  #  0  1  _ 
+rewind|99|1       [>] 0  0  #  0  1  _ 
+go-end-1|99|1      > [0] 0  #  0  1  _ 
+go-end-1|99|1      >  0 [0] #  0  1  _ 
+go-end-1|99|1      >  0  0 [#] 0  1  _ 
+scan-1|99|1        >  0 [0] #  0  1  _ 
+skip|0|1           >  0  X [#] 0  1  _ 
+go-end-2|0|1       >  0  X  # [0] 1  _ 
+go-end-2|0|1       >  0  X  #  0 [1] _ 
+go-end-2|0|1       >  0  X  #  0  1 [_]
+scan-2|0|1         >  0  X  #  0 [1] _ 
+rewind|99|0        >  0  X  # [0] X  _ 
+rewind|99|0        >  0  X [#] 0  X  _ 
+rewind|99|0        >  0 [X] #  0  X  _ 
+rewind|99|0        > [0] X  #  0  X  _ 
+rewind|99|0       [>] 0  X  #  0  X  _ 
+go-end-1|99|0      > [0] X  #  0  X  _ 
+go-end-1|99|0      >  0 [X] #  0  X  _ 
+go-end-1|99|0      >  0  X [#] 0  X  _ 
+scan-1|99|0        >  0 [X] #  0  X  _ 
+scan-1|99|0        > [0] X  #  0  X  _ 
+skip|0|0           >  X [X] #  0  X  _ 
+skip|0|0           >  X  X [#] 0  X  _ 
+go-end-2|0|0       >  X  X  # [0] X  _ 
+go-end-2|0|0       >  X  X  #  0 [X] _ 
+go-end-2|0|0       >  X  X  #  0  X [_]
+scan-2|0|0         >  X  X  #  0 [X] _ 
+scan-2|0|0         >  X  X  # [0] X  _ 
+rewind|99|0        >  X  X [#] X  X  _ 
+rewind|99|0        >  X [X] #  X  X  _ 
+rewind|99|0        > [X] X  #  X  X  _ 
+rewind|99|0       [>] X  X  #  X  X  _ 
+go-end-1|99|0      > [X] X  #  X  X  _ 
+go-end-1|99|0      >  X [X] #  X  X  _ 
+go-end-1|99|0      >  X  X [#] X  X  _ 
+scan-1|99|0        >  X [X] #  X  X  _ 
+scan-1|99|0        > [X] X  #  X  X  _ 
+scan-1|99|0       [>] X  X  #  X  X  _ 
+check-done|99|99   > [X] X  #  X  X  _ 
+check-done|99|99   >  X [X] #  X  X  _ 
+check-done|99|99   >  X  X [#] X  X  _ 
+check-done|99|99   >  X  X  # [X] X  _ 
+check-done|99|99   >  X  X  #  X [X] _ 
+check-done|99|99   >  X  X  #  X  X [_]
+acc|99|99          >  X  X  #  X  X  _ [_]
+- : bool = true
+# run m "011#100";;
+start|99|99       [>] 0  1  1  #  1  0  0 
+check1|99|99       > [0] 1  1  #  1  0  0 
+check1|99|99       >  0 [1] 1  #  1  0  0 
+check1|99|99       >  0  1 [1] #  1  0  0 
+check1|99|99       >  0  1  1 [#] 1  0  0 
+check2|99|99       >  0  1  1  # [1] 0  0 
+check2|99|99       >  0  1  1  #  1 [0] 0 
+check2|99|99       >  0  1  1  #  1  0 [0]
+check2|99|99       >  0  1  1  #  1  0  0 [_]
+rewind|99|1        >  0  1  1  #  1  0 [0] _ 
+rewind|99|1        >  0  1  1  #  1 [0] 0  _ 
+rewind|99|1        >  0  1  1  # [1] 0  0  _ 
+rewind|99|1        >  0  1  1 [#] 1  0  0  _ 
+rewind|99|1        >  0  1 [1] #  1  0  0  _ 
+rewind|99|1        >  0 [1] 1  #  1  0  0  _ 
+rewind|99|1        > [0] 1  1  #  1  0  0  _ 
+rewind|99|1       [>] 0  1  1  #  1  0  0  _ 
+go-end-1|99|1      > [0] 1  1  #  1  0  0  _ 
+go-end-1|99|1      >  0 [1] 1  #  1  0  0  _ 
+go-end-1|99|1      >  0  1 [1] #  1  0  0  _ 
+go-end-1|99|1      >  0  1  1 [#] 1  0  0  _ 
+scan-1|99|1        >  0  1 [1] #  1  0  0  _ 
+skip|1|1           >  0  1  X [#] 1  0  0  _ 
+go-end-2|1|1       >  0  1  X  # [1] 0  0  _ 
+go-end-2|1|1       >  0  1  X  #  1 [0] 0  _ 
+go-end-2|1|1       >  0  1  X  #  1  0 [0] _ 
+go-end-2|1|1       >  0  1  X  #  1  0  0 [_]
+scan-2|1|1         >  0  1  X  #  1  0 [0] _ 
+rewind|99|1        >  0  1  X  #  1 [0] X  _ 
+rewind|99|1        >  0  1  X  # [1] 0  X  _ 
+rewind|99|1        >  0  1  X [#] 1  0  X  _ 
+rewind|99|1        >  0  1 [X] #  1  0  X  _ 
+rewind|99|1        >  0 [1] X  #  1  0  X  _ 
+rewind|99|1        > [0] 1  X  #  1  0  X  _ 
+rewind|99|1       [>] 0  1  X  #  1  0  X  _ 
+go-end-1|99|1      > [0] 1  X  #  1  0  X  _ 
+go-end-1|99|1      >  0 [1] X  #  1  0  X  _ 
+go-end-1|99|1      >  0  1 [X] #  1  0  X  _ 
+go-end-1|99|1      >  0  1  X [#] 1  0  X  _ 
+scan-1|99|1        >  0  1 [X] #  1  0  X  _ 
+scan-1|99|1        >  0 [1] X  #  1  0  X  _ 
+skip|1|1           >  0  X [X] #  1  0  X  _ 
+skip|1|1           >  0  X  X [#] 1  0  X  _ 
+go-end-2|1|1       >  0  X  X  # [1] 0  X  _ 
+go-end-2|1|1       >  0  X  X  #  1 [0] X  _ 
+go-end-2|1|1       >  0  X  X  #  1  0 [X] _ 
+go-end-2|1|1       >  0  X  X  #  1  0  X [_]
+scan-2|1|1         >  0  X  X  #  1  0 [X] _ 
+scan-2|1|1         >  0  X  X  #  1 [0] X  _ 
+rewind|99|1        >  0  X  X  # [1] X  X  _ 
+rewind|99|1        >  0  X  X [#] 1  X  X  _ 
+rewind|99|1        >  0  X [X] #  1  X  X  _ 
+rewind|99|1        >  0 [X] X  #  1  X  X  _ 
+rewind|99|1        > [0] X  X  #  1  X  X  _ 
+rewind|99|1       [>] 0  X  X  #  1  X  X  _ 
+go-end-1|99|1      > [0] X  X  #  1  X  X  _ 
+go-end-1|99|1      >  0 [X] X  #  1  X  X  _ 
+go-end-1|99|1      >  0  X [X] #  1  X  X  _ 
+go-end-1|99|1      >  0  X  X [#] 1  X  X  _ 
+scan-1|99|1        >  0  X [X] #  1  X  X  _ 
+scan-1|99|1        >  0 [X] X  #  1  X  X  _ 
+scan-1|99|1        > [0] X  X  #  1  X  X  _ 
+skip|0|1           >  X [X] X  #  1  X  X  _ 
+skip|0|1           >  X  X [X] #  1  X  X  _ 
+skip|0|1           >  X  X  X [#] 1  X  X  _ 
+go-end-2|0|1       >  X  X  X  # [1] X  X  _ 
+go-end-2|0|1       >  X  X  X  #  1 [X] X  _ 
+go-end-2|0|1       >  X  X  X  #  1  X [X] _ 
+go-end-2|0|1       >  X  X  X  #  1  X  X [_]
+scan-2|0|1         >  X  X  X  #  1  X [X] _ 
+scan-2|0|1         >  X  X  X  #  1 [X] X  _ 
+scan-2|0|1         >  X  X  X  # [1] X  X  _ 
+rewind|99|0        >  X  X  X [#] X  X  X  _ 
+rewind|99|0        >  X  X [X] #  X  X  X  _ 
+rewind|99|0        >  X [X] X  #  X  X  X  _ 
+rewind|99|0        > [X] X  X  #  X  X  X  _ 
+rewind|99|0       [>] X  X  X  #  X  X  X  _ 
+go-end-1|99|0      > [X] X  X  #  X  X  X  _ 
+go-end-1|99|0      >  X [X] X  #  X  X  X  _ 
+go-end-1|99|0      >  X  X [X] #  X  X  X  _ 
+go-end-1|99|0      >  X  X  X [#] X  X  X  _ 
+scan-1|99|0        >  X  X [X] #  X  X  X  _ 
+scan-1|99|0        >  X [X] X  #  X  X  X  _ 
+scan-1|99|0        > [X] X  X  #  X  X  X  _ 
+scan-1|99|0       [>] X  X  X  #  X  X  X  _ 
+check-done|99|99   > [X] X  X  #  X  X  X  _ 
+check-done|99|99   >  X [X] X  #  X  X  X  _ 
+check-done|99|99   >  X  X [X] #  X  X  X  _ 
+check-done|99|99   >  X  X  X [#] X  X  X  _ 
+check-done|99|99   >  X  X  X  # [X] X  X  _ 
+check-done|99|99   >  X  X  X  #  X [X] X  _ 
+check-done|99|99   >  X  X  X  #  X  X [X] _ 
+check-done|99|99   >  X  X  X  #  X  X  X [_]
+acc|99|99          >  X  X  X  #  X  X  X  _ [_]
+- : bool = true
+# run m "011#010";;
+start|99|99       [>] 0  1  1  #  0  1  0 
+check1|99|99       > [0] 1  1  #  0  1  0 
+check1|99|99       >  0 [1] 1  #  0  1  0 
+check1|99|99       >  0  1 [1] #  0  1  0 
+check1|99|99       >  0  1  1 [#] 0  1  0 
+check2|99|99       >  0  1  1  # [0] 1  0 
+check2|99|99       >  0  1  1  #  0 [1] 0 
+check2|99|99       >  0  1  1  #  0  1 [0]
+check2|99|99       >  0  1  1  #  0  1  0 [_]
+rewind|99|1        >  0  1  1  #  0  1 [0] _ 
+rewind|99|1        >  0  1  1  #  0 [1] 0  _ 
+rewind|99|1        >  0  1  1  # [0] 1  0  _ 
+rewind|99|1        >  0  1  1 [#] 0  1  0  _ 
+rewind|99|1        >  0  1 [1] #  0  1  0  _ 
+rewind|99|1        >  0 [1] 1  #  0  1  0  _ 
+rewind|99|1        > [0] 1  1  #  0  1  0  _ 
+rewind|99|1       [>] 0  1  1  #  0  1  0  _ 
+go-end-1|99|1      > [0] 1  1  #  0  1  0  _ 
+go-end-1|99|1      >  0 [1] 1  #  0  1  0  _ 
+go-end-1|99|1      >  0  1 [1] #  0  1  0  _ 
+go-end-1|99|1      >  0  1  1 [#] 0  1  0  _ 
+scan-1|99|1        >  0  1 [1] #  0  1  0  _ 
+skip|1|1           >  0  1  X [#] 0  1  0  _ 
+go-end-2|1|1       >  0  1  X  # [0] 1  0  _ 
+go-end-2|1|1       >  0  1  X  #  0 [1] 0  _ 
+go-end-2|1|1       >  0  1  X  #  0  1 [0] _ 
+go-end-2|1|1       >  0  1  X  #  0  1  0 [_]
+scan-2|1|1         >  0  1  X  #  0  1 [0] _ 
+rewind|99|1        >  0  1  X  #  0 [1] X  _ 
+rewind|99|1        >  0  1  X  # [0] 1  X  _ 
+rewind|99|1        >  0  1  X [#] 0  1  X  _ 
+rewind|99|1        >  0  1 [X] #  0  1  X  _ 
+rewind|99|1        >  0 [1] X  #  0  1  X  _ 
+rewind|99|1        > [0] 1  X  #  0  1  X  _ 
+rewind|99|1       [>] 0  1  X  #  0  1  X  _ 
+go-end-1|99|1      > [0] 1  X  #  0  1  X  _ 
+go-end-1|99|1      >  0 [1] X  #  0  1  X  _ 
+go-end-1|99|1      >  0  1 [X] #  0  1  X  _ 
+go-end-1|99|1      >  0  1  X [#] 0  1  X  _ 
+scan-1|99|1        >  0  1 [X] #  0  1  X  _ 
+scan-1|99|1        >  0 [1] X  #  0  1  X  _ 
+skip|1|1           >  0  X [X] #  0  1  X  _ 
+skip|1|1           >  0  X  X [#] 0  1  X  _ 
+go-end-2|1|1       >  0  X  X  # [0] 1  X  _ 
+go-end-2|1|1       >  0  X  X  #  0 [1] X  _ 
+go-end-2|1|1       >  0  X  X  #  0  1 [X] _ 
+go-end-2|1|1       >  0  X  X  #  0  1  X [_]
+scan-2|1|1         >  0  X  X  #  0  1 [X] _ 
+scan-2|1|1         >  0  X  X  #  0 [1] X  _ 
+rej|99|99          >  0  X  X  #  0  1 [X] _ 
+- : bool = false
+</pre>
+
+
+    <hr>
+    
+    <ol class="question">
+
+      <li> <p><b>Structured States</b></p>
+
+	<ol class="subquestion">
+
+	  <li> <p>Code a function <tt class="code">transformStates</tt> of
+	      type <tt class="code">'a list -> ('a -> b) -> 'b
+		list</tt> where <tt>(transformStates states f)</tt>
+	      returns the result of applying transformation <tt>f</tt>
+	      to every state in <tt>states</tt>.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# let trans (x,y) = x^"/"^(string_of_int y);;
+val trans : string * int -> string = &lt;fun>
+# trans ("hello",10);;
+- : string = "hello/10"
+
+# transformStates [] trans;;
+- : string list = []
+# transformStates [("a",1);("b",2);("c",3)] trans;;
+- : string list = ["a/1"; "b/2"; "c/3"]
+</pre>
+</div>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">find_original</tt> of
+	      type <tt class="code">'a list -> ('a -> 'b) -> 'b ->
+		'a</tt> where <tt>(find_original states f target)</tt>
+	      returns the state <tt>s</tt> in <tt>states</tt> for
+	      which <tt>(f s)</tt> is <tt>target</tt>. In other words,
+	      it returns the original state that transforms
+	      to <tt>target</tt>.</p>
+	    
+
+	      <p>You can use <tt>failwith</tt> to raise an exception if the original state cannot be found.
+	    </p>
+	    
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# let trans (x,y) = x^"/"^(string_of_int y);;
+val trans : string * int -> string = &lt;fun>
+# trans ("hello",10);;
+- : string = "hello/10"
+
+# find_original [("a",1);("b",2);("c",3)] trans "a/1";;
+- : string * int = ("a", 1)
+# find_original [("a",1);("b",2);("c",3)] trans "b/2";;
+- : string * int = ("b", 2)
+# find_original [("a",1);("b",2);("c",3)] trans "c/3";;
+- : string * int = ("c", 3)
+# find_original [("a",1);("b",2);("c",3)] trans "d/3";;
+Exception: Failure "cannot find original value".
+</pre>
+</div>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">transformDelta</tt> of
+	      type <tt class="code">'a list -> ('a * 'b
+	      -> 'a * 'b * int) -> ('a -> 'c) -> ('c * 'b -> 'c * 'b *
+		int) </tt> where <tt>(transformDelta states delta
+	      f)</tt> takes a a list of <tt>states</tt> and a Turing
+	      machine transition function <tt>delta</tt> as well as a
+	      state transformation function <tt>f</tt> and
+	      returns <i>a new transition function</i> with same
+	      transitions as <tt>delta</tt> except using the
+	      transformed states instead of the original states. Thus,
+	      if <tt>delta(p,a)</tt> is <tt>(q,b,d)</tt>, then the new
+	      transition function takes <tt>(f p,a)</tt> to <tt>(f
+	      q,b,d)</tt>. 
+	    </p>
+	    
+	    <p><b>Hint:</b> you may find
+	      function <tt>find_original</tt> useful. Just
+	      sayin'. </p>
+
+	    <p><b>Also:</b> if you get the answer to this one right and you
+	    understand what you're doing, then you've understood
+	    everything there is to understand about higher-order
+	      functions. Kudos.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# let trans (x,y) = x^"/"^(string_of_int y);;
+val trans : string * int -> string = &lt;fun>
+# trans ("hello",10);;
+- : string = "hello/10"
+
+# let delta x = match x with
+                | (("a",1),"0") -> (("b",2),"0",0)
+                | (("a",1),"1") -> (("c",3),"1",0)
+                | (("b",2),"0") -> (("c",3),"0",0)
+                | (("b",2),"1") -> (("a",1),"1",0)
+                | (("c",3),"0") -> (("a",1),"0",1)
+                | (("c",3),"1") -> (("b",2),"1",1)
+                | (_,sym) -> (("a",1),sym,1)  ;;
+val delta : (string * int) * string -> (string * int) * string * int = <fun>
+# delta(("a",1),"0");;
+- : (string * int) * string * int = (("b", 2), "0", 0)
+# delta(("b",2),"0");;
+- : (string * int) * string * int = (("c", 3), "0", 0)
+# delta(("c",3),"0");;
+- : (string * int) * string * int = (("a", 1), "0", 1)
+# let new_delta = transformDelta [("a",1);("b",2);("c",3)] delta trans;;
+val new_delta : string * string -> string * string * int = <fun>
+# new_delta("a/1","0");;
+- : string * string * int = ("b/2", "0", 0)
+# new_delta("b/2","0");;
+- : string * string * int = ("c/3", "0", 0)
+# new_delta("c/3","0");;
+- : string * string * int = ("a/1", "0", 1)
+</pre>
+</div>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">transform</tt> of
+	      type <tt class="code">'a tm -> ('a -> 'b) -> 'b tm</tt>
+	      where <tt>(transform m f)</tt> returns a Turing
+	      machine that acts just like Turing machine <tt>m</tt> except that it
+	      uses the states obtained by transforming the states
+	      of <tt>m</tt> by <tt>f</tt>. 
+	    </p>
+
+	    <p>
+	      As the example in the introduction shows, you can use
+	      <tt>transform</tt> to transform a Turing machine with structured
+	      states (i.e., states represented using tuples) into a
+	      Turing machines with strings as states which you can
+	      feed to function <tt>run</tt>.
+	    </p>
+
+	    <p>
+	      For a simple output, run the <tt>add1</tt> machine as in
+	      the introduction.</p>
+
+	  </li>
+
+
+
+	</ol>
+      </li>
+
+      <li> <p><b>Designing Turing Machines with Structured States</b></p>
+
+        <p>In this question, I will ask you to design a Turing
+	  machine. Unless you want to drive yourself insane, you are
+	  strongly encouraged to use structured states (exactly what
+	  you take those states to be is up to you &mdash; I recommend
+	  tuples of some sort), and to use the <tt>transform</tt>
+	  function you created in Problem 1 to transform them
+	  into <tt>string tm</tt>. </p>
+
+      <p>Code a function <tt class="code">permutations</tt> of
+	      type <tt class="code">int -> string tm</tt>
+	      where <tt>(permutations n)</tt> returns a Turing machine
+	      over alphabet <tt>{a, ..., z,#}</tt> that accepts
+	      strings of the
+	      form <tt><i>u<sub>1</sub></i>#<i>u<sub>2</sub></i>#...#<i>u<sub>n</sub></i></tt>
+	      where each substring <tt><i>u<sub>i</sub></i></tt> is a
+	  string over <tt>{a, ..., z}</tt> and
+	      each <tt><i>u<sub>i</sub></i></tt> is a permutation of
+	      the others. This
+	      requires <tt>n</tt> to be greater than 0. (You may fail
+	      if <tt>n&le;0</tt>.)  
+	    </p>
+
+	    <p>Thus, <tt>(permutations 1)</tt> should accept the following
+	    strings:
+	    </p>
+
+	    <pre>
+   &epsilon;
+   hello
+   geronimo</pre>
+	    <p>and reject:</p>
+<pre>
+   hello#world
+   hello#hello
+   this#is#sparta</pre>
+	    <p>while <tt>(permutations 3)</tt> should accept the following
+	    strings:
+	    </p>
+	    <pre>
+   ##
+   hello#hlloe#olleh
+   good#good#good
+   geronimo#ominoreg#grnmoioe</pre>
+	    <p>and reject:</p>
+	    <pre>
+   &epsilon;
+   #
+   ###
+   good#good#bad
+   hello#hello
+   frank#knarf#frnak#kfran</pre>
+	    <p>You get the gist.</p>
+
+      </li>
+
+      <li> <p><b>Multitrack Turing Machines</b></p>
+
+	<p>There is a variant of Turing machines that is sometimes
+	useful: a multitrack Turing machine. Intuitively, a multitrack
+	Turing machines has <i>n</i> tapes, but a single tape head. A
+	transition may depend on the symbols under the tape head (one
+	per tape) and writes new symbols to those tapes after the
+	transition. The tape head moves left or right, as usual.
+	</p>
+
+	<p>
+	  (The difference between thse multitrack Turing machines and multitape
+	Turing machines is that multitape Turing machines have three tape
+	  heads moving independently.)
+	</p>
+
+	<p>Here is a type definition for multitrack Turing machines
+	  with 2 tapes:</p>
+	
+	  <pre>
+type 'a tm_2 = { states_2 : 'a list;
+		 input_alphabet_2 : symbol list;
+		 tape_alphabet_2 : symbol list;
+		 left_marker_2 : symbol;
+		 blank_2 : symbol;
+		 delta_2 : ('a * symbol * symbol) -> ('a * symbol * symbol * int);
+		 start_2 : 'a;
+		 accept_2 : 'a;
+		 reject_2 : 'a }
+	  </pre>
+	  
+	  <p>As you can see, the definition is just like that of Turing
+	  machines, except for the type for <tt>delta_2</tt>, which
+	  defines a transition based on two symbols (one per tape) and
+	  writes two symbols (one per tape).
+	  </p>
+
+	<p>Here's an example of a multitrack Turing machine (with two tapes)
+	  that implements the same language <i>Add1</i> given above. It works by
+	  taking a string <tt><i>u</i>#<i>v</i></tt> and moving the
+	  <tt><i>v</i></tt> part onto the second tape, lined up
+	  with <tt><i>u</i></tt>, and then doing a simple pass from right to
+	  left comparing the <i>u</i> part with the <i>v</i> part:</p>
+
+	<pre>
+let add1_2 = {
+  states_2 = [ "start"; "skip#"; "skipX"; "copy0_skip"; "copy0"; "copy1_skip"; "copy1"; 
+	       "done"; "add1"; "add-carry"; "allsame"; "acc"; "rej"; ];
+  tape_alphabet_2 = [ "0"; "1"; "#"; "_"; ">" ];
+  input_alphabet_2 = [ "0"; "1"; "#" ];
+  blank_2 = "_"; 
+  left_marker_2 = ">";
+  start_2 = "start";
+  accept_2 = "acc";
+  reject_2 = "rej";
+  delta_2 = (fun x ->
+    match x with
+    | ("start",">",b) -> ("skip#",">",b,1)
+
+    | ("skip#","0",b) -> ("skip#","0",b,1)
+    | ("skip#","1",b) -> ("skip#","1",b,1)
+    | ("skip#","#",b) -> ("skipX","#",b,1)
+
+    | ("skipX","X",b) -> ("skipX","X",b,1)
+    | ("skipX","_",b) -> ("done","_",b,0)
+    | ("skipX","0",b) -> ("copy0_skip","X",b,0)
+    | ("skipX","1",b) -> ("copy1_skip","X",b,0)
+
+    | ("copy0_skip",a,"_") -> ("copy0_skip",a,"_",0)
+    | ("copy0_skip",a,b) -> ("copy0",a,b,1)
+
+    | ("copy0",a,b) -> ("skip#",a,"0",1)
+
+    | ("copy1_skip",a,"_") -> ("copy1_skip",a,"_",0)
+    | ("copy1_skip",a,b) -> ("copy1",a,b,1)
+
+    | ("copy1",a,b) -> ("skip#",a,"1",1)
+	  
+    | ("done","X",b) -> ("done","X",b,0)
+    | ("done","#",b) -> ("add1","#",b,0)
+
+    | ("add1","0","1") -> ("allsame","0","1",0)
+    | ("add1","1","0") -> ("add1","1","0",0)
+
+    | ("allsame","0","0") -> ("allsame","0","0",0)
+    | ("allsame","1","1") -> ("allsame","1","1",0)
+    | ("allsame",">",">") -> ("acc",">",">",1)
+
+    | (_,a,b) -> ("rej",a,b,1) )
+}</pre>
+
+	<p>We could define a <tt>run</tt> function to execute
+	multitrack Turing machines just like we did for normal Turing
+	machines, but instead, we are simply going to transform
+	multitrack Turing machines into normal Turing machines, and
+	  run the transformed Turing machines. </p>
+
+	<p>The transformation is pretty simple. We'll focus on
+	2-track Turing machines here. The idea is to transform a
+	  2-track Turing machine M into a normal Turing
+	machine M' with an
+	  extended tape alphabet: the tape alphabet of M'
+	machine is made up of pairs of symbols. Intuitively, if
+	  2-track Turing machine M has <tt>> 1 0 1 0</tt> on
+	  its first tape and <tt>> 1 1 0 1 0</tt> on its second tape,
+	  then we can encode that as a single tape for M' that
+	looks like <tt>(>,>) (1,1) (0,1)
+	    (1,0) (0,1) (_,0)</tt> where <tt>_</tt> is the blank
+	  symbol and <tt>></tt> is the left marker symbol
+	  of M'.</p>
+
+	<p>More precisely, we transform M into M' where:
+	  <ul>
+	    <li>the states of M' are just the states
+	      of M, including the start, accept, and reject states</li>
+	    <li>the input alphabet of M' is just <tt>(a,_)</tt>
+	      for every input symbol <tt>a</tt> of M</li>
+	    <li>the tape alphabet of M' is just <tt>(a,b)</tt>
+	      for every combination of tape symbols of M</li>
+	    <li>the blank symbol of M' is <tt>(_,_)</tt> where
+	      <tt>_</tt> is the blank symbol of M</li>
+	    <li>the left marker symbol of M' is <tt>(>,>)</tt>
+	      where <tt>></tt> is the left marker symbol of M</li>
+	    <li>The transition function &delta;' of M' is defined so
+	      that &delta;'(q,(a,b)) = (p,(c,d),dir) whenever
+	      &delta;(q,a,b) = (p,c,d,dir) where &delta; is the transition
+	      function of M.
+	    </li>
+	</ul></p>
+	
+	<p>It's all very straightforward.</p>
+
+	<p>The only slight difficulty is that we defined our alphabet to be
+	  lists of strings, and not lists of pairs. We are going to get
+	  around that problem by encoding a pair of symbols
+	  (<tt>a</tt>,<tt>b</tt>) as the <i>string</i> <tt>a,b</tt></p>
+
+	  <ol class="subquestion">
+
+	    <li><p> Code a function <tt class="code">transformDelta_2</tt>
+	      of type <tt class="code">('a * string * string -> 'a * string * string * int) -> ('a * string -> 'a * string * int)</tt>
+	      taking a transition function &delta; for a 2-track Turing machine and returning the corresponding transition for transformed Turing machine given above:
+	    the resulting transition function &delta;' should satisfy &delta;'(q,(a,b)) = (p,(c,d),dir) whenever 
+		&delta;(q,a,b) = (p,c,d,dir).</p>
+
+	      <p>I supplied you with a function <tt>split</tt> that can be used to split a string into substrings separated by a given character.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# let delta x = match x with
+                | ("1","a","b") -> ("1","a","a",1)
+                | ("2","a",x) -> ("2","b",x,0)
+                | ("3",x,"b") -> ("3","a",x,1)
+                | (_,x,y) -> ("1",x,y,1) ;;
+val delta : string * string * string -> string * string * string * int =
+  &lt;fun>
+# delta ("1","a","b");;
+- : string * string * string * int = ("1", "a", "a", 1)
+# delta ("2","a","b");;
+- : string * string * string * int = ("2", "b", "b", 0)
+# delta ("3","a","b");;
+- : string * string * string * int = ("3", "a", "a", 1)
+# delta ("4","a","b");;
+- : string * string * string * int = ("1", "a", "b", 1)
+# let new_delta = transformDelta_2 delta;;
+val new_delta : string * string -> string * string * int = &lt;fun>
+# new_delta ("1","a,b");;
+- : string * string * int = ("1", "a,a", 1)
+# new_delta ("2","a,b");;
+- : string * string * int = ("2", "b,b", 0)
+# new_delta ("3","a,b");;
+- : string * string * int = ("3", "a,a", 1)
+# new_delta ("4","a,b");;
+- : string * string * int = ("1", "a,b", 1)
+</pre>
+</div>
+	    </li>
+
+	    <li><p>Code a function <tt class="code">transform_2</tt> of type
+		<tt class="code">'a tm_2 -> 'a tm</tt> that takes a 2-track Turing machine and transforms it into a single-track Turing machine as described above.</p>
+
+	      <p>I've supplied you with a function <tt>run_2</tt> that you
+		can use to test out your transformation. If takes a
+		2-track Turing machine M and an input string, transforms
+		M using your <tt>transform_2</tt> function, and runs the
+		resulting single-track Turing machine using the Turing
+		machine execution code from Homework 4 on the input
+		string transformed into the new input alphabet. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+{states =
+  ["start"; "skip#"; "skipX"; "copy0_skip"; "copy0"; "copy1_skip"; "copy1";
+   "done"; "add1"; "add-carry"; "allsame"; "acc"; "rej"];
+ input_alphabet = ["0,_"; "1,_"; "#,_"];
+ tape_alphabet =
+  ["0,0"; "0,1"; "0,#"; "0,_"; "0,>"; "1,0"; "1,1"; "1,#"; "1,_"; "1,>";
+   "#,0"; "#,1"; "#,#"; "#,_"; "#,>"; "_,0"; "_,1"; "_,#"; "_,_"; "_,>";
+   ">,0"; ">,1"; ">,#"; ">,_"; ">,>"];
+ left_marker = ">,>"; blank = "_,_"; delta = &lt;fun>; start = "start";
+ accept = "acc"; reject = "rej"}
+
+# run_2 add1_2 "00#01";;
+start       [>,>] 0,_  0,_  #,_  0,_  1,_ 
+skip#        >,> [0,_] 0,_  #,_  0,_  1,_ 
+skip#        >,>  0,_ [0,_] #,_  0,_  1,_ 
+skip#        >,>  0,_  0,_ [#,_] 0,_  1,_ 
+skipX        >,>  0,_  0,_  #,_ [0,_] 1,_ 
+copy0_skip   >,>  0,_  0,_ [#,_] X,_  1,_ 
+copy0_skip   >,>  0,_ [0,_] #,_  X,_  1,_ 
+copy0_skip   >,> [0,_] 0,_  #,_  X,_  1,_ 
+copy0_skip  [>,>] 0,_  0,_  #,_  X,_  1,_ 
+copy0        >,> [0,_] 0,_  #,_  X,_  1,_ 
+skip#        >,>  0,0 [0,_] #,_  X,_  1,_ 
+skip#        >,>  0,0  0,_ [#,_] X,_  1,_ 
+skipX        >,>  0,0  0,_  #,_ [X,_] 1,_ 
+skipX        >,>  0,0  0,_  #,_  X,_ [1,_]
+copy1_skip   >,>  0,0  0,_  #,_ [X,_] X,_ 
+copy1_skip   >,>  0,0  0,_ [#,_] X,_  X,_ 
+copy1_skip   >,>  0,0 [0,_] #,_  X,_  X,_ 
+copy1_skip   >,> [0,0] 0,_  #,_  X,_  X,_ 
+copy1        >,>  0,0 [0,_] #,_  X,_  X,_ 
+skip#        >,>  0,0  0,1 [#,_] X,_  X,_ 
+skipX        >,>  0,0  0,1  #,_ [X,_] X,_ 
+skipX        >,>  0,0  0,1  #,_  X,_ [X,_]
+skipX        >,>  0,0  0,1  #,_  X,_  X,_ [_,_]
+done         >,>  0,0  0,1  #,_  X,_ [X,_] _,_ 
+done         >,>  0,0  0,1  #,_ [X,_] X,_  _,_ 
+done         >,>  0,0  0,1 [#,_] X,_  X,_  _,_ 
+add1         >,>  0,0 [0,1] #,_  X,_  X,_  _,_ 
+allsame      >,> [0,0] 0,1  #,_  X,_  X,_  _,_ 
+allsame     [>,>] 0,0  0,1  #,_  X,_  X,_  _,_ 
+acc          >,> [0,0] 0,1  #,_  X,_  X,_  _,_ 
+- : bool = true
+# run_2 add1_2 "0111#1000";;
+start       [>,>] 0,_  1,_  1,_  1,_  #,_  1,_  0,_  0,_  0,_ 
+skip#        >,> [0,_] 1,_  1,_  1,_  #,_  1,_  0,_  0,_  0,_ 
+skip#        >,>  0,_ [1,_] 1,_  1,_  #,_  1,_  0,_  0,_  0,_ 
+skip#        >,>  0,_  1,_ [1,_] 1,_  #,_  1,_  0,_  0,_  0,_ 
+skip#        >,>  0,_  1,_  1,_ [1,_] #,_  1,_  0,_  0,_  0,_ 
+skip#        >,>  0,_  1,_  1,_  1,_ [#,_] 1,_  0,_  0,_  0,_ 
+skipX        >,>  0,_  1,_  1,_  1,_  #,_ [1,_] 0,_  0,_  0,_ 
+copy1_skip   >,>  0,_  1,_  1,_  1,_ [#,_] X,_  0,_  0,_  0,_ 
+copy1_skip   >,>  0,_  1,_  1,_ [1,_] #,_  X,_  0,_  0,_  0,_ 
+copy1_skip   >,>  0,_  1,_ [1,_] 1,_  #,_  X,_  0,_  0,_  0,_ 
+copy1_skip   >,>  0,_ [1,_] 1,_  1,_  #,_  X,_  0,_  0,_  0,_ 
+copy1_skip   >,> [0,_] 1,_  1,_  1,_  #,_  X,_  0,_  0,_  0,_ 
+copy1_skip  [>,>] 0,_  1,_  1,_  1,_  #,_  X,_  0,_  0,_  0,_ 
+copy1        >,> [0,_] 1,_  1,_  1,_  #,_  X,_  0,_  0,_  0,_ 
+skip#        >,>  0,1 [1,_] 1,_  1,_  #,_  X,_  0,_  0,_  0,_ 
+skip#        >,>  0,1  1,_ [1,_] 1,_  #,_  X,_  0,_  0,_  0,_ 
+skip#        >,>  0,1  1,_  1,_ [1,_] #,_  X,_  0,_  0,_  0,_ 
+skip#        >,>  0,1  1,_  1,_  1,_ [#,_] X,_  0,_  0,_  0,_ 
+skipX        >,>  0,1  1,_  1,_  1,_  #,_ [X,_] 0,_  0,_  0,_ 
+skipX        >,>  0,1  1,_  1,_  1,_  #,_  X,_ [0,_] 0,_  0,_ 
+copy0_skip   >,>  0,1  1,_  1,_  1,_  #,_ [X,_] X,_  0,_  0,_ 
+copy0_skip   >,>  0,1  1,_  1,_  1,_ [#,_] X,_  X,_  0,_  0,_ 
+copy0_skip   >,>  0,1  1,_  1,_ [1,_] #,_  X,_  X,_  0,_  0,_ 
+copy0_skip   >,>  0,1  1,_ [1,_] 1,_  #,_  X,_  X,_  0,_  0,_ 
+copy0_skip   >,>  0,1 [1,_] 1,_  1,_  #,_  X,_  X,_  0,_  0,_ 
+copy0_skip   >,> [0,1] 1,_  1,_  1,_  #,_  X,_  X,_  0,_  0,_ 
+copy0        >,>  0,1 [1,_] 1,_  1,_  #,_  X,_  X,_  0,_  0,_ 
+skip#        >,>  0,1  1,0 [1,_] 1,_  #,_  X,_  X,_  0,_  0,_ 
+skip#        >,>  0,1  1,0  1,_ [1,_] #,_  X,_  X,_  0,_  0,_ 
+skip#        >,>  0,1  1,0  1,_  1,_ [#,_] X,_  X,_  0,_  0,_ 
+skipX        >,>  0,1  1,0  1,_  1,_  #,_ [X,_] X,_  0,_  0,_ 
+skipX        >,>  0,1  1,0  1,_  1,_  #,_  X,_ [X,_] 0,_  0,_ 
+skipX        >,>  0,1  1,0  1,_  1,_  #,_  X,_  X,_ [0,_] 0,_ 
+copy0_skip   >,>  0,1  1,0  1,_  1,_  #,_  X,_ [X,_] X,_  0,_ 
+copy0_skip   >,>  0,1  1,0  1,_  1,_  #,_ [X,_] X,_  X,_  0,_ 
+copy0_skip   >,>  0,1  1,0  1,_  1,_ [#,_] X,_  X,_  X,_  0,_ 
+copy0_skip   >,>  0,1  1,0  1,_ [1,_] #,_  X,_  X,_  X,_  0,_ 
+copy0_skip   >,>  0,1  1,0 [1,_] 1,_  #,_  X,_  X,_  X,_  0,_ 
+copy0_skip   >,>  0,1 [1,0] 1,_  1,_  #,_  X,_  X,_  X,_  0,_ 
+copy0        >,>  0,1  1,0 [1,_] 1,_  #,_  X,_  X,_  X,_  0,_ 
+skip#        >,>  0,1  1,0  1,0 [1,_] #,_  X,_  X,_  X,_  0,_ 
+skip#        >,>  0,1  1,0  1,0  1,_ [#,_] X,_  X,_  X,_  0,_ 
+skipX        >,>  0,1  1,0  1,0  1,_  #,_ [X,_] X,_  X,_  0,_ 
+skipX        >,>  0,1  1,0  1,0  1,_  #,_  X,_ [X,_] X,_  0,_ 
+skipX        >,>  0,1  1,0  1,0  1,_  #,_  X,_  X,_ [X,_] 0,_ 
+skipX        >,>  0,1  1,0  1,0  1,_  #,_  X,_  X,_  X,_ [0,_]
+copy0_skip   >,>  0,1  1,0  1,0  1,_  #,_  X,_  X,_ [X,_] X,_ 
+copy0_skip   >,>  0,1  1,0  1,0  1,_  #,_  X,_ [X,_] X,_  X,_ 
+copy0_skip   >,>  0,1  1,0  1,0  1,_  #,_ [X,_] X,_  X,_  X,_ 
+copy0_skip   >,>  0,1  1,0  1,0  1,_ [#,_] X,_  X,_  X,_  X,_ 
+copy0_skip   >,>  0,1  1,0  1,0 [1,_] #,_  X,_  X,_  X,_  X,_ 
+copy0_skip   >,>  0,1  1,0 [1,0] 1,_  #,_  X,_  X,_  X,_  X,_ 
+copy0        >,>  0,1  1,0  1,0 [1,_] #,_  X,_  X,_  X,_  X,_ 
+skip#        >,>  0,1  1,0  1,0  1,0 [#,_] X,_  X,_  X,_  X,_ 
+skipX        >,>  0,1  1,0  1,0  1,0  #,_ [X,_] X,_  X,_  X,_ 
+skipX        >,>  0,1  1,0  1,0  1,0  #,_  X,_ [X,_] X,_  X,_ 
+skipX        >,>  0,1  1,0  1,0  1,0  #,_  X,_  X,_ [X,_] X,_ 
+skipX        >,>  0,1  1,0  1,0  1,0  #,_  X,_  X,_  X,_ [X,_]
+skipX        >,>  0,1  1,0  1,0  1,0  #,_  X,_  X,_  X,_  X,_ [_,_]
+done         >,>  0,1  1,0  1,0  1,0  #,_  X,_  X,_  X,_ [X,_] _,_ 
+done         >,>  0,1  1,0  1,0  1,0  #,_  X,_  X,_ [X,_] X,_  _,_ 
+done         >,>  0,1  1,0  1,0  1,0  #,_  X,_ [X,_] X,_  X,_  _,_ 
+done         >,>  0,1  1,0  1,0  1,0  #,_ [X,_] X,_  X,_  X,_  _,_ 
+done         >,>  0,1  1,0  1,0  1,0 [#,_] X,_  X,_  X,_  X,_  _,_ 
+add1         >,>  0,1  1,0  1,0 [1,0] #,_  X,_  X,_  X,_  X,_  _,_ 
+add1         >,>  0,1  1,0 [1,0] 1,0  #,_  X,_  X,_  X,_  X,_  _,_ 
+add1         >,>  0,1 [1,0] 1,0  1,0  #,_  X,_  X,_  X,_  X,_  _,_ 
+add1         >,> [0,1] 1,0  1,0  1,0  #,_  X,_  X,_  X,_  X,_  _,_ 
+allsame     [>,>] 0,1  1,0  1,0  1,0  #,_  X,_  X,_  X,_  X,_  _,_ 
+acc          >,> [0,1] 1,0  1,0  1,0  #,_  X,_  X,_  X,_  X,_  _,_ 
+- : bool = true
+# run_2 add1_2 "00#11";;
+start       [>,>] 0,_  0,_  #,_  1,_  1,_ 
+skip#        >,> [0,_] 0,_  #,_  1,_  1,_ 
+skip#        >,>  0,_ [0,_] #,_  1,_  1,_ 
+skip#        >,>  0,_  0,_ [#,_] 1,_  1,_ 
+skipX        >,>  0,_  0,_  #,_ [1,_] 1,_ 
+copy1_skip   >,>  0,_  0,_ [#,_] X,_  1,_ 
+copy1_skip   >,>  0,_ [0,_] #,_  X,_  1,_ 
+copy1_skip   >,> [0,_] 0,_  #,_  X,_  1,_ 
+copy1_skip  [>,>] 0,_  0,_  #,_  X,_  1,_ 
+copy1        >,> [0,_] 0,_  #,_  X,_  1,_ 
+skip#        >,>  0,1 [0,_] #,_  X,_  1,_ 
+skip#        >,>  0,1  0,_ [#,_] X,_  1,_ 
+skipX        >,>  0,1  0,_  #,_ [X,_] 1,_ 
+skipX        >,>  0,1  0,_  #,_  X,_ [1,_]
+copy1_skip   >,>  0,1  0,_  #,_ [X,_] X,_ 
+copy1_skip   >,>  0,1  0,_ [#,_] X,_  X,_ 
+copy1_skip   >,>  0,1 [0,_] #,_  X,_  X,_ 
+copy1_skip   >,> [0,1] 0,_  #,_  X,_  X,_ 
+copy1        >,>  0,1 [0,_] #,_  X,_  X,_ 
+skip#        >,>  0,1  0,1 [#,_] X,_  X,_ 
+skipX        >,>  0,1  0,1  #,_ [X,_] X,_ 
+skipX        >,>  0,1  0,1  #,_  X,_ [X,_]
+skipX        >,>  0,1  0,1  #,_  X,_  X,_ [_,_]
+done         >,>  0,1  0,1  #,_  X,_ [X,_] _,_ 
+done         >,>  0,1  0,1  #,_ [X,_] X,_  _,_ 
+done         >,>  0,1  0,1 [#,_] X,_  X,_  _,_ 
+add1         >,>  0,1 [0,1] #,_  X,_  X,_  _,_ 
+allsame      >,> [0,1] 0,1  #,_  X,_  X,_  _,_ 
+rej          >,>  0,1 [0,1] #,_  X,_  X,_  _,_ 
+- : bool = false
+</pre>
+</div>
+		
+	    </li>
+
+	  </ol>
+	
+      </li>
+      
+    </ol>
+		    
+
+    
+  </body>
+</html>
