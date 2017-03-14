@@ -139,7 +139,7 @@ li > p { margin-top:0;}
     
     <h1 class="clear">Homework 5</h1>
     
-    <p class="subtitle">Due date: Friday, ?? (23:59)</p>
+    <p class="subtitle">Due date: Friday, March 24 (23:59)</p>
 
     <p><b>Note on integrity:</b> This homework is meant to be done
     individually. You may discuss problems with fellow students, but
@@ -206,8 +206,8 @@ li > p { margin-top:0;}
     <hr>
 
 
-    <p>For this homework, we use the same type of Turing machines as
-      in Homework 5:</p>
+    <p>For this homework, we use the same type of Turing machines we used in
+      Homework 4:</p>
 
 <pre>
 type symbol = string
@@ -235,8 +235,8 @@ type 'a tm = { states : 'a list;
       machines.</p>
 
 <p>
-Depending on how you implemented the Turing machine for negation and
-conjunction in the last question of Homework 4, you probably noticed that there
+Depending on how you implemented the Turing machine for binary negation and
+binary conjunction in the last question of Homework 4, you probably noticed that there
 was some redundancy in the state transitions. In particular, in the
 case of negation, when finding a 0 on the left, you had to match a 1
 on the right, and when finding a 1 on the left, you had to match a 0
@@ -244,14 +244,21 @@ on the right. The logic in both cases was the same, but you needed
 distinct states to implement that logic for the 0 case and for the 1
 case &mdash; intuitively, the states had to remember whether you had seen a 0
    or a 1. This was even worse in the conjunction case, where you had
-to remember the two bits you had seen before knowing what to match on
+to remember two bits you had seen to know what bit to match on
 the right.
 We can make it easier to express that kind of structure when writing
 the transition function of a Turing machine by making encoding this
 kind of information into the states easier.
 </p>
 
-<p>
+    <p>
+      The idea is simply to use <b>structured states</b>, where the
+      states are not just strings (say), but tuples containing not
+      only the name of the state but also some finite amount of extra
+      information. The transition function can use pattern matching on
+      that extra information, or simply pass it along.</p>
+
+    <p>
 To illustrate, let's consider a different language. Consider
 the language <i>Add1</i>, consisting of all strings of the
 form <tt><i>u</i><i>#v</i></tt> where <tt><i>u</i></tt>
@@ -272,20 +279,25 @@ A possible structure for the Turing machine is as follows:
   shape</li>
 <li>Scan from left to right, finding the last <tt>0</tt>
 or <tt>1</tt> before the <tt>#</tt>, crossing it out, and then
-scanning past the <tt>#</tt> to find the last <tt>0</tt> or <tt>1</tt>
+scanning right past the <tt>#</tt> to find the last <tt>0</tt> or <tt>1</tt>
 before the end of the string, and checking that it matches the value
-  seen before the <tt>#</tt> plus any carry from the previous
-  iteration.</li>
-<li>Continue until all the symbols have been crossed out (accept) or
+  seen before the <tt>#</tt> plus 1.</li>
+<li>Scan from left to right, finding the last <tt>0</tt>
+or <tt>1</tt> before the <tt>#</tt>, crossing it out, and then
+scanning right past the <tt>#</tt> to find the last <tt>0</tt> or <tt>1</tt>
+before the end of the string, and checking that it matches the value
+  seen before the <tt>#</tt> (plus any carry from the previous
+  iteration.)</li>
+<li>Repeat this last step  until all the symbols have been crossed out (accept) or
   you exhaust the symbols before or after the <tt>#</tt> (reject). 
 </li>
 </ul>
 </p>
 
 <p>
-Here is a Turing machine that implements the above, where the states
-are not just strings, but 
-rather <i>structured</i> values. For this particular example, I chose
+Here is a Turing machine that implements the above with structured
+states.
+For this particular example, I chose
 a state to be a tuple of 
 the form <i>(name,m,c)</i> where <i>name</i> is a name for the
 state, <i>m</i> is either 99 (the uninitialized value) or 0 or 1 (representing
@@ -361,20 +373,20 @@ let add1 =
     of the state. So we can just match on the name of the state, and
     pass the carry part through to the resulting state. We could spell
     it out by having different transitions for all the possible values
-    of the carry (99,0,1), but we don't need to. That's where we gain
-    a lot of the simplification. Look at the code for matching in
+    of the carry (99,0, or 1), but we don't need to. That's where we gain
+    a lot of the simplification. Look at the code for matching a 0 or
+    1 in
     state named <tt>scan-2</tt>. Those two rules take the place of the
     four rules that would be needed otherwise (one for every possible
     choice of <tt>v</tt> and <tt>carry</tt>) and not only is it
     shorter but it's also easier to see what's happening.</p>
 
     <p>There's only one problem with the above. The resulting machine
-      has type <tt>(string * int * int) tm</tt>. Which is fine, except
-      that our <tt>run</tt> function expects a <tt>string tm</tt>, as
-      I mentioned above. </p>
+      has type <tt>(string * int * int) tm</tt>. This doesn't entirely
+      mesh with <tt>run</tt> expecting a <tt>string tm</tt>.</p>
 
-    <p>The way we're going to fix that annoyance (Problem 2 below) is
-      by implementing a function to <i>transform</i> a Turing
+    <p>The way we're going to fix that annoyance (Problem 1 below) is
+      by implementing a function to <b>transform</b> a Turing
       machine with structured states into an equivalent Turing machine
       where the states are just strings. We'll need to provide a
       transformation function that can transform a tuple into a string
@@ -699,8 +711,8 @@ Exception: Failure "cannot find original value".
 
 
 	  <li> <p>Code a function <tt class="code">transformDelta</tt> of
-	      type <tt class="code">'a list -> ('a * 'b
-	      -> 'a * 'b * int) -> ('a -> 'c) -> ('c * 'b -> 'c * 'b *
+	      type <tt class="code">'a list -> ('a * symbol
+	      -> 'a * symbol * int) -> ('a -> 'c) -> ('c * symbol -> 'c * symbol *
 		int) </tt> where <tt>(transformDelta states delta
 	      f)</tt> takes a a list of <tt>states</tt> and a Turing
 	      machine transition function <tt>delta</tt> as well as a
@@ -853,7 +865,7 @@ val new_delta : string * string -> string * string * int = <fun>
 	</p>
 
 	<p>
-	  (The difference between thse multitrack Turing machines and multitape
+	  (The difference between these multitrack Turing machines and multitape
 	Turing machines is that multitape Turing machines have three tape
 	  heads moving independently.)
 	</p>
@@ -880,7 +892,7 @@ type 'a tm_2 = { states_2 : 'a list;
 	  </p>
 
 	<p>Here's an example of a multitrack Turing machine (with two tapes)
-	  that implements the same language <i>Add1</i> given above. It works by
+	  that implements the same language <i>Add1</i> given in the introduction. It works by
 	  taking a string <tt><i>u</i>#<i>v</i></tt> and moving the
 	  <tt><i>v</i></tt> part onto the second tape, lined up
 	  with <tt><i>u</i></tt>, and then doing a simple pass from right to
@@ -960,7 +972,8 @@ let add1_2 = {
 	    <li>the input alphabet of M' is just <tt>(a,_)</tt>
 	      for every input symbol <tt>a</tt> of M</li>
 	    <li>the tape alphabet of M' is just <tt>(a,b)</tt>
-	      for every combination of tape symbols of M</li>
+	      for every combination of tape symbols <tt>a</tt>
+	      and <tt>b</tt> of M</li>
 	    <li>the blank symbol of M' is <tt>(_,_)</tt> where
 	      <tt>_</tt> is the blank symbol of M</li>
 	    <li>the left marker symbol of M' is <tt>(>,>)</tt>
@@ -982,12 +995,18 @@ let add1_2 = {
 	  <ol class="subquestion">
 
 	    <li><p> Code a function <tt class="code">transformDelta_2</tt>
-	      of type <tt class="code">('a * string * string -> 'a * string * string * int) -> ('a * string -> 'a * string * int)</tt>
-	      taking a transition function &delta; for a 2-track Turing machine and returning the corresponding transition for transformed Turing machine given above:
+	      of type <tt class="code">('a * symbol * symbol -> 'a *
+	      symbol * symbol * int) -> ('a * symbol -> 'a * symbol * int)</tt>
+	      taking a transition function &delta; for a 2-track
+	      Turing machine and returning the corresponding
+	      transition for the transformed Turing machine given above:
 	    the resulting transition function &delta;' should satisfy &delta;'(q,(a,b)) = (p,(c,d),dir) whenever 
 		&delta;(q,a,b) = (p,c,d,dir).</p>
 
-	      <p>I supplied you with a function <tt>split</tt> that can be used to split a string into substrings separated by a given character.</p>
+	      <p>I supplied you with a function <tt>split</tt> that
+	      can be used to split a string into substrings separated
+	      by a given character, and therefore parse a symbol of
+		the form <tt>a,b</tt> </p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
@@ -1035,6 +1054,8 @@ val new_delta : string * string -> string * string * int = &lt;fun>
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre>
+# transform_2 add1_2;;
+- : string tm =
 {states =
   ["start"; "skip#"; "skipX"; "copy0_skip"; "copy0"; "copy1_skip"; "copy1";
    "done"; "add1"; "add-carry"; "allsame"; "acc"; "rej"];
