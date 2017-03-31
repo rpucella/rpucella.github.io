@@ -118,6 +118,12 @@
       <ul class="simple annoucements">
 
 	<li>
+	  <p><span>Mar 31:</span>
+	    References and links on complexity and recursive data structures below. 
+	    <a href="./homework6.html">Homework 6</a> is out. Due Friday April 7th.</p>
+	</li>
+
+	<li>
 	  <p><span>Mar 11:</span>
 	    <a href="./homework5.html">Homework 5</a> is out. Due Friday after Spring Break, March 24th.</p>
 	</li>
@@ -415,26 +421,52 @@
 	</li>	  
 
 	
-	<li><p><span class="hdr">Mar 2:</span><i>No class</i></p>
-	</li>	  
-
-
-	<li><p><span class="hdr">Mar 9:</span><i>Midterm examination</i></p>
+	<li><p><span class="hdr">Mar 9:</span><b>Midterm examination</b></p>
 	</li>
 
 
 	
-	<li><p><i>ALGORITHMS AND DATA STRUCTURES</i></p></li>
+	<li><p><b>ALGORITHMS AND DATA STRUCTURES</b></p></li>
 
 
-	<li><p><span class="hdr">Mar 23:</span><i>Algorithmic complexity</i></p>
+	<li><p><span class="hdr">Mar 23:</span><b>Algorithmic complexity</b></p>
 	  <div class="lect">
-	  </div>
+	    <p>Aaronson has a wonderfully <a href="http://www.scottaaronson.com/papers/pnp.pdf">extensive survey of the P versus NP</a> question. Warning: it gets pretty technical, but the initial sections on motivations and arguments is interesting in its own right.</p>
+	    
+	    <p>Determining the running time of recursive functions
+	    (i.e., anything you write in Ocaml) requires solving
+	    recurrence equations. There is no general method for
+	    solving recurrence equations, but many different
+	      techniques that apply in subsets of cases. <a href="https://users.cs.duke.edu/~reif/courses/alglectures/skiena.lectures/lecture3.pdf">This</a> is a
+	    reasonable
+	      overview. <a href="http://www.cs.cmu.edu/~rweba/algf09/solverecurrencesSF.pdf">This</a>
+	    goes into more detail about the so-called <i>iteration
+		method</i> for solving recurrence equations: substitute until you spot a pattern.</p>
+		</div>
 	</li>	  
 
 
-	<li><p><span class="hdr">Mar 30:</span><i>Recursive data structures</i></p>
+	<li><p><span class="hdr">Mar 30:</span><b>Recursive data structures</b></p>
 	  <div class="lect">
+	    <p>A reasonable overview of <a href="http://www.cs.cornell.edu/courses/cs3110/2011sp/lectures/lec04-types/types.htm">algebraic data types</a> in OCaml.</p>
+	    
+	    <p>Wikipedia page
+	    on <a href="https://en.wikipedia.org/wiki/Binary_search_tree">binary
+	    search trees</a> and on the version of self-balanced
+	    binary search trees I described in
+	    class, <a href="https://en.wikipedia.org/wiki/AVL_tree">AVL
+	    trees</a>. The description of the rotations that restore
+	    the balanced height property after an insertion is
+	    reasonably clear there. There are basically four cases to
+	      consider, depending on the local form of unbalance.</p>
+	    <p>A <a href="https://www.cs.usfca.edu/~galles/visualization/AVLtree.html">cute visualization</a> of what happens when you insert
+	    into an AVL tree. Try starting with the empty tree, and
+	    inserting 1, 2, 3, 4, 5, 6, 7, 8... You'll see the tree
+	      grow "to the right" and then rebalance itself repeatedly.</p>
+	    <p>An <a href="https://cs.nyu.edu/courses/fall02/V22.0310-002/lectures/lecture-16.html">analysis
+		of the height of AVL trees</a>, showing that it is
+	      always logarithmic in the number of nodes.</p>
+	    
 	  </div>
 	</li>	  
 
@@ -479,6 +511,7 @@
       <li><a href="homework3.html">Homework 3</a> &mdash; Due Friday Feb 10 (23:59)</li>
       <li><a href="homework4.html">Homework 4</a> &mdash; Due Friday Feb 24 (23:59)</li>
       <li><a href="homework5.html">Homework 5</a> &mdash; Due Friday Mar 24 (23:59)</li>
+      <li><a href="homework6.html">Homework 6</a> &mdash; Due Friday Apr 7 (23:59)</li>
       </ul>
     </div>
 
