@@ -132,3 +132,45 @@ let avl_insert (t:'a bintree) (x:'a):'a bintree =
  * QUESTION 3  (insert below when available)
  *
  *)
+
+
+type exp = 
+
+ (* PART A *)
+ | Num of int
+ | Ident of string
+ | Plus of exp * exp
+ | Times of exp * exp
+
+ (* PART B *)
+ | EQ of exp * exp
+ | GT of exp * exp
+ | And of exp * exp
+ | Not of exp
+ | If of exp * exp * exp
+
+ (* PART C *)
+ | Letval of string * exp * exp
+
+ (* PART D - BONUS *)
+ | Letfun of string * string * exp * exp
+ | Letrecfun of string * string * exp * exp
+ | App of string * exp
+
+
+type 'a env = string -> 'a
+
+let update (env:'a env) (x:string) (v:'a):'a env = 
+  fun y -> if (y = x) then v else (env y)
+
+let init:int env = (fun x -> 0)
+
+let initF:(int -> int) env = (fun x -> failwith ("unknown function "^x))
+
+
+let rec eval (exp:exp) (env:int env):int = 
+  failwith "eval not implemented"
+
+
+let rec evalF (exp:exp) (env:int env) (fenv:(int -> int) env):int =
+  failwith "evalF not implemented"

@@ -178,20 +178,65 @@ li > p { margin-top:0;}
       submission</i>.</li> 
     </ul>
 
- <!--
     <hr>
 
     <p class="subtitle">Updates</p>
     <ul class="simple">
-      <li>Feb 17: Questions 2 to 4 added. Note that I've made some
-      small changes to <tt>homework4.ml</tt> pertaining to questions 2
-      to 4, so <a href="homework4.ml"><b>I will ask you to download
-      the latest version</b></a>. If you already have solutions to
-      question 1 (which I hope you have!) you should simply transfer
-      your answers to the new file. It'll make everything easier. I
-      apologize about the minor complexities this causes.</li> 
+      <li>Apr 1: Added Question 3 below. I've also updated <tt><a href="homework6.ml">homework6.ml</a></tt>
+	with types and stubs for Question 3. If you don't want to download the new version of <tt>homework6.ml</tt>
+	you can just copy and paste the code below in the old version of <tt>homework6.ml</tt>:
+
+	<pre>
+(* 
+ * QUESTION 3  (insert below when available)
+ *
+ *)
+
+
+type exp = 
+
+ (* PART A *)
+ | Num of int
+ | Ident of string
+ | Plus of exp * exp
+ | Times of exp * exp
+
+ (* PART B *)
+ | EQ of exp * exp
+ | GT of exp * exp
+ | And of exp * exp
+ | Not of exp
+ | If of exp * exp * exp
+
+ (* PART C *)
+ | Letval of string * exp * exp
+
+ (* PART D - BONUS *)
+ | Letfun of string * string * exp * exp
+ | Letrecfun of string * string * exp * exp
+ | App of string * exp
+
+
+type 'a env = string -> 'a
+
+let update (env:'a env) (x:string) (v:'a):'a env = 
+  fun y -> if (y = x) then v else (env y)
+
+let init:int env = (fun x -> 0)
+
+let initF:(int -> int) env = (fun x -> failwith ("unknown function "^x))
+
+
+let rec eval (exp:exp) (env:int env):int = 
+  failwith "eval not implemented"
+
+
+let rec evalF (exp:exp) (env:int env) (fenv:(int -> int) env):int =
+  failwith "evalF not implemented"
+</pre>
+	
+      </li>
     </ul>
-    -->
  
     <hr>
 
@@ -703,28 +748,314 @@ val insert_all : 'a list -> 'a bintree = &lt;fun>
 	</ol>
       </li>
 
-      <li> <i>Coming soon</i> <!-- <p><b>Arithmetic Expressions</b></p>
+      <li> <p><b>Arithmetic Expressions</b></p>
 
+	<p>Consider the following type for (the parse tree of) arithmetic expressions:</p>
+<pre>
+type exp =
+
+  (* PART A *)
+  | Num of int                
+  | Ident of string
+  | Plus of exp * exp
+  | Times of exp * exp
+
+  (* PART B *)
+  | EQ of exp * exp           
+  | GT of exp * exp
+  | And of exp * exp
+  | Not of exp
+  | If of exp * exp * exp
+
+  (* PART C *)
+  | Letval of string * exp * exp    
+
+  (* PART D - BONUS *)
+  | Letfun of string * string * exp * exp      
+  | Letrecfun of string * string * exp * exp
+  | App of string * exp
+</pre>
+
+	<p>We won't be using all constructors at once.</p>
+
+	<p>We will be writing an <i>evaluation function</i> that takes
+	  an expression written as a parse tree as above, and
+	  evaluates it down to a value.  To deal with identifiers
+	  (variables) appearing in an expression, we supply
+	  an <i>environment</i> to the evaluation function which tells
+	  the evaluation which integer each identifier is mapped
+	  to. An environment is just a function <tt>string -> T</tt>
+	  where <tt>T</tt> is the type of values that the environment
+	  stores. Mostly, we'll be working with integer environments,
+	  where <tt>T</tt> is <tt>int</tt>. I've supplied you with two
+	  environment-manipulating functions:</p>
+	
+	<pre>
+let init : int env = (fun x -> 0)
+
+let update (env:'a env) (x:string) (v:'a):'a env =
+  (fun y -> if (x=y) then v else env y</pre>
+	
+	<p>Value <tt>init</tt> is an initial integer environment that
+	maps every identifier to 0. Function <tt>update</tt> takes an
+	environment <tt>env</tt>, an identifier <tt>x</tt> and a
+	value <tt>v</tt>, and returns a new environment which
+	maps <tt>x</tt> to <tt>v</tt> and maps every other identifier
+	to whatever the original environment <tt>env</tt> maps it
+	to. Thus, <tt>update init x 10</tt> is an environment that
+	maps <tt>x</tt> to 10 and every other identifier to 0.</p>
+					  
 	<ol class="subquestion">
 
-	  <li> ((implement evaluation))
+	  <li><p> Code a function <tt class="code">eval</tt> of
+	  type <tt class="code">exp -> int env -> int</tt>
+	      where <tt>eval exp env</tt> takes an
+	  expression <tt>exp</tt> using only
+	  constructors <tt>Num</tt>, <tt>Ident</tt>, <tt>Plus</tt>,
+	  and <tt>Times</tt> and an environment <tt>env</tt> and
+	  returns the result of evaluating <tt>exp</tt> with
+	  environment <tt>env</tt> to resolve identifiers. You can
+	  use <tt>failwith</tt> to return an error if you encounter another
+	  constructor.</p>
 
+	    <p>Intuitively, a <tt>Num</tt> evaluates to the number
+	    itself, an idenfitier <tt>Ident</tt> evaluates to whatever
+	    the environment says it maps to, and <tt>Plus</tt>
+	    and <tt>Times</tt> evaluate to the result of adding or
+	    multiplying the values to which the subexpressions
+	    evaluate to. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre class="code">
+# eval (Num 10) init;;
+- : int = 10
+# eval (Ident "x") init;;
+- : int = 0
+# eval (Plus(Num 10, Num 20)) init;;
+- : int = 30
+# eval (Plus(Num 10, Ident "x")) (update init "x" 2);;
+- : int = 12
+# eval (Times(Num 10, Ident "x")) (update init "x" 2);;
+- : int = 20
+# eval (Times(Plus(Num 10, Ident "y"), Ident "x")) (update init "x" 2);;
+- : int = 20
+# eval (Times(Plus(Num 10, Ident "x"), Ident "x")) (update init "x" 2);;
+- : int = 24
+# eval (Plus (Ident "x", Ident "y")) (update (update init "x" 42) "y" 10);;
+- : int = 52
+</pre>
+</div>
 	  </li>
+      
+	  <li><p> If we interpret integer 0 as <i>false</i> and an
+	  integer different from 0 as <i>true</i>, we can handle
+	      Boolean operations and conditional evaluation in our
+	      expressions.</p>
 
-	  <li> ((add floating point numbers))
+	    <p>Intuitively, <tt>EQ</tt> evaluates to true (that is,
+	    any integer different from 0) if its two
+	      arguments evaluate to the same value, while <tt>GT</tt>
+	    evaluates to true (that is, any integer different from 0)
+	    if its first argument evaluates to a 
+	      value greater than the second
+	      argument. They evaluate to false (0) otherwise.
+	    </p>
+
+	    <p>Expression <tt>And</tt> evaluates to true (that is,
+	      any integer different from 0) if both its arguments
+	    evaluate to true, and evaluates to false (0) otherwise,
+	    while expression <tt>Not</tt> evaluates to true
+	    when its argument evaluates to false, and evaluates to
+	      false otherwise.</p>
+
+	    <p>Expression <tt>If</tt> is more interesting. It first
+	    evaluates its first argument. If it is true, then it
+	    evaluates its second argument and uses that as the result
+	      of the overall evaluation of <tt>If</tt>. Otherwise, it
+	    evaluates its 
+	    third argument, and uses that as the result of the overall
+	      evaluation of <tt>If</tt>. </p>
+	      
+	    <p>Extend your function <tt class="code">eval</tt> from
+	    part A so that you can also evaluate expressions using
+	      constructors <tt>EQ</tt>, <tt>GT</tt>, <tt>And</tt>, <tt>Or</tt>,
+	      and <tt>If</tt>. 
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# eval (EQ (Num 10,Num 10)) init;;                                             
+- : int = 1                                                                    
+# eval (EQ (Num 10,Num 0)) init;;                                              
+- : int = 0                                                                    
+# eval (EQ (Plus (Num 1,Num 2), Num 2)) init;;                                 
+- : int = 0                                                                    
+# eval (GT (Num 10,Num 10)) init;;                                             
+- : int = 0                                                                    
+# eval (GT (Num 10,Num 0)) init;;                                              
+- : int = 1                                                                    
+# eval (GT (Plus (Num 1,Num 2), Num 2)) init;;                                 
+- : int = 1                                                                    
+# eval (And (Num 1,Num 1)) init;;                                              
+- : int = 1                                                                    
+# eval (And (Num 1,Num 0)) init;;                                              
+- : int = 0                                                                    
+# eval (Not (Num 1)) init;;                                                    
+- : int = 0                                                                    
+# eval (Not (Num 0)) init;;                                                    
+- : int = 1                                                                    
+# eval (And (Num 1, Not (Num 1))) init;;                                       
+- : int = 0                                                                    
+# eval (And (Num 0, Not (Num 0))) init;;                                       
+- : int = 0                                                                    
+# eval (If (EQ (Ident "x", Num 42), Num 100, Num 200)) init;;                  
+- : int = 200                                                                  
+# eval (If (EQ (Ident "x", Num 42), Num 100, Num 200)) (update init "x" 42);;  
+- : int = 100                                                                  
+</pre>
+</div>
 	    
 	  </li>
 
-	  <li> ((add boolean expressions and conditionals ))
+
+	  
+	  <li>
+
+	    <p>We haven't really manipulated the environment during
+	  evaluation. We can easily define names for values during
+	      evaluation using constructor <tt>Letval</tt>.</p>
+
+	    <p>Intuitively, expression <tt>Letval (x,e1,e2)</tt>
+	      evaluates <tt>e1</tt> to an integer <i>n</i>, and then
+	      evaluates <tt>e2</tt> in the environment updated to map
+	      identifier <tt>x</tt> to <i>n</i>.
+	    </p>
+
+	    <p>Extend your function <tt class="code">eval</tt> from
+	    part A and B so that you can also evaluate expressions using
+	      constructor <tt>Letval</tt>.
+	    <p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# eval (Letval ("x",Num 42, Plus (Ident "x",Num 1))) init;;
+- : int = 43
+# eval (Letval ("x",Num 42, Letval ("y",Num 10, Plus (Ident "x",Ident "y")))) init;;
+- : int = 52
+# eval (Letval ("x",Num 42, Letval ("y",Plus(Ident "x", Num 10),
+                Times (Ident "y", Num 2)))) init;;
+- : int = 104  
+# eval (Letval ("x",Letval("y",Num 1,Plus(Ident "y",Num 2)),
+                Times(Ident "x",Num 4))) init;;
+- : int = 12 
+</pre>
+</div>
+	      
 	  </li>
 
-	  <li> ((add variable update))
+	  
+	  <li> <p><B>(BONUS for no advantage except impressing me)</B></p>
+
+	    <p>Using <tt>Letval</tt> to create names for values is
+	      nice enough,  but it would be really great if we could
+	      write <i>functions</i> in our expressions language that
+	      simplify the writing of complex
+	      expressions. Constructors <tt>Letfun</tt>
+	      and <tt>App</tt> let us do just that.</p>
+
+	    <p>Intuitively, <tt>Letfun (f,x,e1,e2)</tt> defines a
+	      (nonrecursive) function called <tt>f</tt> that takes a single
+	      parameter <tt>x</tt> and has body <tt>e1</tt>. 
+	      Calling <tt>f</tt> with an integer  <i>n</i> amounts to
+	      evaluating <tt>e1</tt> in an environment extended so
+	      that parameter <tt>x</tt> maps to <i>n</i>. The function
+	      definition is available during the evaluation
+	      of <tt>e2</tt>, whose result is the result of the
+	      overall evaluation
+	      of <tt>Letfun</tt>. Expression <tt>App</tt> is used
+	      to <i>apply</i> a function. It takes a function name (a
+	      string) and an expression, evaluates the expression to a
+	      value, and calls the function with that value to get the
+	      final result.</p>
+
+	    <p>We can't store functions in the environment, because
+	      the environment can only store values of
+	      type <tt>int</tt>. So we are going to use a second
+	      environment, a function environment, to store values of
+	      type <tt>int -> int</tt>, and pass that function
+	      environment around along with the normal
+	      environment. </p>
+
+	    <p>I have provided you with an initial function environment <tt>initF</tt>
+	      that assigns an undefined function to every
+	      function name.</p>
+
+
+	  <p> Code a function <tt class="code">evalF</tt> of
+	  type <tt class="code">exp -> int env -> (int -> int) env ->
+		int</tt> where <tt>evalF exp env fenv</tt> takes an
+	      expression <tt>exp</tt> using all the constructors
+	      in <tt>exp</tt> (except <tt>Letfunrec</tt>), an
+	  environment <tt>env</tt>, a function
+	      environment <tt>fenv</tt>, and 
+	      returns the result of evaluating <tt>exp</tt> with
+	  environment <tt>env</tt> to resolve identifiers and function
+	      environment <tt>fenv</tt> to resolve function
+	      names. (No, you won't get to reuse <tt>eval</tt>. You'll need to rewrite the whole
+	  evaluation function from scratch.)</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre class="code">
+# evalF (Letfun ("square","x",Times(Ident "x", Ident "x"),
+                 App("square",Num 10))) init initF;;
+- : int = 100
+# evalF (Letfun ("square","x",Times(Ident "x", Ident "x"),
+                 Letfun ("double","y",Times(Num 2, Ident "y"),
+                         App ("double", App ("square",Num 42))))) init initF;;
+- : int = 3528
+</pre>
+</div>
+
+	    <p>Additionally, extend <tt class="code">evalF</tt> to handle
+	      constructor <tt>Letrecfun</tt> for defining recursive
+	      functions.</p>
+
+	    <p>Intuitively, <tt>Letrecfun (f,x,e1,e2)</tt> defines a
+	      recursive function called <tt>f</tt> that takes a single
+	      parameter <tt>x</tt> and has body <tt>e1</tt>.
+	      Calling <tt>f</tt> with an integer <i>n</i> amounts to
+	      evaluating <tt>e1</tt> in an environment extended so
+	      that parameter <tt>x</tt> maps to <i>n</i>, and in which
+	      function name <tt>f</tt> refers to the function being
+	      defined itself.  Function <tt>f</tt> is also available
+	      during the evaluation of <tt>e2</tt>, whose result is
+	      the result of the overall evaluation
+	      of <tt>Letrecfun</tt>. </p>
+
+
+	      
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# evalF (Letrecfun ("fact","n",If (GT (Ident "n", Num 0),
+                                   Times (Ident "n", App ("fact",
+                                                          Plus (Ident "n", Num (-1)))),
+                                   Num 1),
+                    (App ("fact", Num 7)))) init initF;;
+- : int = 5040
+</pre>
+</div>
+  
+
+	    <p>Oh, and congratulations! You're more than halfway through writing
+	    an interpreter for OCaml.</p>
+
 	  </li>
 
-	  <li> ((add while loops ))
-	  </li>
-
-	  <p>Welcome to programming language interpretation!</p> -->
 
 	</ol>
 
