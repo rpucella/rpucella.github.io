@@ -425,10 +425,10 @@ Searching (depth 13, max width 13)
     3:</p>
   <pre>
 type 'a fa = { states: 'a list;
-		alphabet: char list;
-		delta: ('a * char * 'a);
-		start : 'a;
-		final : 'a list }  </pre>
+               alphabet: char list;
+               delta: ('a * char * 'a) list;
+               start : 'a;
+               final : 'a list }  </pre>
 
   <p>In class, I described a way to convert a finite
   automaton to a context-free grammar that generates the language accepted by the
