@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 8</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+/*           background: #e6e6e6; */
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+      
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+      ol.question > li {
+      font-weight: bold;
+      }
+
+      ol.question > li > * {
+      font-weight: normal;
+      }
+      
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP17</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 8</h1>
+    
+    <p class="subtitle">Due date: Sunday, April 23 (23:59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists your <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Please code your answers by modifying the
+      file <a href="homework8.ml"><tt>homework8.ml</tt></a> provided.</p>
+
+    <p>Please <b>do not change the types in the signature of the
+	function stubs I provide</b>. Doing so will make it
+	impossible to load your code into the testing infrastructure,
+      and make me unhappy.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use
+      "homework8.ml";;</tt></li>
+      <li>If there are any error, do not submit. I can't test what I
+	can't <tt>#use</tt>.</li>
+      <li>When you're ready to submit, send an email with your
+      file <tt>homework8.ml</tt> as an attachment
+      to <tt>focs.sp17@gmail.com</tt> with subject <i>Homework 8
+      submission</i>.</li> 
+    </ul>
+
+
+    <hr>
+
+
+    <p>This homework is about the lambda calculus. I've implemented
+    some code for you to enter and simplify lambda-calculus terms using the
+    rules we saw in class. The result is not very fast, but it
+    works.</p>
+
+    <p>A term is just a string in OCaml. The syntax of terms is
+      the one we saw in class, adapted to the ASCII character set:
+      <ul>
+	<li>An identifier can be any sequence of alphanumeric
+	  characters (including <tt>_</tt>, and starting with a
+	  letter), such as <tt>x</tt> or <tt>arg_2</tt>
+	<li>A lambda is written <tt>&lt;identifier -> M></tt>
+	  where <tt>M</tt> is a term, such
+	  as <tt>&lt;x -> x></tt> or <tt>&lt;arg -> plus arg arg></tt>
+	<li>An application is written <tt>M N</tt>, where <tt>M</tt>
+	  and <tt>N</tt> are terms</li>
+	<li>Terms can be wrapped in parentheses, such
+	  as <tt>(&lt;x -> x>)</tt> or <tt>(ident1 &lt;y -> y>)</tt>.
+	</li>
+      </ul>
+    </p>
+
+    <p>To simplify a term, I gave you a
+    function <tt>simplify</tt> that repeatedly simplifies redexes
+    until the term reaches a normal form. (If a normal form is not
+      reached after a given number of steps, you'll get an error.)</p>
+
+    <pre>
+# simplify default_defs "&lt;x -> x>";;
+Term already in normal form
+- : string = "&lt;x -> x>"
+# simplify default_defs "&lt;x -> x> z";;
+- : string = "z"
+# simplify default_defs "&lt;x -> &lt;y -> y y> x> z";;
+- : string = "z z"</pre>
+
+    <p>    A variant of <tt>simplify</tt> called <tt>simplify_verbose</tt>
+      reports all intermediate terms that arise during a
+      simplification. That can be quite helpful for debugging.</p>
+
+    <pre>
+# simplify_verbose default_defs "&lt;x -> &lt;y -> y y> x> z";;
+   &lt;x -> &lt;y -> y y> x> z
+ = &lt;y -> y y> z
+ = z z
+- : string = "z z"</pre>
+
+    <p>What about the first argument of <tt>simplify</tt>
+      and <tt>simplify_verbose</tt>? Recall that when I presented the
+      lambda calculus in class, I started defining terms as abbreviations, for terms such as <tt>true</tt> and <tt>false</tt>, to help 
+      us when
+      writing down more interesting terms. The
+      first argument to <tt>simplify</tt>
+      and <tt>simplify_verbose</tt> is a sequence of definitions, each
+      of the form <i>(name,def)</i> where <i>name</i> is the name of
+      the term being defined, and <i>def</i> is the
+      definition. For example, here are the definitions
+      of <tt>true</tt> and <tt>false</tt>:
+    </p>
+
+    <pre>
+    ("true", "&lt;x -> &lt;y -> x>>")
+    ("false", "&lt;x -> &lt;y -> y>>")    </pre>
+
+    <p>To make your life easier, I've provided you with
+    a <tt>default_defs</tt> set of definitions that pretty much
+    defines everything we did in class, including natural number
+      arithmetic, complete with a predecessor function</p>
+
+<pre>
+let default_defs = [ 
+   ("true","&lt;x -> &lt;y -> x>>");
+   ("false","&lt;x -> &lt;y -> y>>");
+   ("if","&lt;c -> &lt;x -> &lt;y -> c x y>>>");
+   ("and","&lt;b -> &lt;c -> b c false>>");
+   ("or","&lt;b -> &lt;c -> b true c>>");
+   ("not","&lt;b -> b false true>");
+   ("_0","&lt;f -> &lt;x -> x>>");
+   ("_1","&lt;f -> &lt;x -> f x>>");
+   ("_2","&lt;f -> &lt;x -> f (f x)>>");
+   ("_3","&lt;f -> &lt;x -> f (f (f x))>>");
+   ("_4","&lt;f -> &lt;x -> f (f (f (f x)))>>");
+   ("_5","&lt;f -> &lt;x -> f (f (f (f (f x))))>>");
+   ("succ","&lt;n -> &lt;f -> &lt;x -> (n f) (f x)>>>");
+   ("plus","&lt;m -> &lt;n -> &lt;f -> &lt;x -> (m f) (n f x)>>>>");
+   ("times","&lt;m -> &lt;n -> &lt;f -> &lt;x -> m (n f) x>>>>");
+   ("iszero","&lt;n -> n &lt;x -> false> true>");
+   ("pred","&lt;n -> &lt;f -> &lt;x -> n &lt;g -> &lt;h -> h (g f)>> &lt;u -> x> &lt;u -> u>>>>");
+   ("pair","&lt;x -> &lt;y -> &lt;s -> s x y>>>");
+   ("pfirst","&lt;p -> p &lt;x -> &lt;y -> x>>>");
+   ("psecond","&lt;p -> p &lt;x -> &lt;y -> y>>>");
+   ("Y","&lt;f -> &lt;x -> f (x x)> &lt;x -> f (x x)>>");
+   ("fact","Y &lt;fact -> &lt;n -> (iszero n) _1 (times n (fact (pred n)))>>")
+ ]</pre>
+
+    <p>You'll note that you have only the first 6 natural numbers defined
+      as literals. This means that if you want to use natural number 8 somewhere, for instance, you will either
+      have to create it by hand, or use the arithmetic operations:
+    </p>
+
+    <pre>
+# simplify_verbose default_defs "plus _4 _4";;
+   &lt;m -> &lt;n -> &lt;f -> &lt;x -> m f (n f x)>>>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>>
+ = &lt;n -> &lt;f -> &lt;x -> &lt;f -> &lt;x -> f (f (f (f x)))>> f (n f x)>>> &lt;f -> &lt;x -> f (f (f (f x)))>>
+ = &lt;f -> &lt;x -> &lt;f -> &lt;x -> f (f (f (f x)))>> f (&lt;f -> &lt;x -> f (f (f (f x)))>> f x)>>
+ = &lt;f -> &lt;x -> &lt;x -> f (f (f (f x)))> (&lt;f -> &lt;x -> f (f (f (f x)))>> f x)>>
+ = &lt;f -> &lt;x -> f (f (f (f (&lt;f -> &lt;x -> f (f (f (f x)))>> f x))))>>
+ = &lt;f -> &lt;x -> f (f (f (f (&lt;x -> f (f (f (f x)))> x))))>>
+ = &lt;f -> &lt;x -> f (f (f (f (f (f (f (f x)))))))>>
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f (f (f (f x)))))))>>"</pre>
+
+    <p>When you simplify a term, all definitions are expanded out
+    before simplification occurs. This means that when you get 
+       the simplified term back, it will be expressed in
+    terms of the expanded out definitions. Thus, if you want to check
+      that the number 8 you create above is zero or not, you'll get
+      the resulting <tt>false</tt> in terms of how it is defined:</p>
+
+    <pre>
+# simplify_verbose default_defs "iszero (plus _4 _4)";;
+   &lt;n -> n &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>> (&lt;m -> &lt;n -> &lt;f -> &lt;x -> m f (n f x)>>>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>>)
+ = &lt;m -> &lt;n -> &lt;f -> &lt;x -> m f (n f x)>>>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>
+ = &lt;n -> &lt;f -> &lt;x -> &lt;f -> &lt;x -> f (f (f (f x)))>> f (n f x)>>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>
+ = &lt;f -> &lt;x -> &lt;f -> &lt;x -> f (f (f (f x)))>> f (&lt;f -> &lt;x -> f (f (f (f x)))>> f x)>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>
+ = &lt;x -> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> x)> &lt;x -> &lt;y -> x>>
+ = &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>)
+ = &lt;x -> &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> x)))> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>)
+ = &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>))))
+ = &lt;x -> &lt;y -> y>>
+- : string = "&lt;x -> &lt;y -> y>>"
+</pre>
+
+    <p>Don't worry, by the time you're done with this homework, your brain will be rewired so that you'll read <tt>&lt;x -> &lt;y -> y>></tt> as <tt>false</tt> and <tt>&lt;x -> &lt;y -> x>></tt> as <tt>true</tt>. You're welcome.</p> 
+
+
+    <p>A tricky point about definitions: every definition in the list of
+    definitions can only refer to previously defined terms. This means two things. First, that you can't write recursive definitions.
+      If you want recursion, you need to use the <tt>Y</tt> combinator &mdash; see <tt>fact</tt> in the default definitions for an example. It also means that the order
+    of definitions is important, just like in OCaml. What's tricky is that
+    if you mess it up, the simplification process will not complain. An undefined identifier
+    is just that, an identifier, and it is passed around as an identifier. This makes debugging
+      somewhat painful. For instance, suppose you mess up the <tt>plus</tt> in the previous example:</p>
+
+    <pre>
+# simplify_verbose default_defs "iszero (pluss _4 _4)";;
+   &lt;n -> n &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>> (pluss &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>>)
+ = pluss &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>
+- : string =
+"pluss &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>"</pre>
+
+    <p>Yeah, that's not great. The clue that something went wrong is the <tt>pluss</tt> there at the beginning.</p>
+
+    <p>You can of course create your own definitions that you can pass to <tt>simplify</tt> or <tt>simplify_verbose</tt>. For instance, you can define <tt>_8</tt> and use it:</p>
+
+    <pre>
+# simplify_verbose (default_defs @ [("_8","plus _4 _4")]) "iszero _8";;
+   &lt;n -> n &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>> (&lt;m -> &lt;n -> &lt;f -> &lt;x -> m f (n f x)>>>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>>)
+ = &lt;m -> &lt;n -> &lt;f -> &lt;x -> m f (n f x)>>>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>
+ = &lt;n -> &lt;f -> &lt;x -> &lt;f -> &lt;x -> f (f (f (f x)))>> f (n f x)>>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>
+ = &lt;f -> &lt;x -> &lt;f -> &lt;x -> f (f (f (f x)))>> f (&lt;f -> &lt;x -> f (f (f (f x)))>> f x)>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>
+ = &lt;x -> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> x)> &lt;x -> &lt;y -> x>>
+ = &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>)
+ = &lt;x -> &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> x)))> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>)
+ = &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>))))
+ = &lt;x -> &lt;y -> y>>
+- : string = "&lt;x -> &lt;y -> y>>"</pre>
+
+    <p>In fact, all the questions below ask you to create
+    definitions. For each question, you should put all your
+    definitions into list of definitions that is self-contained,
+    meaning that I can pass it (and only it) to <tt>simplify</tt> to test your
+    definitions. In practice, this means that these definitions will
+    extend the default definitions. Feel free to add definitions for helper functions if you need them. 
+
+    
+    <hr>
+
+
+    <ol class="question">
+
+    </ol>
+
+  </body>
+</html>
