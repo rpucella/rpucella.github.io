@@ -270,11 +270,18 @@ let default_defs = [
    ("times","&lt;m -> &lt;n -> &lt;f -> &lt;x -> m (n f) x>>>>");
    ("iszero","&lt;n -> n &lt;x -> false> true>");
    ("pred","&lt;n -> &lt;f -> &lt;x -> n &lt;g -> &lt;h -> h (g f)>> &lt;u -> x> &lt;u -> u>>>>");
+   ("minus","&lt;n -> &lt;m -> m pred n>>");
+   ("geq","&lt;m -> &lt;n -> not (iszero (minus (succ m) n))>>");
    ("pair","&lt;x -> &lt;y -> &lt;s -> s x y>>>");
    ("pfirst","&lt;p -> p &lt;x -> &lt;y -> x>>>");
    ("psecond","&lt;p -> p &lt;x -> &lt;y -> y>>>");
    ("Y","&lt;f -> &lt;x -> f (x x)> &lt;x -> f (x x)>>");
-   ("fact","Y &lt;fact -> &lt;n -> (iszero n) _1 (times n (fact (pred n)))>>")
+   ("fact","Y &lt;fact -> &lt;n -> (iszero n) _1 (times n (fact (pred n)))>>");
+   ("alt_0","&lt;x -> x>");
+   ("alt_1","&lt;x -> x false &lt;x -> x>>");
+   ("alt_2","&lt;x -> x false &lt;x -> x false &lt;x -> x>>>");
+   ("alt_3","&lt;x -> x false &lt;x -> x false &lt;x -> x false &lt;x -> x>>>>");
+   ("alt_succ","&lt;n -> &lt;x -> x false n>>")
  ]</pre>
 
     <p>You'll note that you have only the first 6 natural numbers defined
@@ -439,6 +446,8 @@ let default_defs = [
 	      described above and returns integer <i>m+n</i>. 
 	    </p>
 
+	    <p>I have given you terms <tt>minus</tt> for subtraction and <tt>geq</tt> for testing if a number if greater than or equal to another in the list of default definitions, which may come in handy.</p>
+
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
@@ -555,6 +564,9 @@ let default_defs = [
 	    <p>Code a term <tt class="code">alt_pred</tt> which takes 
 a number n in this alternate representation and returns the predecessor 
 of that number. Your term need not do anything sensible when applied to the repsentation of zero.</p>
+
+	    <p>I have given you terms <tt>alt_0</tt>, <tt>alt_1</tt>, <tt>alt_2</tt>, and <tt>alt_succ</tt> in the list of
+	      default definitions to help you test.</p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
