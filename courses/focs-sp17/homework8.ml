@@ -271,11 +271,18 @@ let default_defs = [
    ("times","<m -> <n -> <f -> <x -> m (n f) x>>>>");
    ("iszero","<n -> n <x -> false> true>");
    ("pred","<n -> <f -> <x -> n <g -> <h -> h (g f)>> <u -> x> <u -> u>>>>");
+   ("minus","<n -> <m -> m pred n>>");
+   ("geq","<m -> <n -> not (iszero (minus (succ m) n))>>");
    ("pair","<x -> <y -> <s -> s x y>>>");
    ("pfirst","<p -> p <x -> <y -> x>>>");
    ("psecond","<p -> p <x -> <y -> y>>>");
    ("Y","<f -> <x -> f (x x)> <x -> f (x x)>>");
-   ("fact","Y <fact -> <n -> (iszero n) _1 (times n (fact (pred n)))>>")
+   ("fact","Y <fact -> <n -> (iszero n) _1 (times n (fact (pred n)))>>");
+   ("alt_0","<x -> x>");
+   ("alt_1","<x -> x false <x -> x>>");
+   ("alt_2","<x -> x false <x -> x false <x -> x>>>");
+   ("alt_3","<x -> x false <x -> x false <x -> x false <x -> x>>>>");
+   ("alt_succ","<n -> <x -> x false n>>")
  ]
    
 
@@ -329,8 +336,6 @@ let tfirst = ("tfirst", "not_implemented")
 let tsecond = ("tsecond", "not_implemented")
 let tthird = ("tthird", "not_implemented")
 
-let minus = ("minus", "not_implemented")
-
 let alt_iszero = ("alt_iszero", "not_implemented")
 let alt_pred = ("alt_pred", "not_implemented")
 
@@ -342,13 +347,8 @@ let alt_pred = ("alt_pred", "not_implemented")
  *)
 
 let q2_defs : (string * string) list = 
-   default_defs @ [ ("alt_0","<x -> x>");
-		    ("alt_1","<x -> x false <x -> x>>");
-		    ("alt_2","<x -> x false <x -> x false <x -> x>>>");
-		    ("alt_3","<x -> x false <x -> x false <x -> x false <x -> x>>>>");
-		    ("alt_succ","<n -> <x -> x false n>>");
-		    triple; tfirst; tsecond; tthird; 
-                    minus; alt_iszero; alt_pred ]
+   default_defs @ [ triple; tfirst; tsecond; tthird; 
+                    alt_iszero; alt_pred ]
 
 
 

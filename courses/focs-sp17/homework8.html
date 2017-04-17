@@ -311,8 +311,7 @@ let default_defs = [
  = &lt;x -> &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> x)))> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>)
  = &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>))))
  = &lt;x -> &lt;y -> y>>
-- : string = "&lt;x -> &lt;y -> y>>"
-</pre>
+- : string = "&lt;x -> &lt;y -> y>>"  </pre>
 
     <p>Don't worry, by the time you're done with this homework, your brain will be rewired so that you'll read <tt>&lt;x -> &lt;y -> y>></tt> as <tt>false</tt> and <tt>&lt;x -> &lt;y -> x>></tt> as <tt>true</tt>. You're welcome.</p> 
 
@@ -330,7 +329,7 @@ let default_defs = [
    &lt;n -> n &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>> (pluss &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>>)
  = pluss &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>
 - : string =
-"pluss &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>"</pre>
+"pluss &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>"   </pre>
 
     <p>Yeah, that's not great. The clue that something went wrong is the <tt>pluss</tt> there at the beginning.</p>
 
@@ -347,7 +346,7 @@ let default_defs = [
  = &lt;x -> &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> x)))> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>)
  = &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>))))
  = &lt;x -> &lt;y -> y>>
-- : string = "&lt;x -> &lt;y -> y>>"</pre>
+- : string = "&lt;x -> &lt;y -> y>>"   </pre>
 
     <p>In fact, all the questions below ask you to create
     definitions. For each question, you should put all your
@@ -361,6 +360,415 @@ let default_defs = [
 
 
     <ol class="question">
+
+      <li> <p><b>Integers</b></p>
+
+	<p><i>This question asks you to create definitions of
+	    lambda calculus terms with a given name. There are already
+	placeholders for those definitions that you should replace
+	with your own. Remember that each definition is a name and a
+	term. All these definitions are automatically added to a list of
+	definitions <tt>q1_defs</tt>, which is what I'll be
+	    testing. Any helper functions you need must go
+	    in <tt>q1_defs</tt> as well.</i></p>  
+
+	<p>We saw in class an encoding of natural numbers
+	  0,1,2,3,... In this question, we consider an encoding of
+	  intergers, ...,-3,-2,-1,0,1,2,3,... </p>
+
+	<p>The encoding is dead simple. An integer is a pair of a
+	sign and a natural number. The sign will be represented by a
+	  Boolean value: <tt>true</tt> for positive integers,
+	  and <tt>false</tt> for negative integers. Thus,
+	  <i>(true,3)</i> is the representation of integer 3,
+	  and <i>(false,2)</i> the representation of integer
+	  -2. Integer 0 is always represented as (true,0).</p>
+
+	<ol class="subquestion">
+
+	  <li>
+	    <p>Code a term <tt class="code">int</tt> which
+	      takes a natural number <i>n</i> and returns a (positive) integer
+	      <i>n</i> in the encoding described above. 
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q1_defs "pfirst (int _0)";;
+- : string = "&lt;x -> &lt;y -> x>>"
+# simplify q1_defs "pfirst (int _1)";;
+- : string = "&lt;x -> &lt;y -> x>>"
+# simplify q1_defs "pfirst (int _2)";;
+- : string = "&lt;x -> &lt;y -> x>>"
+# simplify q1_defs "psecond (int _0)";;
+- : string = "&lt;f -> &lt;x -> x>>"   
+# simplify q1_defs "psecond (int _1)";;
+- : string = "&lt;f -> &lt;x -> f x>>"
+# simplify q1_defs "psecond (int _2)";;
+- : string = "&lt;f -> &lt;x -> f (f x)>>"   </pre>
+</div>
+	  </li>	  
+	  
+	  <li>
+	    <p>Code a term <tt class="code">neg_int</tt> which
+	      takes an integer <i>n</i> in the encoding described
+	      above, and returns its negation. Recall that the negation of 2 is
+	      -2, and the negation of -3 is 3. 
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q1_defs "pfirst (neg_int (int _3))";;
+- : string = "&lt;x -> &lt;y -> y>>"
+# simplify q1_defs "psecond (neg_int (int _3))";;
+- : string = "&lt;f -> &lt;x -> f (f (f x))>>"
+# simplify q1_defs "pfirst (neg_int (neg_int (int _3)))";;
+- : string = "&lt;x -> &lt;y -> x>>"
+# simplify q1_defs "psecond (neg_int (neg_int (int _3)))";;
+- : string = "&lt;f -> &lt;x -> f (f (f x))>>"	  </pre>
+</div>
+	  </li>	  
+
+
+
+	  <li>
+	    <p>Code a term <tt class="code">plus_int</tt> which
+	      takes two integers <i>m</i> and <i>n</i> in the encoding
+	      described above and returns integer <i>m+n</i>. 
+	    </p>
+
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q2_defs "fst (plus_int (int _3) (int _2))";;
+- : string = "&lt;x -> &lt;y -> x>>"
+# simplify q2_defs "snd (plus_int (int _3) (int _2))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f x))))>>"
+# simplify q2_defs "fst (plus_int (int _3) (neg_int (int _2)))";;
+- : string = "&lt;x -> &lt;y -> x>>"
+# simplify q2_defs "snd (plus_int (int _3) (neg_int (int _2)))";;
+- : string = "&lt;f -> &lt;x -> f x>>"
+# simplify q2_defs "fst (plus_int (neg_int (int _3)) (int _2))";;
+- : string = "&lt;x -> &lt;y -> y>>"
+# simplify q2_defs "snd (plus_int (neg_int (int _3)) (int _2))";;
+- : string = "&lt;f -> &lt;x -> f x>>"
+# simplify q2_defs "fst (plus_int (neg_int (int _3)) (neg_int (int _2)))";;
+- : string = "&lt;x -> &lt;y -> y>>"
+# simplify q2_defs "snd (plus_int (neg_int (int _3)) (neg_int (int _2)))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f x))))>>"	  </pre>
+</div>
+	  </li>	  
+
+
+	  <li>
+	    <p>Code a term <tt class="code">times_int</tt> which
+	      takes two integers <i>m</i> and <i>n</i> in the encoding
+	      described above and returns integer <i>m &times; n</i>. 
+	    </p>
+
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q2_defs "fst (times_int (int _3) (int _2))";;
+- : string = "&lt;x -> &lt;y -> x>>"
+# simplify q2_defs "snd (times_int (int _3) (int _2))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f (f x)))))>>"
+# simplify q2_defs "fst (times_int (int _3) (neg_int (int _2)))";;
+- : string = "&lt;x -> &lt;y -> y>>"
+# simplify q2_defs "snd (times_int (int _3) (neg_int (int _2)))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f (f x)))))>>"
+# simplify q2_defs "fst (times_int (neg_int (int _3)) (int _2))";;
+- : string = "&lt;x -> &lt;y -> y>>"
+# simplify q2_defs "snd (times_int (neg_int (int _3)) (int _2))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f (f x)))))>>"
+# simplify q2_defs "fst (times_int (neg_int (int _3)) (neg_int (int _2)))";;
+- : string = "&lt;x -> &lt;y -> x>>"
+# simplify q2_defs "snd (times_int (neg_int (int _3)) (neg_int (int _2)))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f (f x)))))>>"	  </pre>
+</div>
+	  </li>	  
+
+
+	</ol>
+
+      </li>
+
+
+
+
+      <li> <p><b>Encodings</b></p>
+
+	<p><i>This question asks you to create definitions of
+	    lambda calculus terms with a given name. There are already
+	placeholders for those definitions that you should replace
+	with your own. Remember that each definition is a name and a
+	    term. All these definitions are automatically added to a list of
+	definitions <tt>q2_defs</tt>, which is what I'll be
+	    testing. Any supporting definitions you need must go in 
+	    <tt>q2_defs</tt>.</i></p>
+	
+	<ol class="subquestion">
+
+	  <li><p>Let's encode triples. A triple is a package containing three values, <i>(x,y,z)</i>. </p>
+
+	    <p>Code a term <tt class="code">triple</tt> which
+	      takes three arguments <i>x</i>, <i>y</i>, and <i>z</i>, and returns an encoding of <i>(x,y,z)</i>.</p>
+
+	    <p>Code terms <tt class="code">tfirst</tt>, <tt class="code">tsecond</tt>, and <tt class="code">tthird</tt> which take an encoding of a triple and return respectively the first, second, and third element of the triple.</p>
+
+	    <p>Your functions should satisfy the following
+	      properties: <br>
+	      <tt>tfirst (triple a b c)</tt> = <tt>a</tt><br>
+	      <tt>tsecond (triple a b c)</tt> = <tt>b</tt><br>
+	      <tt>tthird (triple a b c)</tt> = <tt>c</tt>.  </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q2_defs "tfirst (triple a b c)";;
+- : string = "a"
+# simplify q2_defs "tsecond (triple a b c)";;
+- : string = "b"
+# simplify q2_defs "tthird (triple a b c)";;
+- : string = "c"    </pre>
+</div>
+	  </li>
+
+	  <li>
+	    <p>
+	      In class we saw the Church encoding of natural numbers. However, there are many possible encodings of the natural numbers into the lambda calculus. Consider the following alternate encoding:</p>
+	    <pre class="code">
+  alt_0 = &lt;x -> x>
+  alt_succ = &lt;n -> &lt;x -> x false n>>   </pre>
+
+	    <p>That is, the encoding of zero is the identity function, and the encoding of n + 1 is a function that takes an argument x, and then applies x to false , and applies the result to the encoding for n. This encoding of natural numbers makes it much easier to define a predecessor operation, which is somewhat complex for the Church encoding.</p>
+
+	    <p>Code a term <tt class="code">alt_iszero</tt> which takes a 
+	      number n in this alternate representation and returns 
+	      <tt>true</tt> if the number is zero and returning
+	      <tt>false</tt> otherwise.</p>
+	    
+	    <p>Code a term <tt class="code">alt_pred</tt> which takes 
+a number n in this alternate representation and returns the predecessor 
+of that number. Your term need not do anything sensible when applied to the repsentation of zero.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q2_defs "alt_iszero alt_0";;
+- : string = "&lt;x -> &lt;y -> x>>"
+# simplify q2_defs "alt_iszero alt_1";;
+- : string = "&lt;x -> &lt;y -> y>>"
+# simplify q2_defs "alt_iszero alt_2";;
+- : string = "&lt;x -> &lt;y -> y>>"
+# simplify q2_defs "alt_iszero (alt_succ alt_0)";;
+- : string = "&lt;x -> &lt;y -> y>>"
+
+# simplify q2_defs "alt_pred alt_1";;
+- : string = "&lt;x -> x>"
+# simplify q2_defs "alt_pred alt_2";;
+- : string = "&lt;x -> x &lt;x -> &lt;y -> y>> &lt;x -> x>>"
+# simplify q2_defs "alt_pred (alt_pred alt_2)";;
+- : string = "&lt;x -> x>"
+# simplify q2_defs "alt_pred (alt_pred alt_3)";;
+- : string = "&lt;x -> x &lt;x -> &lt;y -> y>> &lt;x -> x>>"
+# simplify q2_defs "alt_pred (alt_pred (alt_pred alt_3))";;
+- : string = "&lt;x -> x>"  </pre>
+</div>
+
+	  </li>
+	
+	</ol>
+
+
+      </li>
+
+
+      <li> <p><b>Lists</b></p>
+
+	<p><i>This question asks you to create definitions of
+	    lambda calculus terms with a given name. There are already
+	placeholders for those definitions that you should replace
+	with your own. Remember that each definition is a name and a
+	    term. All these definitions are automatically added to a list of
+	definitions <tt>q3_defs</tt>, which is what I'll be
+	    testing. Any supporting definitions you need must go in <tt>q3_defs</tt>.</i></p>
+
+
+	<ol class="subquestion">
+
+	  <li><p>Let's encode lists. The encoding is a variant of that 
+	      for pairs, with a twist. A pair was encoded as a
+	  function that took a function <i>f</i> as an argument and
+	  passed its two components to <i>f</i>. For lists, the twist
+	      is that there are two kinds of lists that need to
+	be handled differently: empty lists, and non-empty
+	lists. Therefore, a list will be encoded differently if it is
+	      an empty list or a non-empty list. But each of the
+	      encodings is a function that takes <i>two</i> arguments
+	      <i>a</i> and <i>f</i>. The encoding for an
+	      empty list simply returns <i>a</i>. The encoding for a
+	      non-empty list with head <i>h</i> and tail <i>t</i>
+	      calls <i>f</i> with <i>h</i> and <i>t</i>. </p>
+
+	    <p>Code a term <tt class="code">empty</tt> which
+	      represents the empty list.</p>
+
+	    <p>Code a term <tt class="code">cons</tt> which
+	    takes two arguments <i>h</i> and <i>t</i>
+	    (like <tt>plus</tt>) and returns the encoding of a list
+	      with first element <i>h</i> followed by
+	      elements <i>t</i>. Intuitively, <tt>cons h t</tt> plays
+	      the role of <tt>h::t</tt> in OCaml.
+
+	    <p>To go
+	      with <tt>empty</tt> and <tt>cons</tt>, code a
+	      term <tt class="code">match_list</tt> which
+	      takes a list <i>L</i> and two other arguments <i>a</i>
+	      and <i>f</i> and returns <i>a</i> if <i>L</i> is the
+	      empty list otherwise calls <i>f</i> with the head
+	      of <i>L</i> and the tail of <i>L</i> as arguments.</p>
+
+	    <p>(Roughly speaking, <tt>match_list lst a &lt;h -> &lt;t -> M>></tt>
+	      behaves like <tt>match lst with [] -> a | h::t -> M</tt> in OCaml.)</p>
+
+	    <p>Your functions should satisfy the following
+	      properties:<br>
+	      <tt>match_list empty a f</tt> = <tt>a</tt><br>
+	      <tt>match_list (cons h t) a f</tt> = <tt>f h t</tt>. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q3_defs "match_list empty a f";;
+- : string = "a"
+# simplify q3_defs "match_list (cons h t) a f";;
+- : string = "f h t"
+# simplify q3_defs "match_list (cons A empty) a &lt;h -> &lt;t -> h>>";;
+- : string = "A"
+# simplify q3_defs "match_list (cons A (cons B empty)) a &lt;h -> &lt;t -> h>>";;
+- : string = "A"
+# simplify q3_defs "match_list (cons A (cons B empty)) a &lt;h -> &lt;t -> 
+                       match_list t a &lt;h -> &lt;t -> h>>>>";;
+- : string = "B"	    </pre>
+</div>
+
+	  </li>
+
+
+
+	  <li>
+	    <p>Code a term <tt class="code">length</tt> which
+	      takes a list in the encoding described above and returns
+	      a natural number (in the encoding we saw in class) representing its length. 
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q3_defs "length empty";;
+- : string = "&lt;f -> &lt;x -> x>>"
+# simplify q3_defs "length (cons A empty)";;
+- : string = "&lt;f -> &lt;x -> f x>>"
+# simplify q3_defs "length (cons A (cons B empty))";;
+- : string = "&lt;f -> &lt;x -> f (f x)>>"
+# simplify q3_defs "length (cons A (cons B (cons C empty)))";;
+- : string = "&lt;f -> &lt;x -> f (f (f x))>>"	  </pre>
+</div>
+
+	  </li>	  
+
+
+	  <li>
+	    <p>Code a term <tt class="code">sum</tt> which
+	      takes a list of natural numbers in the encoding described above and returns
+	      a natural number (in the encoding we saw in class) representing the sum of its elements.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q3_defs "sum empty";;
+- : string = "&lt;f -> &lt;x -> x>>"
+# simplify q3_defs "sum (cons _1 empty)";;
+- : string = "&lt;f -> &lt;x -> f x>>"
+# simplify q3_defs "sum (cons _1 (cons _3 empty))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f x)))>>"
+# simplify q3_defs "sum (cons _1 (cons _3 (cons _5 empty)))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f (f (f (f (f x))))))))>>"	  </pre>
+</div>
+
+	  </li>	  
+
+
+	  <li>
+	    <p>Code a term <tt class="code">append</tt> which
+	      takes two lists <i>L1</i> and <i>L2</i> in the encoding described above
+	      (like <tt>plus</tt>) and returns the list made up of all
+	      the elements of <i>L1</i> followed by all the elements
+	      of <i>L2</i>. 
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q3_defs "length (append empty empty)";;
+- : string = "&lt;f -> &lt;x -> x>>"
+# simplify q3_defs "length (append empty (cons A (cons B empty)))";;
+- : string = "&lt;f -> &lt;x -> f (f x)>>"
+# simplify q3_defs "length (append (cons C (cons D (cons E empty))) 
+                      (cons A (cons B empty)))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f x))))>>"
+# simplify q3_defs "sum (append empty empty)";;
+- : string = "&lt;f -> &lt;x -> x>>"
+# simplify q3_defs "sum (append empty (cons _1 (cons _2 empty)))";;
+- : string = "&lt;f -> &lt;x -> f (f (f x))>>"
+# simplify q3_defs "sum (append (cons _3 (cons _4 (cons _5 empty))) 
+                      (cons _1 (cons _2 empty)))";;
+- : string =
+"&lt;f -> &lt;x -> f (f (f (f (f (f (f (f (f (f (f (f (f (f (f x))))))))))))))>>"	  </pre>
+</div>
+
+	  </li>	  
+
+
+	  <li>
+	    <p>Code a term <tt class="code">map</tt> which
+	      takes a function <i>f</i> and a list <i>L</i> in the
+	      encoding described above and returns the list obtained
+	      by applying function <i>f</i> to every element of <i>L</i>. 
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# simplify q3_defs "length (map &lt;x -> plus x x> empty)";;
+- : string = "&lt;f -> &lt;x -> x>>"
+# simplify q3_defs "length (map &lt;x -> plus x x> 
+                              (cons _1 (cons _2 (cons _3 empty))))";;
+- : string = "&lt;f -> &lt;x -> f (f (f x))>>"
+# simplify q3_defs "sum (map &lt;x -> plus x x> 
+                           (cons _1 (cons _2 (cons _3 empty))))";;
+- : string = "&lt;f -> &lt;x -> f (f (f (f (f (f (f (f (f (f (f (f x)))))))))))>>"
+# simplify q3_defs "match_list (map &lt;x -> plus x x> 
+                                  (cons _1 (cons _2 (cons _3 empty)))) 
+                        X &lt;h -> &lt;t -> h>>";;
+- : string = "&lt;f -> &lt;x -> f (f x)>>"	  </pre>
+</div>
+
+	  </li>	  
+
+
+	</ol>
+	
+      </li>
+
+
+
 
     </ol>
 
