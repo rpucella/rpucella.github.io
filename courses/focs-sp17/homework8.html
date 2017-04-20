@@ -452,21 +452,21 @@ let default_defs = [
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 	    <pre class="code">
-# simplify q2_defs "fst (plus_int (int _3) (int _2))";;
+# simplify q1_defs "pfirst (plus_int (int _3) (int _2))";;
 - : string = "&lt;x -> &lt;y -> x>>"
-# simplify q2_defs "snd (plus_int (int _3) (int _2))";;
+# simplify q1_defs "psecond (plus_int (int _3) (int _2))";;
 - : string = "&lt;f -> &lt;x -> f (f (f (f (f x))))>>"
-# simplify q2_defs "fst (plus_int (int _3) (neg_int (int _2)))";;
+# simplify q1_defs "pfirst (plus_int (int _3) (neg_int (int _2)))";;
 - : string = "&lt;x -> &lt;y -> x>>"
-# simplify q2_defs "snd (plus_int (int _3) (neg_int (int _2)))";;
+# simplify q1_defs "psecond (plus_int (int _3) (neg_int (int _2)))";;
 - : string = "&lt;f -> &lt;x -> f x>>"
-# simplify q2_defs "fst (plus_int (neg_int (int _3)) (int _2))";;
+# simplify q1_defs "pfirst (plus_int (neg_int (int _3)) (int _2))";;
 - : string = "&lt;x -> &lt;y -> y>>"
-# simplify q2_defs "snd (plus_int (neg_int (int _3)) (int _2))";;
+# simplify q1_defs "psecond (plus_int (neg_int (int _3)) (int _2))";;
 - : string = "&lt;f -> &lt;x -> f x>>"
-# simplify q2_defs "fst (plus_int (neg_int (int _3)) (neg_int (int _2)))";;
+# simplify q1_defs "pfirst (plus_int (neg_int (int _3)) (neg_int (int _2)))";;
 - : string = "&lt;x -> &lt;y -> y>>"
-# simplify q2_defs "snd (plus_int (neg_int (int _3)) (neg_int (int _2)))";;
+# simplify q1_defs "psecond (plus_int (neg_int (int _3)) (neg_int (int _2)))";;
 - : string = "&lt;f -> &lt;x -> f (f (f (f (f x))))>>"	  </pre>
 </div>
 	  </li>	  
@@ -482,21 +482,21 @@ let default_defs = [
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 	    <pre class="code">
-# simplify q2_defs "fst (times_int (int _3) (int _2))";;
+# simplify q1_defs "pfirst (times_int (int _3) (int _2))";;
 - : string = "&lt;x -> &lt;y -> x>>"
-# simplify q2_defs "snd (times_int (int _3) (int _2))";;
+# simplify q1_defs "psecond (times_int (int _3) (int _2))";;
 - : string = "&lt;f -> &lt;x -> f (f (f (f (f (f x)))))>>"
-# simplify q2_defs "fst (times_int (int _3) (neg_int (int _2)))";;
+# simplify q1_defs "pfirst (times_int (int _3) (neg_int (int _2)))";;
 - : string = "&lt;x -> &lt;y -> y>>"
-# simplify q2_defs "snd (times_int (int _3) (neg_int (int _2)))";;
+# simplify q1_defs "psecond (times_int (int _3) (neg_int (int _2)))";;
 - : string = "&lt;f -> &lt;x -> f (f (f (f (f (f x)))))>>"
-# simplify q2_defs "fst (times_int (neg_int (int _3)) (int _2))";;
+# simplify q1_defs "pfirst (times_int (neg_int (int _3)) (int _2))";;
 - : string = "&lt;x -> &lt;y -> y>>"
-# simplify q2_defs "snd (times_int (neg_int (int _3)) (int _2))";;
+# simplify q1_defs "psecond (times_int (neg_int (int _3)) (int _2))";;
 - : string = "&lt;f -> &lt;x -> f (f (f (f (f (f x)))))>>"
-# simplify q2_defs "fst (times_int (neg_int (int _3)) (neg_int (int _2)))";;
+# simplify q1_defs "pfirst (times_int (neg_int (int _3)) (neg_int (int _2)))";;
 - : string = "&lt;x -> &lt;y -> x>>"
-# simplify q2_defs "snd (times_int (neg_int (int _3)) (neg_int (int _2)))";;
+# simplify q1_defs "psecond (times_int (neg_int (int _3)) (neg_int (int _2)))";;
 - : string = "&lt;f -> &lt;x -> f (f (f (f (f (f x)))))>>"	  </pre>
 </div>
 	  </li>	  
