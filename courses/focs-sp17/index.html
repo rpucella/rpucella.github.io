@@ -533,8 +533,13 @@
 	  </div>
 	</li>	  
 
-	<li><p><span class="hdr">Apr 27:</span><i>TBD</i></p>
+	<li><p><span class="hdr">Apr 27:</span><b>Logic and Computation</b></p>
 	  <div class="lect">
+	    <p>Wikipedia has a reasonable overview of both <a href="https://en.wikipedia.org/wiki/Natural_deduction">natural deduction</a> as a proof system for logic, and the <a href="https://en.wikipedia.org/wiki/Simply_typed_lambda_calculus">simply-typed &lambda;-calculus</a>.
+	    The correspondence between (intuitionistic) propositional logic and the simply-typed &lambda;-calculus I alluded to is called the Curry-Howard Isomorphism, or Propositions as Types. <a href="http://homepages.inf.ed.ac.uk/wadler/papers/propositions-as-types/propositions-as-types.pdf">Philip Wadler has an eminently readable summary</a>. </p>
+	    <p>An example of a more advanced type system is that of dependent types, which correspond to first-order predicate logic. Intuitively, dependent types are types that may depend on the runtime value of expressions. <a href="http://wiki.portal.chalmers.se/agda/pmwiki.php">Adga</a> is a functional programming language with a dependent type system.</p>
+	    <p><a href="https://coq.inria.fr/">Coq</a> is an environment that lets you prove theorems in a very expressive logic via a Curry-Howard Isomorphism. <a href="./coq-demo.html">Here is the source code of the demo</a> that I did in class proving the correctness of a compiler for a simple language of arithmetic expression into stack machine instructions.</p>
+	  
 	  </div>
 	</li>	  
 	

@@ -1,0 +1,134 @@
+<html>
+  <pre>
+Require Import Coq.Lists.List.
+Import ListNotations.
+Require Import Arith.Plus.
+Require Import Arith.Mult.
+
+
+(* EVALUATOR *)
+
+Inductive exp : Type :=
+  | Num : nat -> exp
+  | Plus : exp -> exp -> exp
+  | Minus : exp -> exp -> exp
+  | Mult : exp -> exp -> exp.
+
+Definition test_2 : exp :=
+  Plus (Mult (Num 10) (Num 4)) (Num 2).
+
+
+
+Fixpoint eval (e : exp) : nat :=
+  match e with 
+  | Num n => n
+  | Plus e1 e2 => (eval e1) + (eval e2)
+  | Minus e1 e2 => (eval e1) - (eval e2)
+  | Mult e1 e2 => (eval e1) * (eval e2)
+  end.
+
+
+(* COMPILER *)
+
+
+Inductive instr : Type := 
+| PUSH : nat -> instr
+| PLUS : instr
+| MINUS : instr
+| MULT : instr.
+
+Definition test_1 : list instr := [ PUSH 10; PUSH 4; MULT ; PUSH 2; PLUS].
+
+Fixpoint execute (s : list nat) (p : list instr) : list nat :=
+  match (s,p) with
+  | (_, []) => s
+  | (_, (PUSH n) :: p') => execute (n    ::s) p'
+  | (m::n::s', PLUS :: p') => execute ((m+n)::s') p'
+  | (m::n::s', MINUS :: p') => execute((m-n)::s') p'
+  | (m::n::s', MULT :: p') => execute ((m*n)::s') p'
+  | (_,_::p') => execute s p'
+  end.
+
+Fixpoint compile (e : exp) : list instr := 
+  match e with 
+  | Num n => [PUSH n]
+  | Plus e1 e2 => compile e1 ++ compile e2 ++ [PLUS]
+  | Minus e1 e2 => compile e2 ++ compile e1 ++ [MINUS]
+  | Mult e1 e2 => compile e1 ++ compile e2 ++ [MULT]
+  end.
+
+Compute execute [] (compile (test_2)).
+
+Example ut1: compile (Num 42) = [PUSH 42] := eq_refl.
+
+Example ut2: compile (Plus (Num 2) (Num 2)) = [PUSH 2; PUSH 2; PLUS] := eq_refl.
+
+
+									
+Lemma execute_empty : forall stack,
+  execute stack [] = stack.
+Proof. 
+intros s.
+unfold execute.
+destruct s.
+- reflexivity.
+- destruct s.
+  + reflexivity.
+  + reflexivity.
+Qed.
+
+
+
+Lemma execute_app : forall p1 p2 stack,
+  execute stack (p1 ++ p2)
+    = execute (execute stack p1) p2.
+Proof.
+induction p1.
+- intros p2 s. rewrite -> app_nil_l. rewrite -> execute_empty.
+  reflexivity.
+- intros p2 s.  destruct a. 
+  * simpl. rewrite IHp1. destruct s. reflexivity. 
+    destruct s. reflexivity. reflexivity.
+  * simpl. rewrite IHp1. destruct s. reflexivity. 
+    destruct s. reflexivity. rewrite IHp1. reflexivity.
+  * simpl. rewrite IHp1. destruct s. reflexivity. 
+    destruct s. reflexivity. rewrite IHp1. reflexivity.
+  * simpl. rewrite IHp1. destruct s. reflexivity. 
+    destruct s. reflexivity. rewrite IHp1. reflexivity.
+Qed.
+
+
+Lemma execute_eval_comm : forall e stack,
+  execute stack (compile e) = eval e :: stack. 
+Proof.
+induction e.
+- unfold compile. unfold eval. unfold execute. destruct stack.
+  * reflexivity.
+  * destruct stack. reflexivity. reflexivity.
+- intros s. simpl. rewrite execute_app. rewrite execute_app. 
+  rewrite IHe2. rewrite IHe1. 
+  unfold execute. assert (eval e2 + eval e1 = eval e1 + eval e2). 
+  apply plus_comm. 
+  destruct s.  
+  * rewrite H. reflexivity.
+  * rewrite H. reflexivity.
+- intros s. simpl. rewrite execute_app. rewrite execute_app. 
+  rewrite IHe2. rewrite IHe1. unfold execute. 
+  destruct s. reflexivity. reflexivity.
+- intros. simpl. rewrite execute_app. rewrite execute_app. 
+  rewrite IHe2. rewrite IHe1. unfold execute. 
+  assert (eval e2 * eval e1 = eval e1 * eval e2). apply mult_comm. 
+  destruct stack.  
+  * rewrite H. reflexivity.
+  * rewrite H. reflexivity. 
+Qed.
+
+
+Theorem compile_correctly : forall e, 
+  execute [] (compile e) = [eval(e)].
+Proof.
+intros e.
+apply execute_eval_comm.
+Qed.
+  </pre>
+</html>
