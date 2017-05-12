@@ -7,7 +7,13 @@ body {
     margin: 0 auto;
     min-width: 50em;
     max-width: 60em;
+    font-size: 11pt;
 }
+
+/*p {
+    margin-top: 5;
+    margin-bottom: 0;
+}*/
 
 div.core {
     margin-top : 0em;
@@ -43,7 +49,6 @@ div.navbar {
     top: 0.5em;
     min-width: 58em;
     width: 100%;
-/*    height: 3em; */
     background: rgb(90,0,0); /* #cccccc; */
     font-size: 100%;
     padding: 0;   /* needed? */
@@ -57,20 +62,7 @@ div.navbar ul {
     margin: 0;
     padding: 0;
     vertical-align: top;
-/*     height: 3em; */
 }
-
-/*
-div.navbar li { 
-    float: left;
-    width: 10em;
-    height: 3em;
-    line-height: 3em;
-    padding-left: 1em;
-    padding-right: 1em;
-    text-align: center;
-}
-*/
 
 div.navbar ul li {
     display: inline-block;
@@ -86,11 +78,8 @@ div.navbar a {
     color: white;
 
     display: block;
-    padding: 1em 1em;
-
+    padding: 0.7em 1em;
 }
-
-
 
 
 div.home {
@@ -108,7 +97,7 @@ div.home:hover {
 }
 
 div.home a {
-    padding: 1em 1em 0.6em 1em;
+    padding: 0.7em 1em 0.3em 1em;
 }
 
 
@@ -125,8 +114,14 @@ a.imageanchor:link {
 }
 a:link {
     text-decoration: none;
+    font-weight: bold;
     color: rgb(0, 51, 160);
 }
+
+div.navbar a:link { 
+    font-weight: normal;
+}
+
 a:visited {
     text-decoration: none;
     color: rgb(0, 51, 160);
@@ -138,6 +133,11 @@ a:hover {
 
 table.toc a {
     text-decoration: none;
+}
+
+ul.lectures p  {
+    margin-top: 7px;
+    margin-bottom: 7px;
 }
 
 h1 { 
@@ -162,11 +162,14 @@ ul.simple {
 ul.lectures {
     list-style-type: none; 
     padding-left: 0;
+    margin: 0;
 }
 
 ul.lectures li {
+    margin-top: 30px;
     padding-top: 0px;
-    padding-bottom: 5px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 p.ind {
@@ -193,9 +196,6 @@ hr {
 hr.section {
     height: 2px; 
     opacity: 1;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
-
-
-
