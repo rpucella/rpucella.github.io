@@ -384,8 +384,6 @@ li > p { margin-top:0;}
 
 	<p>A language is a set of strings, which following the last question will be represented as a value <tt>string list</tt>.</p>
 
-	<p>This question will be much easier to debug if you ensure that your set representations do not have repeated elements.</p>
-
 	<p>Note that the order (or repetitions) of elements in the sample outputs may differ from yours. I will be testing your code using <tt>set_eq</tt> anyway, so as long as your results are equals <i>as sets</i>  everything will be okay.</p>
 
 	<ol class="subquestion">
@@ -533,6 +531,8 @@ li > p { margin-top:0;}
 where 
 <tt>lang r n max</tt> takes a regular expressionn <tt>r</tt>, an integer <tt>n</tt>, and a maximum length <tt>max</tt>, and 
 prints out all the strings in the language corresponding to regular expression <tt>r</tt> that have length at most <tt>max</tt>. Argument <tt>n</tt> is used to limit the number of iterations for the star operator in regular expressions: for example, using <tt>n=4</tt> means that <i>r<sup>*</sup></i> in regular expressions gets interpreted as the language <i>L(r)<sup>&le;n</sup></i> instead of <i>L(r)<sup>*</sup></i>.</p>
+
+	<p>(Most of the time, you will call <tt>lang</tt> with <tt>n</tt> and <tt>max</tt> the same, basically restricting the size of the strings generated. When you have a lot of star operators in your regular expression, though, you may run into memory problems and may need to reduce <tt>n</tt>. See the sample output for <tt>regexp_d</tt> below for an example.)
 
 	<p>Note that function <tt>lang</tt> will <b>not</b> work until
 	  you complete question 2 correctly. You can still work on this question even if you haven't done question 2, of
@@ -854,7 +854,7 @@ prints out all the strings in the language corresponding to regular expression <
 	      language 
 	      consisting of all strings over the alphabet <tt>{d,e}</tt> with either no <tt>d</tt>s or in 
 	      which every <tt>d</tt> is immediately followed by
-	      two <tt>e</tt>s.
+	      at least two <tt>e</tt>s.
 	    </p>
 
 <div class="code">
