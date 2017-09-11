@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 2</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+
+	pre.code {
+	   border: 1px solid #c6c6c6;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+	}
+
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science FA17</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 2</h1>
+    
+    <p class="subtitle">Due date: Sunday, Sep 17 (23h59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you. <b>Please do not post your solutions on a public website or a public repository like GitHub.</b>
+   </p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Code your answers by modifying the
+      file <a href="homework2.ml"><tt>homework2.ml</tt></a> provided. Add your
+      <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor to the block comment at the head of the file.</p>
+
+    <p><b>Please do not change the types in the signature of the
+	function stubs I provide</b>. Doing so will make it
+	impossible to load your code into the testing infrastructure,
+      and make me unhappy.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use "homework2.ml";;</tt></li>
+      <li>If there are any error, do not submit. I can't test what I
+	can't <tt>#use</tt>.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework2.ml</tt> as an attachment to <tt>focs.fa17@gmail.com</tt> with subject <i>Homework 2 submission</i>.</li>
+    </ul>
+
+<!--
+    <hr>
+
+    <p class="subtitle">Updates</p>
+    <ul class="simple">
+      <li>Jan 21: changed sample outputs for <tt>nth</tt> to match type of the functon.</li>
+      <li>Jan 23: changed last sample output for <tt>multM</tt> to a more meaningful one.</li>
+      <li>Jan 24: fixed incorrect outer product outputs.</li>
+    </ul>
+-->
+	
+
+    <hr>
+
+    <ol class="question">
+      <li> <p><b>Set functions</b></p>
+
+	<p>A <i>set</i> is a collection of elements in
+	which repetition and order is irrelevant; the sets {1,1,2,3}
+	and {2,3,3,1} are considered to be equal.</p> 
+
+	<p>We use lists as a representation for sets. We define set
+	operations that work with that list representation.
+	  You have a choice to make for that representation though: do you get rid of repeated elements in the representation, or do you keep them in and make sure that functions to determine, say, equality and size, return the right result even if repeated elements exist? Both approaches are possible. </p>
+
+
+	<ol class="subquestion">
+
+	  <li><p>
+	    Code a function <tt class="code">set_in</tt> of
+	    type <tt class="code">'a -> 'a list -> bool</tt>
+	    where <tt>set_in a s</tt> returns true if element
+	    <tt>a</tt> is an element of set <tt>s</tt>, and false
+	    otherwise. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# set_in 1 [];;
+- : bool = false
+# set_in 1 [2;3];;
+- : bool = false
+# set_in 1 [1;2;3];;
+- : bool = true
+# set_in 1 [3;4;4;1;1];;
+- : bool = true
+# set_in "a" ["b";"a";"b"];;
+- : bool = true</pre>
+	  </div>
+	  </li>
+
+	  <li><p>Recall that a set S is a subset of T when every
+	      element of S is an element of T.</p>
+
+	    <p>
+	    Code a function <tt class="code">set_sub</tt> of
+	      type <tt class="code">'a list -> 'a list -> bool</tt>
+	    where <tt>set_sub s t</tt> returns true if <tt>s</tt>
+	    is a subset of <tt>t</tt> when <tt>s</tt> and <tt>t</tt>
+	    are interpreted as sets, and false otherwise.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# set_sub [] [];;
+- : bool = true
+# set_sub [] [1;1;1];;
+- : bool = true
+# set_sub [1] [1;1;1];;
+- : bool = true
+# set_sub [1;1;] [1;1;1];;
+- : bool = true
+# set_sub [1;1] [1;2;3];;
+- : bool = true
+# set_sub [1;1;] [2;3];;
+- : bool = false
+# set_sub [1] [];;
+- : bool = false
+# set_sub ["a"] ["a";"b"];;
+- : bool = true</pre>
+	  </div>
+	  </li>
+
+	  <li><p>
+	    Code a function <tt class="code">set_eq</tt> of
+	    type <tt class="code">'a list -> 'a list -> bool</tt>
+	    where <tt>set_eq s t</tt>
+	    returns true if <tt>s</tt> and <tt>t</tt> are equal when
+	    interpreted as sets, and false otherwise.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# set_eq [] [];;
+- : bool = true
+# set_eq [1] [1];;
+- : bool = true
+# set_eq [1] [1;1;1];;
+- : bool = true
+# set_eq [1;1;1] [1;1];;
+- : bool = true
+# set_eq [1;2] [1;2;3];;
+- : bool = false
+# set_eq [2;3] [1;2;3];;
+- : bool = false
+# set_eq [1;2;3] [1;2];;
+- : bool = false
+# set_eq [1;2] [2;1];;
+- : bool = true
+# set_eq [1;1;2] [2;2;1];;
+- : bool = true
+# set_eq ["a";"b"] ["b";"a"];;
+- : bool = true</pre>
+</div>
+	  </li>
+
+
+	  <li><p>Code a function <tt class="code">set_union</tt> of
+	    type <tt class="code">'a list -> 'a list -> 'a list</tt>
+	    where <tt>set_union s t</tt> returns a list representing the
+	      union of <tt>s</tt> and <tt>t</tt> interpreted as
+	    sets.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# set_eq (set_union [] []) [];;
+- : bool = true
+# set_eq (set_union [] [1;1]) [1];;
+- : bool = true
+# set_eq (set_union [1;2] []) [2;1];;
+- : bool = true
+# set_eq (set_union [1;2;3] [4;5;6]) [1;2;3;4;5;6];;
+- : bool = true
+# set_eq (set_union [1;2] [2;3;3]) [1;2;3];;
+- : bool = true
+# set_eq (set_union [1;2] [2;1]) [1;2];;
+- : bool = true
+# set_eq (set_union [1] [2]) [1];;
+- : bool = false
+# set_eq (set_union [1] [2]) [2];;
+- : bool = false
+# set_eq (set_union ["a"] ["b"]) ["a";"b"];;
+- : bool = true</pre>
+</div>
+	  </li>
+
+
+	  <li><p>Code a function <tt class="code">set_inter</tt> of
+	    type <tt class="code">'a list -> 'a list -> 'a list</tt>
+	    where <tt>set_inter s t</tt> returns a list representing the
+	      intersection of <tt>s</tt> and <tt>t</tt> interpreted as
+	    sets.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# set_eq (set_inter [] []) [];;
+- : bool = true
+# set_eq (set_inter [1;2] [1]) [1];;
+- : bool = true
+# set_eq (set_inter [1;2] [2;3]) [2];;
+- : bool = true
+# set_eq (set_inter [1;2;3] [3;3;2;2]) [2;3];;
+- : bool = true
+# set_eq (set_inter [] [1;2;3]) [];;
+- : bool = true
+# set_eq (set_inter [1;2;3] []) [];;
+- : bool = true
+# set_eq (set_inter [1;2] [2]) [1];;
+- : bool = false
+# set_eq (set_inter [1;2] [2;3]) [1;3];;
+- : bool = false
+# set_eq (set_inter ["a";"b"] ["c";"b"]) ["b"];;
+- : bool = true</pre>
+</div>
+
+	  </li>
+
+	  <li><p>Code a function <tt class="code">set_size</tt> of
+	    type <tt class="code">'a list -> int</tt>
+	    where <tt>set_size s</tt> returns the number of elements
+	      in <tt>s</tt> when interpreted as a set.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# set_size [];;
+- : int = 0
+# set_size [1];;
+- : int = 1
+# set_size [1;2;3];;
+- : int = 3
+# set_size [1;1;1;2;2;2;3;3;3;4;4;4];;
+- : int = 4
+# set_size [1;2;3;2;1];;
+- : int = 3
+# set_size ["a";"a";"b"];;
+- : int = 2</pre>
+</div>
+
+	  </li>
+
+	</ol>
+
+      </li>
+
+
+
+      <li> <p><b>Language functions</b></p>
+
+	<p>A language is a set of strings, which following the last question will be represented as a value <tt>string list</tt>.</p>
+
+	<p>This question will be much easier to debug if you ensure that your set representations do not have repeated elements.</p>
+
+	<p>Note that the order (or repetitions) of elements in the sample outputs may differ from yours. I will be testing your code using <tt>set_eq</tt> anyway, so as long as your results are equals <i>as sets</i>  everything will be okay.</p>
+
+	<ol class="subquestion">
+
+
+	  <li><p>
+	    Code a function <tt class="code">lang_union</tt> of
+	    type <tt class="code">string list -> string list -> string
+		list</tt> that takes two languages  and returns the language of all strings
+	    in either languages.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# lang_union [] [];;
+- : string list = []
+# lang_union ["a";"b"] ["c";"d"];;
+- : string list = ["a"; "b"; "c"; "d"]
+# lang_union ["a";"b"] ["abc";"abcd";"abcde"];;
+- : string list = ["a"; "b"; "abc"; "abcd"; "abcde"]
+# lang_union ["abc";"abcd";"abcde"] ["a";"b"];;
+- : string list = ["abc"; "abcd"; "abcde"; "a"; "b"]
+# lang_union ["abc";"abcd";"abcde"] [];;
+- : string list = ["abc"; "abcd"; "abcde"]
+# lang_union [] ["abc";"abcd";"abcde"];;
+- : string list = ["abc"; "abcd"; "abcde"]</pre>
+	  </div>
+	  </li>
+
+	  <li><p>
+	    Code a function <tt class="code">lang_concat</tt> of
+	    type <tt class="code">string list -> string list -> string
+		list</tt> that takes two languages <tt>ss1</tt>
+	    and <tt>ss2</tt> and returns the language of all strings
+	    obtained by 
+	    concatenating a string from <tt>ss1</tt> to a string
+	    from <tt>ss2</tt>. Recall that <tt>^</tt> is string concatenation in OCaml.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# lang_concat [] [];;
+- : string list = []
+# lang_concat ["a";"b"] [];;
+- : string list = []
+# lang_concat [] ["c";"d"];;
+- : string list = []
+# lang_concat ["c";"d"] [""];;
+- : string list = ["c"; "d"]
+# lang_concat [""] ["c";"d"];;
+- : string list = ["c"; "d"]
+# lang_concat ["a";"b"] ["c";"d"];;
+- : string list = ["ac"; "ad"; "bc"; "bd"]
+# lang_concat ["ab";"abb"] ["c";"cc";"ccc"];;
+- : string list = ["abc"; "abcc"; "abccc"; "abbc"; "abbcc"; "abbccc"]</pre>
+	  </div>
+	  </li>
+
+
+	  <li>
+	    <p>One of the regular operations is <tt>*</tt>, defined as follows:</p>
+	    <p><center><i>A</i><sup>*</sup> = <i>A</i><sup>0</sup> &cup; <i>A</i><sup>1</sup> &cup; <i>A</i><sup>2</sup> &cup; <i>A</i><sup>3</sup> &cup; ... </center></p>
+	    <p>This operation always leads to an infinite language, which is a pain to work with in implementations at this stage of the course.</p>
+	    <p>Instead of implementing <i>A</i><sup>*</sup>, we will instead implement a finitary approximation:</p>
+	    <p><center><i>A</i><sup>&le;n</sup> = <i>A</i><sup>0</sup> &cup; <i>A</i><sup>1</sup> &cup; <i>A</i><sup>2</sup> &cup; ... &cup; <i>A</i><sup>n</sup></center></p>
+	    <p>Intuitively, <i>A</i><sup>&le;n</sup> is the language of all strings obtained by concatenating up to n strings from <i>A</i></p>
+	      
+	    <p>
+	    Code a function <tt class="code">lang_nstar</tt> of
+	    type <tt class="code">int -> string list -> string
+		list</tt> that takes an integer <tt>n</tt> and a language <tt>ss</tt> and returns the language <tt>ss</tt><sup>&le;<tt>n</tt></sup> of all strings
+	    obtained by concatenating up to <tt>n</tt> strings from <tt>ss</tt>.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# lang_nstar 4 [];;
+- : string list = [""]
+# lang_nstar 4 ["a"];;
+- : string list = [""; "a"; "aa"; "aaa"; "aaaa"]
+# lang_nstar 4 ["a";"b"];;
+- : string list =
+[""; "a"; "b"; "aa"; "ab"; "aaa"; "aab"; "aaaa"; "aaab"; "aaba"; "aabb";
+ "aba"; "abb"; "abaa"; "abab"; "abba"; "abbb"; "ba"; "bb"; "baa"; "bab";
+ "baaa"; "baab"; "baba"; "babb"; "bba"; "bbb"; "bbaa"; "bbab"; "bbba";
+ "bbbb"]
+# lang_nstar 4 ["a";"b";"c"];;
+- : string list =
+[""; "a"; "b"; "c"; "aa"; "ab"; "ac"; "aaa"; "aab"; "aac"; "aaaa"; "aaab";
+ "aaac"; "aaba"; "aabb"; "aabc"; "aaca"; "aacb"; "aacc"; "aba"; "abb"; "abc";
+ "abaa"; "abab"; "abac"; "abba"; "abbb"; "abbc"; "abca"; "abcb"; "abcc";
+ "aca"; "acb"; "acc"; "acaa"; "acab"; "acac"; "acba"; "acbb"; "acbc"; "acca";
+ "accb"; "accc"; "ba"; "bb"; "bc"; "baa"; "bab"; "bac"; "baaa"; "baab";
+ "baac"; "baba"; "babb"; "babc"; "baca"; "bacb"; "bacc"; "bba"; "bbb"; "bbc";
+ "bbaa"; "bbab"; "bbac"; "bbba"; "bbbb"; "bbbc"; "bbca"; "bbcb"; "bbcc";
+ "bca"; "bcb"; "bcc"; "bcaa"; "bcab"; "bcac"; "bcba"; "bcbb"; "bcbc"; "bcca";
+ "bccb"; "bccc"; "ca"; "cb"; "cc"; "caa"; "cab"; "cac"; "caaa"; "caab";
+ "caac"; "caba"; "cabb"; "cabc"; "caca"; "cacb"; "cacc"; "cba"; "cbb"; "cbc";
+ "cbaa"; "cbab"; "cbac"; "cbba"; "cbbb"; "cbbc"; "cbca"; "cbcb"; "cbcc";
+ "cca"; "ccb"; "ccc"; "ccaa"; "ccab"; "ccac"; "ccba"; "ccbb"; "ccbc"; "ccca";
+ "cccb"; "cccc"]
+# lang_nstar 4 ["a";"bc"];;
+- : string list =
+[""; "a"; "bc"; "aa"; "abc"; "aaa"; "aabc"; "aaaa"; "aaabc"; "aabca";
+ "aabcbc"; "abca"; "abcbc"; "abcaa"; "abcabc"; "abcbca"; "abcbcbc"; "bca";
+ "bcbc"; "bcaa"; "bcabc"; "bcaaa"; "bcaabc"; "bcabca"; "bcabcbc"; "bcbca";
+ "bcbcbc"; "bcbcaa"; "bcbcabc"; "bcbcbca"; "bcbcbcbc"]
+# lang_nstar 4 ["a";"bc";"def"];;
+- : string list =
+[""; "a"; "bc"; "def"; "aa"; "abc"; "adef"; "aaa"; "aabc"; "aadef"; "aaaa";
+ "aaabc"; "aaadef"; "aabca"; "aabcbc"; "aabcdef"; "aadefa"; "aadefbc";
+ "aadefdef"; "abca"; "abcbc"; "abcdef"; "abcaa"; "abcabc"; "abcadef";
+ "abcbca"; "abcbcbc"; "abcbcdef"; "abcdefa"; "abcdefbc"; "abcdefdef";
+ "adefa"; "adefbc"; "adefdef"; "adefaa"; "adefabc"; "adefadef"; "adefbca";
+ "adefbcbc"; "adefbcdef"; "adefdefa"; "adefdefbc"; "adefdefdef"; "bca";
+ "bcbc"; "bcdef"; "bcaa"; "bcabc"; "bcadef"; "bcaaa"; "bcaabc"; "bcaadef";
+ "bcabca"; "bcabcbc"; "bcabcdef"; "bcadefa"; "bcadefbc"; "bcadefdef";
+ "bcbca"; "bcbcbc"; "bcbcdef"; "bcbcaa"; "bcbcabc"; "bcbcadef"; "bcbcbca";
+ "bcbcbcbc"; "bcbcbcdef"; "bcbcdefa"; "bcbcdefbc"; "bcbcdefdef"; "bcdefa";
+ "bcdefbc"; "bcdefdef"; "bcdefaa"; "bcdefabc"; "bcdefadef"; "bcdefbca";
+ "bcdefbcbc"; "bcdefbcdef"; "bcdefdefa"; "bcdefdefbc"; "bcdefdefdef"; "defa";
+ "defbc"; "defdef"; "defaa"; "defabc"; "defadef"; "defaaa"; "defaabc";
+ "defaadef"; "defabca"; "defabcbc"; "defabcdef"; "defadefa"; "defadefbc";
+ "defadefdef"; "defbca"; "defbcbc"; "defbcdef"; "defbcaa"; "defbcabc";
+ "defbcadef"; "defbcbca"; "defbcbcbc"; "defbcbcdef"; "defbcdefa";
+ "defbcdefbc"; "defbcdefdef"; "defdefa"; "defdefbc"; "defdefdef"; "defdefaa";
+ "defdefabc"; "defdefadef"; "defdefbca"; "defdefbcbc"; "defdefbcdef";
+ "defdefdefa"; "defdefdefbc"; "defdefdefdef"]
+	  </div>
+	  </li>
+
+	</ol>
+      </li>
+
+
+
+
+      <li> <p><b>Regular expressions</b></p>
+
+	<p>In file <tt>homework2.ml</tt>, I've implemented some
+	code to manipulate regular expressions. In particular, I've
+	  given you a function 
+<pre>
+  lang : string -> int -> int -> unit</pre>
+where 
+<tt>lang r n max</tt> takes a regular expressionn <tt>r</tt>, an integer <tt>n</tt>, and a maximum length <tt>max</tt>, and 
+prints out all the strings in the language corresponding to regular expression <tt>r</tt> that have length at most <tt>max</tt>. Argument <tt>n</tt> is used to limit the number of iterations for the star operator in regular expressions: for example, using <tt>n=4</tt> means that <i>r<sup>*</sup></i> in regular expressions gets interpreted as the language <i>L(r)<sup>&le;n</sup></i> instead of <i>L(r)<sup>*</sup></i>.</p>
+
+	<p>Note that function <tt>lang</tt> will <b>not</b> work until
+	  you complete question 2 correctly. You can still work on this question even if you haven't done question 2, of
+	  course. You just won't be able to test your answers.</p>
+
+	<p>The syntax of regular expression corresponds to what we saw
+	in class: the alphabet is restricted to be alphabetical
+	characters (a,b,c,d,...,z,A,B,...,Z), and 0, 1, (, ), *, + all
+	  are reserved characters. For example, <tt>ab+ac</tt> is a valid regular
+	  expression, as is <tt>a(b+c)</tt> and <tt>a*(b+c)*</tt> and
+	  so on.</p>
+
+	<p>Here's a sample interaction:</p>
+
+<pre>
+# lang "ab+bc" 4 4;;
+  ab
+  bc
+- : unit = ()
+# lang "a(b+c)*" 4 4;;
+  a
+  ab
+  ac
+  abb
+  abc
+  acb
+  acc
+  abbb
+  abbc
+  abcb
+  abcc
+  acbb
+  acbc
+  accb
+  accc
+- : unit = ()
+# lang "a*(b+c)*" 4 4;;
+  &lt;epsilon>
+  a
+  b
+  c
+  aa
+  ab
+  ac
+  bb
+  bc
+  cb
+  cc
+  aaa
+  aab
+  aac
+  abb
+  abc
+  acb
+  acc
+  bbb
+  bbc
+  bcb
+  bcc
+  cbb
+  cbc
+  ccb
+  ccc
+  aaaa
+  aaab
+  aaac
+  aabb
+  aabc
+  aacb
+  aacc
+  abbb
+  abbc
+  abcb
+  abcc
+  acbb
+  acbc
+  accb
+  accc
+  bbbb
+  bbbc
+  bbcb
+  bbcc
+  bcbb
+  bcbc
+  bccb
+  bccc
+  cbbb
+  cbbc
+  cbcb
+  cbcc
+  ccbb
+  ccbc
+  cccb
+  cccc
+- : unit = ()</pre>	
+
+        <p>In this question, I will ask you to come up with regular
+        expressions. You can test your regular expressions  using
+          the function <tt>lang</tt> above. </p>
+
+	<p>For submission purposes, I ask you to define those regular
+	  expressions as constants using <tt>let</tt> with a fixed
+	  name given below in each question. There is already a
+	  placeholder in <tt>homework2.ml</tt> for those answers. Just
+	  replace the placeholder with your definition.</p>
+
+	<ol class="subquestion">
+
+	  <li><p>
+	      Come up with a regular expression <tt class="code">regexp_a</tt> for the language
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> of length exactly 4.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# lang regexp_a 6 6;;
+  dddd
+  ddde
+  dded
+  ddee
+  dedd
+  dede
+  deed
+  deee
+  eddd
+  edde
+  eded
+  edee
+  eedd
+  eede
+  eeed
+  eeee
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular expression <tt class="code">regexp_b</tt> for the language
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> of
+	      odd length.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# lang regexp_b 6 6;;
+  d
+  e
+  ddd
+  dde
+  ded
+  dee
+  edd
+  ede
+  eed
+  eee
+  ddddd
+  dddde
+  ddded
+  dddee
+  ddedd
+  ddede
+  ddeed
+  ddeee
+  deddd
+  dedde
+  deded
+  dedee
+  deedd
+  deede
+  deeed
+  deeee
+  edddd
+  eddde
+  edded
+  eddee
+  ededd
+  edede
+  edeed
+  edeee
+  eeddd
+  eedde
+  eeded
+  eedee
+  eeedd
+  eeede
+  eeeed
+  eeeee
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular expression <tt class="code">regexp_c</tt> for the language
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> with
+	      exactly two <tt>d</tt>s in then.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# lang regexp_c 6 6;;
+  dd
+  dde
+  ded
+  edd
+  ddee
+  dede
+  deed
+  edde
+  eded
+  eedd
+  ddeee
+  dedee
+  deede
+  deeed
+  eddee
+  edede
+  edeed
+  eedde
+  eeded
+  eeedd
+  ddeeee
+  dedeee
+  deedee
+  deeede
+  deeeed
+  eddeee
+  ededee
+  edeede
+  edeeed
+  eeddee
+  eedede
+  eedeed
+  eeedde
+  eeeded
+  eeeedd
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular
+	      expression <tt class="code">regexp_d</tt> for the
+	      language 
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> with
+	      an odd number of <tt>d</tt>s in them.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# lang regexp_d 3 6;;
+  d
+  de
+  ed
+  ddd
+  dee
+  ede
+  eed
+  ddde
+  dded
+  dedd
+  deee
+  eddd
+  edee
+  eede
+  eeed
+  ddddd
+  dddee
+  ddede
+  ddeed
+  dedde
+  deded
+  deedd
+  eddde
+  edded
+  ededd
+  edeee
+  eeddd
+  eedee
+  eeede
+  ddddde
+  dddded
+  dddedd
+  dddeee
+  ddeddd
+  ddedee
+  ddeede
+  ddeeed
+  dedddd
+  deddee
+  dedede
+  dedeed
+  deedde
+  deeded
+  deeedd
+  eddddd
+  edddee
+  eddede
+  eddeed
+  ededde
+  ededed
+  edeedd
+  eeddde
+  eedded
+  eededd
+  eedeee
+  eeeddd
+  eeedee
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+	  <li><p>
+	      Come up with a regular
+	      expression <tt class="code">regexp_e</tt> for the
+	      language 
+	      consisting of all strings over the alphabet <tt>{d,e}</tt> with either no <tt>d</tt>s or in 
+	      which every <tt>d</tt> is immediately followed by
+	      two <tt>e</tt>s.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# lang regexp_e 6 6;;
+  &lt;epsilon>
+  e
+  ee
+  dee
+  eee
+  deee
+  edee
+  eeee
+  deeee
+  edeee
+  eedee
+  eeeee
+  deedee
+  deeeee
+  edeeee
+  eedeee
+  eeedee
+  eeeeee
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+	</ol>
+      </li>
+
+
+    </ol>
+	
+    
+
+  </body>
+</html>
