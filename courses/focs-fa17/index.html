@@ -117,11 +117,15 @@
 
 <!--	<li><p><a href="announcements.html">Older announcements...</a></p></li> -->
 
+<li><p><span>Sep 16:</span>
+    Notes from the lecture on finite automata available.</p>
+</li>
+
 <li><p><span>Sep 10:</span>
 	    <a href="./homework2.html">Homework 2</a> is out. Due next Sunday night.</p>
     </li>
          <li><p><span>Sep 9:</span>
-	     Notes from the lecture on formal languages available.
+	     Notes from the lecture on formal languages available.</p>
 	</li>
 	
          <li><p><span>Sep 3:</span>
@@ -273,7 +277,7 @@
 
 	<li><p><b>MACHINE MODELS OF COMPUTATION</b></p></li>
 
-	<li><p><span class="hdr"></span><b>Formal languages</b></p>
+	<li><p><span class="hdr">Sep 7:</span><b>Formal languages</b></p>
 	  <div class="lect">
 	    <p><a href="01-languages.pdf">Notes from the lecture.</a></p>
 	    <p>Regular expressions are often used to search for patterns in text. <a href="http://www.cs.columbia.edu/~tal/3261/fall07/handout/egrep_mini-tutorial.htm">Here is an example of how they are used in egrep</a>.</p>
@@ -282,8 +286,25 @@
 	</li>	  
 
 
-	<li><p><span class="hdr"></span><b>Finite automata</b></p>
-	</li>	  
+	<li><p><span class="hdr">Sep 14:</span><b>Finite automata</b></p>
+	  <div class="lect">
+	    <p><a href="02-automata.pdf">Notes from the lecture.</a></p>
+	    <p>The notes include some supplementary material at the
+	    end, fleshing out things that I think are pretty
+	    interesting: (1) I show how the language accepted by a
+	    finite automaton must be regular; (2) I point out how you
+	    can use finite automata to show that the complement of
+	    a regular language is regular; (3) I show how you can use finite automata to 
+            argue that some languages are not regular.</p>
+	    <p>I pointed out in class one reason we study
+nondeterministic forms of finite automata is that they can be easier
+to describe than deterministic finite automata. More specifically,
+there exists languages that can be accepted by nondeterministic finite
+automata with N states whose smallest deterministic finite
+	      automata that accept those same languages have at least 2<sup>N</sup> states. One example is the language over {<tt>a</tt>,<tt>b</tt>} 
+	      consisting of all strings whose Nth from last symbol is <tt>a</tt>. <a href="https://commons.wikimedia.org/wiki/File:NFA_with_exponential_blown-up_DFA.gif">Here is an illustration</a> of the subset construction for that language, over alphabet {0,1}, and N=4.</p>
+	  </div>
+	</li>
 	
 
 	<li><p><span class="hdr"></span><b>Turing machines</b></p>
