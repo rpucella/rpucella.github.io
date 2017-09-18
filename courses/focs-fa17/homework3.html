@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 3</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+      
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP17</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 3</h1>
+    
+    <p class="subtitle">Due date: Sunday, Sep 24 (23h59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you. <b>Please do not post your solutions on a public website or a public repository like GitHub.</b>
+   </p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Code your answers by modifying the
+      file <a href="homework3.ml"><tt>homework3.ml</tt></a> provided. Add your
+      <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor to the block comment at the head of the file.</p>
+
+    <p><b>Please do not change the types in the signature of the
+	function stubs I provide</b>. Doing so will make it
+	impossible to load your code into the testing infrastructure,
+      and make me unhappy. It is perfectly okay to add a <tt>rec</tt> keyword, though. That does not change the type of the function.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use "homework3.ml";;</tt></li>
+      <li>If there are any error, do not submit. I can't test what I
+	can't <tt>#use</tt>.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework3.ml</tt> as an attachment to <tt>focs.fa17@gmail.com</tt> with subject <i>Homework 3 submission</i>.</li>
+    </ul>
+
+
+    <hr>
+
+
+    <p>Consider the following type for finite automata:</p>
+    <pre>
+   type 'a fa = { states: 'a list;
+                  alphabet: char list;
+                  delta: ('a * char * 'a) list;
+                  start : 'a;
+                  final : 'a list }
+</pre>
+<p>A finite automaton  is described by a record with fields holding the various
+components of the automaton: the set of states, the alphabet, the
+transition relation &Delta;, the start state, and the set of final states. Lists are  
+used to represent sets. The transition relation is represented using
+  list of triples (<i>p</i>,<i>a</i>,<i>q</i>), stating that in
+  state <i>p</i>, reading symbol 
+  <i>a</i> makes the machine transition to state <i>q</i>. The automaton itself is
+parameterized over the type of states. (That means that you can use
+               strings, or integers, or anything you want to represent
+               states.)  
+</p>
+
+<p>Records are basically dictionaries, except that they are statically
+    typed, and the fields available in a record are part of its
+    type. For information how to work with records in
+    OCaml, <a href="http://www.cs.cornell.edu/courses/cs3110/2011sp/recitations/rec02-ocaml/ocaml.htm">check
+    out this 
+    link</a> and scroll down to the <i>Records</i> section. Note that
+    aside from pattern matching, you can also access the fields of a
+  record using the <tt>.</tt> notation: <tt>record.fld</tt> will
+  return the value of field <tt>fld</tt> of <tt>record</tt>.
+</p>
+
+<p>Here is an example of a finite automaton that accepts the
+  language of all strings over <tt>{a,b,c}</tt> whose last three
+  symbols are <tt>b</tt>s. </p>
+
+<pre>
+   let faLastThreeB = {
+     states = [0;1;2;3];
+     alphabet = ['a';'b';'c'];
+     delta = [ (0,'a',0);
+               (0,'b',0);
+               (0,'c',0);
+               (0,'b',1);
+               (1,'b',2);
+               (2,'b',3); ];
+     start = 0;
+     final = [3]
+   } 
+</pre>
+
+<p>Here is an example of a (deterministic) finite automaton that accepts
+  the set of all strings over <tt>{a,b}</tt> that contains a number
+  of <tt>a</tt>s that is a multiple of 3. 
+</p>
+
+<pre>
+   let faThreeA = { 
+     states = ["start";"one";"two"];
+     alphabet = ['a';'b'];
+     delta = [ ("start",'a',"one");
+               ("one",'a',"two");
+               ("two",'a',"start");
+               ("start",'b',"start");
+               ("one",'b',"one");
+               ("two",'b',"two") ];
+     start = "start";
+     final = ["start"]
+   } 
+</pre>
+
+    <hr>
+
+    <ol class="question">
+      <li> <p><b>Finite Automata</b></p>
+
+	<ol class="subquestion">
+
+	  <li><p>
+	      Code a function <tt class="code">hasFinal</tt> of
+	    type <tt class="code">'a fa -> 'a list -> bool</tt>
+	    where <tt>hasFinal m qs</tt> returns true if one of the
+	      states in <tt>qs</tt> is a final state of
+	      automaton <tt>m</tt>, and false
+	    otherwise. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# hasFinal faLastThreeB [];;
+- : bool = false
+# hasFinal faLastThreeB [0];;
+- : bool = false
+# hasFinal faLastThreeB [0;1];;
+- : bool = false
+# hasFinal faLastThreeB [0;1;2];;
+- : bool = false
+# hasFinal faLastThreeB [0;1;2;3];;
+- : bool = true
+# hasFinal faLastThreeB [3];;
+- : bool = true
+# hasFinal faThreeA ["start";"one"];;
+- : bool = true
+</pre>
+</div>
+	  </li>
+
+
+	  <li><p>
+	      Code a function <tt class="code">reachableStates</tt> of
+	    type <tt class="code">'a fa -> 'a -> char -> 'a list</tt>
+	    where <tt>reachableStates m q a</tt> returns the list of
+	      states of <tt>m</tt> that can be reached by a transition 
+	      labeled <tt>a</tt> from state <tt>q</tt>.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# reachableStates faLastThreeB 0 'a';;
+- : int list = [0]
+# reachableStates faLastThreeB 0 'b';;
+- : int list = [0; 1]
+# reachableStates faLastThreeB 1 'a';;
+- : int list = []
+# reachableStates faLastThreeB 1 'b';;
+- : int list = [2]
+# reachableStates faLastThreeB 2 'a';;
+- : int list = []
+# reachableStates faLastThreeB 2 'b';;
+- : int list = [3]
+# reachableStates faLastThreeB 3 'a';;
+- : int list = []
+# reachableStates faLastThreeB 3 'b';;
+- : int list = []
+# reachableStates faThreeA "start" 'a';;
+- : string list = ["one"]
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li><p>
+	      Code a function <tt class="code">follow</tt> of
+	    type <tt class="code">'a fa -> 'a list -> char -> 'a list</tt>
+	    where <tt>follow m qs a</tt> returns the list of
+	      states of <tt>m</tt> that are reachable by following a transition 
+	      labeled <tt>a</tt> from any of the states
+	      in <tt>qs</tt>.</p>
+
+	    <p>(For your own sanity, you should make
+	      sure that the resulting list has no duplicate
+	      states. Execution of later functions may slow to a
+	      crawl otherwise. The easiest way to do so is to
+	      implement a function that adds states to an existing list
+	      of states but making sure that it only adds a state if
+	      it isn't already in the list.)</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# follow faThreeA [] 'a';;
+- : string list = []
+# follow faThreeA ["start"] 'a';;
+- : string list = ["one"]
+# follow faThreeA ["start"] 'b';;
+- : string list = ["start"]
+# follow faThreeA ["start"; "one"] 'a';;
+- : string list = ["one"; "two"]
+# follow faThreeA ["start"; "one"] 'b';;
+- : string list = ["start"; "one"]
+# follow faLastThreeB [0;1] 'a';;
+- : int list = [0]
+# follow faLastThreeB [0;1] 'b';;
+- : int list = [0; 1; 2]
+</pre>
+	  </div>	  </li>
+
+
+	  <li><p>
+	      Code a function <tt class="code">followAll</tt> of
+	    type <tt class="code">'a fa -> 'a list -> char list -> 'a list</tt>
+	    where <tt>followAll m qs as</tt> returns the list of
+	      states of <tt>m</tt> that are reachable by following a
+	      sequence of transitions labeled by the symbols
+	      in <tt>as</tt> (in order) starting from any of the states
+	      in <tt>qs</tt>.</p>
+
+	    <p>(Again, for your own sanity, you should make
+	      sure that the resulting list has no duplicate
+	      states.)</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# followAll faThreeA [] [];;
+- : string list = []
+# followAll faThreeA [] ['a'];;
+- : string list = []
+# followAll faThreeA [] ['a';'b'];;
+- : string list = []
+# followAll faThreeA ["start"] [];;
+- : string list = ["start"]
+# followAll faThreeA ["start"] ['a'];;
+- : string list = ["one"]
+# followAll faThreeA ["start"] ['a';'b'];;
+- : string list = ["one"]
+# followAll faThreeA ["start"] ['a';'a'];;
+- : string list = ["two"]
+# followAll faThreeA ["start";"one"] ['a';'a'];;
+- : string list = ["two"; "start"]
+# followAll faThreeA ["start";"one"] ['a';'a';'b'];;
+- : string list = ["two"; "start"]
+# followAll faThreeA ["start";"one"] ['a';'a';'b';'a'];;
+- : string list = ["start"; "one"]
+# followAll faLastThreeB [0;1] ['a';'b';'b';'b'];;
+- : int list = [0; 1; 2; 3]
+</pre>
+	  </div>	  </li>
+
+
+	  <li><p>
+	      Code a function <tt class="code">accept</tt> of
+	    type <tt class="code">'a fa -> string -> bool</tt>
+	    where <tt>accept m s</tt> returns true if and only if
+	      finite automaton <tt>m</tt> accepts the
+	      string <tt>s</tt>. That is, it returns true exactly if
+	      there is a way to follow the transitions of <tt>m</tt>
+	      labeled by the symbols in <tt>s</tt>
+	      from the start state to a final state.</p>
+
+	    <p>You can use function <tt>explode</tt> (provided in the homework
+	    code) to turn a string into a list of characters. You
+	      should probably also use <tt>followAll</tt>...</p>
+
+	    <p>For testing purposes, I've provided you with a function <tt>lang</tt>
+	      where <tt>lang m k</tt> prints out all the strings of length up to <tt>k</tt>
+	      accepted by finite automaton <tt>m</tt>. Note that it calls 
+	      <tt>accept</tt>, so it won't work correctly until you
+	      implement that function. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# accept faThreeA "babab";;
+- : bool = false
+# accept faThreeA "bababa";;
+- : bool = true
+# accept faThreeA "bababab";;
+- : bool = true
+# accept faLastThreeB "abb";;
+- : bool = false
+# accept faLastThreeB "abbb";;
+- : bool = true
+# accept faLastThreeB "abbbb";;
+- : bool = true
+# lang faLastThreeB 6;;
+  bbb
+  abbb
+  bbbb
+  cbbb
+  aabbb
+  babbb
+  cabbb
+  abbbb
+  bbbbb
+  cbbbb
+  acbbb
+  bcbbb
+  ccbbb
+  aaabbb
+  baabbb
+  caabbb
+  ababbb
+  bbabbb
+  cbabbb
+  acabbb
+  bcabbb
+  ccabbb
+  aabbbb
+  babbbb
+  cabbbb
+  abbbbb
+  bbbbbb
+  cbbbbb
+  acbbbb
+  bcbbbb
+  ccbbbb
+  aacbbb
+  bacbbb
+  cacbbb
+  abcbbb
+  bbcbbb
+  cbcbbb
+  accbbb
+  bccbbb
+  cccbbb
+</pre>
+</div>
+	  </li>
+
+
+	</ol>
+
+      </li>
+
+
+
+      <li> <p><b>Designing Finite Automata</b></p>
+
+        <p>In this question, I will ask you to come up with finite
+	  automata. You can test your automata
+	  with the code you wrote in Question 1. </p>
+
+	<p>For submission purposes, I ask you to define those finite
+	  automata as constants using <tt>let</tt> with a fixed
+	  name given below in each question. There is already a
+	  placeholder in <tt>homework3.ml</tt> for those answers. Just
+	  replace the placeholder with your definition.</p>
+
+	<ol class="subquestion">
+
+	  <li><p>
+	      Design a finite automaton <tt class="code">fa_q2_a</tt> for
+	      the language consisting of all strings over the alphabet
+	      <tt>{x,y,z}</tt> of length at least three where the third
+	      symbol from the end is a <tt>z</tt>.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# lang fa_q2_a 6;;
+  zxx
+  zyx
+  zzx
+  zxy
+  zyy
+  zzy
+  zxz
+  zyz
+  zzz
+  xzxx
+  yzxx
+  zzxx
+  xzyx
+  yzyx
+  zzyx
+  xzzx
+  yzzx
+  zzzx
+  xzxy
+  yzxy
+  zzxy
+  xzyy
+  yzyy
+  zzyy
+  xzzy
+  yzzy
+  zzzy
+  xzxz
+  yzxz
+  zzxz
+  xzyz
+  yzyz
+  zzyz
+  xzzz
+  yzzz
+  zzzz
+  xxzxx
+  yxzxx
+  zxzxx
+  xyzxx
+  yyzxx
+  zyzxx
+  xzzxx
+  yzzxx
+  zzzxx
+  xxzyx
+  yxzyx
+  zxzyx
+  xyzyx
+  yyzyx
+  zyzyx
+  xzzyx
+  yzzyx
+  zzzyx
+  xxzzx
+  yxzzx
+  zxzzx
+  xyzzx
+  yyzzx
+  zyzzx
+  xzzzx
+  yzzzx
+  zzzzx
+  xxzxy
+  yxzxy
+  zxzxy
+  xyzxy
+  yyzxy
+  zyzxy
+  xzzxy
+  yzzxy
+  zzzxy
+  xxzyy
+  yxzyy
+  zxzyy
+  xyzyy
+  yyzyy
+  zyzyy
+  xzzyy
+  yzzyy
+  zzzyy
+  xxzzy
+  yxzzy
+  zxzzy
+  xyzzy
+  yyzzy
+  zyzzy
+  xzzzy
+  yzzzy
+  zzzzy
+  xxzxz
+  yxzxz
+  zxzxz
+  xyzxz
+  yyzxz
+  zyzxz
+  xzzxz
+  yzzxz
+  zzzxz
+  xxzyz
+  yxzyz
+  zxzyz
+  xyzyz
+  yyzyz
+  zyzyz
+  xzzyz
+  yzzyz
+  zzzyz
+  xxzzz
+  yxzzz
+  zxzzz
+  xyzzz
+  yyzzz
+  zyzzz
+  xzzzz
+  yzzzz
+  zzzzz
+  xxxzxx
+  yxxzxx
+  zxxzxx
+  xyxzxx
+  yyxzxx
+  zyxzxx
+  xzxzxx
+  yzxzxx
+  zzxzxx
+  xxyzxx
+  yxyzxx
+  zxyzxx
+  xyyzxx
+  yyyzxx
+  zyyzxx
+  xzyzxx
+  yzyzxx
+  zzyzxx
+  xxzzxx
+  yxzzxx
+  zxzzxx
+  xyzzxx
+  yyzzxx
+  zyzzxx
+  xzzzxx
+  yzzzxx
+  zzzzxx
+  xxxzyx
+  yxxzyx
+  zxxzyx
+  xyxzyx
+  yyxzyx
+  zyxzyx
+  xzxzyx
+  yzxzyx
+  zzxzyx
+  xxyzyx
+  yxyzyx
+  zxyzyx
+  xyyzyx
+  yyyzyx
+  zyyzyx
+  xzyzyx
+  yzyzyx
+  zzyzyx
+  xxzzyx
+  yxzzyx
+  zxzzyx
+  xyzzyx
+  yyzzyx
+  zyzzyx
+  xzzzyx
+  yzzzyx
+  zzzzyx
+  xxxzzx
+  yxxzzx
+  zxxzzx
+  xyxzzx
+  yyxzzx
+  zyxzzx
+  xzxzzx
+  yzxzzx
+  zzxzzx
+  xxyzzx
+  yxyzzx
+  zxyzzx
+  xyyzzx
+  yyyzzx
+  zyyzzx
+  xzyzzx
+  yzyzzx
+  zzyzzx
+  xxzzzx
+  yxzzzx
+  zxzzzx
+  xyzzzx
+  yyzzzx
+  zyzzzx
+  xzzzzx
+  yzzzzx
+  zzzzzx
+  xxxzxy
+  yxxzxy
+  zxxzxy
+  xyxzxy
+  yyxzxy
+  zyxzxy
+  xzxzxy
+  yzxzxy
+  zzxzxy
+  xxyzxy
+  yxyzxy
+  zxyzxy
+  xyyzxy
+  yyyzxy
+  zyyzxy
+  xzyzxy
+  yzyzxy
+  zzyzxy
+  xxzzxy
+  yxzzxy
+  zxzzxy
+  xyzzxy
+  yyzzxy
+  zyzzxy
+  xzzzxy
+  yzzzxy
+  zzzzxy
+  xxxzyy
+  yxxzyy
+  zxxzyy
+  xyxzyy
+  yyxzyy
+  zyxzyy
+  xzxzyy
+  yzxzyy
+  zzxzyy
+  xxyzyy
+  yxyzyy
+  zxyzyy
+  xyyzyy
+  yyyzyy
+  zyyzyy
+  xzyzyy
+  yzyzyy
+  zzyzyy
+  xxzzyy
+  yxzzyy
+  zxzzyy
+  xyzzyy
+  yyzzyy
+  zyzzyy
+  xzzzyy
+  yzzzyy
+  zzzzyy
+  xxxzzy
+  yxxzzy
+  zxxzzy
+  xyxzzy
+  yyxzzy
+  zyxzzy
+  xzxzzy
+  yzxzzy
+  zzxzzy
+  xxyzzy
+  yxyzzy
+  zxyzzy
+  xyyzzy
+  yyyzzy
+  zyyzzy
+  xzyzzy
+  yzyzzy
+  zzyzzy
+  xxzzzy
+  yxzzzy
+  zxzzzy
+  xyzzzy
+  yyzzzy
+  zyzzzy
+  xzzzzy
+  yzzzzy
+  zzzzzy
+  xxxzxz
+  yxxzxz
+  zxxzxz
+  xyxzxz
+  yyxzxz
+  zyxzxz
+  xzxzxz
+  yzxzxz
+  zzxzxz
+  xxyzxz
+  yxyzxz
+  zxyzxz
+  xyyzxz
+  yyyzxz
+  zyyzxz
+  xzyzxz
+  yzyzxz
+  zzyzxz
+  xxzzxz
+  yxzzxz
+  zxzzxz
+  xyzzxz
+  yyzzxz
+  zyzzxz
+  xzzzxz
+  yzzzxz
+  zzzzxz
+  xxxzyz
+  yxxzyz
+  zxxzyz
+  xyxzyz
+  yyxzyz
+  zyxzyz
+  xzxzyz
+  yzxzyz
+  zzxzyz
+  xxyzyz
+  yxyzyz
+  zxyzyz
+  xyyzyz
+  yyyzyz
+  zyyzyz
+  xzyzyz
+  yzyzyz
+  zzyzyz
+  xxzzyz
+  yxzzyz
+  zxzzyz
+  xyzzyz
+  yyzzyz
+  zyzzyz
+  xzzzyz
+  yzzzyz
+  zzzzyz
+  xxxzzz
+  yxxzzz
+  zxxzzz
+  xyxzzz
+  yyxzzz
+  zyxzzz
+  xzxzzz
+  yzxzzz
+  zzxzzz
+  xxyzzz
+  yxyzzz
+  zxyzzz
+  xyyzzz
+  yyyzzz
+  zyyzzz
+  xzyzzz
+  yzyzzz
+  zzyzzz
+  xxzzzz
+  yxzzzz
+  zxzzzz
+  xyzzzz
+  yyzzzz
+  zyzzzz
+  xzzzzz
+  yzzzzz
+  zzzzzz
+- : unit = ()
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li><p>
+	      Design a finite automaton
+	      <tt class="code">fa_q2_b</tt> for
+	      the language consisting of all strings over the
+	      alphabet <tt>{x,y,z}</tt> in which there are no sequences of three <tt>x
+</tt> in a row.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# lang fa_q2_b 5;;
+  &lt;epsilon&gt;
+  x
+  y
+  z
+  xx
+  yx
+  zx
+  xy
+  yy
+  zy
+  xz
+  yz
+  zz
+  yxx
+  zxx
+  xyx
+  yyx
+  zyx
+  xzx
+  yzx
+  zzx
+  xxy
+  yxy
+  zxy
+  xyy
+  yyy
+  zyy
+  xzy
+  yzy
+  zzy
+  yxz
+  zxz
+  xyz
+  yyz
+  zyz
+  xzz
+  yzz
+  zzz
+  xyxx
+  yyxx
+  zyxx
+  xzxx
+  yzxx
+  zzxx
+  xxyx
+  yxyx
+  zxyx
+  xyyx
+  yyyx
+  zyyx
+  xzyx
+  yzyx
+  zzyx
+  yxzx
+  zxzx
+  xyzx
+  yyzx
+  zyzx
+  xzzx
+  yzzx
+  zzzx
+  yxxy
+  zxxy
+  xyxy
+  yyxy
+  zyxy
+  xzxy
+  yzxy
+  zzxy
+  xxyy
+  yxyy
+  zxyy
+  xyyy
+  yyyy
+  zyyy
+  xzyy
+  yzyy
+  zzyy
+  yxzy
+  zxzy
+  xyzy
+  yyzy
+  zyzy
+  xzzy
+  yzzy
+  zzzy
+  xyxz
+  yyxz
+  zyxz
+  xzxz
+  yzxz
+  zzxz
+  xxyz
+  yxyz
+  zxyz
+  xyyz
+  yyyz
+  zyyz
+  xzyz
+  yzyz
+  zzyz
+  yxzz
+  zxzz
+  xyzz
+  yyzz
+  zyzz
+  xzzz
+  yzzz
+  zzzz
+  xxyxx
+  yxyxx
+  zxyxx
+  xyyxx
+  yyyxx
+  zyyxx
+  xzyxx
+  yzyxx
+  zzyxx
+  yxzxx
+  zxzxx
+  xyzxx
+  yyzxx
+  zyzxx
+  xzzxx
+  yzzxx
+  zzzxx
+  yxxyx
+  zxxyx
+  xyxyx
+  yyxyx
+  zyxyx
+  xzxyx
+  yzxyx
+  zzxyx
+  xxyyx
+  yxyyx
+  zxyyx
+  xyyyx
+  yyyyx
+  zyyyx
+  xzyyx
+  yzyyx
+  zzyyx
+  yxzyx
+  zxzyx
+  xyzyx
+  yyzyx
+  zyzyx
+  xzzyx
+  yzzyx
+  zzzyx
+  xyxzx
+  yyxzx
+  zyxzx
+  xzxzx
+  yzxzx
+  zzxzx
+  xxyzx
+  yxyzx
+  zxyzx
+  xyyzx
+  yyyzx
+  zyyzx
+  xzyzx
+  yzyzx
+  zzyzx
+  yxzzx
+  zxzzx
+  xyzzx
+  yyzzx
+  zyzzx
+  xzzzx
+  yzzzx
+  zzzzx
+  xyxxy
+  yyxxy
+  zyxxy
+  xzxxy
+  yzxxy
+  zzxxy
+  xxyxy
+  yxyxy
+  zxyxy
+  xyyxy
+  yyyxy
+  zyyxy
+  xzyxy
+  yzyxy
+  zzyxy
+  yxzxy
+  zxzxy
+  xyzxy
+  yyzxy
+  zyzxy
+  xzzxy
+  yzzxy
+  zzzxy
+  yxxyy
+  zxxyy
+  xyxyy
+  yyxyy
+  zyxyy
+  xzxyy
+  yzxyy
+  zzxyy
+  xxyyy
+  yxyyy
+  zxyyy
+  xyyyy
+  yyyyy
+  zyyyy
+  xzyyy
+  yzyyy
+  zzyyy
+  yxzyy
+  zxzyy
+  xyzyy
+  yyzyy
+  zyzyy
+  xzzyy
+  yzzyy
+  zzzyy
+  xyxzy
+  yyxzy
+  zyxzy
+  xzxzy
+  yzxzy
+  zzxzy
+  xxyzy
+  yxyzy
+  zxyzy
+  xyyzy
+  yyyzy
+  zyyzy
+  xzyzy
+  yzyzy
+  zzyzy
+  yxzzy
+  zxzzy
+  xyzzy
+  yyzzy
+  zyzzy
+  xzzzy
+  yzzzy
+  zzzzy
+  xxyxz
+  yxyxz
+  zxyxz
+  xyyxz
+  yyyxz
+  zyyxz
+  xzyxz
+  yzyxz
+  zzyxz
+  yxzxz
+  zxzxz
+  xyzxz
+  yyzxz
+  zyzxz
+  xzzxz
+  yzzxz
+  zzzxz
+  yxxyz
+  zxxyz
+  xyxyz
+  yyxyz
+  zyxyz
+  xzxyz
+  yzxyz
+  zzxyz
+  xxyyz
+  yxyyz
+  zxyyz
+  xyyyz
+  yyyyz
+  zyyyz
+  xzyyz
+  yzyyz
+  zzyyz
+  yxzyz
+  zxzyz
+  xyzyz
+  yyzyz
+  zyzyz
+  xzzyz
+  yzzyz
+  zzzyz
+  xyxzz
+  yyxzz
+  zyxzz
+  xzxzz
+  yzxzz
+  zzxzz
+  xxyzz
+  yxyzz
+  zxyzz
+  xyyzz
+  yyyzz
+  zyyzz
+  xzyzz
+  yzyzz
+  zzyzz
+  yxzzz
+  zxzzz
+  xyzzz
+  yyzzz
+  zyzzz
+  xzzzz
+  yzzzz
+  zzzzz
+- : unit = ()
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li><p>
+	      Design a finite automaton
+	      <tt class="code">fa_q2_c</tt> for
+	      the language consisting of all strings over the alphabet
+	      <tt>{x,y,z}</tt> subject to the constraint that only a <tt>y</tt> or a <tt>z</tt> can 
+	      follow an <tt>x</tt>, and only a <tt>z</tt> can follow a <tt>y</tt>. 
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# lang fa_q2_c 5;;
+  &lt;epsilon&gt;
+  x
+  y
+  z
+  zx
+  xy
+  zy
+  xz
+  yz
+  zz
+  xzx
+  yzx
+  zzx
+  zxy
+  xzy
+  yzy
+  zzy
+  zxz
+  xyz
+  zyz
+  xzz
+  yzz
+  zzz
+  zxzx
+  xyzx
+  zyzx
+  xzzx
+  yzzx
+  zzzx
+  xzxy
+  yzxy
+  zzxy
+  zxzy
+  xyzy
+  zyzy
+  xzzy
+  yzzy
+  zzzy
+  xzxz
+  yzxz
+  zzxz
+  zxyz
+  xzyz
+  yzyz
+  zzyz
+  zxzz
+  xyzz
+  zyzz
+  xzzz
+  yzzz
+  zzzz
+  xzxzx
+  yzxzx
+  zzxzx
+  zxyzx
+  xzyzx
+  yzyzx
+  zzyzx
+  zxzzx
+  xyzzx
+  zyzzx
+  xzzzx
+  yzzzx
+  zzzzx
+  zxzxy
+  xyzxy
+  zyzxy
+  xzzxy
+  yzzxy
+  zzzxy
+  xzxzy
+  yzxzy
+  zzxzy
+  zxyzy
+  xzyzy
+  yzyzy
+  zzyzy
+  zxzzy
+  xyzzy
+  zyzzy
+  xzzzy
+  yzzzy
+  zzzzy
+  zxzxz
+  xyzxz
+  zyzxz
+  xzzxz
+  yzzxz
+  zzzxz
+  xzxyz
+  yzxyz
+  zzxyz
+  zxzyz
+  xyzyz
+  zyzyz
+  xzzyz
+  yzzyz
+  zzzyz
+  xzxzz
+  yzxzz
+  zzxzz
+  zxyzz
+  xzyzz
+  yzyzz
+  zzyzz
+  zxzzz
+  xyzzz
+  zyzzz
+  xzzzz
+  yzzzz
+  zzzzz
+- : unit = ()
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li><p>
+	      Design a finite automaton
+	      <tt class="code">fa_q2_d</tt> for
+	      the language consisting of all strings over the alphabet
+	      <tt>{x,y,z}</tt> in which there are an even number
+	      of <tt>x</tt> and an odd number of <tt>y</tt>.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# lang fa_q2_d 6;;
+  y
+  zy
+  yz
+  yxx
+  xyx
+  xxy
+  yyy
+  zzy
+  zyz
+  yzz
+  zyxx
+  yzxx
+  zxyx
+  xzyx
+  yxzx
+  xyzx
+  zxxy
+  xzxy
+  zyyy
+  yzyy
+  xxzy
+  yyzy
+  zzzy
+  yxxz
+  xyxz
+  xxyz
+  yyyz
+  zzyz
+  zyzz
+  yzzz
+  yxxxx
+  xyxxx
+  xxyxx
+  yyyxx
+  zzyxx
+  zyzxx
+  yzzxx
+  xxxyx
+  yyxyx
+  zzxyx
+  yxyyx
+  xyyyx
+  zxzyx
+  xzzyx
+  zyxzx
+  yzxzx
+  zxyzx
+  xzyzx
+  yxzzx
+  xyzzx
+  xxxxy
+  yyxxy
+  zzxxy
+  yxyxy
+  xyyxy
+  zxzxy
+  xzzxy
+  yxxyy
+  xyxyy
+  xxyyy
+  yyyyy
+  zzyyy
+  zyzyy
+  yzzyy
+  zxxzy
+  xzxzy
+  zyyzy
+  yzyzy
+  xxzzy
+  yyzzy
+  zzzzy
+  zyxxz
+  yzxxz
+  zxyxz
+  xzyxz
+  yxzxz
+  xyzxz
+  zxxyz
+  xzxyz
+  zyyyz
+  yzyyz
+  xxzyz
+  yyzyz
+  zzzyz
+  yxxzz
+  xyxzz
+  xxyzz
+  yyyzz
+  zzyzz
+  zyzzz
+  yzzzz
+  zyxxxx
+  yzxxxx
+  zxyxxx
+  xzyxxx
+  yxzxxx
+  xyzxxx
+  zxxyxx
+  xzxyxx
+  zyyyxx
+  yzyyxx
+  xxzyxx
+  yyzyxx
+  zzzyxx
+  yxxzxx
+  xyxzxx
+  xxyzxx
+  yyyzxx
+  zzyzxx
+  zyzzxx
+  yzzzxx
+  zxxxyx
+  xzxxyx
+  zyyxyx
+  yzyxyx
+  xxzxyx
+  yyzxyx
+  zzzxyx
+  zyxyyx
+  yzxyyx
+  zxyyyx
+  xzyyyx
+  yxzyyx
+  xyzyyx
+  xxxzyx
+  yyxzyx
+  zzxzyx
+  yxyzyx
+  xyyzyx
+  zxzzyx
+  xzzzyx
+  yxxxzx
+  xyxxzx
+  xxyxzx
+  yyyxzx
+  zzyxzx
+  zyzxzx
+  yzzxzx
+  xxxyzx
+  yyxyzx
+  zzxyzx
+  yxyyzx
+  xyyyzx
+  zxzyzx
+  xzzyzx
+  zyxzzx
+  yzxzzx
+  zxyzzx
+  xzyzzx
+  yxzzzx
+  xyzzzx
+  zxxxxy
+  xzxxxy
+  zyyxxy
+  yzyxxy
+  xxzxxy
+  yyzxxy
+  zzzxxy
+  zyxyxy
+  yzxyxy
+  zxyyxy
+  xzyyxy
+  yxzyxy
+  xyzyxy
+  xxxzxy
+  yyxzxy
+  zzxzxy
+  yxyzxy
+  xyyzxy
+  zxzzxy
+  xzzzxy
+  zyxxyy
+  yzxxyy
+  zxyxyy
+  xzyxyy
+  yxzxyy
+  xyzxyy
+  zxxyyy
+  xzxyyy
+  zyyyyy
+  yzyyyy
+  xxzyyy
+  yyzyyy
+  zzzyyy
+  yxxzyy
+  xyxzyy
+  xxyzyy
+  yyyzyy
+  zzyzyy
+  zyzzyy
+  yzzzyy
+  xxxxzy
+  yyxxzy
+  zzxxzy
+  yxyxzy
+  xyyxzy
+  zxzxzy
+  xzzxzy
+  yxxyzy
+  xyxyzy
+  xxyyzy
+  yyyyzy
+  zzyyzy
+  zyzyzy
+  yzzyzy
+  zxxzzy
+  xzxzzy
+  zyyzzy
+  yzyzzy
+  xxzzzy
+  yyzzzy
+  zzzzzy
+  yxxxxz
+  xyxxxz
+  xxyxxz
+  yyyxxz
+  zzyxxz
+  zyzxxz
+  yzzxxz
+  xxxyxz
+  yyxyxz
+  zzxyxz
+  yxyyxz
+  xyyyxz
+  zxzyxz
+  xzzyxz
+  zyxzxz
+  yzxzxz
+  zxyzxz
+  xzyzxz
+  yxzzxz
+  xyzzxz
+  xxxxyz
+  yyxxyz
+  zzxxyz
+  yxyxyz
+  xyyxyz
+  zxzxyz
+  xzzxyz
+  yxxyyz
+  xyxyyz
+  xxyyyz
+  yyyyyz
+  zzyyyz
+  zyzyyz
+  yzzyyz
+  zxxzyz
+  xzxzyz
+  zyyzyz
+  yzyzyz
+  xxzzyz
+  yyzzyz
+  zzzzyz
+  zyxxzz
+  yzxxzz
+  zxyxzz
+  xzyxzz
+  yxzxzz
+  xyzxzz
+  zxxyzz
+  xzxyzz
+  zyyyzz
+  yzyyzz
+  xxzyzz
+  yyzyzz
+  zzzyzz
+  yxxzzz
+  xyxzzz
+  xxyzzz
+  yyyzzz
+  zzyzzz
+  zyzzzz
+  yzzzzz
+- : unit = ()
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li><p>
+	      Design a finite automaton <tt class="code">fa_q2_e</tt> for
+	      the language consisting of all strings over the alphabet
+	      <tt>{x,y,z}</tt> in which there are an odd number
+	      of <tt>x</tt>, an even number of <tt>y</tt>, and
+	      exactly one <tt>z</tt>. 
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+# lang fa_q2_e 6;;
+  zx
+  xz
+  zxxx
+  xzxx
+  zyyx
+  yzyx
+  xxzx
+  yyzx
+  zyxy
+  yzxy
+  zxyy
+  xzyy
+  yxzy
+  xyzy
+  xxxz
+  yyxz
+  yxyz
+  xyyz
+  zxxxxx
+  xzxxxx
+  zyyxxx
+  yzyxxx
+  xxzxxx
+  yyzxxx
+  zyxyxx
+  yzxyxx
+  zxyyxx
+  xzyyxx
+  yxzyxx
+  xyzyxx
+  xxxzxx
+  yyxzxx
+  yxyzxx
+  xyyzxx
+  zyxxyx
+  yzxxyx
+  zxyxyx
+  xzyxyx
+  yxzxyx
+  xyzxyx
+  zxxyyx
+  xzxyyx
+  zyyyyx
+  yzyyyx
+  xxzyyx
+  yyzyyx
+  yxxzyx
+  xyxzyx
+  xxyzyx
+  yyyzyx
+  xxxxzx
+  yyxxzx
+  yxyxzx
+  xyyxzx
+  yxxyzx
+  xyxyzx
+  xxyyzx
+  yyyyzx
+  zyxxxy
+  yzxxxy
+  zxyxxy
+  xzyxxy
+  yxzxxy
+  xyzxxy
+  zxxyxy
+  xzxyxy
+  zyyyxy
+  yzyyxy
+  xxzyxy
+  yyzyxy
+  yxxzxy
+  xyxzxy
+  xxyzxy
+  yyyzxy
+  zxxxyy
+  xzxxyy
+  zyyxyy
+  yzyxyy
+  xxzxyy
+  yyzxyy
+  zyxyyy
+  yzxyyy
+  zxyyyy
+  xzyyyy
+  yxzyyy
+  xyzyyy
+  xxxzyy
+  yyxzyy
+  yxyzyy
+  xyyzyy
+  yxxxzy
+  xyxxzy
+  xxyxzy
+  yyyxzy
+  xxxyzy
+  yyxyzy
+  yxyyzy
+  xyyyzy
+  xxxxxz
+  yyxxxz
+  yxyxxz
+  xyyxxz
+  yxxyxz
+  xyxyxz
+  xxyyxz
+  yyyyxz
+  yxxxyz
+  xyxxyz
+  xxyxyz
+  yyyxyz
+  xxxyyz
+  yyxyyz
+  yxyyyz
+  xyyyyz
+- : unit = ()
+</pre>
+	  </div>
+	  </li>
+
+
+
+	</ol>
+      </li>
+
+
+      <li> <p><b>Finite Automata Constructions</b></p>
+
+	<p>In this question, we implement some of the constructions that came up in class when we discussed how to go from regular expressions to finite automata.
+	</p>
+
+	<ol class="subquestion">
+
+	  <li><p>
+	      Code a function <tt class="code">unionM</tt> of
+	    type <tt class="code">'a fa -> 'a fa -> 'a fa</tt>
+	      where <tt>unionM m1 m2</tt> returns a finite automaton that accepts the union of the language accepted by <tt>m1</tt> and the language accepted by <tt>m2</tt>. </p>
+
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+(Coming soon)</pre>
+	  </div>
+	  </li>
+
+	  <li><p>
+	      Code a function <tt class="code">concatM</tt> of
+	    type <tt class="code">'a fa -> 'a fa -> 'a fa</tt>
+	    where <tt>concatM m1 m2</tt> returns the finite automaton that accepts the concatenation of the language accepted by <tt>m1</tt> and the language accepted by <tt>m2</tt>. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+(Coming soon)</pre>
+	  </div>
+	  </li>
+
+
+	  <li><p><b>(Challenging)</b>
+	      Code a function <tt class="code">interM</tt> of
+	    type <tt class="code">'a fa -> 'a fa -> ('a * 'a) fa</tt>
+	      where <tt>interM m1 m2</tt> returns the finite automaton that accepts the <i>intersection</i> of the language accepted by <tt>m1</tt> and the language accepted by <tt>m2</tt>. That is, <tt>interM m1 m2</tt> should yield a finite automaton whose language is the set of all strings accepted by both <tt>m1</tt> and <tt>m2</tt>.
+</p>
+
+	    <p>The type gives you a strong hint of how you can solve the problem. You basically construct a finite automaton <tt>m</tt> whose states are <i>pairs</i> of a state of <tt>m1</tt> and a state of <tt>m2</tt>. A transition of <tt>m</tt> from state (s,t) gives you a new pair of states (s',t'), where s' is obtained by following a transition in <tt>m1</tt> from state s, and t' is obtained by following a transition in <tt>m2</tt> from state t. A final state of <tt>m</tt> is a pair of final states of <tt>m1</tt> and <tt>m2</tt>. I leave it up to you to work out the details.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+(Coming soon)</pre>
+
+	  </div>
+	  </li>
+
+
+	</ol>
+      </li>
+
+
+    </ol>
+	
+    
+
+  </body>
+</html>
