@@ -164,6 +164,13 @@ li > p { margin-top:0;}
       <li>When you're ready to submit, send an email with your file <tt>homework3.ml</tt> as an attachment to <tt>focs.fa17@gmail.com</tt> with subject <i>Homework 3 submission</i>.</li>
     </ul>
 
+    <hr>
+
+    <p class="subtitle">Updates</p>
+    <ul class="simple">
+      <li>Sep 21: added sample outputs to Q3, and made the third part of Q3 optional.</li>
+    </ul>
+
 
     <hr>
 
@@ -1755,6 +1762,28 @@ parameterized over the type of states. (That means that you can use
 	<p>In this question, we implement some of the constructions that came up in class when we discussed how to go from regular expressions to finite automata.
 	</p>
 
+	<p>
+The sample outputs use the following simple automata:
+<pre>
+let fa1 = { states = ["fa1_1";"fa1_2";"fa1_3"];
+	    alphabet = ['a';'b'];
+	    delta = [ ("fa1_1",'a',"fa1_2");
+		      ("fa1_2",'a',"fa1_3");
+		      ("fa1_3",'a',"fa1_1") ];
+	    start = "fa1_1";
+	    final = ["fa1_1"] }
+
+let fa2 = { states = ["fa2_1";"fa2_2"];
+	    alphabet = ['a';'b'];
+	    delta = [ ("fa2_1",'b',"fa2_2");
+		      ("fa2_2",'a',"fa2_1") ];
+	    start = "fa2_1";
+	    final = ["fa2_1"] }
+</pre>
+The language of <tt>fa1</tt> is the language described by regular expression <tt>(aaa)<sup>*</sup></tt>, and the language of <tt>fa2</tt> is the language described by regular expression <tt>(ba)<sup>*</sup></tt>.</p>
+
+	<p>For these questions, you may assume that the alphabets of the machines are the same, that the set of states of different machines are different, and that the states are described by strings.</p>
+
 	<ol class="subquestion">
 
 	  <li><p>
@@ -1762,11 +1791,48 @@ parameterized over the type of states. (That means that you can use
 	    type <tt class="code">'a fa -> 'a fa -> 'a fa</tt>
 	      where <tt>unionM m1 m2</tt> returns a finite automaton that accepts the union of the language accepted by <tt>m1</tt> and the language accepted by <tt>m2</tt>. </p>
 
+	    <p><b>Hint:</b> You may benefit from a helper function that takes a state <tt>p</tt> and a state <tt>q</tt> and a set of transitions <tt>delta</tt> and returns the set of all transitions from <tt>q</tt> in which the origin <tt>q</tt> has been replaced by <tt>p</tt>. (It doesn't have to be exactly this helper function, of course.) </p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
   <pre>
-(Coming soon)</pre>
+# lang fa1 10;;
+  &lt;epsilon>
+  aaa
+  aaaaaa
+  aaaaaaaaa
+- : unit = ()
+# lang fa2 10;;
+  &lt;epsilon>
+  ba
+  baba
+  bababa
+  babababa
+  bababababa
+- : unit = ()
+# lang (unionM fa1 fa2) 10;;
+  &lt;epsilon>
+  ba
+  aaa
+  baba
+  aaaaaa
+  bababa
+  babababa
+  aaaaaaaaa
+  bababababa
+- : unit = ()
+# lang (unionM fa2 fa1) 10;;
+  &lt;epsilon>
+  ba
+  aaa
+  baba
+  aaaaaa
+  bababa
+  babababa
+  aaaaaaaaa
+  bababababa
+- : unit = ()
+</pre>
 	  </div>
 	  </li>
 
@@ -1775,15 +1841,64 @@ parameterized over the type of states. (That means that you can use
 	    type <tt class="code">'a fa -> 'a fa -> 'a fa</tt>
 	    where <tt>concatM m1 m2</tt> returns the finite automaton that accepts the concatenation of the language accepted by <tt>m1</tt> and the language accepted by <tt>m2</tt>. </p>
 
+	    <p><b>Hint:</b> You may benefit from a helper function that takes a set of states <tt>ps</tt> and a state <tt>q</tt> and a set of transitions <tt>delta</tt> and returns the set of all transitions from <tt>q</tt> in which the origin <tt>q</tt> has been replaced by some state in <tt>ps</tt>. (It doesn't have to be exactly this helper function, of course. And you may even be able to reuse the helper function from the previous question!) </p>
+
+
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
   <pre>
-(Coming soon)</pre>
+# lang fa1 10;;
+  &lt;epsilon>
+  aaa
+  aaaaaa
+  aaaaaaaaa
+- : unit = ()
+# lang fa2 10;;
+  &lt;epsilon>
+  ba
+  baba
+  bababa
+  babababa
+  bababababa
+- : unit = ()
+# lang (concatM fa1 fa2) 10;;
+  &lt;epsilon>
+  ba
+  aaa
+  baba
+  aaaba
+  aaaaaa
+  bababa
+  aaababa
+  aaaaaaba
+  babababa
+  aaaaaaaaa
+  aaabababa
+  aaaaaababa
+  bababababa
+- : unit = ()
+# lang (concatM fa2 fa1) 10;;
+  &lt;epsilon>
+  ba
+  aaa
+  baba
+  baaaa
+  aaaaaa
+  bababa
+  babaaaa
+  baaaaaaa
+  babababa
+  aaaaaaaaa
+  bababaaaa
+  babaaaaaaa
+  bababababa
+- : unit = ()
+</pre>
 	  </div>
 	  </li>
 
 
-	  <li><p><b>(Challenging)</b>
+	  <li><p><b>(OPTIONAL)</b>
 	      Code a function <tt class="code">interM</tt> of
 	    type <tt class="code">'a fa -> 'a fa -> ('a * 'a) fa</tt>
 	      where <tt>interM m1 m2</tt> returns the finite automaton that accepts the <i>intersection</i> of the language accepted by <tt>m1</tt> and the language accepted by <tt>m2</tt>. That is, <tt>interM m1 m2</tt> should yield a finite automaton whose language is the set of all strings accepted by both <tt>m1</tt> and <tt>m2</tt>.
