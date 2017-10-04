@@ -209,8 +209,8 @@ let rejectConfig (m:'a tm) (c:'a config):bool =
   failwith "rejectConfig not implemented"
 
 
-let haltConfig (m:'a tm) (c:'a config):bool = 
-  failwith "haltConfig not implemented"
+let replace_nth (xs:'a list) (n:int) (x:'a):'a list = 
+  failwith "replace_nth not implemented"
 
 
 let step (m:'a tm) (c:'a config):'a config = 
