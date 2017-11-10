@@ -115,14 +115,40 @@
 
       <ul class="simple annoucements">
 
-<!--	<li><p><a href="announcements.html">Older announcements...</a></p></li> -->
+	<!--	<li><p><a href="announcements.html">Older announcements...</a></p></li> -->
+
+	<li><p><span>Nov 5:</span>
+	    <a href="./homework7.html">Homework 7</a> is out. Due Sunday Nov 12.
+	  </p>
+	</li>
+
+	<li><p><span>Nov 4:</span>
+	    Lecture notes on &lambda;-calculus are available.
+	  </p>
+	</li>
+
+<li><p><span>Oct 23:</span>
+    A <a href="./midterm.html">quick study guide</a> for the midterm on Thursday.</p>
+</li>
+
+<li><p><span>Oct 22:</span>
+    <a href="./homework6.html">Homework 6</a> is out. Also, notes from the lecture on grammars are available.
+</p></li>
+
+<li><p><span>Oct 9:</span>
+   Lecture notes on undecidability are up.
+</p></li>
+
+<li><p><span>Oct 3:</span>
+    <a href="./homework5.html">Homework 5</a> is out. A short one, and due a day later than usual.
+</p></li>
 
 <li><p><span>Sep 30:</span>
     Lecture notes on Turing machines are up.
 </p></li>
 
 <li><p><span>Sep 25:</span>
-    <a href="./homework4.html">Homerwork 4</a> is out. A short one &mdash; only two questions. Just to exercise those higher-order programming muscles you developed reading the last <a href="./notes-functional.html">write-up</a>.
+    <a href="./homework4.html">Homework 4</a> is out. A short one &mdash; only two questions. Just to exercise those higher-order programming muscles you developed reading the last <a href="./notes-functional.html">write-up</a>.
 </p></li>
 
 <li><p><span>Sep 23:</span>
@@ -356,33 +382,64 @@ automata with N states whose smallest deterministic finite
 	</li>	  
 	
 	
-	<li><p><span class="hdr"></span><b>Undecidability</b></p>
+	<li><p><span class="hdr">Oct 5:</span><b>Undecidability</b></p>
+	  <div class="lect">
+	    <p><a href="04-undecidability.pdf">Notes from the lecture.</a></p>
+
+	    <p>The <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis">Church-Turing thesis</a>.</p>
+	    
+	    <p>Note that our counting argument actually shows that there exists not-only undecidable languages, but non-enumerable languages. (Why?)</p>
+
+	    <p><a href="http://io9.gizmodo.com/5873581/the-odd-genius-who-showed-that-one-infinity-was-greater-than-another">Georg Cantor</a> the odd genius.</p>
+	    
+	    <p>A quick introduction
+	      to <a href="https://en.wikipedia.org/wiki/Universal_Turing_machine">Universal
+		Turing machines</a> from Wikipedia. Moore gives a
+	      <a href="https://courses.washington.edu/fit100/sp11/files/Moore%20turing.pdf">multi-tape implementation of a Universal Turing
+		machine in 15 states</a>. </p>
+
+	    <p>The <a href="https://en.wikipedia.org/wiki/Post_correspondence_problem">Post Correspondence Problem</a>.</p>
+	  </div>
 	</li>	  
 
 	
-	<li><p><span class="hdr"></span><b>Midterm examination</b></p>
-	</li>
-
-	
-	<li><p><b>FUNCTIONAL PROGRAMMING</b></p></li>
-
-
-	<li><p><span class="hdr"></span><b>Recursive data structures</b></p>
-	</li>	  
-
-	<li><p><span class="hdr"></span><b>Recursion versus iteration</b></p>
-	</li>
-
-
 	<li><p><b>ALTERNATIVE MODELS OF COMPUTATION</b></p></li>
 
-	<li><p><span class="hdr"></span><b>Generative grammars</b></p>
+	<li><p><span class="hdr">Oct 19</span><b>Generative grammars</b></p>
+	  <div class="lect">
+
+	  <p><a href="05-grammars.pdf">Notes</a> from the lecture.</p> 
+
+	  <p>The main area of CS where you'll encounter grammars is
+	  probably when parsing input, which is often described using
+	  a grammar from which a parser can be automatically
+	  generated. There are many good tutorials and introductions
+	  to
+	  parsing. <a href="http://homepages.cwi.nl/~storm/teaching/sc1112/intro-parsing.pdf">Here's
+	  a reasonable high-level presentation.</a></p> 
+
+	  <p>A beautiful application of grammars
+	  is <a href="https://en.wikipedia.org/wiki/L-system">L-systems</a>,
+	  a class of grammars that model the growth processes of plant
+	  development.</p> 
+	  </div>
 	</li>	  
 
-	<li><p><span class="hdr"></span><b>Lambda calculus</b></p>
+	<li><p><span class="hdr">Oct 26</span><b>Midterm examination</b></p>
+	</li>
+	
+	<li><p><span class="hdr">Nov 2</span><b>Lambda calculus</b></p>
+		<div class="lect">
+		  <p><a href="06-lambda.pdf">Notes</a> from the lecture. These notes explicitly define a substitution function, something I left undefined in class, and also emphasize using the Y combinator to implement recursion.</p>
+
+		  <p>A general discussion of <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">fixed-point combinators</a>, of which Y is an example.</p>
+
+		  <p>Some additional introductory references on the lambda calculus: <a href="http://palmstroem.blogspot.com/2012/05/lambda-calculus-for-absolute-dummies.html">The Lambda Calculus for Absolute Dummies (Like Myself)</a>, Jung's <a href="https://pdfs.semanticscholar.org/7fbb/69ab3be000788c106cbfe11f0c5208457746.pdf">A Short Introduction to the Lambda Calculus</a>, and Rojas's <a href="http://www.inf.fu-berlin.de/lehre/WS03/alpi/lambda.pdf">A Tutorial Introduction to the Lambda Calculus</a>. Note that all of these references use the standard presentation of the calculus, with &lambda;x.M instead of &lt;x &rarr; M&gt;</p> 
+		</div>
 	</li>	  
 
-	<li><p><span class="hdr"></span><b>Dataflow</b></p>
+
+	<li><p><span class="hdr">Nov 9</span><b>Dataflow</b></p>
 	  <div class="lect">
 	    <p>The <a href="streams-tutorial.html">streams programming tutorial</a> I gave in class.</p>
 
@@ -397,8 +454,16 @@ automata with N states whose smallest deterministic finite
 	  </div>
 	</li>	  
 	
-	<li><p><span class="hdr"></span><b>Concurrency</b></p>
+	<li><p><span class="hdr">Nov 16</span><b>Concurrency</b></p>
 	</li>	  
+
+	<li><p><b>FUNCTIONAL PROGRAMMING</b></p></li>
+
+	<li><p><span class="hdr">Nov 30</span><b>Recursive data structures</b></p>
+	</li>	  
+
+	<li><p><span class="hdr">Dec 7</span><b>Recursion versus iteration</b></p>
+	</li>
 
       </ul>
 
@@ -413,6 +478,9 @@ automata with N states whose smallest deterministic finite
       <li><a href="homework2.html">Homework 2</a> &mdash; Due Sunday Sep 17 (23h59)</li>
       <li><a href="homework3.html">Homework 3</a> &mdash; Due Sunday Sep 24 (23h59)</li>
       <li><a href="homework4.html">Homework 4</a> &mdash; Due Sunday Oct 1 (23h59)</li>
+      <li><a href="homework5.html">Homework 5</a> &mdash; Due Monday Oct 9 (23h59)</li>
+      <li><a href="homework6.html">Homework 6</a> &mdash; Due Sunday Oct 29 (23h59)</li>
+      <li><a href="homework7.html">Homework 7</a> &mdash; Due Sunday Nov 12 (23h59)</li>
     </div>
 
   </body>
