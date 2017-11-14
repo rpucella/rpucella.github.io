@@ -131,7 +131,7 @@ li > p { margin-top:0;}
     
     <h1 class="clear">Homework 8</h1>
     
-    <p class="subtitle">Due date: Sunday, Nov 20 (23h59)</p>
+    <p class="subtitle">Due date: Monday, Nov 21 (23h59)</p>
 
     <p><b>Note on integrity:</b> This homework is meant to be done
     individually. You may discuss problems with fellow students, but
@@ -222,16 +222,19 @@ fby : 'a stream -> (unit -> 'a stream) -> 'a stream    </pre>
     and not get into infinite loops.)</p>
 
     <p>To recall examples given in class, the stream of natural
-      numbers can be defined as follows. (Stream <tt>nats</tt> uses feedback, which is 
-     expressed using recursion in OCaml, and since the only objects that can be 
-     recursive in OCaml are functions, we need to create the stream of natural numbers
-      as a function. Here, we first create <tt>gen_nats</tt>, the natural numbers generator, as a function
-      from unit to the integer stream of natural numbers, and apply <tt>gen_nats</tt> to <tt>()</tt> to obtain the natural numbers):</p>
+      numbers can be defined as follows. (Stream <tt>nats</tt> uses
+      feedback, which is expressed using recursion in OCaml, and since
+      the only objects that can be recursive in OCaml are functions,
+      we need to create the stream of natural numbers as a
+      function. Here, we first create <tt>mk_nats</tt>, the natural
+      numbers generator, as a function from unit to the integer stream
+      of natural numbers, and apply <tt>mk_nats</tt> to <tt>()</tt> to
+      obtain the natural numbers):</p>
 
     <pre>
-let rec gen_nats = fby (cst 0)
-                       (fun () -> (map (fun x -> x+1) (gen_nats ())))
-let nats = gen_nats ()</pre>
+let rec mk_nats = fby (cst 0)
+                       (fun () -> (map (fun x -> x+1) (mk_nats ())))
+let nats = mk_nats ()</pre>
 
     <p>The function for computing partial sums of a stream, that is,
       where</p>
