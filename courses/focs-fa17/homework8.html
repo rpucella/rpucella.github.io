@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 8</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+/*           background: #e6e6e6; */
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+      
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP17</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 8</h1>
+    
+    <p class="subtitle">Due date: Sunday, Nov 20 (23h59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    individually. You may discuss problems with fellow students, but
+    all work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you. <b>Please do not post your solutions on a public website or a public repository like GitHub.</b>
+   </p>
+
+    <p>All programming is to be done in OCaml v4.</p>
+
+    <p>Code your answers by modifying the
+      file <a href="homework8.ml"><tt>homework8.ml</tt></a> provided. Add your
+      <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor to the block comment at the head of the file.</p>
+
+    <p><b>Please do not change the types in the signature of the
+	function stubs I provide</b>. Doing so will make it
+	impossible to load your code into the testing infrastructure,
+      and make me unhappy. It is perfectly okay to add a <tt>rec</tt> keyword, though. That does not change the type of the function.</p>
+
+    <p>Feel free to define helper functions if you need them.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Start a <i>new</i> OCaml shell.</li>
+      <li>Load your homework code via <tt>#use "homework8.ml";;</tt></li>
+      <li>If there are any error, do not submit. I can't test what I
+	can't <tt>#use</tt>.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework8.ml</tt> as an attachment to <tt>focs.fa17@gmail.com</tt> with subject <i>Homework 8 submission</i>.</li>
+    </ul>
+
+    <hr>
+
+
+    <p>Recall the interface that I presented in class to
+      work with infinite streams. Type <tt>'a stream</tt> represents a
+      stream of elements of
+    type <tt>'a</tt>, and the
+    following operations are available on streams:</p>
+
+    <pre>
+    cst : 'a -> 'a stream
+    map : ('a -> 'b) -> 'a stream -> 'b stream
+    map2 : ('a -> 'b -> 'c) -> 'a stream -> 'b stream -> 'c stream
+    filter : ('a -> 'b -> bool) -> 'a stream -> 'b stream -> 'b stream
+    split : 'a stream -> ('a stream * 'a stream)
+    print_stream : ('a -> string) -> int -> 'a stream -> unit
+</pre>
+
+    <p>These functions are straightforward: 
+<ul>
+<li><tt>cst <i>v</i></tt>
+  creates an infinite constant stream of <tt><i>v</i></tt>s</li>
+<li><tt>map <i>f</i> <i>s</i></tt> returns the stream obtained by
+  applying function <tt><i>f</i></tt> to every element
+  of <tt><i>s</i></tt>
+<li><tt>map2 <i>f</i> <i>s1</i> <i>s2</i></tt> returns the stream obtained by
+  applying function <tt><i>f</i></tt> to every element
+  of <tt><i>s1</i></tt> and <tt><i>s2</i></tt>, pairwise.
+<li><tt>filter <i>p</i> <i>ctl</i> <i>s</i></tt> returns the stream
+  obtained by keeping only the elements of <tt><i>s</i></tt> for
+  which <tt><i>p</i></tt> applied to a control
+  element in <tt><i>ctl</i></tt> and the corresponding element
+  in <tt><i>s</i></tt> is true</li>
+<li><tt>split <i>s</i></tt> returns a <i>pair of streams</i>, the
+  first stream being the constant stream of the first element
+  of <tt><i>s</i></tt>, and the second stream being the stream of all
+  but the first element of <tt><i>s</i></tt>.</li>
+<li><tt>print_stream <i>transf</i> <i>n</i> <i>s</i></tt> prints the first <tt><i>n</i></tt> 
+  elements of stream <tt><i>s</i></tt>, using <tt><i>transf</i></tt> to transform each element into a
+  string first.</li>
+  </ul>
+    </p>
+
+    <p>The following function is the one that lets you build interesting streams:</p>
+    <pre>
+fby : 'a stream -> (unit -> 'a stream) -> 'a stream    </pre>
+    <p>This function takes a stream <i>s</i> and a <i>function</i>
+    returning some 
+    stream <i>t</i>, and creates a new stream made up of the first
+    element of <i>s</i> followed by the elements of the stream <i>t</i>
+    obtained by applying the function. (The reason why the second
+    argument of <tt>fby</tt> is a function is to prevent OCaml from
+      evaluating the stream immediately. This is what makes it
+    possible to work with infinite streams in a language like OCaml
+    and not get into infinite loops.)</p>
+
+    <p>To recall examples given in class, the stream of natural
+      numbers can be defined as follows. (Stream <tt>nats</tt> uses feedback, which is 
+     expressed using recursion in OCaml, and since the only objects that can be 
+     recursive in OCaml are functions, we need to create the stream of natural numbers
+      as a function. Here, we first create <tt>gen_nats</tt>, the natural numbers generator, as a function
+      from unit to the integer stream of natural numbers, and apply <tt>gen_nats</tt> to <tt>()</tt> to obtain the natural numbers):</p>
+
+    <pre>
+let rec gen_nats = fby (cst 0)
+                       (fun () -> (map (fun x -> x+1) (gen_nats ())))
+let nats = gen_nats ()</pre>
+
+    <p>The function for computing partial sums of a stream, that is,
+      where</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>psums &lt;a1 a2 a3 ...&gt; = &lta1 (a1+a2) (a1+a2+a3)
+	...&gt;</tt></p>
+    <p>can be implemented as follows:</p>
+
+    <pre>
+let drop s = let (f,r) = split s in r
+
+let rec psums s =
+  fby s
+      (fun () -> add (psums s) (drop s))    </pre>      
+
+    <p>Streams cannot be displayed directly. To help us examine streams, I've provided you with a <tt>print_stream</tt> function that prints a prefix of the stream. For ease of use, you have the following shorthands available:
+      <pre>
+pri : int stream -> unit
+prs : string stream -> unit
+prip : (int * int) stream  -> unit
+prf : float stream -> unit</pre>
+      where <tt>pri</tt> print the first 20 elements of a stream of integers, <tt>prs</tt> the first 20 elements of a stream of strings, <tt>prip</tt> the first 20 elements of a stream of pairs of integers, and <tt>prf</tt> the first 20 elements of a stream of floating point numbers. For example:
+<pre>
+# pri nats;;
+&lt; 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 ...>
+- : unit = ()
+# prs s_as;;
+&lt; a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 ...>
+- : unit = ()
+# prf (map (fun x -> (float x) *. 2. +. 0.15) nats);;
+&lt; 0.15 2.15 4.15 6.15 8.15 10.15 12.15 14.15 16.15 18.15 20.15 22.15 24.15 26.15 
+  28.15 30.15 32.15 34.15 36.15 38.15 ...>
+- : unit = ()
+# pri (s_ampl);;
+&lt; 0 1 0 -1 0 1 2 1 0 -1 -2 -1 0 1 2 3 2 1 0 -1 ...>
+- : unit = ()
+</pre>
+    </p>
+
+
+    <hr>
+
+
+    
+    <ol class="question">
+
+      <li> <p><b>Basic Stream Manipulation</b></p>
+
+	<ol class="subquestion">
+
+	  <li> <p>Code a function <tt class="code">scale</tt> of
+	      type <tt class="code">int -> int stream -> int
+		stream</tt> where <tt>scale n s</tt> returns the
+	      stream obtained by multiplying every element
+	      of <tt>s</tt> by <tt>n</tt>:</p>
+	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scale n &lt;a1 a2 a3 ...&gt; = &lt;n*a1 n*a2 n*a3 ...&gt;</tt></p>
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# pri (scale 2 nats);;
+&lt; 0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 ...>
+- : unit = ()
+# pri (scale 3 evens);;
+&lt; 0 6 12 18 24 30 36 42 48 54 60 66 72 78 84 90 96 102 108 114 ...>
+- : unit = ()
+# pri (scale 4 odds);;
+&lt; 4 12 20 28 36 44 52 60 68 76 84 92 100 108 116 124 132 140 148 156 ...>
+- : unit = ()
+# pri (scale 0 nats);;
+&lt; 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...>
+- : unit = ()</pre>
+</div>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">mult</tt> of
+	      type <tt class="code">int stream -> int stream -> int
+		stream</tt> where <tt>mult s1 s2</tt> returns the
+	      stream obtained by multiplying the corresponding
+	      elements of <tt>s1</tt> and <tt>s2</tt>:</p>
+	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mult &lt;a1 a2 a3 ...&gt; &lt;b1 b2 b3 ...&gt; =
+		&lt;a1*b1 a2*b2 a3*b3 ...&gt;</tt></p>
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# pri (mult nats nats);;
+&lt; 0 1 4 9 16 25 36 49 64 81 100 121 144 169 196 225 256 289 324 361 ...>
+- : unit = ()
+# pri (mult nats evens);;
+&lt; 0 2 8 18 32 50 72 98 128 162 200 242 288 338 392 450 512 578 648 722 ...>
+- : unit = ()
+# pri (mult nats odds);;
+&lt; 0 3 10 21 36 55 78 105 136 171 210 253 300 351 406 465 528 595 666 741 ...>
+- : unit = ()
+# pri (mult (cst 4) nats);;
+&lt; 0 4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 ...>
+- : unit = ()
+# pri (mult (cst 0) nats);;
+&lt; 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...>
+- : unit = ()
+</pre>
+</div>
+	  </li>
+
+	  <li> <p>Code a function <tt class="code">zip</tt> of
+	      type <tt class="code">'a stream -> 'b stream -> ('a * 'b) stream</tt> where <tt>zip s1 s2</tt> takes streams <tt>s1</tt> and <tt>s2</tt> and returns the stream of pairs of pairwise elements from <tt>s1</tt> and <tt>s2</tt>:
+	    </p>
+
+	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zip &lt;a1 a2 a3 ...&gt; &lt;b1 b2 b3 ...&gt; = &lt;(a1,b1) (a2,b2) (a3,b3) ...&gt;</tt></p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# prip (zip nats nats);;
+&lt; (0,0) (1,1) (2,2) (3,3) (4,4) (5,5) (6,6) (7,7) (8,8) (9,9) (10,10) (11,11) 
+  (12,12) (13,13) (14,14) (15,15) (16,16) (17,17) (18,18) (19,19) ...>
+- : unit = ()
+# prip (zip nats evens);;
+&lt; (0,0) (1,2) (2,4) (3,6) (4,8) (5,10) (6,12) (7,14) (8,16) (9,18) (10,20) 
+  (11,22) (12,24) (13,26) (14,28) (15,30) (16,32) (17,34) (18,36) (19,38) ...>
+- : unit = ()
+# prip (zip odds evens);;
+&lt; (1,0) (3,2) (5,4) (7,6) (9,8) (11,10) (13,12) (15,14) (17,16) (19,18) 
+  (21,20) (23,22) (25,24) (27,26) (29,28) (31,30) (33,32) (35,34) (37,36) 
+  (39,38) ...>
+  - : unit = ()
+# prs (map (fun (x,y) -> y) (zip nats s_as));;
+&lt; a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 ...>
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+	  <li> <p>Code a function <tt class="code">unzip</tt> of
+	      type <tt class="code">('a * 'b) stream -> ('a stream *
+		'b stream)</tt> where <tt>unzip s</tt> takes a stream
+	      of pairs <tt>s</tt> and returns <i>a pair of
+	      streams</i>, the first being the stream of all first
+	      elements of the pairs in <tt>s</tt>, the second being
+	      the stream of all second elements of pairs in <tt>s</tt>:
+	    </p>
+
+	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unzip &lt;(a1,b1) (a2,b2) (a3,b3) ...&gt; = (&lt;a1
+		a2 a3...&gt;, &lt;b1 b2 b3 ...&gt;)</tt></p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# pri (let (s1,s2) = unzip(cst(66,99)) in s1);;
+&lt; 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 ...>
+- : unit = ()
+# pri (let (s1,s2) = unzip(cst(66,99)) in s2);;
+&lt; 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 ...>
+- : unit = ()
+# pri (let (s1,s2) = unzip(zip nats evens) in s1);;
+&lt; 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 ...>
+- : unit = ()
+# pri (let (s1,s2) = unzip(zip nats evens) in s2);;
+&lt; 0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 ...>
+- : unit = ()
+# pri (let (s1,s2) = unzip(map (fun x -> (x*10,x+5)) nats) in s1);;
+&lt; 0 10 20 30 40 50 60 70 80 90 100 110 120 130 140 150 160 170 180 190 ...>
+- : unit = ()
+# pri (let (s1,s2) = unzip(map (fun x -> (x*10,x+5)) nats) in s2);;
+&lt; 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ...>
+- : unit = ()
+# prs (let (s1,s2) = unzip (cst (10,"x")) in s2);;
+&lt; x x x x x x x x x x x x x x x x x x x x ...>
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+
+	  <li> <p>Code a function <tt class="code">fold</tt> of
+	      type <tt class="code">('a -> 'b -> 'b) -> 'b stream ->
+		'a stream -> 'b stream</tt> where <tt>fold f init_s
+	      s</tt> returns the stream obtained by the result of
+	      calling <tt>f</tt> over each element of <tt>s</tt> and
+	      passing in the previous value of the resulting
+	      stream. The initial "previous" value is the first
+	      element of <tt>init_s</tt>:
+	    </p>
+
+	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fold f &lt;i1 i2 i3 ...&gt; &lt;a1 a2 a3 ...&gt; =<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(f a1 i1) (f a2 (f a1 i1)) (f a3 (f a2 (f a1 i1))) ...&gt;</tt></p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# pri (fold (fun a r -> a+r) (cst 0) nats);;
+&lt; 0 1 3 6 10 15 21 28 36 45 55 66 78 91 105 120 136 153 171 190 ...>
+- : unit = ()
+# pri (fold (fun a r -> a+r) (cst 10) evens);;
+&lt; 10 12 16 22 30 40 52 66 82 100 120 142 166 192 220 250 282 316 352 390 ...>
+- : unit = ()
+# pri (fold (fun a r -> a*r) (cst 2) nats);;
+&lt; 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...>
+- : unit = ()
+# pri (fold (fun a r -> a*r) (cst 2) odds);;
+&lt; 2 6 30 210 1890 20790 270270 4054050 68918850 1309458150 27498621150 
+  632468286450 15811707161250 426916093353750 12380566707258750 383797567925021250 
+  3441947704670925442 564333184370304966 2433583747991732126 2676045803129794834 
+  ...>
+- : unit = ()
+# prs (fold (fun a r -> r^a) (cst "") s_as);;
+&lt; a0 a0a1 a0a1a2 a0a1a2a3 a0a1a2a3a4 a0a1a2a3a4a5 a0a1a2a3a4a5a6 a0a1a2a3a4a5a6a7 
+  a0a1a2a3a4a5a6a7a8 a0a1a2a3a4a5a6a7a8a9 a0a1a2a3a4a5a6a7a8a9a10 
+  a0a1a2a3a4a5a6a7a8a9a10a11 a0a1a2a3a4a5a6a7a8a9a10a11a12 
+  a0a1a2a3a4a5a6a7a8a9a10a11a12a13 a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14 
+  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15 
+  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15a16 
+  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15a16a17 
+  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15a16a17a18 
+  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15a16a17a18a19 ...>
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+	  <li> <p>Code a function <tt class="code">running_max</tt> of
+	      type <tt class="code">int stream -> int stream</tt>
+	      where <tt>running_max s</tt> returns the stream consisting
+	      of the maximum value in <tt>s</tt> from the start
+	      of <tt>s</tt> up to the corresponding position:</p>
+	    
+	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;running_max &lt;a1 a2 a3 ...&gt; = &lt;max(a1)
+		max(a1,a2) max(a1,a2,a3) ...&gt;</tt></p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# pri (running_max odds);;
+&lt; 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 ...>
+- : unit = ()
+# pri (running_max odds);;
+&lt; 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 ...>
+- : unit = ()
+# pri (running_max (map (fun x -> (-x)) nats));;
+&lt; 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...>
+- : unit = ()
+# pri (running_max (map (fun x -> if x mod 2 = 0 then x else -x) nats));;
+&lt; 0 0 2 2 4 4 6 6 8 8 10 10 12 12 14 14 16 16 18 18 ...>
+- : unit = ()
+# pri (running_max s_ampl);;
+&lt; 0 1 1 1 1 1 2 2 2 2 2 2 2 2 2 3 3 3 3 3 ...>
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+<li> <p><b>(Challenging)</b>  Code a function <tt class="code">stutter</tt> of
+	      type <tt class="code">'a stream -> 'a stream</tt>
+    where <tt>stutter s</tt> returns the stream consisting of every
+    element of <tt>s</tt> repeated twice in a row:</p>
+
+  <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stutter &lt;a1 a2 a3 ...&gt; = &lt;a1 a1 a2 a2 a3 a3 ...&gt;</tt></p>
+    
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# pri (stutter nats);;
+&lt; 0 0 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 ...>
+- : unit = ()
+# pri (stutter (stutter nats));;
+&lt; 0 0 0 0 1 1 1 1 2 2 2 2 3 3 3 3 4 4 4 4 ...>
+- : unit = ()
+# prs (stutter s_as);;
+&lt; a0 a0 a1 a1 a2 a2 a3 a3 a4 a4 a5 a5 a6 a6 a7 a7 a8 a8 a9 a9 ...>
+- : unit = ()</pre>
+</div>
+	  </li>
+
+	</ol>
+
+      </li>
+
+
+<li> <p><b>Numerical Analysis</b></p>
+
+  <p>
+Many problems in numerical analysis involve finding better and better
+approximations to a desired value (such as &pi; or <i>e</i>,
+or the solution to a differential equation) until the difference
+between successive approximations gets small enough that we decide
+that we have converged and report that we have found the value we're
+looking for. 
+  </p>
+
+<p>Infinite streams help in this context because we can represent the 
+  successive approximations to a value by a stream of those
+  approximations.</p>
+
+<p>
+In this question, we will mostly be dealing with streams of floating 
+point numbers. To make your life a bit easier, you may want to code 
+functions <tt>scalef</tt>, <tt>addf</tt>, and <tt>psumsf</tt>:
+</p>
+<pre>
+scalef : float -> float stream -> float stream
+addf   : float stream -> float stream -> float stream
+psumsf : float stream -> float stream
+</pre>
+<p>
+that basically do what <tt>scale</tt>, <tt>add</tt>,
+and <tt>psums</tt> do, but with floating point numbers instead of
+integers. 
+</p>
+
+	<ol class="subquestion">
+
+	  <li> <p>How do you compute the value of &pi;? One way is to
+	      use trigonometry. One of the earliest approaches uses the
+	      fact that tan &pi;/4 = 1. Using arctan,
+	      the inverse tan function, 
+	      we can express this as &pi;/4 = arctan 1, that
+	      is, &pi; = 4 arctan 1.</p>
+	    
+	    <p>Why
+	      does that help us? The Taylor expansion of arctan at x
+	      tells us that </p>
+	    <p> &nbsp;&nbsp;&nbsp;arctan x = x/1
+	      - x<sup>3</sup>/3 + x<sup>5</sup>/5
+	      - x<sup>7</sup>/7 + ...</p>
+	    <p>This is an infinite sum, but it can be approximated by
+	      the stream of partial sums</p>
+	    <p> &nbsp;&nbsp;&nbsp;&lt;x/1 &nbsp;&nbsp; (x/1 - x<sup>3</sup>/3)
+	      &nbsp;&nbsp;(x/1 - x<sup>3</sup>/3 + x<sup>5</sup>/5)
+	      &nbsp;&nbsp;(x/1 - x<sup>3</sup>/3 + x<sup>5</sup>/5 - x<sup>7</sup>/7)
+	      &nbsp;&nbsp;...&gt; &nbsp;&nbsp;&nbsp; (*)</p>
+	    <p>which gets closer and closer to arctan x.</p>
+
+	    <p>Code a function <tt class="code">arctan</tt> with type
+	      <tt class="code">float -> float stream</tt>
+	      where <tt>arctan x</tt> returns a stream of approximations to
+	      arctan x given by (*) above</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+	    <pre class="code">
+# prf (arctan 0.0);;
+&lt; 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. ...>
+- : unit = ()
+# prf (arctan 1.0);;
+&lt; 1. 0.666666666667 0.866666666667 0.72380952381 0.834920634921 
+  0.744011544012 0.820934620935 0.754267954268 0.81309148368 
+  0.760459904732 0.808078952351 0.764600691482 0.804600691482 
+  0.767563654445 0.802046413065 0.769788348549 0.800091378852 
+  0.771519950281 0.798546977308 0.772905951667 ...>
+- : unit = ()
+# prf (scalef 4.0 (arctan 1.0));;
+&lt; 4. 2.66666666667 3.46666666667 2.89523809524 3.33968253968 
+  2.97604617605 3.28373848374 3.01707181707 3.25236593472 3.04183961893 
+  3.23231580941 3.05840276593 3.21840276593 3.07025461778 3.20818565226 
+  3.0791533942 3.20036551541 3.08607980112 3.19418790923 3.09162380667 ...>
+- : unit = ()
+
+# let rec dropN n s = if n = 0 then s else let (s1,s2) = split s in dropN (n-1) s2;;
+val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
+
+# prf (dropN 1000 (scalef 4.0 (arctan 1.0)));;
+&lt; 3.14259165434 3.14059464985 3.14258966232 3.1405966379 
+  3.14258767822 3.14059861805 3.142585702 3.14060059034 3.14258373362 
+  3.14060255482 3.14258177303 3.14060451154 3.14257982018 3.14060646054 
+  3.14257787503 3.14060840186 3.14257593752 3.14061033556 3.14257400762 
+  3.14061226167 ...>
+- : unit = ()</pre>
+</div>
+
+	    <p>The last example shows that this way of computing &pi; converges very
+	      slowly. After 1000 terms into the stream, we're still only at
+	      3.142591... which is pretty far from 3.141592...</p>
+
+	    <p>A more efficient way to compute &pi; is to use the following formula:</p>
+	    
+	    <p>&nbsp;&nbsp;&nbsp; &pi;/4 = 4 arctan (1/5)
+	      - arctan (1/239)</p>
+
+	    <p>and thus</p>
+	    
+	    <p>&nbsp;&nbsp;&nbsp; &pi; = 16 arctan (1/5) -
+	      4 arctan (1/239) &nbsp;&nbsp;&nbsp;(**)</p>
+
+	    <p>Again, we know each of the arctan can be approximated by the stream
+	      (*), and thus &pi; can be
+	      approximated by the difference of the two streams, each properly scaled. </p>
+
+	    <p>Code a function <tt class="code">pi</tt> with type <tt class="code">unit -> float stream</tt>
+	      where <tt>pi ()</tt> returns a stream providing
+	      approximations to &pi; using (**)</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# prf (pi ());;
+&lt; 3.18326359833 3.14059702933 3.14162102933 3.14159177218 3.1415926824 
+  3.14159265262 3.14159265362 3.14159265359 3.14159265359 3.14159265359 
+  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
+  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 ...>
+- : unit = ()
+
+# let rec dropN n s = if n = 0 then s else let (s1,s2) = split s in dropN (n-1) s2;;
+val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
+
+# prf (dropN 100 (pi ()));;
+&lt; 3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
+  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
+  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
+  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 ...>
+- : unit = ()
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li> 
+	    <p>Newton's method is a way to find a zero of a formula with one
+	      unknown, such as 10x+20. Recall that a zero of a formula f(x) is a
+	      value v that makes f(v)=0. To compute &radic;10,
+	      for instance, we can use Newton's method to find a zero of
+	      x<sup>2</sup>-10. To compute &#x221b;20 we find a zero of
+	      x<sup>3</sup>-20, and so on.  </p>
+
+	    <p>What is Newton's method? It says that to find a zero of f(x), we
+	    need the derivative of f, written f'(x), as well as an initial
+	    guess x<sub>0</sub>. The guess doesn't have to be a good guess. Once we have a
+	      guess x<sub>0</sub>, we can improve the guess by computing x<sub>1</sub> as follows:</p>
+
+	  <p>&nbsp;&nbsp;&nbsp;x<sub>1</sub> = x<sub>0</sub> -
+	  f(x<sub>0</sub>)/f'(x<sub>0</sub>)</p>
+
+	    <p>We can repeatedly improve guesses using:</p>
+	    <p> &nbsp;&nbsp;&nbsp;
+	    x<sub>n+1</sub> = x<sub>n</sub> -
+	    f(x<sub>n</sub>)/f'(x<sub>n</sub>)
+	    &nbsp;&nbsp;&nbsp;(***)</p>
+
+	    <p>where x<sub>i</sub> is the i<sup>th</sup> guess. Each
+	      guess gets closer and closer to a zero of f(x).</p>
+
+	    <p>Code a function <tt class="code">newton</tt> with type
+	      <tt class="code">(float -> float) -> (float -> float) ->
+		float -> float stream</tt> where <tt>newton f df
+		guess</tt> returns the stream of guesses given by 
+	      (***) for function <tt>f</tt> with its derivative <tt>df</tt>, and initial
+	      guess <tt>guess</tt>.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# prf (newton (fun x -> 3.0 *. x -. 2.0) (fun x -> 3.0) 1.0);;
+&lt; 1. 0.666666666667 0.666666666667 0.666666666667 0.666666666667 
+  0.666666666667 0.666666666667 0.666666666667 0.666666666667 
+  0.666666666667 0.666666666667 0.666666666667 0.666666666667 
+  0.666666666667 0.666666666667 0.666666666667 0.666666666667 
+  0.666666666667 0.666666666667 0.666666666667 ...>
+- : unit = ()
+
+# let sqrt v = newton (fun x -> x *. x -. v) (fun x -> 2.0 *. x) 1.0;;
+val sqrt : float -> float AbsStream.stream = <fun>
+
+# prf (sqrt 4.0);;
+&lt; 1. 2.5 2.05 2.0006097561 2.00000009292 2. 2. 2. 2. 2. 2. 2. 
+  2. 2. 2. 2. 2. 2. 2. 2. ...>
+- : unit = ()
+# prf (sqrt 9.0);;
+&lt; 1. 5. 3.4 3.02352941176 3.00009155413 3.0000000014 3. 3. 3. 
+  3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. ...>
+- : unit = ()
+# prf (sqrt 2.0);;
+&lt; 1. 1.5 1.41666666667 1.41421568627 1.41421356237 1.41421356237 
+  1.41421356237 1.41421356237 1.41421356237 1.41421356237 1.41421356237 
+  1.41421356237 1.41421356237 1.41421356237 1.41421356237 1.41421356237 
+  1.41421356237 1.41421356237 1.41421356237 1.41421356237 ...>
+- : unit = ()
+# prf (sqrt 3.0);;
+&lt; 1. 2. 1.75 1.73214285714 1.73205081001 1.73205080757 1.73205080757 
+  1.73205080757 1.73205080757 1.73205080757 1.73205080757 1.73205080757 
+  1.73205080757 1.73205080757 1.73205080757 1.73205080757 1.73205080757 
+  1.73205080757 1.73205080757 1.73205080757 ...>
+- : unit = ()
+# prf (sqrt 144.0);;
+&lt; 1. 72.5 37.2431034483 20.5547955554 13.7802299906 12.1149915067 
+  12.0005457307 12.0000000124 12. 12. 12. 12. 12. 12. 12. 12. 12. 12. 
+  12. 12. ...>
+- : unit = ()
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li> <p>Given that we talked about derivatives in (b), how about
+  computing derivatives? It is itself an approximate process. More
+  specifically, the value of the derivative of a function f at a
+	  point x<sub>0</sub> can be approximated by the
+	      sequence:</p>
+
+  <p>&nbsp;&nbsp;&nbsp;
+    &lt;<sup>f(x<sub>0</sub>+1)-f(x<sub>0</sub>)</sup> &frasl; <sub>1</sub>
+    &nbsp;&nbsp;
+    <sup>f(x<sub>0</sub>+&frac12;)-f(x<sub>0</sub>)</sup> &frasl; <sub>&frac12;</sub>
+    &nbsp;&nbsp;
+    <sup>f(x<sub>0</sub>+&frac13;)-f(x<sub>0</sub>)</sup> &frasl; <sub>&frac13;</sub>
+    &nbsp;&nbsp;...&gt;&nbsp;&nbsp;&nbsp;(****)</p>
+  <p>where the n<sup>th</sup> term in the sequence is:</p>
+  <p>&nbsp;&nbsp;&nbsp; <sup>f(x<sub>0</sub>+(1/n))-f(x<sub>0</sub>)</sup>
+    &frasl; <sub>(1/n)</sub></p>
+
+	    <p>Code a function <tt class="code">derivative</tt> with type
+	      <tt class="code">(float -> float) -> float -> float stream</tt>
+	      where <tt>derivative f x</tt> returns the stream of approximations of the
+	      derivative of <tt>f</tt> at point <tt>x</tt> given by (****).
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# let rec dropN n s = if n = 0 then s else let (s1,s2) = split s in dropN (n-1) s2;;
+val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
+
+# let d = derivative (fun x -> x *. x) 4.0;;
+val d : float stream = <abstr>
+   (* The derivative of x^2 is just 2x *)
+
+# prf d;;
+&lt; 9. 8.5 8.33333333333 8.25 8.2 8.16666666667 8.14285714286 8.125 
+  8.11111111111 8.1 8.09090909091 8.08333333333 8.07692307692 8.07142857143 
+  8.06666666667 8.0625 8.05882352941 8.05555555556 8.05263157895 8.05 ...>
+- : unit = ()
+# prf (dropN 1000 d);;
+&lt; 8.000999001 8.00099800399 8.00099700897 8.00099601593 8.00099502488 
+  8.00099403578 8.00099304866 8.00099206349 8.00099108028 8.00099009901 
+  8.00098911968 8.00098814229 8.00098716683 8.0009861933 8.00098522167 
+  8.00098425197 8.00098328417 8.00098231828 8.00098135427 8.00098039216 ...>
+- : unit = ()
+
+# prf (derivative (fun x -> x *. x +. 10.0) 4.0);;
+    (* The derivative of x^2 + 10 is still just 2x *)
+&lt; 9. 8.5 8.33333333333 8.25 8.2 8.16666666667 8.14285714286 8.125 
+  8.11111111111 8.1 8.09090909091 8.08333333333 8.07692307692 8.07142857143 
+  8.06666666667 8.0625 8.05882352941 8.05555555556 8.05263157895 8.05 ...>
+- : unit = ()
+# prf (derivative (fun x -> 3.0 *. x) 4.0);;
+    (* The derivative of 3x is 3 *)
+&lt; 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. ...>
+- : unit = ()
+
+# let d = derivative (fun x-> x *. x *. x +. x *. x +. 2.0 *. x) 2.0;;
+val d : float stream = <abstr>
+   (* The derivative of x^3 + x^2 + 2x is 3x^2 + 2x + 2 *)
+
+# prf d;;
+&lt; 26. 21.75 20.4444444444 19.8125 19.44 19.1944444444 19.0204081633 
+  18.890625 18.7901234568 18.71 18.6446280992 18.5902777778 18.5443786982 
+  18.5051020408 18.4711111111 18.44140625 18.4152249135 18.3919753086 
+  18.3711911357 18.3525 ...>
+- : unit = ()
+# prf (dropN 1000 d);;
+&lt; 18.006994005 18.006987024 18.0069800568 18.0069731036 18.0069661642 
+  18.0069592386 18.0069523268 18.0069454286 18.0069385442 18.0069316734 
+  18.0069248161 18.0069179725 18.0069111423 18.0069043256 18.0068975224 
+  18.0068907325 18.006883956 18.0068771928 18.0068704429 18.0068637063 ...>
+</pre>
+	  </div>
+	  </li>
+</li>
+
+	  <li> <p> All of the above questions return streams yielding better and
+	      better approximations to a desired value. By picking out an
+	      element of the stream far enough down, we can find a good
+	      approximation to the value we want.</p>
+
+	    <p>But how far do we go? Approximations get closer and closer to the
+	      value they approximate, which means that the difference between
+	      successive approximations gets smaller and smaller. So we can look into
+	      the stream and try to find the first approximation which differs from
+	      the next approximation by a small enough margin to decide
+	      that we have converged to the desired value, and take that as the
+	      desired approximation. Since we can make the margin as small as we
+	      want, we can get approximation that are as close as we want to the
+	      actual value we seek. (All of this assuming that the
+	      stream actually converges to the desired value. What
+	      happens if the stream does <i>not</i> converge?)</p>
+
+	    <p>Code a function <tt class="code">limit</tt> with type
+	      <tt class="code">float -> float stream -> float stream</tt>
+	      where <tt>limit epsilon s</tt> returns the elements of
+	      stream <tt>s</tt> that differ from their subsequent
+	      element by less than <tt>epsilon</tt> (in absolute value).</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# prf (limit 0.00001 (map (fun n -> 1.0 /. (float (n+1))) nats));;
+&lt; 0.00316455696203 0.00315457413249 0.00314465408805 0.00313479623824 
+  0.003125 0.00311526479751 0.00310559006211 0.0030959752322 
+  0.00308641975309 0.00307692307692 0.00306748466258 0.00305810397554 
+  0.0030487804878 0.00303951367781 0.0030303030303 0.00302114803625 
+  0.00301204819277 0.003003003003 0.00299401197605 0.00298507462687 ...>
+- : unit = ()
+# prf (limit 0.0000000001 (pi ()));;
+&lt; 3.14159265362 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
+  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
+  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
+  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 ...>
+- : unit = ()
+# prf (limit 0.0000000001 (newton (fun x -> x *. x -. 10.0) (fun x -> 2.0 *. x) 1.0));;
+&lt; 3.16227766017 3.16227766017 3.16227766017 3.16227766017 3.16227766017 
+  3.16227766017 3.16227766017 3.16227766017 3.16227766017 3.16227766017 
+  3.16227766017 3.16227766017 3.16227766017 3.16227766017 3.16227766017 
+  3.16227766017 3.16227766017 3.16227766017 3.16227766017 3.16227766017 ...>
+- : unit = ()
+# prf (limit 0.0000001 (derivative (fun x -> x *. x) 4.0));;
+&lt; 8.00031625552 8.00031615556 8.00031605563 8.00031595577 8.00031585597 
+  8.00031575622 8.00031565656 8.00031555697 8.00031545741 8.00031535794 
+  8.0003152585 8.00031515917 8.00031505985 8.00031496063 8.00031486146 
+  8.00031476236 8.00031466331 8.00031456432 8.00031446541 8.00031436655 ...>
+- : unit = ()</pre>
+	  </div>
+	  </li>
+
+
+	</ol>
+      </li>
+
+    </ol>
+
+  </body>
+</html>
