@@ -167,6 +167,15 @@ li > p { margin-top:0;}
 
     <hr>
 
+    <p class="subtitle">Updates</p>
+    <ul class="simple">
+      <li>Nov 15: Fixed sample outputs to <tt>map</tt> question (3C) so that it no longer uses a non-existent <tt>length</tt>.
+      </li>
+    </ul>
+    
+
+    <hr>
+
     <p>This homework is about the lambda calculus. I've implemented
     some code for you to enter and simplify lambda-calculus terms using the
     rules we saw in class. The result is not very fast, but it
@@ -689,11 +698,10 @@ of that number. Your term need not do anything sensible when applied to the reps
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 	    <pre class="code">
-# simplify q3_defs "length (map &lt;x -> plus x x> empty)";;
+# simplify q3_defs "sum (map &lt;x -> plus x x> empty)";;
 - : string = "&lt;f -> &lt;x -> x>>"
-# simplify q3_defs "length (map &lt;x -> plus x x> 
-                              (cons _1 (cons _2 (cons _3 empty))))";;
-- : string = "&lt;f -> &lt;x -> f (f (f x))>>"
+# simplify q3_defs "sum (map &lt;x -> plus x x> (cons _1 empty))";;
+- : string = "&lt;f -> &lt;x -> f (f x)>>"
 # simplify q3_defs "sum (map &lt;x -> plus x x> 
                            (cons _1 (cons _2 (cons _3 empty))))";;
 - : string = "&lt;f -> &lt;x -> f (f (f (f (f (f (f (f (f (f (f (f x)))))))))))>>"
