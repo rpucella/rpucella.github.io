@@ -232,8 +232,8 @@ fby : 'a stream -> (unit -> 'a stream) -> 'a stream    </pre>
       obtain the natural numbers):</p>
 
     <pre>
-let rec mk_nats = fby (cst 0)
-                       (fun () -> (map (fun x -> x+1) (mk_nats ())))
+let rec mk_nats () = fby (cst 0)
+                         (fun () -> (map (fun x -> x+1) (mk_nats ())))
 let nats = mk_nats ()</pre>
 
     <p>The function for computing partial sums of a stream, that is,
