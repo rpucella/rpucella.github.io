@@ -117,6 +117,11 @@
 
 	<!--	<li><p><a href="announcements.html">Older announcements...</a></p></li> -->
 
+	<li><p><span>Dec 2:</span>
+	    <a href="./homework9.html">Homework 9</a> is out. Due Sunday Dec 10.
+	  </p>
+	</li>
+
 	<li><p><span>Nov 20:</span>
 	    As I mentioned in class on Thursday, you can have until after Thanksgiving Break to work on Homework 8. I will accept them without penalty until Sunday Nov 26.</p>
 	</li>
@@ -464,15 +469,57 @@ automata with N states whose smallest deterministic finite
 	</li>	  
 	
 	<li><p><span class="hdr">Nov 16</span><b>Concurrency</b></p>
+	  <div class="lect">
+	    <p>The <a href="https://en.wikipedia.org/wiki/Calculus_of_communicating_systems">calculus
+	    of communicating systems</a> (CCS) is the first process calculus
+	    we saw. A good introduction is Aceto, Larsen, and
+	    Ing&oacute;lfsd&oacute;ttir's <a href="https://pdfs.semanticscholar.org/b418/a42405e41d7109bbf42deb1525992089a667.pdf"><i>An Introduction to
+		  Milner's CCS</i></a>.</p>
+
+	    <p>The <a href="https://en.wikipedia.org/wiki/%CE%A0-calculus">&pi;-calculus</a>
+	    is an extension of CCS where actions and coactions are
+	    specialized to be send and receives over channels. Here is
+	      a <a href="https://www.cs.cmu.edu/~fp/courses/15312-f04/handouts/26-picalc.pdf">set
+	    of lecture notes by Pfenning on the &pi;-calculus</a>,
+	      where he also
+	    describes <a href="https://en.wikipedia.org/wiki/Concurrent_ML">Concurrent
+	    ML</a>, a concurrent extension of a language similar to
+	    OCaml that can be seen as using a &pi;-calculus model of
+	    communication. Another description of CML is Reppy's
+	    <a href="http://www.cs.tufts.edu/comp/250RTS/archive/john-reppy/cml-pldi.pdf">original paper</a>.</p>
+	  </div>
 	</li>	  
+
 
 	<li><p><b>FUNCTIONAL PROGRAMMING</b></p></li>
 
 	<li><p><span class="hdr">Nov 30</span><b>Recursive data structures</b></p>
+	  <div class="lect">
+	    <p>A reasonable overview of <a href="http://www.cs.cornell.edu/courses/cs3110/2011sp/lectures/lec04-types/types.htm">algebraic data types</a> in OCaml.</p>
+	    
+	    <p>Wikipedia page
+	    on <a href="https://en.wikipedia.org/wiki/Binary_search_tree">binary
+	    search trees</a> and on the version of self-balanced
+	    binary search trees I described in
+	    class, <a href="https://en.wikipedia.org/wiki/AVL_tree">AVL
+	    trees</a>. The description of the rotations that restore
+	    the balanced height property after an insertion is
+	    reasonably clear there. There are basically four cases to
+	      consider, depending on the local form of unbalance.</p>
+	    <p>A <a href="https://www.cs.usfca.edu/~galles/visualization/AVLtree.html">cute visualization</a> of what happens when you insert
+	    into an AVL tree. Try starting with the empty tree, and
+	    inserting 1, 2, 3, 4, 5, 6, 7, 8... You'll see the tree
+	      grow "to the right" and then rebalance itself repeatedly.</p>
+
+	    <p>An <a href="https://cs.nyu.edu/courses/fall02/V22.0310-002/lectures/lecture-16.html">analysis
+		of the height of AVL trees</a>, showing that it is
+	      always logarithmic in the number of nodes.</p>
+
+	    <p>Another classic kind of balanced trees are <a href="https://en.wikipedia.org/wiki/Red%E2%80%93black_tree">red-black trees</a>.</p>
+	    
+	  </div>
 	</li>	  
 
-	<li><p><span class="hdr">Dec 7</span><b>Recursion versus iteration</b></p>
-	</li>
 
       </ul>
 
@@ -491,6 +538,7 @@ automata with N states whose smallest deterministic finite
       <li><a href="homework6.html">Homework 6</a> &mdash; Due Sunday Oct 29 (23h59)</li>
       <li><a href="homework7.html">Homework 7</a> &mdash; Due <del>Sunday Nov 12</del> <ins>Wednesday Nov 15</ins> (23h59)</li>
       <li><a href="homework8.html">Homework 8</a> &mdash; Due Monday Nov 21 (23h59)</li>
+      <li><a href="homework9.html">Homework 9</a> &mdash; Due Sunday Dec 10 (23h59)</li>
     </div>
 
   </body>
