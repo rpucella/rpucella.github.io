@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 1</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+      ol.question > li {
+      font-weight: bold;
+      }
+
+      ol.question > li > * {
+      font-weight: normal;
+      }
+      
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Programming Languages SP18</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 1</h1>
+    
+    <p class="subtitle">Due date: Friday, Feb 2 (23h59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done
+    with your team. You may discuss problems with fellow students, but
+    all work must be entirely that of your team, and should not be
+    from any other course, present, past, or future. If you use a
+    solution from another source you must cite it &mdash; this
+    includes when that source is someone else helping you. <b>Please
+    do not post your code on a public website or a public repository
+    like GitHub.</b>
+   </p>
+
+    <p>All programming is to be done in Scala v2.12.</p>
+
+    <p>Code your answers by modifying the
+      file <a href="homework1.scala"><tt>homework1.scala</tt></a> provided. Add the
+      <span style="text-decoration:underline;">names of your team members</span>, your <span style="text-decoration:underline;">email addresses</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor to the block comment at the head of the file.</p>
+
+    <p><b>Please do not change the types in the signature of the
+	function and class stubs I provide</b>. Doing so will make it difficult to test your code.</p>
+
+    <p>Feel free to define helper functions or helper classes if you need them.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Run your homework code via <tt>scala homework1.scala</tt></li>
+      <li>If there are any error, do not submit. I can't test what will not load correctly.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework1.scala</tt> as an attachment to <tt>olin.submissions@gmail.com</tt> with subject <i>Homework 1 submission</i>.</li>
+    </ul>
+
+<!--
+    <hr>
+
+    <p class="subtitle">Updates</p>
+    <ul class="simple">
+    </ul>
+-->
+	
+
+    <hr>
+
+
+
+
+
+
+    <ol class="question">
+
+
+      <!-- ------------------------------------------------------------ -->
+
+
+      <li> <p><b>Scala Exercises</b></p>
+
+	<ol class="subquestion">
+
+
+	  <!-- ------------------------------ -->
+
+
+	  <li> <p>Code a function <tt class="code">gcd</tt> of
+              type <tt class="code">(Int,Int):Int</tt> which takes two
+              non-negative integers and returns the greatest common divisor of those
+              integers. I do not care what happens when <tt>gcd</tt> is not given two non-negative integers.</p>
+            
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+              <pre>
+scala> gcd(10,20)
+res48: Int = 10
+
+scala> gcd(15,20)
+res49: Int = 5
+
+scala> gcd(20,15)
+res50: Int = 5
+
+scala> gcd(40,40)
+res51: Int = 40
+
+scala> gcd(40,39)
+res52: Int = 1
+	      </pre>
+	    </div>
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li> <p>A positive integer (greater than 1) is prime if it is divisible only by 1 and by itself. 
+	      Code a function <tt class="code">isPrime</tt> of type <tt class="code">(Int):Boolean</tt> which returns <tt>true</tt> exactly when the argument is a prime integer. I do not care how efficient your code is, though it should easily be able to check primality of any number less than a million. 
+	    </p>
+
+	    <p>Note that <tt>true</tt> and <tt>false</tt> are values of type <tt>Boolean</tt>, and <tt>n % m </tt> computes the remainder of dividing <tt>n</tt> by <tt>m</tt>. 
+	      
+	      <div class="code">
+		<p onClick="toggleShowHide(this)">Show sample output</p>
+		<pre>
+scala> isPrime(2)
+res53: Boolean = true
+
+scala> isPrime(3)
+res54: Boolean = true
+
+scala> isPrime(4)
+res55: Boolean = false
+
+scala> isPrime(5)
+res56: Boolean = true
+
+scala> isPrime(6)
+res57: Boolean = false
+
+scala> isPrime(7)
+res58: Boolean = true
+
+scala> isPrime(51)
+res59: Boolean = false
+
+scala> isPrime(53)
+res60: Boolean = true
+
+scala> isPrime(904357)
+res61: Boolean = true
+		</pre>	    
+	      </div>
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li> <p>Code a class <tt class="code">Coordinates</tt> with parameters <tt class="code">(val x : Double, val y : Double)</tt> to represent coordinates in the Cartesian plane. An object of class <tt>Coordinates</tt> represent a point with coordinates (<tt>x</tt>, <tt>y</tt>).</p>
+
+	    <p>Define the method <tt>toString()</tt> in class <tt>Coordinates</tt> to return a string representation of the coordinates as a pair, such as <tt>"(1.2,3.4)"</tt>. 
+	    </p>
+
+	    
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> new Coordinates(1,2)
+res61: Coordinates = (1.0,2.0)
+
+scala> val e = new Coordinates(10,20)
+e: Coordinates = (10.0,20.0)
+
+scala> e.x
+res71: Double = 10.0
+
+scala> e.y
+res72: Double = 20.0
+
+scala> new Coordinates(1.2,3.4)
+res64: Coordinates = (1.2,3.4)
+
+scala> new Coordinates(-1.2,-3.4)
+res65: Coordinates = (-1.2,-3.4)
+	      </pre>	    
+	    </div>
+
+	    <p>Define a method <tt class="code">translate</tt> in class <tt>Coordinates</tt> of type <tt class="code">(Coordinates):Coordinates</tt> which takes another Coordinates object representing some point <tt>(x',y')</tt> and returns a <i>new</i> Coordinates object representing the current point translated by <tt>(x',y')</tt>. For example, translating the coordinates (3,5) by (6,-1) yields the coordinates (9,4). Note that translation does not change the object &mdash; it returns a <i>new</i> object representing the translated coordinates.</p>
+
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> val e = new Coordinates (10,20)
+e: Coordinates = (10.0,20.0)
+
+scala> e.translate(new Coordinates(100,200))
+res66: Coordinates = (110.0,220.0)
+
+scala> e
+res67: Coordinates = (10.0,20.0)
+
+scala> e.translate(new Coordinates(-1,-2))
+res68: Coordinates = (9.0,18.0)
+
+scala> e.translate(e)
+res69: Coordinates = (20.0,40.0)
+
+scala> e.translate(new Coordinates(-e.x,-e.y))
+res70: Coordinates = (0.0,0.0)
+	      </pre>	    
+	    </div>
+
+
+	    <p>Define a method <tt class="code">scale</tt> in class <tt>Coordinates</tt> of type <tt class="code">(Double):Coordinates</tt> which takes a scaling factor as argument and return a <i>new</i> Coordinates object representing the current point scaled by that scaling factor. For example, scaling the coordinates (3,5) by 2 yields the coordinates (6,10). Note that scaling does not change the object &mdash; it returns a <i>new</i> object representing the scaled coordinates.</p> 
+
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> val e = new Coordinates(10,20)
+e: Coordinates = (10.0,20.0)
+
+scala> e.scale(2.0)
+res73: Coordinates = (20.0,40.0)
+
+scala> e.scale(0.5)
+res74: Coordinates = (5.0,10.0)
+
+scala> e.scale(1.0)
+res75: Coordinates = (10.0,20.0)
+
+scala> e.scale(-0.5)
+res76: Coordinates = (-5.0,-10.0)
+
+scala> e
+res77: Coordinates = (10.0,20.0)
+	      </pre>	    
+	    </div>
+
+
+	    <p><b>(Optional)</b> Define a method <tt class="code">rotate</tt> in class <tt>Coordinates</tt> of type <tt class="code">(Double):Coordinates</tt> which takes an angle in degrees as an argument and return a <i>new</i> Coordinates object representing the current point rotated counterclockwise about the origin by the angle specified. For example, rotating the coordinates (3,5) by 90 degrees yields the point (-5,3). Note that rotation does not change the object &mdash; it returns a <i>new</i> object representing the rotated coordinates.</p> 
+
+	    <p>You may find functions <tt>math.sin</tt> and <tt>math.cos</tt> useful, as well as the constant <tt>math.Pi</tt>.</p>
+
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> val e = new Coordinates (2,1)
+e: Coordinates = (2.0,1.0)
+
+scala> e.rotate(90)
+res78: Coordinates = (-0.9999999999999999,2.0)
+
+scala> e.rotate(180)
+res79: Coordinates = (-2.0,-0.9999999999999998)
+
+scala> e.rotate(360)
+res80: Coordinates = (2.0000000000000004,0.9999999999999996)
+
+scala> e.rotate(45)
+res81: Coordinates = (0.7071067811865477,2.1213203435596424)
+
+scala> e
+res82: Coordinates = (2.0,1.0)
+	      </pre>	    
+	    </div>
+
+	  </li>
+
+
+	</ol>
+      </li>
+
+
+
+
+
+
+      <!-- ------------------------------------------------------------ -->
+
+
+      <li> <p><b>New Abstract Representation Expressions</b></p>
+
+	<p>Consider the abstract representation for the small language of arithmetic expressions we saw in class. 
+	  The sample code I gave you implements abstract class <tt>Exp</tt> and expressions <tt>EInteger</tt>, <tt>EPlus</tt>, <tt>ETimes</tt>, and <tt>EIf</tt>. In this question we will add new expressions to the language.</p>
+
+	<ol class="subquestion">
+
+
+
+	  <!-- ------------------------------ -->
+
+	  <li><p>
+	      Code a new kind of expression <tt class="code">ENeg (val e : Exp)</tt> that represents the operation of negating an expression, that is, <tt>ENeg(e)</tt> is meant to represent operation <tt>-e</tt>. Make sure you supply an appropriate <tt>toString()</tt> method as well as an <tt>eval()</tt> method.
+	    </p>
+
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> def i (x:Int) : Exp = new EInteger(x)
+i: (x: Int)Exp
+
+scala> val e = new ENeg(i(1))
+e: ENeg = ENeg(EInteger(1))
+
+scala> e.eval()
+res83: Int = -1
+
+scala> val e = new EPlus(i(1),new ENeg(i(1)))
+e: EPlus = EPlus(EInteger(1),ENeg(EInteger(1)))
+
+scala> e.eval()
+res84: Int = 0
+
+scala> val e = new ENeg(new EPlus(i(1),i(2)))
+e: ENeg = ENeg(EPlus(EInteger(1),EInteger(2)))
+
+scala> e.eval()
+res85: Int = -3
+	      </pre>	    
+	    </div>
+
+
+	  </li>
+
+
+
+	  <!-- ------------------------------ -->
+
+	  <li><p>
+	      Code a new kind of expression <tt class="code">EMax (val e1:Exp, val e2:Exp)</tt> which represents the operation of taking the maximum of two expressions, that is, <tt>EMax(e1,e2)</tt> represents operation <tt>max(e1,e2)</tt>. Make sure you supply an appropriate <tt>toString()</tt> method as well as an appropriate <tt>eval()</tt> method.
+	    </p>
+
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> def i (x:Int) : Exp = new EInteger(x)
+i: (x: Int)Exp
+
+scala> val e = new EMax(i(1),i(2))
+e: EMax = EMax(EInteger(1),EInteger(2))
+
+scala> e.eval()
+res86: Int = 2
+
+scala> val e = new EPlus(new EMax(i(1),i(2)),i(3))
+e: EPlus = EPlus(EMax(EInteger(1),EInteger(2)),EInteger(3))
+
+scala> e.eval()
+res87: Int = 5
+
+scala> val e = new EMax(new EPlus(i(1),i(2)), new ETimes(i(2),i(3)))
+e: EMax = EMax(EPlus(EInteger(1),EInteger(2)),ETimes(EInteger(2),EInteger(3)))
+
+scala> e.eval()
+res88: Int = 6
+	      </pre>	    
+	    </div>
+
+	  </li>
+
+
+
+
+	  <!-- ------------------------------ -->
+
+	  <li><p>
+	      Code a new kind of expression <tt class="code">EWithin (val e1:Exp, val e2:Exp, val e3:Exp)</tt> which represents an operation that takes three arguments (x,y,z) and returns the closest value to x (possibly x itself) that lies between y and z (both inclusive). Do not assume that y is less than z. Make sure you supply an appropriate <tt>toString()</tt> method as well as an appropriate <tt>eval()</tt> method.
+	    </p>
+
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> def i (x:Int) : Exp = new EInteger(x)
+i: (x: Int)Exp
+
+scala> val e = new EWithin(i(2),i(1),i(3))
+e: EWithin = EWithin(EInteger(2),EInteger(1),EInteger(3))
+
+scala> e.eval()
+res89: Int = 2
+
+scala> val e = new EWithin(i(0),i(1),i(3))
+e: EWithin = EWithin(EInteger(0),EInteger(1),EInteger(3))
+
+scala> e.eval()
+res90: Int = 1
+
+scala> val e = new EWithin(i(10),i(1),i(3))
+e: EWithin = EWithin(EInteger(10),EInteger(1),EInteger(3))
+
+scala> e.eval()
+res91: Int = 3
+
+scala> val e = new EWithin(i(10),i(3),i(1))
+e: EWithin = EWithin(EInteger(10),EInteger(3),EInteger(1))
+
+scala> e.eval()
+res92: Int = 3
+
+scala> val e = new EWithin(new ETimes(i(10),i(1)),
+                           new EPlus(i(3),i(-1)),
+                           new EPlus(i(1),i(2)))
+e: EWithin = EWithin(ETimes(EInteger(10),EInteger(1)),
+                     EPlus(EInteger(3),EInteger(-1)),
+                     EPlus(EInteger(1),EInteger(2)))
+
+scala> e.eval()
+res93: Int = 3
+	      </pre>	    
+	    </div>
+
+	  </li>
+
+
+
+	  <!-- ------------------------------ -->
+
+	  <li><p><b>(Optional)</b>
+	      Code a new kind of expression <tt class="code">EMin (val es:List[Exp])</tt> which represents an operation that returns the minimal value in a non-empty list of values. <a href="http://www.artima.com/pins1ed/working-with-lists.html">You will need to read about the <tt>List</tt> type</a>. I don't care what the operation does if you give it an empty list, though throwing an exception is probably most reasonable. Make sure you supply an appropriate <tt>toString()</tt> method as well as an appropriate <tt>eval()</tt> method.</p>
+
+<p>The details of the string that <tt>toString()</tt> returns are not that important as long as all the information is there.
+	    </p>
+
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> def i (x:Int) : Exp = new EInteger(x)
+i: (x: Int)Exp
+
+scala> val e = new EMin(List(i(10)))
+e: EMin = EMin(EInteger(10))
+
+scala> e.eval()
+res94: Int = 10
+
+scala> val e = new EMin(List(i(10),i(8),i(6),i(7),i(9)))
+e: EMin = EMin(EInteger(10),EInteger(8),EInteger(6),EInteger(7),EInteger(9))
+
+scala> e.eval()
+res95: Int = 6
+
+scala> val e = new EMin(List(new EPlus(i(5),i(5)), 
+                             new EPlus(i(4),i(4)), 
+                             new EPlus(i(4),i(5))))
+e: EMin = EMin(EPlus(EInteger(5),EInteger(5)),
+               EPlus(EInteger(4),EInteger(4)),
+               EPlus(EInteger(4),EInteger(5)))
+
+scala> e.eval()
+res96: Int = 8
+	      </pre>	    
+	    </div>
+
+	  </li>
+
+	</ol>
+
+      </li>
+
+
+
+
+
+
+      <!-- ------------------------------------------------------------ -->
+
+
+      <li> <p><b>New Abstract Representation Functionality</b></p>
+
+	<p>We continue with the abstract representation for the small language of arithmetic expressions we saw in class and in Question 2 above. </p>
+
+	<p>Method <tt>toString()</tt> in the <tt>Exp</tt> type does give us a string corresponding to the expression, but it's a bit unreadable. I mean, it is an accurate representation of the tree making up the the abstract representation, but it would be nice if we could get a more readable output that is closer to how we usually write arithmetical expressions. For instance, the abstract representation given by <tt>new EPlus(new EInteger(3), new EInteger(4))</tt> could be output as "3+4", which would be more readable than the default <tt>"EPlus(EInteger(3),EInteger(4))"</tt> returned by <tt>toString()</tt>.
+
+	<p>To get that, first add an abstract method</p>
+<pre>
+  def readable () : String
+</pre> 
+<p>to the <tt>Exp</tt> abstract class, then write an implementation of method <tt>readable()</tt> in every subclass of <tt>Exp</tt>. Don't forget the subclasses you had to write for Question 2. I'm not going to be super specific about what <tt>readable()</tt> returns, but it should be something that is readable by someone that knows basic arithmetic. For example, <tt>max(3+4,-(5*6))</tt>.</p>
+
+<p>Feel feel to over-parenthesize &mdash; it is a suprisingly difficult problem to write down an arithmetic expression with a minimal number of parentheses. </p>
+	  
+
+	<div class="code">
+	  <p onClick="toggleShowHide(this)">Show sample output</p>
+	  <pre>
+scala> def i (x:Int) : Exp = new EInteger(x)
+i: (x: Int)Exp
+
+scala> i(5).readable()
+res97: String = 5
+
+scala> val e = new EPlus(i(3),i(5))
+e: EPlus = EPlus(EInteger(3),EInteger(5))
+
+scala> e.readable()
+res98: String = 3+5
+
+scala> val f = new ETimes(i(4),e)
+f: ETimes = ETimes(EInteger(4),EPlus(EInteger(3),EInteger(5)))
+
+scala> f.readable()
+res100: String = (4)*(3+5)
+
+scala> val g = new EMax(e,f)
+g: EMax = EMax(EPlus(EInteger(3),EInteger(5)),
+               ETimes(EInteger(4),EPlus(EInteger(3),EInteger(5))))
+
+scala> g.readable()
+res101: String = max(3+5,(4)*(3+5))
+	  </pre>	    
+	</div>
+
+
+      </li>
+
+
+    </ol>
+	
+    
+
+  </body>
+</html>
