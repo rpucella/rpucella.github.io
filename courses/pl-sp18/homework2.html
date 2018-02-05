@@ -621,8 +621,15 @@ def _letseq (b:List[(String,Exp)],e:Exp) : Exp = new ELetSeq(b,e)
 
 	  <li> <p>Code an alternate to <tt>ELet</tt> called <tt class="code">ELetSim</tt> that can
 	      handle multiple <i>simultaneous bindings</i> instead of a
-	      single one. For instance, using an extension of the
-	      surface syntax I used in class, we could write
+	      single one. Using a similar syntax that I used in class,</p>
+
+	    <pre>
+  let (<i>x<sub>1</sub></i> = <i>e<sub>1</sub></i>, ..., <i>x<sub>n</sub></i> = <i>e<sub>n</sub></i>)
+    e</pre>
+	    <p>first evaluates all the <i>e<sub>1</sub></i>, ..., <i>e<sub>n</sub></i> down to values and <i>then</i> binds them to the identifiers before evaluating <i>e</i>. Thus, if any of the <i>e<sub>1</sub></i>, ..., <i>e<sub>n</sub></i> refer to the identifiers, the values used for those identifiers come from the environment at the beginning of evaluation.
+	    </p>
+	      
+	    <p>For instance, we could write
 <pre>
   let (x = 10, y = 20, z = 30)
     (x+y)*z
@@ -633,9 +640,7 @@ which should evaluate to 900, and
     let (a = b, b = a)
       a + b
 </pre>
-which should evaluate to 25.</p>
-
-Note this last expression is different from
+which should evaluate to 25. This last expression is different from
 <pre>
   let (a = 5)
     let (b = 20)
@@ -643,7 +648,7 @@ Note this last expression is different from
         let (b = a)
           a + b
 </pre>  
-(Why?) In particular, this one evaluates to 40.</p>
+(Why?) In particular, this last one evaluates to 40.</p>
 
 <p><tt>ELetSim</tt>  take two arguments:
   <ul>
