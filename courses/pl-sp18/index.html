@@ -112,6 +112,8 @@ function run () {
 
       <ul class="simple">
 
+	<li><p class="ann"><span class="hdr">Feb 4:</span> <a href="homework2.html">Homework 2</a> is out. Due next Sunday night (to account for the delay getting it out).</p></li>
+
 	<li><p class="ann"><span class="hdr">Jan 26:</span> <a href="homework1.html">Homework 1</a> is out. Due next Friday night.</p></li>
 
 	<li><p class="ann"><span class="hdr">Jan 25:</span> Welcome all! Slides, code, and general notes on the first lecture can be found below. The first homework should go out tomorrow.</p></li>
@@ -199,7 +201,7 @@ function run () {
 	<li><p><span class="hdr">Jan 25:</span><b>Introduction to Interpretation</b></p>
 		<div class="lect">
 		  <p><a href="./lect-01-interpretation.pdf">Slides from the lecture.</a></p>
-		  <p>Final <a href="./lect-01-code.scala">sample code</a> from the lecture.</p>
+		  <p>Final <a href="./code-lect-01.scala">sample code</a> from the lecture.</p>
 		  <p>Some <a href="http://cs.lmu.edu/~ray/notes/paradigms/">notes about programming paradigms</a> similar to what I was describing in class.</p>
 
 		  <p>The <a href="http://docs.scala-lang.org/tour/tour-of-scala.html"><i>Tour of Scala</i></a> from the Scala language web page. It's a good overview, but it gets in the weeds quickly. You probably want to focus on <a href="http://docs.scala-lang.org/tour/tour-of-scala.html">Introduction</a>, <a href="http://docs.scala-lang.org/tour/basics.html">Basics</a>, <a href="http://docs.scala-lang.org/tour/unified-types.html">Unified Types</a>, <a href="http://docs.scala-lang.org/tour/classes.html">Classes</a>, <a href="http://docs.scala-lang.org/tour/case-classes.html">Case Classes</a>, and <a href="http://docs.scala-lang.org/tour/pattern-matching.html">Pattern Matching</a>, at first.</p>
@@ -208,28 +210,22 @@ function run () {
 
 		  <p>The class hierarchy we will develop for the abstract representation of our languages uses an abstract base class (in the code above, <tt>Exp</tt>). If you've never worked with abstract base classes, <a href="https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html">you can find a description here</a> for Java &mdash; the discussion applies to Scala in the same way. Abstract classes don't really make sense in Python, so you would not have encountered them there. (Why?)</p>
 
-<!--		  <p><a foo="homework1.html">Homework 1</a>, due next Monday.</p> -->
+<!--	  <p><a foo="homework1.html">Homework 1</a>, due next Monday.</p> -->
 		  
 		</div>
 	</li>	  
 
-<!--
-	<li><p><span class="hdr">Sep 13:</span><b>Identifiers and the Substitution Model</b></p>
+	<li><p><span class="hdr">Feb 1:</span><b>Values and Identifiers</b></p>
 		<div class="lect">
 		  <p><a href="./lect-02-identifiers.pdf">Slides from the lecture.</a></p>
-		  <p><a href="./code-lect-02-calc-ids.py">Sample code</a> from the lecture, the version with both primitive operations and let bindings.</p>
+		  <p>Final <a href="./code-lect-02.scala">sample code</a> from the lecture, with both a general <tt>Value</tt> class and let bindings.</p>
 
-		  <p>The <a href="https://docs.python.org/2/tutorial/datastructures.html#list-comprehensions">official
-		  docs on Python list comprehensions</a>. Definitely
-		  something worth learning about if you don't already
-		  know about them. Here are two other short tutorials:
-		    <a href="http://www.dalkescientific.com/writings/NBN/list_comps.html">here</a>,
-		    and <a href="http://treyhunner.com/2015/12/python-list-comprehensions-now-in-color/">here</a>. 
-
-		  <p><a foo="homework2.html">Homework 2</a>, due next Monday.</p>
+		  <p>We're going to start using lists a lot more. The implementation of environments in the sample code above uses lists. The official Scala documentation on the <a href="https://www.scala-lang.org/api/2.12.2/scala/collection/immutable/List.html">List</a> class is a good reference. The <a href="https://alvinalexander.com/scala/scala-list-class-examples">following tutorial on using lists in Scala</a> is also probably useful. </p>
+		  
 		</div>
 	</li>	  
 
+<!-- 
 	<li><p><span class="hdr">Sep 20:</span><b>Surface Syntax and Parsing</b></p>
 	  <div class="lect">
 	    <p><a href="./lect-03-surface-syntax.pdf">Slides from the lecture.</a></p>
@@ -451,6 +447,7 @@ which
 
       <ul class="simple">
 	<li><a href="homework1.html">Homework 1</a> &mdash; due date: Friday, Feb 2 (23h59)</li>
+	<li><a href="homework2.html">Homework 2</a> &mdash; due date: Sunday, Feb 11 (23h59)</li>
       </ul>
 
     </div>
