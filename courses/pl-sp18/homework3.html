@@ -137,7 +137,7 @@ li > p { margin-top:0;}
     
     <h1 class="clear">Homework 3</h1>
     
-    <p class="subtitle">Due date: Sunday, Feb 11 (23h59)</p>
+    <p class="subtitle">Due date: Sunday, Feb 18 (23h59)</p>
 
     <p><b>Note on integrity:</b> This homework is meant to be done in
       <b>teams of 2</b>. You may discuss problems with fellow students, but all
@@ -239,6 +239,20 @@ class <tt>SExpParser</tt>, and can be invoked by calling function <tt>parse</tt>
 	      of <tt><i>e1</i></tt> and <tt><i>t2</i></tt> is the
 	  abstract representation of <tt><i>e2</i></tt>. 
 	    </p>
+
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> parse(" (and true false) ")
+res7: Exp = EAnd(ELiteral(true),ELiteral(false))
+
+scala> parse(" (and true (and true true)) ")
+res8: Exp = EAnd(ELiteral(true),EAnd(ELiteral(true),ELiteral(true)))
+
+scala> parse(" (if (and true false) 1 2) ")
+res9: Exp = EIf(EAnd(ELiteral(true),ELiteral(false)),ELiteral(1),ELiteral(2))
+	      </pre>
+	    </div>
 	  </li>
 
 
@@ -254,11 +268,35 @@ class <tt>SExpParser</tt>, and can be invoked by calling function <tt>parse</tt>
           An expression of
 	  the form <tt>(vector <i>e1</i> ... <i>en</i>)</tt> should produce
 	  an abstract
-	  representation <tt>EVector(List(<i>t1</i>,...,<i>tn</i>)</tt>,
+	  representation <tt>EVector(List(<i>t1</i>,...,<i>tn</i>))</tt>,
 	  where <tt><i>t1</i></tt> is the abstract representation
 	      of <tt><i>e1</i></tt>, ..., and <tt><i>tn</i></tt> is the
 	  abstract representation of <tt><i>en</i></tt>. 
 	    </p>
+
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> parse(" (vector 1) ")
+res10: Exp = EVector(ELiteral(1))
+
+scala> parse(" (vector 1 2) ")
+res11: Exp = EVector(ELiteral(1) , ELiteral(2))
+
+scala> parse(" (vector 1 2 3) ")
+res12: Exp = EVector(ELiteral(1) , ELiteral(2) , ELiteral(3))
+
+scala> parse(" (vector (+ 10 20) 2 3) ")
+res13: Exp = EVector(EPlus(ELiteral(10),ELiteral(20)) , ELiteral(2) , ELiteral(3))
+
+scala> parse(" (+ (vector 1 2 3) (vector (+ 1 10) (+ 2 20) (+ 3 30))) ")
+res14: Exp = EPlus(EVector(ELiteral(1) , ELiteral(2) , ELiteral(3)),
+                   EVector(EPlus(ELiteral(1),ELiteral(10)) ,
+                           EPlus(ELiteral(2),ELiteral(20)) ,
+                           EPlus(ELiteral(3),ELiteral(30))))
+	      </pre>
+	    </div>
+	    
 	  </li>
 
 
@@ -271,7 +309,7 @@ class <tt>SExpParser</tt>, and can be invoked by calling function <tt>parse</tt>
 	      version of <tt>let</tt> instead of the existing one:
 <pre>
    expr ::= ... 
-   <b>(</b> let <b>(</b> bindings <b>)</b> expr <b>)</b>
+             <b>(</b> let <b>(</b> bindings <b>)</b> expr <b>)</b>
 
    bindings ::= <b>(</b> <b>identifier</b> expr <b>)</b> bindings
                 <b>(</b> <b>identifier</b> expr <b>)</b>
@@ -284,13 +322,37 @@ abstract representations corresponding to the bindings
 in <tt><i>bindings</i></tt>, and <tt><i>t</i></tt> is the abstract
 representation of the body <tt><i>expr</i></tt>. </p>
 
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> parse(" (let ((x 10)) (* x x)) ")
+res15: Exp = ELetSim(List((x,ELiteral(10))),
+                     ETimes(EId(x),EId(x)))
 
-	  <li><p> <b>(Optional)</b> As it stands, the current language only
-	    supports passing exactly two integers to <tt>+</tt>
-	    and <tt>*</tt>. It's easy enough to modify the primitive
-	    operations for <tt>+</tt> and <tt>*</tt>
-	    (functions <tt>oper_plus</tt> and <tt>oper_times</tt>
-	    in <tt>homework3.py</tt>) to support more than 2
+scala> parse(" (let ((x 10) (y 20)) (* x x)) ")
+res16: Exp = ELetSim(List((x,ELiteral(10)),
+                          (y,ELiteral(20))),
+                     ETimes(EId(x),EId(x)))
+
+scala> parse(" (let ((x 10) (y 20) (z 30)) (* x x)) ")
+res17: Exp = ELetSim(List((x,ELiteral(10)),
+                          (y,ELiteral(20)),
+                          (z,ELiteral(30))),
+                     ETimes(EId(x),EId(x)))
+
+scala> parse(" (let ((x 10) (y (+ x y))) (* x x)) ")
+res18: Exp = ELetSim(List((x,ELiteral(10)),
+                          (y,EPlus(EId(x),EId(y)))),
+                     ETimes(EId(x),EId(x)))
+	      </pre>
+	    </div>
+	  </li>
+
+
+	  <li><p> <b>(Optional)</b> As it stands, our expression language only
+	    supports giving exactly two arguments to <tt>+</tt>
+	      and <tt>*</tt>. It's easy enough to modify the abstract representation for <tt>EPlus</tt> and <tt>ETimes</tt>
+	      to support more than 2
 	      arguments. But there's another approach we can use.</p>
 
 	    <p>Intuitively, we can express addition with more than two
@@ -301,14 +363,13 @@ representation of the body <tt><i>expr</i></tt>. </p>
 	      parse it into an abstract representation that uses nested
 	      additions with two arguments.</p>
 
-	    <p>Modify the parser in function <tt>parse</tt> so
-	      that it can parse expressions of the
+	    <p>Modify the parser so   that it can parse expressions of the
 	      form <tt>(+ <i>e<sub>1</sub></i>
 	      ... <i>e<sub>k</sub></i>)</tt>, and for those returns
 	      the same abstract representation as if we had written
 	      <tt>(+ <i>e<sub>1</sub></i> (+ <i>e<sub>2</sub></i> (+
 		... (+ <i>e<sub>k-1</sub></i> <i>e<sub>k</sub></i>)
-		...)))</tt>, or something equivalent. </p>
+		)))</tt> or something equivalent. </p>
 
 	    <p>Do the same for <tt>*</tt>.</p>
 
@@ -327,139 +388,73 @@ representation of the body <tt><i>expr</i></tt>. </p>
 	<p>As I mentioned in class, the reason why we'll be using S-expressions as our surface syntax
 	  is for simplicity. It'll be easy to add features to our language without having to fight with the parser too too much. </p>
 	
-	<p>To get a sense of the challenges that a more natural syntax poses, we'll develop an alternate surface syntax for our calculator language, based on more standard
-	  mathematical notation. </p>
+	<p>To get a sense of the challenges that a more natural syntax poses, let's introduce infix expressions (that is, expressions of the form <tt>e1 + e2</tt>) in our language. An infix expression is written <tt>(infix e)</tt>, where <tt>e</tt> uses infix notation. For example, <tt>(infix 1 + 3)</tt>, or <tt>(infix 2 + x * 4)</tt>, or <tt>(infix 2 + (3 * y) + 6)</tt>. For simplicity, you can restrict yourself to infix expressions using integers, identifiers, addition, and multiplication.</p>
 
-	<p>Here is the base grammar I have in mind:
+	<p>Here is the extension of the grammar above that I have in mind:
+	  <pre>
+   expr ::= ...
+            <b>(</b> <b>infix</b> iexpr <b>)</b>
 
-<pre>
-  &lt;expr&gt; ::= &lt;integer&gt;
-             true
-             false
-             &lt;identifier&gt;
-             ( expr )
-             &lt;expr&gt; ? &lt;expr&gt; : &lt;expr&gt;
-             let ( &lt;bindings&gt; ) &lt;expr&gt;
-             &lt;expr&gt; + &lt;expr&gt;
-             &lt;expr&gt; * &lt;expr&gt;
-             &lt;expr&gt; - &lt;expr&gt;
-             &lt;name&gt; ( &lt;expr-seq&gt; )
-
-  &lt;bindings&gt; ::= &lt;name&gt; = &lt;expr&gt; , &lt;bindings&gt;
-                 &lt;name&gt; = &lt;expr&gt;
-
-  &lt;expr-seq&gt; ::= &lt;expr&gt; , &lt;expr-seq&gt;
-                 &lt;expr&gt;
+   iexpr ::= <b>integer</b>
+             <b>identifier</b>
+             <b>(</b> iexpr <b>)</b>
+             iexpr <b>+</b> iexpr
+             iexpr <b>*</b> iexpr
 </pre>
 	</p>
 
-	<p>Write a function <tt>parse_natural</tt> that does
-	what <tt>parse</tt> does, but parsing according to the above
-	grammar instead of S-expressions. It should return an abstract
-	  representation of the parsed expression.</p>
+	<p>Extend the parser so that you can parse the above grammar. The result of parsing <tt>(infix <i>e</i>)</tt> should be the obvious abstract representation of expression <tt><i>e</i></tt>.</p>
 
-	<p>In order to be able to use Pyparsing and parser
-	combinators, you will need to modify the above grammar so that
+	<p>In order to be able to use the parsing combinator library, you will need to modify the above grammar so that
 	it is, at the very least, not left recursive. You may need to
 	make other modifications to the grammar as well. Just make
 	sure that the parser you write in the end accepts the same
-	  inputs as the grammar above.</p>
+	  inputs as the grammar above. (The <a href="http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm">following reference</a> I gave on the course web page makes a reasonable starting point.)</p>
 
 	<p>The
 	resulting abstract representation should represent the input
 	expression subject to the usual rules of operator
 	precedence: <tt>*</tt> groups more tightly than
-	either <tt>+</tt> or <tt>-</tt>. Treat <tt>*</tt>, <tt>+</tt>,
-	and <tt>-</tt> as associative operations. (They are, in fact,
-	except for <tt>-</tt>. If you feel adventurous,
-	make <tt>-</tt> right associative).  That is, <tt>10 * 20 +
+	<tt>+</tt>. Treat <tt>*</tt> and <tt>+</tt>  as associative operations. That is, <tt>10 * 20 +
 	30</tt> should parse as though you had written <tt>(10 * 20) +
 	30</tt>, and <tt>10 + 20 + 30</tt> can parse as either <tt>(10
 	+ 20) + 30</tt> or <tt>10 + (20 + 30)</tt> and I don't care
-	which.  
-	</p>
+	which. </p>
 
-	<p>Write a function <tt>shell_natural</tt> that does
-	  what <tt>shell</tt> does except it
-	  uses <tt>parse_natural</tt> instead of <tt>parse</tt>. 
-	</p>
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+scala> parse(" (infix 10) ")
+res19: Exp = ELiteral(10)
 
-<pre class="code">
-<i># sample outputs using the Calc shell
-# note that it gives the parsed abstract representation, which is what I'll be checking
-# I've sometimes indented the abstract representation for ease of reading</i>
+scala> parse(" (infix 10 + 20) ")
+res20: Exp = EPlus(ELiteral(10),ELiteral(20))
 
->>> shell_natural()
-Homework 3 - Calc Language (Natural syntax)
-calc/nat> let (x = 10) x + 1
-Abstract representation: ELet([(x,EInteger(10))],
-                              ECall(+,[EId(x),EInteger(1)]))
-11
-calc/nat> let (x = 10 , y = 20) x + y * y
-Abstract representation: ELet([(x,EInteger(10)),
-                               (y,EInteger(20))],
-                              ECall(+,[EId(x),ECall(*,[EId(y),EId(y)])]))
-410
-calc/nat> zero? (1)
-Abstract representation: ECall(zero?,[EInteger(1)])
-false
-calc/nat> zero? (10 - 10)
-Abstract representation: ECall(zero?,[ECall(-,[EInteger(10),EInteger(10)])])
-true
-calc/nat> zero? (0) ? 1 : 2
-Abstract representation: EIf(ECall(zero?,[EInteger(0)]),EInteger(1),EInteger(2))
-1
-calc/nat> (zero? (0) ? 1 : 2) + 55
-Abstract representation: ECall(+,[EIf(ECall(zero?,[EInteger(0)]),EInteger(1),EInteger(2)),
-                                  EInteger(55)])
-56
-calc/nat> (zero? (1) ? 1 : 2) + 55
-Abstract representation: ECall(+,[EIf(ECall(zero?,[EInteger(1)]),EInteger(1),EInteger(2)),
-                                  EInteger(55)])
-57
-calc/nat> let (x = 4 + 5 * 6) let (y = x * 2) square(y)
-Abstract representation: ELet([(x,ECall(+,[EInteger(4),ECall(*,[EInteger(5),EInteger(6)])]))],
-                              ELet([(y,ECall(*,[EId(x),EInteger(2)]))],
-                                   ECall(square,[EId(y)])))
-4624
-<i># double-checking...</i>
-calc/nat> (34 * 2) * (34 * 2)
-Abstract representation: ECall(*,[ECall(*,[EInteger(34),EInteger(2)]),
-                                  ECall(*,[EInteger(34),EInteger(2)])])
-4624
-</pre>
+scala> parse(" (infix 10 + 20 + 30) ")
+res21: Exp = EPlus(ELiteral(10),EPlus(ELiteral(20),ELiteral(30)))
 
-<i>Note: if you hit a wall and cannot make any progress with the
+scala> parse(" (infix 10 + 20 * 30) ")
+res22: Exp = EPlus(ELiteral(10),ETimes(ELiteral(20),ELiteral(30)))
+
+scala> parse(" (infix 10 * 20 + 30) ")
+res23: Exp = EPlus(ETimes(ELiteral(10),ELiteral(20)),ELiteral(30))
+
+scala> parse(" (infix 10 * (20 + 30)) ")
+res24: Exp = ETimes(ELiteral(10),EPlus(ELiteral(20),ELiteral(30)))
+
+scala> parse(" (infix (10 + 20 ) * (30 + 40)) ")
+res25: Exp = ETimes(EPlus(ELiteral(10),ELiteral(20)),EPlus(ELiteral(30),ELiteral(40)))
+
+scala> parse(" (+ 1 (infix 2 + 3)) ")
+res26: Exp = EPlus(ELiteral(1),EPlus(ELiteral(2),ELiteral(3)))
+	      </pre>
+	    </div>
+
+<p><i>Note: if you hit a wall and cannot make any progress with the
   surface syntax I'm asking you to implement, you can make changes to
   the surface syntax to make it easier to parse. Document your
   changes, and explains why you had to do things that way. Try
-  to keep it as close as possible to a natural syntax.</i>
-
-	  </li>
-
-	  <li><p><b>Extra:</b> Come up with a reasonable natural
-	      syntax for function definitions, and redo Question 2(a)
-	      above except with <tt>parse_natural</tt> and your syntax
-	      for function definitions.
-
-
-<pre class="code">
-<i># sample outputs using the Calc shell
-# note that it gives the parsed abstract representation, which is what I'll be checking
-# I've sometimes indented the abstract representation for ease of reading</i>
-
-calc/nat> function decrement (x) x - 1
-Function decrement added to functions dictionary
-calc/nat> decrement(10)
-Abstract representation: ECall(decrement,[EInteger(10)])
-9
-calc/nat> function sum_of_squares (x,y) square(x) + square(y)
-Function sum_of_squares added to functions dictionary
-calc/nat> sum_of_squares(10,5)
-Abstract representation: ECall(sum_of_squares,[EInteger(10),EInteger(5)])
-125
-</pre>
-
+    to keep it as close as possible to a natural infix syntax.</i></p>
 
       </li>
 
