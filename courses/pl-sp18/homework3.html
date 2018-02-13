@@ -187,609 +187,281 @@ li > p { margin-top:0;}
 
     <ol class="question">
 
-
-      <!-- ------------------------------------------------------------ -->
-
-
-      <li> <p><b>Fractions</b></p>
-
-	<p>In class, we saw some code that implements fractions as a
-	kind of value in class <tt>Value</tt>. This code is available
-	in the source file for thi s homework. In this question, we'll
-	  add to the functionality.</p>
-
-	<p>The sample outputs below assume the following definitions,
-	  also available in the sample source file:</p>
-
-	<pre>
-// empty environment
-val nullEnv = new Env(List())
-
-// useful expression constructors
-def _int (i:Int) : Exp = new ELiteral(new VInteger(i))
-def _frac (n:Int,d:Int) : Exp = new ELiteral(new VFraction(n,d))
-def _plus (e1:Exp, e2:Exp) : Exp = new EPlus(e1,e2)
-def _times (e1:Exp, e2:Exp) : Exp = new ETimes(e1,e2)
-def _div (e1:Exp, e2:Exp) : Exp = new EDiv(e1,e2)
-	</pre>	  
-
-	<p></p>
-	
-	<ol class="subquestion">
-
-	  <!-- ------------------------------ -->
-
-
-	  <li><p>Code an expression class <tt class="code">EDiv</tt>
-	  which takes two expressions and evaluates to the fraction
-	  number obtained by dividing the result of evaluating the
-	  first to the result of evaluating the second. Division
-	  should work with both integers and fractions.</p>
-
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-              <pre>
-scala> _div(_int(1),_int(2)).eval(nullEnv)
-res18: Value = 1/2
-
-scala> _div(_int(2),_int(3)).eval(nullEnv)
-res19: Value = 2/3
-
-scala> _div(_div(_int(2),_int(3)),_int(4)).eval(nullEnv)
-res21: Value = 1/6
-
-scala> _div(_int(2),_div(_int(3),_int(4))).eval(nullEnv)
-res23: Value = 8/3
-
-scala> _div(_div(_int(1),_int(2)),_div(_int(3),_int(5))).eval(nullEnv)
-res25: Value = 5/6
-</pre>
-	    </div>
-	  </li>
-
-
-	  <li><p>Implement evaluation for <tt class="code">EPlus</tt>
-	      and <tt class="code">ETimes</tt> so that they work with
-	      both integers and fractions. The result need not be
-	      simplified.
-	    </p>
-
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-	      <pre>
-scala> _plus(_int(3),_int(4)).eval(nullEnv)
-res40: Value = 7
-
-scala> _plus(_frac(1,2),_frac(1,3)).eval(nullEnv)
-res27: Value = 5/6
-
-scala> _plus(_frac(1,2),_int(1)).eval(nullEnv)
-res28: Value = 3/2
-
-scala> _plus(_int(1),_frac(1,2)).eval(nullEnv)
-res29: Value = 3/2
-
-scala> _times(_int(3),_int(4)).eval(nullEnv)
-res39: Value = 12
-
-scala> _times(_int(3),_frac(1,2)).eval(nullEnv)
-res36: Value = 3/2
-
-scala> _times(_frac(1,2),_int(3)).eval(nullEnv)
-res37: Value = 3/2
-
-scala> _times(_frac(1,2),_frac(5,6)).eval(nullEnv)
-res38: Value = 5/12
-	    </pre>
-	    </div>
-	    
-	  </li>
-
-
-	  
-	  <li> <p>Code a function <tt class="code">mkFraction</tt> of
-	      type <tt class="code">(Int,Int):Value</tt> which takes a numerator <i>n</i>
-	      and a denoninator <i>d</i> and creates a <tt>Value</tt>
-	      representing the simplified form of fraction <i>n /
-	      d</i> &mdash; including the case where the simplified
-	      form of the fraction is an integer, such as <i>4/2</i>. 
-	    </p>
-
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-	      <pre>
-scala> mkFraction(1,2)
-res41: Value = 1/2
-
-scala> mkFraction(2,4)
-res42: Value = 1/2
-
-scala> mkFraction(6,8)
-res43: Value = 3/4
-
-scala> mkFraction(2,1)
-res44: Value = 2
-
-scala> mkFraction(4,2)
-res45: Value = 2
-
-scala> mkFraction(40,30)
-res46: Value = 4/3
-	    </pre>
-	    </div>
-	    
-	    <p>Use <tt>mkFraction</tt> to improve the evaluation
-	      method 
-	      for <tt class="code">ELiteral</tt>, <tt class="code">EPlus</tt>, <tt class="code">ETimes</tt>,
-	      and <tt class="code">EDiv</tt> so that the results are
-	      as simplified as possible. .</p>
-	      
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-	      <pre>
-scala> _frac(4,2).eval(nullEnv)
-res57: Value = 2
-
-scala> _frac(40,30).eval(nullEnv)
-res58: Value = 4/3
-
-scala> _plus(_frac(1,2),_frac(1,2)).eval(nullEnv)
-res50: Value = 1
-
-scala> _times(_frac(2,4),_int(5)).eval(nullEnv)
-res59: Value = 5/2
-
-scala> _times(_frac(2,4),_int(10)).eval(nullEnv)
-res60: Value = 5
-
-scala> _div(_int(2),_int(4)).eval(nullEnv)
-res47: Value = 1/2
-
-scala> _div(_int(10),_int(4)).eval(nullEnv)
-res48: Value = 5/2
-
-scala> _div(_int(10),_int(2)).eval(nullEnv)
-res49: Value = 5
-	    </pre>
-	    </div>
-
-	  </li>
-
-	</ol>
-      </li>
-
-
-      <!-- ------------------------------------------------------------ -->
-
-
-      <li> <p><b>Vectors</b></p>
-
-	<p>In this question, you will implement vectors of
-	  values. Vectors are heterogeneous, meaning that you can
-	  have one vector containing values of various types.</p>
-
-	<p>Vectors are represented
-	  as <a href="https://www.scala-lang.org/api/2.12.2/scala/collection/immutable/List.html">Scala
-	  lists</a>. You'll want to read up on
-	  them. This <a href="https://alvinalexander.com/scala/scala-list-class-examples">tutorial
-	  on using Scala lists</a> might be useful.</p>
-
-	<p>The sample outputs below assume the following definitions,
-	  also available in the sample source file:</p>
-
-	<pre>
-// empty environment
-val nullEnv = new Env(List())
-
-// useful expression constructors
-def _int (i:Int) : Exp = new ELiteral(new VInteger(i))
-def _bool (b:Boolean) : Exp = new ELiteral(new VBoolean(b))
-def _plus (e1:Exp, e2:Exp) : Exp = new EPlus(e1,e2)
-def _and (e1:Exp,e2:Exp) : Exp = new EAnd(e1,e2)
-def _vector (es:List[Exp]) : Exp = new EVector(es)
-</pre>	  
-	
-	<ol class="subquestion">
-
-	  <!-- ------------------------------ -->
-
-
-	  <li><p>Code a value
-	  class <tt class="code">VVector</tt> which adds vectors to
-	  our little language. A vector is represented as a list of
-	      values of type <tt>List[Value]</tt>. Vectors implement a
-	  method <tt>getList()</tt> which returns that list of values.</p>
-
-
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-              <pre>
-scala> new VVector(List(new VInteger(1), new VBoolean(true), new VFraction(1,2)))
-res62: VVector = < 1 , true , 1/2 >
-
-scala> new VVector(List())
-res63: VVector = <  >
-
-scala> new VVector(List(new VInteger(1)))
-res64: VVector = < 1 >
-
-scala> new VVector(List(new VInteger(1), new VInteger(1)))
-res65: VVector = < 1 , 1 >
-
-scala> new ELiteral(new VVector(List(new VInteger(1), new VInteger(2))))
-res66: ELiteral = ELiteral(< 1 , 2 >)
-
-scala> new ELiteral(new VVector(List(new VInteger(1), new VInteger(2)))).eval(nullEnv)
-res67: Value = < 1 , 2 >
-	      </pre>
-	    </div>
-	  </li>
-
-	  <li><p>Code an expression class <tt class="code">EVector</tt> which takes a list of
-	      expressions <i>e<sub>1</sub></i>,
-	  ..., <i>e<sub>n</sub></i> and evaluates to the vector
-	      made up of the result of
-	      evaluating each of <i>e<sub>1</sub></i>,
-	      ..., <i>e<sub>n</sub></i>. </p>
-
-
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-              <pre>
-scala> _vector(List()).eval(nullEnv)
-res83: Value = <  >
-
-scala> _vector(List(_int(1))).eval(nullEnv)
-res84: Value = < 1 >
-
-scala> _vector(List(_int(1),_int(2),_int(3))).eval(nullEnv)
-res76: Value = < 1 , 2 , 3 >
-
-scala> _vector(List(_int(1),_int(2),_int(3)))
-res77: Exp = EVector(ELiteral(1) , ELiteral(2) , ELiteral(3))
-
-scala> _vector(List(_int(1),_int(2),_int(3))).eval(nullEnv)
-res78: Value = < 1 , 2 , 3 >
-
-scala> _vector(List(_plus(_int(1),_int(2)),_and(_bool(true),_bool(false)))).eval(nullEnv)
-res79: Value = < 3 , false >
-
-scala> _vector(List(_vector(List(_int(1),_int(2))),_vector(List(_bool(true),_bool(false))))).eval(nullEnv)
-res81: Value = < < 1 , 2 > , < true , false > >
-	      </pre>
-	    </div>
-
-	    <p>(Why do we need something like <tt>EVector</tt> if we
-	      already have <tt>ELiteral(VVector(...))</tt>?)</p>
-	    
-	  </li>
-
-	      <li> <p>Extend the evaluation of <tt class="code">EPlus</tt> so that
-		  it adds vectors pointwise. Thus, <tt>EPlus</tt>
-		  will compute vector addition when given vectors.</p>
-
-		<p>For full points, make sure you correctly handle
-		  vectors of vectors</p>
-
-		<p><b>Hint:</b> you may want to define a
-		  function <tt>operPlus</tt> of type <tt>(Value,Value):Value</tt> that encapsulates the addition of two values no matter their type.</p>
-	      
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-              <pre>
-scala> _plus(_vector(List()),_vector(List())).eval(nullEnv)
-res94: Value = <  >
-
-scala> _plus(_vector(List(_int(1))),_vector(List(_int(2)))).eval(nullEnv)
-res95: Value = < 3 >
-
-scala> val e1 = _vector(List(_int(1),_int(2)))
-e1: Exp = EVector(ELiteral(1) , ELiteral(2))
-
-scala> val e2 = _vector(List(_int(3),_int(4)))
-e2: Exp = EVector(ELiteral(3) , ELiteral(4))
-
-scala> _plus(e1,e2).eval(nullEnv)
-res87: Value = < 4 , 6 >
-
-scala> _plus(_vector(List(e1,e1)),_vector(List(e2,e2))).eval(nullEnv)
-res88: Value = < < 4 , 6 > , < 4 , 6 > >
-
-scala> _plus(_vector(List(e1,e2)),_vector(List(e1,e2))).eval(nullEnv)
-res89: Value = < < 2 , 4 > , < 6 , 8 > >
-	      </pre>
-	    </div>
-
-		<p>Brownie points if you can also handle vectors of fractions.</p>
-
-	  </li>
-
-	      <li> <p>Extend the evaluation of <tt class="code">ETimes</tt> so that
-		  if given expressions evaluating to vectors of
-		  integers as arguments, it computes the inner product
-		  of those vectors.</p>
-	      
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-              <pre>
-scala> _times(_vector(List()),_vector(List())).eval(nullEnv)
-res98: Value = 0
-
-scala> _times(_vector(List(_int(2))),_vector(List(_int(100)))).eval(nullEnv)
-res99: Value = 200
-
-scala> val e1 = _vector(List(_int(2),_int(3)))
-e1: Exp = EVector(ELiteral(2) , ELiteral(3))
-
-scala> val e2 = _vector(List(_int(33),_int(66)))
-e2: Exp = EVector(ELiteral(33) , ELiteral(66))
-
-scala> _times(e1,e2).eval(nullEnv)
-res96: Value = 264
-
-scala> _times(e1,_plus(e2,e2)).eval(nullEnv)
-res97: Value = 528
-	    </pre>
-	    </div>
-
-		<p>Brownie points if you can also handle vectors of fractions.</p>
-	    
-	      </li>
-
-	      
-	      <li> <p>Extend the evaluation
-		  of <tt class="code">EPlus</tt> and <tt class="code">ETimes</tt> so that when given
-	      expressions evaluating to a 
-	      vector of integers and a scalar (i.e., not a vector), in
-	      either order, the
-	      corresponding operation (addition or multiplication) is applied to every element of
-	      the vector and the scalar, yielding a vector of the results.
-		</p>
-
-		<p>Thus, for example, 2 + &lt; 10,20,30 &gt; should yield the vector &lt; 12,22,32 &gt; and 2 * &lt; 10,20,30 &gt; the vector &lt; 20,40,60 &gt;.</p>
-
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-              <pre>
-scala> _plus(_int(2),_vector(List())).eval(nullEnv)
-res105: Value = <  >
-
-scala> _plus(_int(2),_vector(List(_int(1)))).eval(nullEnv)
-res106: Value = < 3 >
-
-scala> _plus(_int(2),_vector(List(_int(1),_int(2)))).eval(nullEnv)
-res107: Value = < 3 , 4 >
-
-scala> _plus(_int(2),_vector(List(_int(1),_int(2),_int(3)))).eval(nullEnv)
-res108: Value = < 3 , 4 , 5 >
-
-scala> _times(_int(2),_vector(List())).eval(nullEnv)
-res109: Value = <  >
-
-scala> _times(_int(2),_vector(List(_int(1)))).eval(nullEnv)
-res110: Value = < 2 >
-
-scala> _times(_int(2),_vector(List(_int(1),_int(2)))).eval(nullEnv)
-res111: Value = < 2 , 4 >
-
-scala> _times(_int(2),_vector(List(_int(1),_int(2),_int(3)))).eval(nullEnv)
-res112: Value = < 2 , 4 , 6 >
-
-scala> _plus(_vector(List(_int(1),_int(2),_int(3))),_int(2)).eval(nullEnv)
-res113: Value = < 3 , 4 , 5 >
-
-scala> _times(_vector(List(_int(1),_int(2),_int(3))),_int(2)).eval(nullEnv)
-res114: Value = < 2 , 4 , 6 >
-</pre>
-	    </div>
-	      </li>
-
-	  <p>Brownie points if you can also handle fractions.</p>
-
-	</ol>
-      </li>
-      
-
-      <!-- ------------------------------------------------------------ -->
-
-
-      <li> <p><b>Simultaneous Bindings</b></p>
-
-
-	<p>The sample outputs below assume the following definitions,
-	  also available in the sample source file:</p>
-
-	<pre>
-// empty environment
-val nullEnv = new Env(List())
-
-// useful expression constructors
-def _int (i:Int) : Exp = new ELiteral(new VInteger(i))
-def _plus (e1:Exp, e2:Exp) : Exp = new EPlus(e1,e2)
-def _times (e1:Exp, e2:Exp) : Exp = new ETimes(e1,e2)
-def _id (i:String) : Exp = new EId(i)
-def _let (i:String,e1:Exp,e2:Exp) : Exp = new ELet(i,e1,e2)
-def _letsim (b:List[(String,Exp)],e:Exp) : Exp = new ELetSim(b,e)
-def _letseq (b:List[(String,Exp)],e:Exp) : Exp = new ELetSeq(b,e)
-	</pre>	  
-
-	
-	<ol class="subquestion">
-
-
-	  <!-- ------------------------------ -->
-
-	  <li> <p>Code an alternate to <tt>ELet</tt> called <tt class="code">ELetSim</tt> that can
-	      handle multiple <i>simultaneous bindings</i> instead of a
-	      single one. Using a similar syntax that I used in class,</p>
-
-	    <pre>
-  let (<i>x<sub>1</sub></i> = <i>e<sub>1</sub></i>, ..., <i>x<sub>n</sub></i> = <i>e<sub>n</sub></i>)
-    e</pre>
-	    <p>first evaluates all the <i>e<sub>1</sub></i>, ..., <i>e<sub>n</sub></i> down to values and <i>then</i> binds them to the identifiers before evaluating <i>e</i>. Thus, if any of the <i>e<sub>1</sub></i>, ..., <i>e<sub>n</sub></i> refer to the identifiers, the values used for those identifiers come from the environment at the beginning of evaluation.
-	    </p>
-	      
-	    <p>For instance, we could write
+      <p>The sample code I have supplied you comes with an abstract
+      representation that supports integers, booleans, and vectors, as
+      well as addition and multiplication of integers and vectors, as
+      well as conjunction, conditionals, and both singular let
+      bindings and simultaneous let bindings (of the kind we saw in
+	homework 2). </p>
+
+      <p>The code also includes a parser
+      written using
+      the <a href="https://github.com/scala/scala-parser-combinators">Scala
+      Standard Parser Combinator Library</a> which implements the
+      following grammar:
 <pre>
-  let (x = 10, y = 20, z = 30)
-    (x+y)*z
-</pre>
-which should evaluate to 900, and
-<pre>
-  let (a = 5, b = 20)
-    let (a = b, b = a)
-      a + b
-</pre>
-which should evaluate to 25. This last expression is different from
-<pre>
-  let (a = 5)
-    let (b = 20)
-      let (a = b)
-        let (b = a)
-          a + b
-</pre>  
-(Why?) In particular, this last one evaluates to 40.</p>
-
-<p><tt>ELetSim</tt>  take two arguments:
-  <ul>
-    <li> A list of pairs representing the bindings, each pair of the
-      form <tt>(id,exp)</tt> where <tt>id</tt> is a string
-      representing the name of an identifier being bound,
-      and <tt>exp</tt> the expression that identifier is bound to;
-      and </li>
-    <li> the expression to evaluate in the context of those bindings,
-      and that will be the result of evaluating the <tt>ELetSim</tt>
-      expression as a whole.</li>
-  </ul>
-    
-</p>
-
-<p>The two examples above would be written:
-<pre>
-  new ELetSim(List(("x",new ELiteral(new VInteger(10))),
-                   ("y",new ELiteral(new VInteger(20))),
-                   ("z",new ELiteral(new VInteger(30)))),
-              new ETimes(new EPlus(new EId("x"), new EId("y")),
-                         new EId("z")))
-</pre>
-and
-<pre>
-  new ELetSim(List(("a",new ELiteral(new VInteger(5))),
-                   ("b",new ELiteral(new VInteger(20)))),
-              new ELetSim(List(("a",new EId("b")),
-                               ("b",new EId("a"))),
-                          new EPlus(new EId("a"),new EId("b"))))
-</pre>
-	    
-            
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-              <pre>
-scala> _letsim(List(("a",_int(99))),_id("a")).eval(nullEnv)
-res135: Value = 99
-
-scala> _letsim(List(("a",_int(99)),("b",_int(66))),_id("a")).eval(nullEnv)
-res136: Value = 99
-
-scala> _letsim(List(("a",_int(99)),("b",_int(66))),_id("b")).eval(nullEnv)
-res137: Value = 66
-
-scala> _letsim(List(("a",_int(99))),_letsim(List(("a",_int(66)),("b",_id("a"))),_id("a"))).eval(nullEnv)
-res138: Value = 66
-
-scala> _letsim(List(("a",_int(99))),_letsim(List(("a",_int(66)),("b",_id("a"))),_id("b"))).eval(nullEnv)
-res139: Value = 99
-
-scala> _letsim(List(("a",_int(5)),("b",_int(20))),_letsim(List(("a",_id("b")),("b",_id("a"))),_plus(_id("a"),_id("b")))).eval(nullEnv)
-res140: Value = 25
-	      </pre>
-	    </div>
-	  </li>
-
-
-
-	  <li> <p>Another common local binding special form is
-	      sequential bindings, sometimes written <tt>let*</tt>.
-	    Intuitively, it lets you bundle
-	    bindings together just like we did in the previous
-	    question, except that instead of being interpreted "at the
-	      same time", they are interpreted one after the other.
-	    </p>
-
-	    <p>For instance, again using surface syntax similar to
-	      what we used in class, we could write
-<pre>
-  let* (x = 10, y = 20, z = 30)
-    (x+y)*z
-</pre>
-which would evaluate the same as if we had written
-<pre>
-  let (x = 10)
-    let (y = 20)
-      let (z = 30)
-        (x+y)*z
-</pre>
-which of course still evaluates to 900. The expression
-<pre>
-  let (a = 5)
-    let (b = 20)
-      let* (a = b, b = a)
-        a + b
-</pre>
-would evaluate to 40, since it should be equivalent to writing
-<pre>
-  let (a = 5)
-    let (b = 20)
-      let (a = b)
-        let (b = a)
-          a + b
-</pre>
-</p>
-
-	    <p>Code an expression class <tt>ELetSeq</tt> that takes
-	      two arguments, just like <tt>ELetSim</tt> from
-	      last question:
-  <ul>
-    <li> A list of pairs representing the bindings, each pair of the
-      form <tt>(id,exp)</tt> where <tt>id</tt> is a string
-      representing the name of an identifier being bound,
-      and <tt>exp</tt> the expression that identifier is bound
-      to; and</li>
-    
-    <li> the expression to evaluate in the context of those bindings,
-      and that will be the result of evaluating the <tt>ELetSeq</tt>
-      expression as a whole.</li>
-  </ul>
-	    </p>
-
-	    <div class="code">
-	      <p onClick="toggleShowHide(this)">Show sample output</p>
-              <pre>
-scala> _letseq(List(("a",_int(99))),_id("a")).eval(nullEnv)
-res141: Value = 99
-
-scala> _letseq(List(("a",_int(99)),("b",_int(66))),_id("a")).eval(nullEnv)
-res142: Value = 99
-
-scala> _letseq(List(("a",_int(99)),("b",_int(66))),_id("b")).eval(nullEnv)
-res144: Value = 66
-
-scala> _letseq(List(("a",_int(99))),_letseq(List(("a",_int(66)),("b",_id("a"))),_id("a"))).eval(nullEnv)
-res145: Value = 66
-
-scala> _letseq(List(("a",_int(99))),_letseq(List(("a",_int(66)),("b",_id("a"))),_id("b"))).eval(nullEnv)
-res146: Value = 66
-
-scala> _letseq(List(("a",_int(5)),("b",_int(20))),_letseq(List(("a",_id("b")),("b",_id("a"))),_plus(_id("a"),_id("b")))).eval(nullEnv)
-res147: Value = 40
-	      </pre>
-	    </div>
-	  </li>
+  atomic ::=  <b>integer</b>
+              <b>identifier</b>
+              <b>true</b>
+              <b>false</b>
   
+  expr ::= atomic
+           <b>(</b> <b>+</b> expr expr <b>)</b>
+           <b>(</b> <b>*</b> expr expr <b>)</b>
+           <b>(</b> <b>if</b> expr expr expr <b>)</b>
+           <b>(</b> <b>let</b> <b>(</b> <b>(</b> <b>identifier</b> expr <b>)</b> <b>)</b> expr <b>)</b>
+</pre>
+As I did in class, tokens are in <b>bold</b>. The parser is implemented by
+class <tt>SExpParser</tt>, and can be invoked by calling function <tt>parse</tt>.</p>
+
+
+
+      <!-- ------------------------------------------------------------ -->
+
+
+      <li> <p><b>Extending the S-expressions parser</b></p>
+
+	<ol class="subquestion">
+
+	  <!-- ------------------------------ -->
+
+	  <li><p>Extend the parser so that it can parse the following
+	  addition to the grammar above:
+<pre>
+  expr ::= ...
+           <b>(</b> <b>and</b> expr expr <b>)</b>
+</pre>
+          An expression of
+	  the form <tt>(and <i>e1</i> <i>e2</i>)</tt> should produce
+	  an abstract
+	  representation <tt>EAnd(<i>t1</i>,<i>t2</i>)</tt>,
+	  where <tt><i>t1</i></tt> is the abstract representation
+	      of <tt><i>e1</i></tt> and <tt><i>t2</i></tt> is the
+	  abstract representation of <tt><i>e2</i></tt>. 
+	    </p>
+	  </li>
+
+
+	  <li><p>Extend the parser so that it can parse the following
+	  addition to the grammar above:
+<pre>
+  expr ::= ...
+           <b>(</b> <b>vector</b> exprs <b>)</b>
+
+  exprs ::= expr exprs
+            expr
+</pre>
+          An expression of
+	  the form <tt>(vector <i>e1</i> ... <i>en</i>)</tt> should produce
+	  an abstract
+	  representation <tt>EVector(List(<i>t1</i>,...,<i>tn</i>)</tt>,
+	  where <tt><i>t1</i></tt> is the abstract representation
+	      of <tt><i>e1</i></tt>, ..., and <tt><i>tn</i></tt> is the
+	  abstract representation of <tt><i>en</i></tt>. 
+	    </p>
+	  </li>
+
+
+
+	  <li><p>The Expression node <tt>ELetSim</tt>
+	  in <tt>homework3.scala</tt> supports simultaneous bindings
+	  as we saw in homework 2, but the parser right now can only handle a single binding, as in <tt>(let ((x 10)) <i>expr</i>)</tt>. </p>
+
+	    <p>Extend the parser so that it can parse the following
+	      version of <tt>let</tt> instead of the existing one:
+<pre>
+   expr ::= ... 
+   <b>(</b> let <b>(</b> bindings <b>)</b> expr <b>)</b>
+
+   bindings ::= <b>(</b> <b>identifier</b> expr <b>)</b> bindings
+                <b>(</b> <b>identifier</b> expr <b>)</b>
+</pre>
+An expression of the form <tt>(let (<i>bindings</i>) <i>expr</i>)</tt>
+should produce an abstract
+representation <tt>ELetSim(<i>tbindings</i>,<i>t</i>)</tt>,
+where <tt><i>tbindings</i></tt> is a list of pairs of identifiers and
+abstract representations corresponding to the bindings
+in <tt><i>bindings</i></tt>, and <tt><i>t</i></tt> is the abstract
+representation of the body <tt><i>expr</i></tt>. </p>
+
+
+	  <li><p> <b>(Optional)</b> As it stands, the current language only
+	    supports passing exactly two integers to <tt>+</tt>
+	    and <tt>*</tt>. It's easy enough to modify the primitive
+	    operations for <tt>+</tt> and <tt>*</tt>
+	    (functions <tt>oper_plus</tt> and <tt>oper_times</tt>
+	    in <tt>homework3.py</tt>) to support more than 2
+	      arguments. But there's another approach we can use.</p>
+
+	    <p>Intuitively, we can express addition with more than two
+	      arguments as a nested sequence of additions with only
+	      two arguments. For instance, <tt>(+ 1 2 3 4)</tt> is
+	      equivalent to <tt>(+ 1 (+ 2 (+ 3 4)))</tt>. So one way
+	      to support addition with more than two arguments is to
+	      parse it into an abstract representation that uses nested
+	      additions with two arguments.</p>
+
+	    <p>Modify the parser in function <tt>parse</tt> so
+	      that it can parse expressions of the
+	      form <tt>(+ <i>e<sub>1</sub></i>
+	      ... <i>e<sub>k</sub></i>)</tt>, and for those returns
+	      the same abstract representation as if we had written
+	      <tt>(+ <i>e<sub>1</sub></i> (+ <i>e<sub>2</sub></i> (+
+		... (+ <i>e<sub>k-1</sub></i> <i>e<sub>k</sub></i>)
+		...)))</tt>, or something equivalent. </p>
+
+	    <p>Do the same for <tt>*</tt>.</p>
+
+	  </li>
+
+
 	</ol>
       </li>
 
 
+      <!-- ------------------------------------------------------------ -->
+
+
+      <li> <p><b>Infix expressions</b></p>
+
+	<p>As I mentioned in class, the reason why we'll be using S-expressions as our surface syntax
+	  is for simplicity. It'll be easy to add features to our language without having to fight with the parser too too much. </p>
+	
+	<p>To get a sense of the challenges that a more natural syntax poses, we'll develop an alternate surface syntax for our calculator language, based on more standard
+	  mathematical notation. </p>
+
+	<p>Here is the base grammar I have in mind:
+
+<pre>
+  &lt;expr&gt; ::= &lt;integer&gt;
+             true
+             false
+             &lt;identifier&gt;
+             ( expr )
+             &lt;expr&gt; ? &lt;expr&gt; : &lt;expr&gt;
+             let ( &lt;bindings&gt; ) &lt;expr&gt;
+             &lt;expr&gt; + &lt;expr&gt;
+             &lt;expr&gt; * &lt;expr&gt;
+             &lt;expr&gt; - &lt;expr&gt;
+             &lt;name&gt; ( &lt;expr-seq&gt; )
+
+  &lt;bindings&gt; ::= &lt;name&gt; = &lt;expr&gt; , &lt;bindings&gt;
+                 &lt;name&gt; = &lt;expr&gt;
+
+  &lt;expr-seq&gt; ::= &lt;expr&gt; , &lt;expr-seq&gt;
+                 &lt;expr&gt;
+</pre>
+	</p>
+
+	<p>Write a function <tt>parse_natural</tt> that does
+	what <tt>parse</tt> does, but parsing according to the above
+	grammar instead of S-expressions. It should return an abstract
+	  representation of the parsed expression.</p>
+
+	<p>In order to be able to use Pyparsing and parser
+	combinators, you will need to modify the above grammar so that
+	it is, at the very least, not left recursive. You may need to
+	make other modifications to the grammar as well. Just make
+	sure that the parser you write in the end accepts the same
+	  inputs as the grammar above.</p>
+
+	<p>The
+	resulting abstract representation should represent the input
+	expression subject to the usual rules of operator
+	precedence: <tt>*</tt> groups more tightly than
+	either <tt>+</tt> or <tt>-</tt>. Treat <tt>*</tt>, <tt>+</tt>,
+	and <tt>-</tt> as associative operations. (They are, in fact,
+	except for <tt>-</tt>. If you feel adventurous,
+	make <tt>-</tt> right associative).  That is, <tt>10 * 20 +
+	30</tt> should parse as though you had written <tt>(10 * 20) +
+	30</tt>, and <tt>10 + 20 + 30</tt> can parse as either <tt>(10
+	+ 20) + 30</tt> or <tt>10 + (20 + 30)</tt> and I don't care
+	which.  
+	</p>
+
+	<p>Write a function <tt>shell_natural</tt> that does
+	  what <tt>shell</tt> does except it
+	  uses <tt>parse_natural</tt> instead of <tt>parse</tt>. 
+	</p>
+
+<pre class="code">
+<i># sample outputs using the Calc shell
+# note that it gives the parsed abstract representation, which is what I'll be checking
+# I've sometimes indented the abstract representation for ease of reading</i>
+
+>>> shell_natural()
+Homework 3 - Calc Language (Natural syntax)
+calc/nat> let (x = 10) x + 1
+Abstract representation: ELet([(x,EInteger(10))],
+                              ECall(+,[EId(x),EInteger(1)]))
+11
+calc/nat> let (x = 10 , y = 20) x + y * y
+Abstract representation: ELet([(x,EInteger(10)),
+                               (y,EInteger(20))],
+                              ECall(+,[EId(x),ECall(*,[EId(y),EId(y)])]))
+410
+calc/nat> zero? (1)
+Abstract representation: ECall(zero?,[EInteger(1)])
+false
+calc/nat> zero? (10 - 10)
+Abstract representation: ECall(zero?,[ECall(-,[EInteger(10),EInteger(10)])])
+true
+calc/nat> zero? (0) ? 1 : 2
+Abstract representation: EIf(ECall(zero?,[EInteger(0)]),EInteger(1),EInteger(2))
+1
+calc/nat> (zero? (0) ? 1 : 2) + 55
+Abstract representation: ECall(+,[EIf(ECall(zero?,[EInteger(0)]),EInteger(1),EInteger(2)),
+                                  EInteger(55)])
+56
+calc/nat> (zero? (1) ? 1 : 2) + 55
+Abstract representation: ECall(+,[EIf(ECall(zero?,[EInteger(1)]),EInteger(1),EInteger(2)),
+                                  EInteger(55)])
+57
+calc/nat> let (x = 4 + 5 * 6) let (y = x * 2) square(y)
+Abstract representation: ELet([(x,ECall(+,[EInteger(4),ECall(*,[EInteger(5),EInteger(6)])]))],
+                              ELet([(y,ECall(*,[EId(x),EInteger(2)]))],
+                                   ECall(square,[EId(y)])))
+4624
+<i># double-checking...</i>
+calc/nat> (34 * 2) * (34 * 2)
+Abstract representation: ECall(*,[ECall(*,[EInteger(34),EInteger(2)]),
+                                  ECall(*,[EInteger(34),EInteger(2)])])
+4624
+</pre>
+
+<i>Note: if you hit a wall and cannot make any progress with the
+  surface syntax I'm asking you to implement, you can make changes to
+  the surface syntax to make it easier to parse. Document your
+  changes, and explains why you had to do things that way. Try
+  to keep it as close as possible to a natural syntax.</i>
+
+	  </li>
+
+	  <li><p><b>Extra:</b> Come up with a reasonable natural
+	      syntax for function definitions, and redo Question 2(a)
+	      above except with <tt>parse_natural</tt> and your syntax
+	      for function definitions.
+
+
+<pre class="code">
+<i># sample outputs using the Calc shell
+# note that it gives the parsed abstract representation, which is what I'll be checking
+# I've sometimes indented the abstract representation for ease of reading</i>
+
+calc/nat> function decrement (x) x - 1
+Function decrement added to functions dictionary
+calc/nat> decrement(10)
+Abstract representation: ECall(decrement,[EInteger(10)])
+9
+calc/nat> function sum_of_squares (x,y) square(x) + square(y)
+Function sum_of_squares added to functions dictionary
+calc/nat> sum_of_squares(10,5)
+Abstract representation: ECall(sum_of_squares,[EInteger(10),EInteger(5)])
+125
+</pre>
+
+
+      </li>
 
       
     </ol>
