@@ -309,7 +309,7 @@ function run () {
     return f()
   
   print g()</pre>
-	      If you run this code, value <tt>10</tt> will get printed. The declaration <tt>v = 2000</tt> in <tt>g</tt> is a local declaration (you would have to say <tt>global v</tt> otherwise), and <span class="underline">of course</span> the <tt>v</tt> in <tt>f</tt> refers to the global <tt>v</tt>. So calling <tt>f()</tt> from <tt>g</tt> returns 10, as expected. But the only reason why you say <span class="underline">of course</span> above is because you drank the static-0binding Koolaid. If you write the equivalent of the above code in <a href="https://en.wikipedia.org/wiki/Emacs_Lisp">Emacs Lisp</a> which uses dynamic binding, things are quite different:
+	      If you run this code, value <tt>10</tt> will get printed. The declaration <tt>v = 2000</tt> in <tt>g</tt> is a local declaration (you would have to say <tt>global v</tt> otherwise), and <span class="underline">of course</span> the <tt>v</tt> in <tt>f</tt> refers to the global <tt>v</tt>. So calling <tt>f()</tt> from <tt>g</tt> returns 10, as expected. But the only reason why you say <span class="underline">of course</span> above is because you drank the static-binding Koolaid. If you write the equivalent of the above code in <a href="https://en.wikipedia.org/wiki/Emacs_Lisp">Emacs Lisp</a> which uses dynamic binding, things are quite different:
 	      <pre>
   (defconst v 10)
   
