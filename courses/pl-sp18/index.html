@@ -13,6 +13,8 @@
     
     <style>
 
+        span.underline { text-decoration: underline; }
+
         a, a:link, a:visited {
 	    color: #003d99;
           /* font-weight: bold; */
@@ -286,13 +288,40 @@ function run () {
 
 	<li><p><span class="hdr">Feb 15:</span><b>Functions</b></p>
 	  <div class="lect">
+
 	    <p><a href="./lect-04-functions.pdf">Slides from the lecture.</a></p>
-<!--	    <p><a href="./code-lect-04.scala">Sample code</a> from the lecture.</p> -->
+
+	    <p>Sample code from the lecture: <a href="./code-lect-04-dynamic.scala">functions with dynamic binding</a>, <a href="./code-lect-04-static.scala">functions with static binding</a>.</p>
+
 	    <p>A good overview of some advantages of the functional programming approach is given by John Hughes' <a href="http://www.cse.chalmers.se/~rjmh/Papers/whyfp.html"><i>Why Functional Programming Matters.</i></a> The first three sections at least should be pretty accessible.</p>
 	    
-<!--	    <p>((some links about static/dynamic binding/scoping))</p>
+	    <p>A very short description of the <a href="https://courses.cs.washington.edu/courses/cse341/03wi/imperative/scoping.html">difference between static binding and dynamic binding</a> (here, and in many places, called static/lexical scoping and dynamic scoping)</p>
+
+	    <p>Here is an example different than the one I used in class that shows the difference between static and dynamic binding. Python has static binding. Here is a simple example in Python that won't be a surprise to anyone:
+	      <pre>
+  v = 10
+  
+  def f () :
+    return v
+  
+  def g () :
+    v = 2000
+    return f()
+  
+  print g()</pre>
+	      If you run this code, value <tt>10</tt> will get printed. The declaration <tt>v = 2000</tt> in <tt>g</tt> is a local declaration (you would have to say <tt>global v</tt> otherwise), and <span class="underline">of course</span> the <tt>v</tt> in <tt>f</tt> refers to the global <tt>v</tt>. So calling <tt>f()</tt> from <tt>g</tt> returns 10, as expected. But the only reason why you say <span class="underline">of course</span> above is because you drank the static-0binding Koolaid. If you write the equivalent of the above code in <a href="https://en.wikipedia.org/wiki/Emacs_Lisp">Emacs Lisp</a> which uses dynamic binding, things are quite different:
+	      <pre>
+  (defconst v 10)
+  
+  (defun f () v)
+  
+  (defun g () (let ((v 2000)) (f)))
+  
+  (g)</pre>
+	      Lo and behold, you get value <tt>2000</tt>. The local binding of <tt>v</tt> in <tt>g</tt> supercedes the definition of <tt>v</tt> globally when calling <tt>f</tt> from <tt>g</tt>, against all intuition. The global constant <tt>v</tt> always has value <tt>10</tt> &mdash; that never changed. What changes is what <tt>v</tt> the <tt>v</tt> in <tt>f</tt> refers to. When it's called from <tt>g</tt>, it refers to the <tt>v</tt> in <tt>g</tt>, not the global <tt>v</tt>. Yeah, I know... Welcome to dynamic binding!</p>
+	      	      
 	    
-	    <p>((UPWARD FUNARG problem))</p> -->
+	    <p>If you're into it, you can read about the <a href="https://en.wikipedia.org/wiki/Funarg_problem">upward funarg problem</a> that motivated the invention of closures. It gets deep in the guts of language implementation using a stack <i>&agrave; la</i> C, though, so be warned.</p> 
 	    
 	  </div>
 	  
