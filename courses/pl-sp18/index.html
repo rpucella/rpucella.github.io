@@ -318,7 +318,7 @@ function run () {
   (defun g () (let ((v 2000)) (f)))
   
   (g)</pre>
-	      Lo and behold, you get value <tt>2000</tt>. The local binding of <tt>v</tt> in <tt>g</tt> supercedes the definition of <tt>v</tt> globally when calling <tt>f</tt> from <tt>g</tt>, against all intuition. The global constant <tt>v</tt> always has value <tt>10</tt> &mdash; that never changed. What changes is what <tt>v</tt> the <tt>v</tt> in <tt>f</tt> refers to. When it's called from <tt>g</tt>, it refers to the <tt>v</tt> in <tt>g</tt>, not the global <tt>v</tt>. Yeah, I know... Welcome to dynamic binding!</p>
+	      Lo and behold, you get value <tt>2000</tt>. The local binding of <tt>v</tt> in <tt>g</tt> supercedes the global binding of <tt>v</tt> when calling <tt>f</tt> from <tt>g</tt>, against all intuition. The global constant <tt>v</tt> always has value <tt>10</tt> &mdash; that never changed. What changes is what <tt>v</tt> the <tt>v</tt> in <tt>f</tt> refers to. When it's called from <tt>g</tt>, it refers to the <tt>v</tt> in <tt>g</tt>, not the global <tt>v</tt>. Yeah, I know... Welcome to dynamic binding!</p>
 	      	      
 	    
 	    <p>If you're into it, you can read about the <a href="https://en.wikipedia.org/wiki/Funarg_problem">upward funarg problem</a> that motivated the invention of closures. It gets deep in the guts of language implementation using a stack <i>&agrave; la</i> C, though, so be warned.</p> 
