@@ -256,7 +256,7 @@ class ELet (val id : String, val e : Exp, val ebody : Exp) extends Exp {
 class EApply1 (val f : Exp, val arg : Exp) extends Exp {
 
    override def toString () : String =
-      "EApply(" + f + "," + arg + ")"
+      "EApply1(" + f + "," + arg + ")"
       
    def eval (env : Env) : Value = {
       val vf = f.eval(env)
@@ -269,7 +269,7 @@ class EApply1 (val f : Exp, val arg : Exp) extends Exp {
 class EFunction1 (val param : String, val body : Exp) extends Exp {
 
    override def toString () : String =
-     "EFunction(" + param + "," + body + ")"
+     "EFunction1(" + param + "," + body + ")"
      
    def eval (env : Env) : Value =
       new VClosure1(param,body,env)
