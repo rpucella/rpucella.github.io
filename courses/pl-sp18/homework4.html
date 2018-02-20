@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 4</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+      ol.question > li {
+      font-weight: bold;
+      }
+
+      ol.question > li > * {
+      font-weight: normal;
+      }
+      
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Programming Languages SP18</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 4</h1>
+    
+    <p class="subtitle">Due date: Sunday, Feb 25 (23h59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done in
+      <b>teams of 2</b>. You may discuss problems with fellow students, but all
+    work must be entirely that of your team, and should not be from
+    any other course, present, past, or future. If you use a solution
+    from another source you must cite it &mdash; this includes when
+    that source is someone else helping you. <b>Please do not post
+    your code on a public website or a public repository like
+    GitHub.</b>
+   </p>
+
+    <p>All programming is to be done in Scala v2.12.</p>
+
+    <p>Code your answers by modifying the
+      file <a href="homework4.scala"><tt>homework4.scala</tt></a> provided. Add the
+      <span style="text-decoration:underline;">names of your team members</span>, your <span style="text-decoration:underline;">email addresses</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor to the block comment at the head of the file.</p>
+
+    <p><b>Please do not change the types in the signature of the
+	function and class stubs I provide</b>. Doing so will make it difficult to test your code.</p>
+
+    <p>Feel free to define helper functions or helper classes if you need them.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Run your homework code via <tt>scala homework4.scala</tt></li>
+      <li>If there are any error, do not submit. I can't test what will not load correctly.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework4.scala</tt> as an attachment to <tt>olin.submissions@gmail.com</tt> with subject <i>Homework 4 submission</i>.</li>
+    </ul>
+
+    <hr>
+
+    <p><b>Important notes on sample outputs:</b> for technical reasons (classes <tt>Value</tt> and <tt>Exp</tt> are mutually recursive) it is not possible to load the code I give you in the Scala shell in the usual way using <tt>:load</tt>. The only way that works is to launch the shell <i>after</i> loading the code, by writing <tt>scala -i homework4.scala</tt> from the command line. That will load <tt>homework4.scala</tt> and drop you in the shell. If you make changes to <tt>homework4.scala</tt>, you will have to exit the shell with <tt>:quit</tt> and restart it again with <tt>scala -i homework4.scala</tt>.</p>
+      
+
+    <hr>
+
+    <p>
+      Look over the sample code to see what is offered. Basic values are
+      integers, booleans, and vectors. Expressions include literals,
+      conditional, and simultaneous local bindings (let). Note that we don't have 
+      <tt>EPlus</tt> or <tt>ETimes</tt> anymore &mdash; more on why in first question.
+    </p>
+
+    <p>The code also includes a parser
+      written using
+      the <a href="https://github.com/scala/scala-parser-combinators">Scala
+	Standard Parser Combinator Library</a>.
+    </p> 
+
+    
+    
+    <ol class="question">
+
+
+      <!-- ------------------------------------------------------------ -->
+
+      <li> <p><b>Multiargument Functions</b></p>
+
+	<p>In class, we saw an implementation of one-argument
+	  functions by introducing a <tt>VClosure1</tt> value
+	  representing a one-argument function which captures its
+	  definition environment (this is what makes is a closure) as
+	  well as expression <tt>EFunction1</tt> that evaluates to a
+	  closure, and <tt>EApply1</tt> that applies a function
+	  (represented by a closure) to an argument.
+	</p>
+
+	<p>
+	  We now replicate that work, but with multiple arguments.
+	</p>
+
+	
+	<ol class="subquestion">
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+	    <p>Code a new kind of value <tt class="code">VClosure</tt>
+to represent a multiargument function taking three arguments: a list
+of strings representing the parameters that will be bound to values
+when the function is called, an expression representing the body of
+the function (which of course can refer to parameters), and an
+environment that represents the environment existing at the moment
+when the function was created.</p>
+
+	    <p><tt>VClosure</tt> should implement a method apply that
+takes a list of values (the values with which the function is called)
+and evaluate the body in the stored environment extended with a
+binding of parameters with the appropriate values. (It's an error to
+call a function with too few or too many arguments.)</p>
+
+	    <p>For example, <tt>VClosure(List("a","b"),EId("b"),new
+Env(List()))</tt> should produce a function that returns its second
+argument.</p>
+	    
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+	    <p>Code a new kind of expression
+<tt class="code">EFunction</tt> that takes a list of strings
+representing parameters and an expression representing a body, and
+	      evaluates to a closure.</p>
+
+	    <p>
+	      For example, 
+	      <tt>EFunction(List("a","b"),EId("b"))</tt> should evaluate to the sample closure in the previous question when evaluated in the empty environment.</p>
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li><p> Code a new kind of
+	      expression <tt class="code">EApply</tt> that takes an
+	      expression (which should evaluate to a function) and a
+	      sequence of expressions (which should evaluate to the
+	      arguments of the function) and applies the function to
+	      the arguments.</p>
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li><p>I've included a sample parser (for S-expressions) for
+the language implemented. Add surface syntax for multiargument
+functions and function application so that
+	      <tt>(fun (<i>x<sub>1</sub></i> ... <i>x<sub>n</sub></i>) <i>expr</i>)</tt>
+	      should parse to <tt>EFunction(List(<i>x<sub>1</sub></i>,...,<i>x<sub>n</sub></i>),<i>expr</i>)</tt>
+and
+	      <tt>(<i>expr</i> <i>expr<sub>1</sub></i> ... <i>expr<sub>n</sub></i>)</tt> should parse to <tt>EApply(<i>expr</i>,List(<i>expr<sub>1</sub></i>,...,<i>expr<sub>n</sub></i>))</tt>
+	    </p>
+
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+	    <p>I noted above that we don't have <tt>EPlus</tt>
+or <tt>ETimes</tt>. In fact, we don't have any operation on any of the
+	      values. That's because we don't need them. If you look at <tt>EPlus</tt>,
+you'll see that what's happening is that we first evaluate all the
+	      arguments to <tt>EPlus</tt>, and then perform an operation on the resulting
+	      values. Same with <tt>ETimes</tt>. If we were to introduce equality, or
+comparisons, they would follow the same pattern. And that pattern is:
+evaluate all arguments, apply a ``primitive operation'' to those values
+to get a new value out. It's just like applying a function, except
+instead of applying a function, we apply one of these primitive
+	      operations.</p>
+
+	    <p>Code a new kind of
+value <tt class="code">VPrimOp</tt> that represents a new type of
+function that can be called in our object language, except instead of
+evaluating a body to get its result, it simply defers to a Scala
+function (of type <tt>(List[Value]) => Value</tt>) to do the work.
+	    </p>
+
+	    <p>Thus, <tt>VPrimOp(operPlus)</tt> becomes a function
+	      that applies <tt>operPlus</tt> to a list of values , <tt>VPrimOP(operTimes)</tt>
+	      becomes
+a function that performs multiplication of values, and so on.
+	    </p>
+
+	    <p>
+We don't add new expression for these. In order to use primitive
+operations, we can simply bind them to identifiers in the standard
+environment in which we evaluate our expressions. Basically, these
+primitive operations become predefined values. Note what we're doing:
+we're pushing features out of the language definition (classes <tt>Value</tt>
+and <tt>Exp</tt>) and into the standard initial environment. That simplifies
+the interpreter an awful lot.</p>
+
+	    <p><i>Stuff to think about: <tt>ELet</tt> and <tt>EIf</tt> cannot be replaced by such primitive 
+		operations: Why not?</i></p>
+
+	  </li>	  
+
+	</ol>
+
+      </li>
+
+
+      
+      <!-- ------------------------------------------------------------ -->
+
+      <li> <p><b>Recursive Functions</b></p>
+
+<p>The one-argument functions we implemented in class and the
+multi-argument functions you implemented in (1) have a serious
+limitation: they don't support recursive. We cannot write a recursive
+function, say, to sum all the numbers between a and b, something that
+we could write in Scala as:
+<pre>
+  def sum (a:Int, b:Int) : Int =  {
+    if (a == b) {
+      return a
+    } else {
+      return a + sum(a+1,b)
+    }
+  }
+</pre></p>
+
+	<p>If we try to write the closest equivalent to <tt>sum</tt> and applying
+	  it to sum the values between 1 and 10 in our object language:</p>
+<pre>
+  (let ((sum (fun (a b) (if (= a b) a (+ a (sum (+ a 1) b)))))) 
+    (sum 1 10))
+</pre>
+<p>in a standard environment with <tt>+</tt> and <tt>=</tt> defined, what happens? why does it
+fail?</p>
+
+	<p>
+There are a few ways of accounting for recursion. One of the easiest
+is to add a notion of a recursive closure. A recursive closure is like
+a normal closure &mdash; parameters, a body, and an environment
+&mdash; except that it has an additional parameter that can be used in
+the body of the function, and that gets bound <b>to the function
+itself</b> when the function is called. Using that parameter, we can
+refer to the function inside its own body, which is of course what
+recursion is all about.
+	</p>
+
+	
+	<ol class="subquestion">
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+	    <p>Define a new kind of value <tt class="code">VRecClosure</tt>
+	      to represent a <i>recursive</i> multiargument function taking four arguments: a string (the self parameter) representing the name under which the recursive function should be bound to when the function is applied, and then the same three arguments as a regular closure (the list of parameters, the body, the creation-time environment). Like a regular closure, <tt>VRecClosure</tt> should implement a method <tt>apply</tt> that takes a
+list of values (the values to which the function is applied) and
+evaluate the body in the stored environment extended with a binding of
+parameters with the appropriate values as well as a binding of
+the self parameter with the recursive closure. (It's an error to call a
+	      function with too few or too many arguments.)</p>
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li><p>
+	      Code an expression <tt class="code">ERecFunction</tt>
+	      that takes a string representing the self parameter, a list of strings representing the parameters of the function, and an expression representing the body, and evaluates to a recursive closure.</p>
+	  </li>
+
+	  
+	  <!-- ------------------------------ -->
+
+	  <li><p>
+Add surface syntax to the parser to account for recursive closure. An
+expression
+<tt>(fun <i>s</i> (<i>x<sub>1</sub></i> ... <i>x<sub>n</sub></i>) <i>expr</i>)</tt> should parse to <tt>ERecFunction(<i>s</i>,List(<i>x<sub>1</sub></i>,...,<i>x<sub>n</sub></i>),<i>expr</i>)</tt></p>
+
+	    <p>(It should of course still be possible to parse <tt>(fun (<i>x<sub>1</sub></i>....<i>x<sub>n</sub></i>) <i>expr</i>)</tt> to
+	      <tt>EFunction</tt>, as before &mdash; we're adding, not replacing.)</p>
+
+	    <p>
+	      Now we can write
+<pre>
+  (let ((sum (fun s (a b) (if (= a b) a (+ a (s (+ a 1) b)))))) 
+    (sum 1 10))
+</pre>
+or even the following (though it might get confusing)
+<pre>
+  (let ((sum (fun sum (a b) (if (= a b) a (+ a (sum (+ a 1) b)))))) 
+    (sum 1 10))
+</pre>
+	    </p>
+
+	  </li>
+
+	</ol>
+
+      </li>
+
+
+      <!-- ------------------------------------------------------------ -->
+
+      <li> <p><b>Vector Comprehension</b></p>
+
+<p>In class, we saw two higher-order functions that turn out to be
+super useful for working with sequences (lists, arrays, vectors) in
+Python or other languages: <tt>map</tt>, and <tt>filter</tt>. Recall
+that <tt>map</tt> takes a function to apply to every element of a
+list, returning a list of the results, while <tt>filter</tt> takes a
+Boolean-valued function (a predicate) and returns all the elements in
+a list for which the predicate is true. We'll basically
+implement <tt>map</tt> and <tt>filter</tt> for vectors in our object
+language.</p>
+
+<p>The parser has some support for creating vectors. The surface syntax
+  for vectors is <tt>[ <i>e<sub>1</sub></i> ... <i>e<sub>n</sub></i> ]</tt> as you'll see if you look at the
+  parser. An expression <tt>[ <i>e<sub>1</sub></i> ... <i>e<sub>n</sub></i> ]</tt> is parsed into abstract
+  representation <tt>EVector(List(<i>e<sub>1</sub></i>,...,<i>e<sub>n</sub></i>))</tt>. We will be extending that
+  surface syntax below.
+</p>
+
+
+	<ol class="subquestion">
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+	    <p>Code a primitive operation <tt class="code">operMap</tt> that takes two values, one
+	      a function value (either a primitive operation <tt>VPrimOp</tt> or a closure,
+recursive or otherwise) and one a vector value, and returns a
+new vector with the function value applied to every element of the
+	      vector.</p>
+
+	    <p>Recall that primitive operations are given a Scala list of <tt>Value</tt>,
+so you will have to extract out the first and second elements. See
+	      <tt>operPlus</tt> for an illustration.</p>
+	  </li>
+	  
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+	    <p>Code a primitive operation <tt class="code">operFilter</tt> that
+	      takes two values, one a function value (either a
+	      primitive operation <tt>VPrimOp</tt> or a closure,
+	      recursive or otherwise) and one a vector value, and
+	      returns a new vector with all the element of the
+	      original vector (in order) for which the function value
+	      returns the Boolean value true.</p>
+
+	    <p>
+	      Recall that primitive operations are given a Scala list
+	      of <tt>Value</tt>, so you will have to extract out the
+	      first and second elements. See <tt>operPlus</tt> for an
+	      illustration.</p>
+	  </li>
+
+	  
+	  <!-- ------------------------------ -->
+
+	  <li><p>
+	      It's easy enough to bind the primitive operations <tt>operMap</tt> and
+	      <tt>operFilter</tt> to identifiers like <tt>map</tt> and <tt>filter</tt>, like any other
+	      operation. (I've added them to <tt>stdEnv</tt>.) Then you can write expressions such as:</p>
+<pre>
+   (map (fun (v) (* v 2)) [1 2 3 4]) 
+</pre>
+
+<p>
+That's all well and good. But Python (and <a href="https://www.haskell.org">Haskell</a> before that) uses a more
+convenient notation for applying <tt>map</tt> and <tt>filter</tt> called
+comprehension. The idea is inspired by <a href="https://en.wikipedia.org/wiki/Set-builder_notation">set comprehension</a> from baby
+set theory.</p>
+
+<p>
+  In Python, an expression such as <tt>[ e1 for id in e2 ]</tt> where <tt>e2</tt>
+  evaluates to a vector <tt>v</tt> returns a new vector where every element is
+  obtained by successively binding each element of <tt>v</tt> to <tt>id</tt> before
+  evaluating <tt>e1</tt> to obtain the new element. Thus, <tt>[ x * 2 for x in [1,2,3,4] ]</tt> in Python would return <tt>[2,4,6,8]</tt>.
+</p>
+
+	    <p>
+	      Similarly, an expression <tt>[ e1 for id in e2 if e3 ]</tt> returns a new list where <tt>e1</tt> is used to obtain the new elements, except that additionally <tt>e3</tt> is evaluated after binding <tt>id</tt> and only the values for which <tt>e3</tt> evaluates to true are kept. Thus, <tt>[ x * 3 for x in [1,2,3,4] if even(x) ]</tt> in Python would return <tt>[6,12]</tt> assuming a suitable definition of <tt>even</tt>, since only 2 and 4 make <tt>even</tt> return
+	      true.</p>
+
+	    <p>Introduce surface syntax so that an expression written</p>
+  <pre>
+    [ <i>expr<sub>1</sub></i> | <i>id</i> &lt;- <i>expr<sub>2</sub></i> ]</pre>
+	    <p>parses into something equivalent to</p>
+<pre>
+  (map (fun (<i>id</i>) <i>expr<sub>1</sub></i>) <i>expr<sub>2</sub></i>) </pre>
+	    <p>and an expression written</p>
+<pre>
+  [ <i>expr<sub>1</sub></i> | <i>id</i> &lt;- <i>expr<sub>2</sub></i> | <i>expr<sub>3</sub></i> ]</pre>
+	    <p>parses into something equivalent to</p>
+<pre>
+  (map (fun (<i>id</i>) <i>expr<sub>1</sub></i>) (filter (fun (<i>id</i>) <i>expr<sub>3</sub></i>) <i>expr<sub>2</sub></i>))</pre>
+
+<p>
+  Note that this should work even if <tt>map</tt> and <tt>filter</tt> are <i>not</i> defined in
+  the environment. (<b>Hint:</b> just <tt>EApply</tt> an <tt>ELiteral</tt> with the appropriate <tt>VPrimOp</tt> value.)</p>
+	  </li>
+
+	</ol>
+
+      </li>
+      
+    </ol>
+
+  </body>
+</html>
