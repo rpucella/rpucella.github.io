@@ -65,7 +65,7 @@
       div.code pre { 
       display:none;
       padding: 10px;
-      font-size:100%;
+      font-size:90%;
       }
 
       div.code.visible pre  {
@@ -173,7 +173,7 @@ li > p { margin-top:0;}
 
     <p><b>Important note on sample outputs:</b> for technical reasons (viz., classes <tt>Value</tt> and <tt>Exp</tt> are mutually recursive) it is not possible to load the code I give you in the Scala shell in the usual way using <tt>:load</tt>. The only way that works is to launch the shell <i>after</i> loading the code, by writing <tt>scala -i homework4.scala</tt> from the command line. That will load <tt>homework4.scala</tt> and drop you in the shell. If you make changes to <tt>homework4.scala</tt>, you will have to exit the shell with <tt>:quit</tt> and restart it again with <tt>scala -i homework4.scala</tt>.</p>
 
-    <p>The sample outputs assume the following definitions found in <tt>homework4.scala</tt>):    </p>
+    <p>The sample outputs assume the following definitions found in <tt>homework4.scala</tt>:    </p>
 
     <pre>
   def _int (i:Int) : Exp = new ELiteral(new VInteger(i))
@@ -183,9 +183,8 @@ li > p { margin-top:0;}
   def _let (bs:List[(String,Exp)],b:Exp) : Exp = new ELetSim(bs,b)
   def _fun (ps:List[String],b:Exp) : Exp = new EFunction(ps,b)
   def _apply (e:Exp,es:List[Exp]) : Exp = new EApply(e,es)
-  def _id (s:String) : Exp = new EId(s)
-      </pre>
-    <p>as well as <tt>nullEnv</tt> representing the empty environment, and <tt>stdEnv</tt> representing a standard environment with useful predefined functions that will only be useful once you complete Question 1. </p>
+  def _id (s:String) : Exp = new EId(s)</pre>
+    <p>as well as values <tt>nullEnv</tt> representing the empty environment and <tt>stdEnv</tt> representing a standard environment with useful predefined functions that will only be usable once you complete Question 1. </p>
     
       
     <hr>
@@ -413,9 +412,9 @@ you'll see that what's happening is that we first evaluate all the
 	      arguments to <tt>EPlus</tt>, and then perform an operation on the resulting
 	      values. Same with <tt>ETimes</tt>. If we were to introduce equality, or
 comparisons, they would follow the same pattern. And that pattern is:
-evaluate all arguments, apply a ``primitive operation'' to those values
-to get a new value out. It's just like applying a function, except
-instead of applying a function, we apply one of these primitive
+evaluate all arguments, and apply a "primitive operation" to those values
+	      to get a new value out. It's just like applying a function, except
+	      instead of applying a <tt>VClosure</tt> function, we apply one of these primitive
 	      operations.</p>
 
 	    <p>Code a new kind of
@@ -432,7 +431,7 @@ a function that performs multiplication of values, and so on.
 	    </p>
 
 	    <p>
-We don't add new expression for these. In order to use primitive
+We don't add new expressions for these. In order to use primitive
 operations, we can simply bind them to identifiers in the standard
 environment in which we evaluate our expressions. Basically, these
 primitive operations become predefined values. Note what we're doing:
@@ -528,7 +527,7 @@ recursion is all about.
 
 	  <li>
 	    <p>Define a new kind of value <tt class="code">VRecClosure</tt>
-	      to represent a <i>recursive</i> multiargument function taking four arguments: a string (the self parameter) representing the name under which the recursive function should be bound to when the function is applied, and then the same three arguments as a regular closure (the list of parameters, the body, the creation-time environment). Like a regular closure, <tt>VRecClosure</tt> should implement a method <tt>apply</tt> that takes a
+	      to represent a <i>recursive</i> multiargument function, and taking four arguments: a string (the self parameter) representing the name under which the recursive function should be bound to when the function is applied, and then the same three arguments as a regular closure (the list of parameters, the body, the creation-time environment). Like a regular closure, <tt>VRecClosure</tt> should implement a method <tt>apply</tt> that takes a
 list of values (the values to which the function is applied) and
 evaluate the body in the stored environment extended with a binding of
 parameters with the appropriate values as well as a binding of
@@ -551,8 +550,16 @@ _plus: (a: Exp, b: Exp)Exp
 scala> def _equal (a:Exp,b:Exp) : Exp = _apply(_id("="),List(a,b))
 _equal: (a: Exp, b: Exp)Exp
 
-scala> val v2 = new VRecClosure("self",List("a","b"),_if(_equal(_id("a"),_id("b")),_id("a"),_plus(_id("a"),_apply(_id("self"),List(_plus(_id("a"),_int(1)),_id("b"))))),stdEnv)
-v2: VRecClosure = List(a, b) | self => EIf(EApply(EId(=),List(EId(a), EId(b))),EId(a),EApply(EId(+),List(EId(a), EApply(EId(self),List(EApply(EId(+),List(EId(a), ELiteral(1))), EId(b))))))
+scala> val v2 = new VRecClosure("self",List("a","b"),
+                                _if(_equal(_id("a"),_id("b")),
+                                    _id("a"),
+                                    _plus(_id("a"),
+                                          _apply(_id("self"),List(_plus(_id("a"),_int(1)),
+                                                                        _id("b"))))),
+                                stdEnv)
+v2: VRecClosure = List(a, b) | self => EIf(EApply(EId(=),List(EId(a), EId(b))),EId(a),
+EApply(EId(+),List(EId(a), EApply(EId(self),List(EApply(EId(+),List(EId(a), ELiteral(1))),
+EId(b))))))
 
 scala> v2.apply(List(new VInteger(1), new VInteger(10)))
 res28: Value = 55
@@ -584,8 +591,15 @@ _plus: (a: Exp, b: Exp)Exp
 scala> def _equal (a:Exp,b:Exp) : Exp = _apply(_id("="),List(a,b))
 _equal: (a: Exp, b: Exp)Exp
 
-scala> val e2 = new ERecFunction("self",List("a","b"),_if(_equal(_id("a"),_id("b")),_id("a"),_plus(_id("a"),_apply(_id("self"),List(_plus(_id("a"),_int(1)),_id("b"))))))
-e2: ERecFunction = ERecFunction(self,List(a, b),EIf(EApply(EId(=),List(EId(a), EId(b))),EId(a),EApply(EId(+),List(EId(a), EApply(EId(self),List(EApply(EId(+),List(EId(a), ELiteral(1))), EId(b)))))))
+scala> val e2 = new ERecFunction("self",List("a","b"),
+                                _if(_equal(_id("a"),_id("b")),
+                                    _id("a"),
+                                    _plus(_id("a"),
+                                          _apply(_id("self"),List(_plus(_id("a"),_int(1)),
+                                                                        _id("b"))))))
+e2: ERecFunction = ERecFunction(self,List(a, b),EIf(EApply(EId(=),List(EId(a), EId(b))),
+EId(a),EApply(EId(+),List(EId(a), EApply(EId(self),List(EApply(EId(+),List(EId(a),
+ELiteral(1))), EId(b)))))))
 
 scala> e2.eval(stdEnv).apply(List(new VInteger(1), new VInteger(10)))
 res2: Value = 55
@@ -598,7 +612,7 @@ res2: Value = 55
 	  <!-- ------------------------------ -->
 
 	  <li><p>
-Add surface syntax to the parser to account for recursive closure. An
+Add surface syntax to the parser to account for recursive closures. An
 expression
 <tt>(fun <i>s</i> (<i>x<sub>1</sub></i> ... <i>x<sub>n</sub></i>) <i>expr</i>)</tt> should parse to <tt>ERecFunction(<i>s</i>,List(<i>x<sub>1</sub></i>,...,<i>x<sub>n</sub></i>),<i>expr</i>)</tt></p>
 
@@ -625,7 +639,8 @@ or even the following (though it might get confusing)
 scala> parse("  (let ((test (fun self (a) self))) (test 10))  ").eval(nullEnv)
 res5: Value = List(a) | self => EId(self)
 
-scala> parse("  (let ((sum (fun self (a b) (if (= a b) a (+ a (self (+ a 1) b)))))) (sum 1 10))  ").eval(stdEnv)
+scala> parse("  (let ((sum (fun s (a b) (if (= a b) a (+ a (s (+ a 1) b)))))) (sum 1 10))  ")
+          .eval(stdEnv)
 res4: Value = 55
 	      </pre>
 	    </div>
@@ -643,7 +658,7 @@ res4: Value = 55
       <li> <p><b>Vector Comprehension</b></p>
 
 <p>In class, we saw two higher-order functions that turn out to be
-super useful for working with sequences (lists, arrays, vectors) in
+super useful for working with sequences such as lists, arrays, or vectors in
 Python or other languages: <tt>map</tt>, and <tt>filter</tt>. Recall
 that <tt>map</tt> takes a function to apply to every element of a
 list, returning a list of the results, while <tt>filter</tt> takes a
@@ -691,10 +706,12 @@ res8: Value = [ 11 ]
 scala> operMap(List(_plus_n(1),new VVector(List(new VInteger(10),new VInteger(20)))))
 res9: Value = [ 11 21 ]
 
-scala> operMap(List(_plus_n(1),new VVector(List(new VInteger(10),new VInteger(20),new VInteger(30)))))
+scala> operMap(List(_plus_n(1),
+                    new VVector(List(new VInteger(10),new VInteger(20),new VInteger(30)))))
 res10: Value = [ 11 21 31 ]
 
-scala> operMap(List(_plus_n(99),new VVector(List(new VInteger(10),new VInteger(20),new VInteger(30)))))
+scala> operMap(List(_plus_n(99),
+                    new VVector(List(new VInteger(10),new VInteger(20),new VInteger(30)))))
 res11: Value = [ 109 119 129 ]
 	      </pre>
 	    </div>
@@ -723,8 +740,11 @@ res11: Value = [ 109 119 129 ]
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
-scala> val if0or1 = new VClosure(List("a"),_if(_equal(_id("a"),_int(0)),_true,_equal(_id("a"),_int(1))),stdEnv)
-if0or1: VClosure = List(a) => EIf(EApply(EId(=),List(EId(a), ELiteral(0))),ELiteral(true),EApply(EId(=),List(EId(a), ELiteral(1))))
+scala> val if0or1 = new VClosure(List("a"),
+                                 _if(_equal(_id("a"),_int(0)),_true,_equal(_id("a"),_int(1))),
+                                 stdEnv)
+if0or1: VClosure = List(a) => EIf(EApply(EId(=),List(EId(a), ELiteral(0))),ELiteral(true),
+EApply(EId(=),List(EId(a), ELiteral(1))))
 
 scala> operFilter(List(if0or1,new VVector(List(new VInteger(0)))))
 res16: Value = [ 0 ]
@@ -732,10 +752,13 @@ res16: Value = [ 0 ]
 scala> operFilter(List(if0or1,new VVector(List(new VInteger(0),new VInteger(1)))))
 res17: Value = [ 0 1 ]
 
-scala> operFilter(List(if0or1,new VVector(List(new VInteger(0),new VInteger(1), new VInteger(2)))))
+scala> operFilter(List(if0or1,
+                       new VVector(List(new VInteger(0),new VInteger(1), new VInteger(2)))))
 res18: Value = [ 0 1 ]
 
-scala> operFilter(List(if0or1,new VVector(List(new VInteger(0),new VInteger(1), new VInteger(2),new VInteger(0)))))
+scala> operFilter(List(if0or1,
+                       new VVector(List(new VInteger(0),new VInteger(1),
+                                        new VInteger(2),new VInteger(0)))))
 res19: Value = [ 0 1 0 ]
 	      </pre>
 	    </div>
