@@ -114,7 +114,9 @@ function run () {
 
       <ul class="simple">
 
-	<li><p class="ann"><span class="hdr">Feb 4:</span> <a href="homework3.html">Homework 3</a> is out. Due next Sunday night.</p></li>
+	<li><p class="ann"><span class="hdr">Feb 20:</span> <a href="homework4.html">Homework 4</a> is out. Due next Tuesday night.</p></li>
+
+	<li><p class="ann"><span class="hdr">Feb 11:</span> <a href="homework3.html">Homework 3</a> is out. Due next Sunday night.</p></li>
 
 	<li><p class="ann"><span class="hdr">Feb 4:</span> <a href="homework2.html">Homework 2</a> is out. Due next Sunday night (to account for the delay getting it out).</p></li>
 
@@ -254,37 +256,6 @@ function run () {
 		</div>
 	</li>	  
 
-<!-- 
-	<li><p><span class="hdr">Sep 27:</span><i>Cancelled</i></p>
-	  <div class="lect">
-	    <p><a href="homework4.html">Homework 4</a>, due next Monday.</p>
-	    <p>The first question of the homework involves front-end
-	      transformations. Basically, we can add surface syntax
-	      expressions that does not require an associated abstract
-	      representation, if we transform what is expressed in the
-	      surface syntax into simpler expressions for which we do
-	      have abstract representations.  How do those kind of
-	      transformations relate to syntax extensions (or macros)
-	      as implemented
-	      by <a href="https://www.cs.indiana.edu/scheme-repository/R4RS/r4rs_12.html">Scheme</a>
-	      or
-	      by <a href="https://static.rust-lang.org/doc/master/book/macros.html">Rust</a>?
-	      The short answer: those kind of syntax extensions
-	      are <i>exactly</i> the sort of transformations that we
-	      can implement by hacking the parser in the way I
-	      described. What those language do is that they allow
-	      transformations to be expressed <i>within the
-	      language</i>, and their parser can look up those
-	      transformations while parsing, instead of requiring the
-	      transformations to be hard-wired into the parser. Same
-	      process, slightly more flexible approach. (There's a
-	      cost to that approach: the parser needs to be more
-	      complex because it needs to look up applicable
-	      transformations at suitable points. It might be a very nice project to figure out ways of doing just that.)
-	    
-	  </div>
-	</li>	  
--->
 
 	<li><p><span class="hdr">Feb 15:</span><b>Functions</b></p>
 	  <div class="lect">
@@ -325,6 +296,49 @@ function run () {
 	    
 	  </div>
 	  
+	</li>
+
+
+	<li><p><span class="hdr">Feb 22:</span><b>Parser Transformations</b></p>
+	  <div class="lect">
+	    
+	    <p><a href="./code-lect-05.scala">Sample code from the lecture</a>.</p>
+	    
+	    <p>The idea that we can keep the abstract representation
+	    simple while still allowing an extensive surface syntax by
+	    using the "trick" of parsing some of the surface syntax
+	    into a complex abstract representation is widespread. For
+	    instance, the surface syntax <tt>(and x y z)</tt> can
+	    parse into
+	    roughly <tt>EIf(x,EIf(y,z,false),false)</tt>. In other
+	    words, we don't need to introduce abstract representation
+	    for everything in the surface
+	    syntax. In <a href="./homework4.htlm">Homework 4</a>, we
+	    use this idea to introduce vector comprehension, a
+	    convenient syntax for expression <tt>map</tt>
+	    and <tt>filter</tt> over vectors.</p> 
+ 
+	    <p>Some languages actually let users define their own surface syntax
+	      transformations. Macros
+	      in <a href="https://www.cs.indiana.edu/scheme-repository/R4RS/r4rs_12.html">Scheme</a>
+	      and
+	      in <a href="https://static.rust-lang.org/doc/master/book/macros.html">Rust</a>
+	      do exactly that: they allow transformations to be
+	      expressed <i>within the language</i>, and their parser
+	      can look up those transformations while parsing, instead
+	      of requiring the transformations to be hard-wired into
+	      the parser. Same process, slightly more flexible
+	      approach. (There's a cost to that approach: the parser
+	      needs to be more complex because it needs to look up
+	      applicable transformations at suitable points. It might
+	      be a very nice project to figure out ways of doing just
+  that.)</p>
+
+<p>I mentioned that the core of FUNC (our little language with
+  single-argument functions) is essentially the <a href="https://en.wikipedia.org/wiki/Lambda_calculus">Lambda
+  Calculus</a>.</p>
+
+	  </div>
 	</li>
 
 <!--	
@@ -498,6 +512,7 @@ which
 	<li><a href="homework1.html">Homework 1</a> &mdash; due date: Friday, Feb 2 (23h59)</li>
 	<li><a href="homework2.html">Homework 2</a> &mdash; due date: Sunday, Feb 11 (23h59)</li>
 	<li><a href="homework3.html">Homework 3</a> &mdash; due date: Sunday, Feb 18 (23h59)</li>
+	<li><a href="homework4.html">Homework 4</a> &mdash; due date: Tuesday, Feb 27 (23h59)</li>
       </ul>
 
     </div>

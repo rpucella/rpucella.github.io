@@ -65,7 +65,7 @@
       div.code pre { 
       display:none;
       padding: 10px;
-      font-size:100%;
+      font-size:90%;
       }
 
       div.code.visible pre  {
@@ -137,7 +137,7 @@ li > p { margin-top:0;}
     
     <h1 class="clear">Homework 4</h1>
     
-    <p class="subtitle">Due date: Monday, Feb 26 (23h59)</p>
+    <p class="subtitle">Due date: Tuesday, Feb 27 (23h59)</p>
 
     <p><b>Note on integrity:</b> This homework is meant to be done in
       <b>teams of 2</b>. You may discuss problems with fellow students, but all
@@ -171,22 +171,36 @@ li > p { margin-top:0;}
 
     <hr>
 
-    <p><b>Important notes on sample outputs:</b> for technical reasons (classes <tt>Value</tt> and <tt>Exp</tt> are mutually recursive) it is not possible to load the code I give you in the Scala shell in the usual way using <tt>:load</tt>. The only way that works is to launch the shell <i>after</i> loading the code, by writing <tt>scala -i homework4.scala</tt> from the command line. That will load <tt>homework4.scala</tt> and drop you in the shell. If you make changes to <tt>homework4.scala</tt>, you will have to exit the shell with <tt>:quit</tt> and restart it again with <tt>scala -i homework4.scala</tt>.</p>
-      
+    <p><b>Important note on sample outputs:</b> for technical reasons (viz., classes <tt>Value</tt> and <tt>Exp</tt> are mutually recursive) it is not possible to load the code I give you in the Scala shell in the usual way using <tt>:load</tt>. The only way that works is to launch the shell <i>after</i> loading the code, by writing <tt>scala -i homework4.scala</tt> from the command line. That will load <tt>homework4.scala</tt> and drop you in the shell. If you make changes to <tt>homework4.scala</tt>, you will have to exit the shell with <tt>:quit</tt> and restart it again with <tt>scala -i homework4.scala</tt>.</p>
 
+    <p>The sample outputs assume the following definitions found in <tt>homework4.scala</tt>:    </p>
+
+    <pre>
+  def _int (i:Int) : Exp = new ELiteral(new VInteger(i))
+  val _true : Exp = new ELiteral(new VBoolean(true))
+  val _false : Exp = new ELiteral(new VBoolean(false))
+  def _if (c:Exp,t:Exp,e:Exp) : Exp = new EIf(c,t,e)
+  def _let (bs:List[(String,Exp)],b:Exp) : Exp = new ELetSim(bs,b)
+  def _fun (ps:List[String],b:Exp) : Exp = new EFunction(ps,b)
+  def _apply (e:Exp,es:List[Exp]) : Exp = new EApply(e,es)
+  def _id (s:String) : Exp = new EId(s)</pre>
+    <p>as well as values <tt>nullEnv</tt> representing the empty environment and <tt>stdEnv</tt> representing a standard environment with useful predefined functions that will only be usable once you complete Question 1. </p>
+    
+      
     <hr>
 
     <p>
-      Look over the sample code to see what is offered. Basic values are
-      integers, booleans, and vectors. Expressions include literals,
-      conditional, and simultaneous local bindings (let). Note that we don't have 
-      <tt>EPlus</tt> or <tt>ETimes</tt> anymore &mdash; more on why in first question.
+      Look over the sample code to see what is offered. Basic values
+      are integers, booleans, and vectors. Expressions include
+      literals, conditional, and simultaneous local bindings (like in
+      Homework 2). We don't have
+      <tt>EPlus</tt> or <tt>ETimes</tt> anymore &mdash; more on why below in Question 1. 
     </p>
 
     <p>The code also includes a parser
       written using
       the <a href="https://github.com/scala/scala-parser-combinators">Scala
-	Standard Parser Combinator Library</a>.
+	Standard Parser Combinator Library</a> like in Homework 3.
     </p> 
 
     
@@ -200,11 +214,11 @@ li > p { margin-top:0;}
 
 	<p>In class, we saw an implementation of one-argument
 	  functions by introducing a <tt>VClosure1</tt> value
-	  representing a one-argument function which captures its
-	  definition environment (this is what makes is a closure) as
-	  well as expression <tt>EFunction1</tt> that evaluates to a
-	  closure, and <tt>EApply1</tt> that applies a function
-	  (represented by a closure) to an argument.
+	  representing a one-argument function which records the
+	  environment in which it was created (this is what makes it a
+	  closure) as well as expression <tt>EFunction1</tt> that
+	  evaluates to a closure, and <tt>EApply1</tt> that applies a
+	  function (represented by a closure) to an argument.
 	</p>
 
 	<p>
@@ -225,19 +239,43 @@ the function (which of course can refer to parameters), and an
 environment that represents the environment existing at the moment
 when the function was created.</p>
 
-	    <p><tt>VClosure</tt> should implement a method apply that
-takes a list of values (the values with which the function is called)
+	    <p><tt>VClosure</tt> should implement a method <tt>apply</tt> that
+takes a list of values (the values to which the function is applied)
 and evaluate the body in the stored environment extended with a
-binding of parameters with the appropriate values. (It's an error to
-call a function with too few or too many arguments.)</p>
+binding of the parameters to the appropriate values. (It's an error to
+apply a function with too few or too many arguments.)</p>
 
 	    <p>For example, <tt>VClosure(List("a","b"),EId("b"),new
 Env(List()))</tt> should produce a function that returns its second
-	      argument.</p>
+argument.</p>
 
+	    
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> val v1 = new VClosure(List("a","b"),_id("b"),nullEnv)
+v1: VClosure = List(a, b) => EId(b)
+
+scala> v1.apply(List(new VInteger(10), new VInteger(20)))
+res1: Value = 20
+
+scala> v1.apply(List(new VInteger(100), new VInteger(200)))
+res2: Value = 200
+
+scala> val v2 = new VClosure(List("x","y","z"),_if(_id("z"),_id("x"),_id("y")),nullEnv)
+v2: VClosure = List(x, y, z) => EIf(EId(z),EId(x),EId(y))
+
+scala> v2.apply(List(new VInteger(10), new VInteger(20), new VBoolean(true)))
+res3: Value = 10
+
+scala> v2.apply(List(new VInteger(10), new VInteger(20), new VBoolean(false)))
+res4: Value = 20
+
+scala> val v3 = new VClosure(List("a"),_id("z"),new Env(List(("z",new VInteger(99)))))
+v3: VClosure = List(a) => EId(z)
+
+scala> v3.apply(List(new VInteger(10)))
+res5: Value = 99
 	      </pre>
 	    </div>
 	    
@@ -259,6 +297,29 @@ representing parameters and an expression representing a body, and
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> val e1 = _fun(List("a","b"),_id("b"))
+e1: Exp = EFunction(List(a, b),EId(b))
+
+scala> e1.eval(nullEnv).apply(List(new VInteger(10), new VInteger(20)))
+res3: Value = 20
+
+scala> e1.eval(nullEnv).apply(List(new VInteger(100), new VInteger(200)))
+res4: Value = 200
+
+scala> val e2 = _fun(List("x","y","z"),_if(_id("z"),_id("x"),_id("y")))
+e2: Exp = EFunction(List(x, y, z),EIf(EId(z),EId(x),EId(y)))
+
+scala> e2.eval(nullEnv).apply(List(new VInteger(10), new VInteger(20), new VBoolean(true)))
+res5: Value = 10
+
+scala> e2.eval(nullEnv).apply(List(new VInteger(10), new VInteger(20), new VBoolean(false)))
+res6: Value = 20
+
+scala> val e3 = _let(List(("z",_int(99))),_fun(List("a"),_id("z")))
+e3: Exp = ELetSim(List((z,ELiteral(99))),EFunction(List(a),EId(z)))
+
+scala> e3.eval(nullEnv).apply(List(new VInteger(10)))
+res7: Value = 99
 	      </pre>
 	    </div>
 	    
@@ -277,6 +338,29 @@ representing parameters and an expression representing a body, and
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> val e1 = _fun(List("a","b"),_id("b"))
+e1: Exp = EFunction(List(a, b),EId(b))
+
+scala> _apply(e1,List(_int(10),_int(20))).eval(nullEnv)
+res8: Value = 20
+
+scala> _apply(e1,List(_int(100),_int(200))).eval(nullEnv)
+res9: Value = 200
+
+scala> val e2 = _fun(List("x","y","z"),_if(_id("z"),_id("x"),_id("y")))
+e2: Exp = EFunction(List(x, y, z),EIf(EId(z),EId(x),EId(y)))
+
+scala> _apply(e2,List(_int(10),_int(20),_true)).eval(nullEnv)
+res12: Value = 10
+
+scala> _apply(e2,List(_int(10),_int(20),_false)).eval(nullEnv)
+res13: Value = 20
+
+scala> val e3 = _let(List(("z",_int(99))),_fun(List("a"),_id("z")))
+e3: Exp = ELetSim(List((z,ELiteral(99))),EFunction(List(a),EId(z)))
+
+scala> _apply(e3,List(_int(10))).eval(nullEnv)
+res14: Value = 99
 	      </pre>
 	    </div>
 	    
@@ -297,6 +381,20 @@ and
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> parse("  ((fun (a b) b) 10 20)  ").eval(nullEnv)
+res16: Value = 20
+
+scala> parse("  ((fun (a b) b) 100 200)  ").eval(nullEnv)
+res17: Value = 200
+
+scala> parse("  ((fun (x y z) (if z x y)) 10 20 true)  ").eval(nullEnv)
+res18: Value = 10
+
+scala> parse("  ((fun (x y z) (if z x y)) 10 20 false)  ").eval(nullEnv)
+res19: Value = 20
+
+scala> parse("  ((let ((z 99)) (fun (a) z)) 10) ").eval(nullEnv)
+res20: Value = 99
 	      </pre>
 	    </div>
 	  </li>
@@ -312,9 +410,9 @@ you'll see that what's happening is that we first evaluate all the
 	      arguments to <tt>EPlus</tt>, and then perform an operation on the resulting
 	      values. Same with <tt>ETimes</tt>. If we were to introduce equality, or
 comparisons, they would follow the same pattern. And that pattern is:
-evaluate all arguments, apply a ``primitive operation'' to those values
-to get a new value out. It's just like applying a function, except
-instead of applying a function, we apply one of these primitive
+evaluate all arguments, and apply a "primitive operation" to those values
+	      to get a new value out. It's just like applying a function, except
+	      instead of applying a <tt>VClosure</tt> function, we apply one of these primitive
 	      operations.</p>
 
 	    <p>Code a new kind of
@@ -331,7 +429,7 @@ a function that performs multiplication of values, and so on.
 	    </p>
 
 	    <p>
-We don't add new expression for these. In order to use primitive
+We don't add new expressions for these. In order to use primitive
 operations, we can simply bind them to identifiers in the standard
 environment in which we evaluate our expressions. Basically, these
 primitive operations become predefined values. Note what we're doing:
@@ -345,6 +443,29 @@ the interpreter an awful lot.</p>
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> val v1 = new VPrimOp(operPlus)
+v1: VPrimOp = primop($$Lambda$1678/298419544@212e3150)
+
+scala> v1.apply(List(new VInteger(10), new VInteger(20)))
+res21: Value = 30
+
+scala> v1.apply(List(new VInteger(10), new VInteger(200)))
+res22: Value = 210
+
+scala> v1.apply(List(new VInteger(100), new VInteger(200)))
+res23: Value = 300
+
+scala> val v2 = new VPrimOp(operTimes)
+v2: VPrimOp = primop($$Lambda$1679/543262131@55b4ebbd)
+
+scala> v2.apply(List(new VInteger(10), new VInteger(20)))
+res24: Value = 200
+
+scala> val e = parse("  (+ (* 10 20) 30)  ")
+e: Exp = EApply(EId(+),List(EApply(EId(*),List(ELiteral(10), ELiteral(20))), ELiteral(30)))
+
+scala> e.eval(stdEnv)
+res25: Value = 230
 	      </pre>
 	    </div>
 
@@ -402,7 +523,7 @@ recursion is all about.
 
 	  <li>
 	    <p>Define a new kind of value <tt class="code">VRecClosure</tt>
-	      to represent a <i>recursive</i> multiargument function taking four arguments: a string (the self parameter) representing the name under which the recursive function should be bound to when the function is applied, and then the same three arguments as a regular closure (the list of parameters, the body, the creation-time environment). Like a regular closure, <tt>VRecClosure</tt> should implement a method <tt>apply</tt> that takes a
+	      to represent a <i>recursive</i> multiargument function, and taking four arguments: a string (the self parameter) representing the name under which the recursive function should be bound to when the function is applied, and then the same three arguments as a regular closure (the list of parameters, the body, the creation-time environment). Like a regular closure, <tt>VRecClosure</tt> should implement a method <tt>apply</tt> that takes a
 list of values (the values to which the function is applied) and
 evaluate the body in the stored environment extended with a binding of
 parameters with the appropriate values as well as a binding of
@@ -412,6 +533,31 @@ the self parameter with the recursive closure. (It's an error to call a
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> val v1 = new VRecClosure("self",List("a","b"),_id("self"),nullEnv)
+v1: VRecClosure = List(a, b) | self => EId(self)
+
+scala> v1.apply(List(new VInteger(10), new VInteger(20)))
+res26: Value =  List(a, b) | self => EId(self)
+	    
+scala> def _plus (a:Exp,b:Exp) : Exp = _apply(_id("+"),List(a,b))
+_plus: (a: Exp, b: Exp)Exp
+
+scala> def _equal (a:Exp,b:Exp) : Exp = _apply(_id("="),List(a,b))
+_equal: (a: Exp, b: Exp)Exp
+
+scala> val v2 = new VRecClosure("self",List("a","b"),
+                                _if(_equal(_id("a"),_id("b")),
+                                    _id("a"),
+                                    _plus(_id("a"),
+                                          _apply(_id("self"),List(_plus(_id("a"),_int(1)),
+                                                                        _id("b"))))),
+                                stdEnv)
+v2: VRecClosure = List(a, b) | self => EIf(EApply(EId(=),List(EId(a), EId(b))),EId(a),
+EApply(EId(+),List(EId(a), EApply(EId(self),List(EApply(EId(+),List(EId(a), ELiteral(1))),
+EId(b))))))
+
+scala> v2.apply(List(new VInteger(1), new VInteger(10)))
+res28: Value = 55
 	      </pre>
 	    </div>
 	    
@@ -427,6 +573,30 @@ the self parameter with the recursive closure. (It's an error to call a
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+val e1 = new ERecFunction("self",List("a","b"),_id("self"))
+e1: ERecFunction = ERecFunction(self,List(a, b),EId(self))
+
+scala> e1.eval(nullEnv).apply(List(new VInteger(10), new VInteger(20)))
+res1: Value = List(a, b) | self => EId(self)
+
+scala> def _plus (a:Exp,b:Exp) : Exp = _apply(_id("+"),List(a,b))
+_plus: (a: Exp, b: Exp)Exp
+
+scala> def _equal (a:Exp,b:Exp) : Exp = _apply(_id("="),List(a,b))
+_equal: (a: Exp, b: Exp)Exp
+
+scala> val e2 = new ERecFunction("self",List("a","b"),
+                                _if(_equal(_id("a"),_id("b")),
+                                    _id("a"),
+                                    _plus(_id("a"),
+                                          _apply(_id("self"),List(_plus(_id("a"),_int(1)),
+                                                                        _id("b"))))))
+e2: ERecFunction = ERecFunction(self,List(a, b),EIf(EApply(EId(=),List(EId(a), EId(b))),
+EId(a),EApply(EId(+),List(EId(a), EApply(EId(self),List(EApply(EId(+),List(EId(a),
+ELiteral(1))), EId(b)))))))
+
+scala> e2.eval(stdEnv).apply(List(new VInteger(1), new VInteger(10)))
+res2: Value = 55
 	      </pre>
 	    </div>
 	    
@@ -436,7 +606,7 @@ the self parameter with the recursive closure. (It's an error to call a
 	  <!-- ------------------------------ -->
 
 	  <li><p>
-Add surface syntax to the parser to account for recursive closure. An
+Add surface syntax to the parser to account for recursive closures. An
 expression
 <tt>(fun <i>s</i> (<i>x<sub>1</sub></i> ... <i>x<sub>n</sub></i>) <i>expr</i>)</tt> should parse to <tt>ERecFunction(<i>s</i>,List(<i>x<sub>1</sub></i>,...,<i>x<sub>n</sub></i>),<i>expr</i>)</tt></p>
 
@@ -459,10 +629,14 @@ or even the following (though it might get confusing)
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> parse("  (let ((test (fun self (a) self))) (test 10))  ").eval(nullEnv)
+res5: Value = List(a) | self => EId(self)
+
+scala> parse("  (let ((sum (fun s (a b) (if (= a b) a (+ a (s (+ a 1) b)))))) (sum 1 10))  ")
+          .eval(stdEnv)
+res4: Value = 55
 	      </pre>
 	    </div>
-	    
-
 	  </li>
 
 	</ol>
@@ -475,7 +649,7 @@ or even the following (though it might get confusing)
       <li> <p><b>Vector Comprehension</b></p>
 
 <p>In class, we saw two higher-order functions that turn out to be
-super useful for working with sequences (lists, arrays, vectors) in
+super useful for working with sequences such as lists, arrays, or vectors in
 Python or other languages: <tt>map</tt>, and <tt>filter</tt>. Recall
 that <tt>map</tt> takes a function to apply to every element of a
 list, returning a list of the results, while <tt>filter</tt> takes a
@@ -510,6 +684,25 @@ so you will have to extract out the first and second elements. See
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> def _plus (a:Exp,b:Exp) : Exp = _apply(_id("+"),List(a,b))
+_plus: (a: Exp, b: Exp)Exp
+
+scala> def _plus_n (n:Int) : Value = new VClosure(List("a"),_plus(_id("a"), _int(n)),stdEnv)
+_plus_n: (n: Int)Value
+
+scala> operMap(List(_plus_n(1),new VVector(List(new VInteger(10)))))
+res8: Value = [ 11 ]
+
+scala> operMap(List(_plus_n(1),new VVector(List(new VInteger(10),new VInteger(20)))))
+res9: Value = [ 11 21 ]
+
+scala> operMap(List(_plus_n(1),
+                    new VVector(List(new VInteger(10),new VInteger(20),new VInteger(30)))))
+res10: Value = [ 11 21 31 ]
+
+scala> operMap(List(_plus_n(99),
+                    new VVector(List(new VInteger(10),new VInteger(20),new VInteger(30)))))
+res11: Value = [ 109 119 129 ]
 	      </pre>
 	    </div>
 	    
@@ -536,10 +729,31 @@ so you will have to extract out the first and second elements. See
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> val if0or1 = new VClosure(List("a"),
+                                 _if(_equal(_id("a"),_int(0)),_true,_equal(_id("a"),_int(1))),
+                                 stdEnv)
+if0or1: VClosure = List(a) => EIf(EApply(EId(=),List(EId(a), ELiteral(0))),ELiteral(true),
+EApply(EId(=),List(EId(a), ELiteral(1))))
+
+scala> operFilter(List(if0or1,new VVector(List(new VInteger(0)))))
+res16: Value = [ 0 ]
+
+scala> operFilter(List(if0or1,new VVector(List(new VInteger(0),new VInteger(1)))))
+res17: Value = [ 0 1 ]
+
+scala> operFilter(List(if0or1,
+                       new VVector(List(new VInteger(0),new VInteger(1), new VInteger(2)))))
+res18: Value = [ 0 1 ]
+
+scala> operFilter(List(if0or1,
+                       new VVector(List(new VInteger(0),new VInteger(1),
+                                        new VInteger(2),new VInteger(0)))))
+res19: Value = [ 0 1 0 ]
 	      </pre>
 	    </div>
-	    
 	  </li>
+
+
 
 	  
 	  <!-- ------------------------------ -->
@@ -590,6 +804,26 @@ set theory.</p>
 	    <div class="code">
 	      <p onClick="toggleShowHide(this)">Show sample output</p>
 	      <pre>
+scala> parse("  [ (+ v 1) | v &lt;- [] ]  ").eval(stdEnv)
+res25: Value = [  ]
+
+scala> parse("  [ (+ v 1) | v &lt;- [ 10 ] ]  ").eval(stdEnv)
+res26: Value = [ 11 ]
+
+scala> parse("  [ (+ v 1) | v &lt;- [ 10 20 ] ]  ").eval(stdEnv)
+res27: Value = [ 11 21 ]
+
+scala> parse("  [ (+ v 1) | v &lt;- [ 10 20 30 ] ]  ").eval(stdEnv)
+res28: Value = [ 11 21 31 ]
+
+scala> parse("  [ (* v 3) | v &lt;- [ 10 20 30 ] ]  ").eval(stdEnv)
+res29: Value = [ 30 60 90 ]
+
+scala> parse("  [ (* v 3) | v &lt;- [ 0 1 2 3 2 1 0 ] | (if (= v 0) true (= v 1)) ]  ").eval(stdEnv)
+res23: Value = [ 0 3 3 0 ]
+
+scala> parse("  [ (* v 3) | v &lt;- [ 0 1 2 3 2 1 0 ] | (if (= v 1) true (= v 2)) ]  ").eval(stdEnv)
+res24: Value = [ 3 6 6 3 ]
 	      </pre>
 	    </div>
 
