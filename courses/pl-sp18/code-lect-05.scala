@@ -11,6 +11,9 @@
  *
  * Primitive operations via EOperation
  *
+ * Parser transformations for multi-argument functions and applications,
+ * and, and or
+ *
  */
 
 
