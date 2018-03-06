@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 5</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:90%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+      ol.question > li {
+      font-weight: bold;
+      }
+
+      ol.question > li > * {
+      font-weight: normal;
+      }
+      
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Programming Languages SP18</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 5</h1>
+    
+    <p class="subtitle">Due date: Tuesday, Mar 13 (23h59)</p>
+
+    <p><b>Note on integrity:</b> This homework is meant to be done in
+      <b>teams of 2</b>. You may discuss problems with fellow students, but all
+    work must be entirely that of your team, and should not be from
+    any other course, present, past, or future. If you use a solution
+    from another source you must cite it &mdash; this includes when
+    that source is someone else helping you. <b>Please do not post
+    your code on a public website or a public repository like
+    GitHub.</b>
+   </p>
+
+    <p>All programming is to be done in Scala v2.12.</p>
+
+    <p>Code your answers by modifying the
+      file <a href="homework5.scala"><tt>homework5.scala</tt></a> provided. Add the
+      <span style="text-decoration:underline;">names of your team members</span>, your <span style="text-decoration:underline;">email addresses</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor to the block comment at the head of the file.</p>
+
+    <p><b>Please do not change the types in the signature of the
+	function and class stubs I provide</b>. Doing so will make it difficult to test your code.</p>
+
+    <p>Feel free to define helper functions or helper classes if you need them.</p>
+
+    <p>Electronic submission instructions:</p>
+
+    <ul>
+      <li>Run your homework code via <tt>scala homework5.scala</tt></li>
+      <li>If there are any error, do not submit. I can't test what will not load correctly.</li>
+      <li>When you're ready to submit, send an email with your file <tt>homework5.scala</tt> as an attachment to <tt>olin.submissions@gmail.com</tt> with subject <i>Homework 5 submission</i>.</li>
+    </ul>
+
+    
+    <hr>
+
+    <p>Let's put together everything we've done into a language I'll call <b>FUNC</b> (for FUNCtional, obviously). It has values and expressions, and expressions evaluate to values. Values include: recursive closures, integers, booleans, vectors, and primitive operations (as in homework 4), and expressions include: literals, identifiers, conditionals, anonymous functions, and application.</p>
+
+    <p>The code is pretty much that of homework 4 (you can see how I
+implemented multi-argument functions), except I've made a small
+modification so that it can now be compiled in Scala, instead of
+interpreted. The restriction when compiling code in Scala is that
+everything needs to be in a class (which we've seen) or in an
+      object. An object is like a class except that it directly creates an object of the class, and doesn't let you create other objects of the class. (Sometimes, these are called singleton classes.) An object definition looks like:</p>
+
+    <pre>
+   object Foo {
+
+      def add1 (i:Int) : Int = {
+         return i+1
+      }
+   }</pre>
+    <p>This define an object <tt>Foo</tt> (technically of class <tt>Foo</tt>). It is
+the only object of its class. To access an element of the object, you
+      simply go <tt>Foo.add1(10)</tt>.  It's basically a way to package functions and
+      values into a module, although there are other uses for it.</p>
+
+    <p>
+I've put all of the functions that used to be at top level inside
+objects. There is an object <tt>Ops</tt> that contains the primitive
+operations, and an object <tt>Shell</tt> that contains the shell and the
+parsing function as well as the standard environment.
+    </p>
+
+    <p>
+      To compile the code:
+
+      <ol>
+	<li>Put <tt>homework5.scala</tt> in its own folder &mdash; it'll make things easier</li>
+	<li>From the command line, go <tt><b>scalac homework5.scala</b></tt></li>
+	<li>When done, you'll get a bunch of <tt>.class</tt> files in your folder, the
+	  way you would with Java.</li>
+	<li>To execute the code, you point the scala runtime to an object with
+	  a <tt>main()</tt> method. We have one such object, <tt>Shell</tt>. The <tt>main()</tt> method simply starts the shell. Run <tt><b>scala Shell</b></tt></li>
+	<li>Whenever you want to run your code, if you have not made any change to the source, you can simply go <tt><b>scala Shell</b></tt>. No need to run <tt>scalac</tt> again.</li>
+      </ol>
+    </p>
+
+    <p>Note that you can still run your code using <tt><b>scala homework5.scala</b></tt> if you want. It will compile on-the-fly without generating <tt>.class files</tt> every time, so it'll be a bit slower, and it will also automatically call <tt>Shell.main()</tt> &mdash; though I'm not entirely sure how it determines with <tt>main()</tt> method to call if there is more than one object with a <tt>main()</tt> method <tt>:/</tt>  </p>
+    
+    <ol class="question">
+
+
+      <!-- ------------------------------------------------------------ -->
+
+      <li> <p><b>Syntactic Transformations</b></p>
+
+	<p>We saw that we extend the language by adding surface syntax
+	that gets parsed into existing abstract representation,
+	without the need to introduce new abstract representation.</p>
+
+	
+	<ol class="subquestion">
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+	    <p>
+	      The short-circuiting conjunction <tt>(and a b)</tt> is true when both <tt>a</tt> and <tt>b</tt>
+	      are true, and false otherwise. Moreover, if <tt>a</tt> is false, <tt>b</tt> need not be
+	      evaluated. Similarly, the short-circuiting disjunction <tt>(or a b)</tt> is
+	      true when either <tt>a</tt> or <tt>b</tt> is true, and false otherwise. If <tt>a</tt> if true,
+	      then <tt>b</tt> need not be evaluated.</p>
+
+	    <p>We saw in class that we can parse <tt>(and a b)</tt> as <tt>(if a then b else
+		false)</tt>, and <tt>(or a b)</tt> as <tt>(if a then true else b)</tt>, so we don't actually
+	      need to introduce abstract representations for <tt>and</tt> and <tt>or</tt>.</p>
+
+	    <p>Extend the surface syntax via a syntactic transformation so you can support conjunctions and
+	      disjunctions with more than two arguments. More specifically:  <tt>(and <i>e<sub>1</sub></i> ... <i>e<sub>k</sub></i>)</tt> should evaluate to true if all of <tt><i>e<sub>1</sub></i></tt> ... <tt><i>e<sub>k</sub></i></tt> evaluate
+	      to true, and <tt>(or <i>e<sub>1</sub></i> ... <i>e<sub>k</sub></i>)</tt> should evaluate to true if any one of <tt><i>e<sub>1</sub></i></tt> ... <tt><i>e<sub>k</sub></i></tt>
+  evaluates to true.</p>
+
+<p>Those operations should be short-circuiting: they should stop
+evaluating as soon as a final result can be established.</p>
+	    
+	    
+	    <div  class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+FUNC> (and true true)
+true
+
+FUNC> (and true false)
+false
+
+FUNC> (and true true true true)
+true
+
+FUNC> (and true false true true)
+false
+
+FUNC> (and true false ((fun loop (a) (loop a)) 0) true)
+false
+
+FUNC> (or true true)
+true
+
+FUNC> (or false false)
+false
+
+FUNC> (or false false false true)
+true
+
+FUNC> (or false true ((fun loop (a) (loop a)) 0) false)
+true
+	      </pre>
+	    </div>
+	    
+	  </li>
+
+
+	  
+	  <!-- ------------------------------ -->
+
+	  <li>
+
+	    <p>
+	      We don't have <tt>let</tt> in our language. It turns out we can implement
+(simultaneous) let as a straightforward syntactic transformation. If
+	      you think about it, an expression <tt>(let ((<i>n<sub>1</sub></i> <i>e<sub>1</sub></i>) ... (<i>n<sub>k</sub></i> <i>e<sub>k</sub></i>)) <i>e</i>)</tt>
+
+	      is equivalent to <tt>((fun (<i>n<sub>1</sub></i> ... <i>n<sub>k</sub></i>) <i>e</i>) <i>e<sub>1</sub></i> ... <i>e<sub>k</sub></i>)</tt>
+	    </p>
+	    
+	    <p>Implement this syntactic transformation to support <tt>let</tt> in FUNC.</p>
+
+	    
+	    
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+FUNC> (let ((a 10)) a)
+10
+
+FUNC> (let ((a 10) (b 20)) [ a b ])
+[ 10 20 ]
+
+FUNC> (let ((a 10) (b 20) (c 30)) [ a b c ])
+[ 10 20 30 ]
+
+FUNC> (let ((a 99) (b 66) (c 33)) (let ((a b) (b a)) [ a b c] ))
+[ 66 99 33 ]
+
+FUNC> (let ((a (+ 1 2)) (b (* 3 4))) [ a b ])
+[ 3 12 ]
+	      </pre>
+	    </div>
+	    
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+
+<p>	    
+  The <tt>if</tt> conditional is nice but there are other useful forms of
+  conditionals. For instance: </p>
+
+<pre>
+  (cond ((= x 0) 10)
+        ((= x 1) 20)
+        ((= x 2) 30)
+        (true 40))</pre>
+
+<p>evaluates to 10 if <tt>x</tt> is equal to 0, 20 if <tt>x</tt> is equal to 1, 30 if <tt>x</tt> is
+  equal to 2, and 40 otherwise. Intuitively, each clause of the form <tt>(<i>t</i>
+    <i>e</i>)</tt> is checked, from the first to the last in order: if the test expression <tt><i>t</i></tt> evaluates to
+  true, then the result of evaluating the whole cond is <tt><i>e</i></tt>, otherwise, the next
+clause is checked.
+</p>
+
+<p>
+  Write a syntactic transformation that parses an expression <tt>(cond <i>c<sub>1</sub></i>
+    ... <i>c<sub>k</sub></i>)</tt> where each <tt><i>c<sub>i</sub></i></tt> is of the form <tt>(<i>t</i> <i>e</i>)</tt> for expressions <tt><i>t</i></tt> and <tt><i>e</i></tt>
+  into an expression made up of nested <tt>if</tt>s.
+</p>
+	    
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+FUNC> (cond (true 1))
+1
+
+FUNC> (cond (false 1) (true 2))
+2
+
+FUNC> (let ((x 15)) (cond ((> x 10) 99) ((> x 0) 66) (true 33)))
+Environment error: unbound identifier >
+
+FUNC> (let ((x 10)) (cond ((= x 10) 99) ((= x 0) 66) (true 33)))
+99
+
+FUNC> (let ((x 0)) (cond ((= x 10) 99) ((= x 0) 66) (true 33)))
+66
+
+FUNC> (let ((x 5)) (cond ((= x 10) 99) ((= x 0) 66) (true 33)))
+33
+
+FUNC> (let ((x 10)) (cond ((= x 10) (+ 33 66)) ((= x 0) 66) (true 33)))
+99
+
+FUNC> (let ((x 10)) (cond ((= x 10) 99) ((= x 10) 66) (true 33)))
+99
+	      </pre>
+	    </div>
+	    
+	  </li>
+
+
+	  
+	  
+	</ol>
+
+      </li>
+
+
+
+      <!-- ------------------------------------------------------------ -->
+
+      <li> <p><b>Extending the Shell</b></p>
+
+<p>I've modified the parser and the shell so that we can extend them with
+  definitions and shell commands.</p>
+
+	<p>
+	  The parser's main entry point is <tt>shell_entry</tt>, which returns an object
+	  of class <tt>ShellEntry</tt>. Basically, <tt>shell_entry</tt> is meant to parse all that you can enter
+	  at the shell prompt. Right now, <tt>shell_entry</tt> only recognizes an
+	  expression, and returns it as an object of class <tt>SEexpr</tt>, a subclass of
+	  <tt>ShellEntry</tt>.</p>
+
+	<p>If you look at <tt>ShellEntry</tt>, it has one method, <tt>processEntry</tt>, that expects
+an environment and returns an environment. The shell
+	  works by simply calling the parser to get back a <tt>ShellEntry</tt> object
+representing what has been entered, and calling that object's
+	  <tt>processEntry</tt> method to process what has been entered. Method <tt>processEntry</tt> is
+passed the current top-level environment, and returns the new
+top-level environment (which allows an entry to change the top-level
+  environment, like adding bindings).</p>
+
+	<p>For a <tt>SEexpr</tt>, processing the entry (which is an expression) simply
+means evaluating the expression and printing the resulting value. The
+  environment returned is the original environment.</p>
+
+
+	<ol class="subquestion">
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+
+	    <p>A useful kind of shell entry is a definition, which allows you to add bindings to the top-level environment. It takes the form:</p>
+
+	    <pre>
+   (define <i>name</i> <i>expression</i>)</pre>
+
+<p>Basically, processing such an entry should evaluate the expression
+to a value, and add a new binding for the name to that value to
+the top-level environment.
+</p>
+
+	    <p>
+	      Complete the parser and class <tt>SEdefine</tt> to support definitions in the
+	      shell. </p>
+	    
+	    
+	    
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+FUNC> (define a (+ 10 20))
+a defined
+
+FUNC> a
+30
+
+FUNC> (define b (if (= a 30) 99 66))
+b defined
+
+FUNC> b
+99
+
+FUNC> (define square (fun (a) (* a a)))
+square defined
+
+FUNC> (square 10)
+100
+
+FUNC> (define sum (fun sum (v) (if (empty? v) 0 (+ (first v) (sum (rest v))))))
+sum defined
+
+FUNC> (sum [1 2 3 4 5 6 7 8 9 10])
+55
+
+FUNC> (sum [10 20])
+30
+	      </pre>
+	    </div>
+	    
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+
+	    <p>The previous question lets you define functions at the shell, as the sample outputs show:</p>
+
+	    <pre>
+  (define square (fun (a) (* a a)))
+
+  (define sum (fun sum (a) (if (empty? a) 0 (+ (first a) (sum (rest a))))))</pre>
+
+We'll make defining functions more convenient. Add a syntactic
+transformation so that the shell entry
+
+	    <pre>
+   (defun <i>name</i> (<i>x<sub>1</sub></i> ... <i>x<sub>n</sub></i>) <i>body</i>)</pre>
+
+	    <p>is parsed liked</p>
+	    <pre>
+   (define <i>name</i> (fun <i>name</i> (<i>x<sub>1</sub></i> ... <i>x<sub>n</sub></i>) <i>body</i>))</pre>
+
+	    <p>so that we can simply write:</p>
+           <pre>
+  (defun square (a) (* a a))
+
+  (defun sum (a) (if (empty? a) (+ (first a) (sum (rest a)))))</pre>
+	    
+	    
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+FUNC> (defun square (a) (* a a))
+square defined
+
+FUNC> (square 10)
+100
+
+FUNC> (defun sum (v) (if (empty? v) 0 (+ (first v) (sum (rest v)))))
+sum defined
+
+FUNC> (sum [1 2 3 4 5])
+15
+
+FUNC> (sum [1 2 3 4 5 6 7 8 9 10])
+55
+	      </pre>
+	    </div>
+	    
+	  </li>
+
+
+	  <!-- ------------------------------ -->
+
+	  <li>
+
+	    <p>
+	      Add directives to control the shell. More specifically, extend the parser
+	      and the shell so that you can write <tt>#quit</tt> to exit the shell, <tt>#env</tt> to
+	      see the entries in the top-level environment, and <tt>#parse <i>expression</i></tt>
+	      to see the abstract representation corresponding to an expression.
+	    </p>
+
+	    <p><b>Hint</b>: add new subclasses to <tt>ShellEntry</tt>.</p>
+
+	    
+	    <div class="code">
+	      <p onClick="toggleShowHide(this)">Show sample output</p>
+	      <pre>
+FUNC> #env
+true = true
+false = false
+not = List(a) |  => EIf(EId(a),ELiteral(false),ELiteral(true))
++ = primop(Shell$$$Lambda$103/825249556@38425407)
+* = primop(Shell$$$Lambda$104/883151184@43bc63a3)
+= = primop(Shell$$$Lambda$105/709865851@702657cc)
+< = primop(Shell$$$Lambda$106/1550207152@6a6cb05c)
+map = primop(Shell$$$Lambda$107/1864230087@40a4337a)
+filter = primop(Shell$$$Lambda$108/1168019749@6025e1b6)
+empty? = primop(Shell$$$Lambda$109/311239812@22ff4249)
+first = primop(Shell$$$Lambda$110/2093010349@2d1ef81a)
+rest = primop(Shell$$$Lambda$111/2088445230@4c402120)
+empty = [  ]
+cons = primop(Shell$$$Lambda$112/1297978429@327514f)
+
+FUNC> (define a 99)
+a defined
+
+FUNC> #env
+a = 99
+true = true
+false = false
+not = List(a) |  => EIf(EId(a),ELiteral(false),ELiteral(true))
++ = primop(Shell$$$Lambda$103/825249556@38425407)
+* = primop(Shell$$$Lambda$104/883151184@43bc63a3)
+= = primop(Shell$$$Lambda$105/709865851@702657cc)
+< = primop(Shell$$$Lambda$106/1550207152@6a6cb05c)
+map = primop(Shell$$$Lambda$107/1864230087@40a4337a)
+filter = primop(Shell$$$Lambda$108/1168019749@6025e1b6)
+empty? = primop(Shell$$$Lambda$109/311239812@22ff4249)
+first = primop(Shell$$$Lambda$110/2093010349@2d1ef81a)
+rest = primop(Shell$$$Lambda$111/2088445230@4c402120)
+empty = [  ]
+cons = primop(Shell$$$Lambda$112/1297978429@327514f)
+
+FUNC> #parse 10
+ELiteral(10)
+
+FUNC> #parse (+ 1 2)
+EApply(EId(+),List(ELiteral(1), ELiteral(2)))
+
+FUNC> #parse (+ (* 1 2) (* 3 4))
+EApply(EId(+),List(EApply(EId(*),List(ELiteral(1), ELiteral(2))),EApply(EId(*),List(ELiteral(3),
+ELiteral(4)))))
+
+FUNC> #parse (and true false)
+EIf(EId(true),EIf(EId(false),ELiteral(true),ELiteral(false)),ELiteral(false))
+
+FUNC> #parse [x+1 for x in [1 2 3]]
+EApply(ELiteral(primop(SExpParser$$Lambda$239/2151717@6200f9cb)),List(EId(x+1), EId(for), EId(x),
+EId(in), EApply(ELiteral(primop(SExpParser$$Lambda$239/2151717@6200f9cb)),List(ELiteral(1),
+ELiteral(2), ELiteral(3)))))
+
+FUNC> #quit
+Goodbye
+	
+C:\PL-SP18>
+	      </pre>
+	    </div>
+	    
+	  </li>
+
+
+	  
+	  
+	</ol>
+
+      </li>
+
+
+      <!-- ------------------------------------------------------------ -->
+
+      <li> <p><b>Dictionaries</b></p>
+
+	<p>A
+	  <I>dictionary</I> is a structure that maps values (keys) to values. In Python, a
+	  dictionary is defined like this:</p>
+
+	  <pre>
+   { 1 : [1,2,3],  3: True, 5 : 8 }</pre>
+
+	<p>and items are accessed via <tt>d[1]</tt>  when <tt>d</tt> is a dictionary. 
+
+	<p>Extend FUNC to support (read-only) dictionaries. Here is a suggested
+	  surface syntax:</p>
+
+	<p><b>To create a dictionary</b>: <tt>(dict (<i>k<sub>1</sub></i> <i>e<sub>1</sub></i>) ... (<i>k<sub>n</sub></i> <i>e<sub>n</sub></i>))</tt></p>
+
+	<p>For instance, the dictionary above can be written:</p>
+<pre>
+  (dict (1 [1 2 3]) (3 true) (5 8))</pre>
+
+	<p>or equivalently:</p>
+
+<pre>
+  (dict (1 (cons 1 [2 3])) ((+ 1 2) true) (5 (+ 5 3)))</pre>
+
+	<p><b>To access items in a dictionary</b>: <tt>(sub <i>d</i> <i>k</i>)</tt></p>
+	
+	<p>For instance,</p>
+<pre>
+   (sub (dict (1 [1 2 3]) (3 true) (5 8)) 1) </pre>
+
+	<p>should return <tt>[1 2 3]</tt> while</p>
+
+	<pre>
+   (sub (dict (1 [1 2 3]) (3 true) (5 8)) (+ 1 2))</pre>
+
+	<p>should return <tt>true</tt></p>
+
+	<p>For more realistic examples, you may want to implement a new kind of value <tt>VString</tt> to represent strings so that you can use them as keys.
+
+      </li>
+      
+
+      
+    </ol>
+
+  </body>
+</html>
