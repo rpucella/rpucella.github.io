@@ -114,6 +114,8 @@ function run () {
 
       <ul class="simple">
 
+	<li><p class="ann"><span class="hdr">Mar 31:</span> As I mentioned in class, time to start thinking about <a href="./project.html">final projects</a>. Please send me an email by Wednesday night (one per team) describing what you'd like to do. If you have no idea, please get in touch with me before then and we'll figure something out for you to work on. Note that next week we'll be looking at type systems, and afterward we'll dip our toes into compilation.</p></li>
+
 	<li><p class="ann"><span class="hdr">Mar 6:</span> <a href="homework5.html">Homework 5</a> is out. Due next Tuesday night.</p></li>
 
 	<li><p class="ann"><span class="hdr">Feb 20:</span> <a href="homework4.html">Homework 4</a> is out. Due next Tuesday night.</p></li>
@@ -358,13 +360,13 @@ function run () {
 	</li>	  
 
 	
-	<li><p><span class="hdr">Mar 15:</span><b>Objects</b></p>
+	<li><p><span class="hdr">Mar 26:</span><b>Objects</b></p>
 		<div class="lect">
 		  <p><a href="./notes-objects.pdf">Notes</a>.</p>
 		  <p>Sample code from the lecture: <a href="./code-lect-07-records.scala">records</a> and <a href="./code-lect-07-objects.scala">objects</a>.</p>
 		  <p>Some notes on the <a href="http://raganwald.com/2014/01/19/prototypes-are-not-classes.html">difference between class-based and prototype-based languages</a>, using JavaScript as an example.</p>
 		  <p>A quick overview of the <a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">difference between inheritance and composition</a> (which I called delegation) &mdash; in some languages, both are ways to get a subclassing relationship between classes.</p>
-<!-- 		  <p>Some additional sample code, extending our <a href="code-lect-06-obj-inheritance.py">object system with inheritance</a>. -->
+		  <p>Some additional sample code, extending our <a href="code-lect-07-inheritance.scala">object system with inheritance</a>. My changes are marked with a comment <tt>INHERITANCE</tt> That turned out to be easier than expected, given how we built up our objects. Objects now take an extra parameter, a super object (that is, an object of the class from which the class is inheriting). In the surface syntax, <tt>class</tt> takes an extra (optional parameter) after its parameters, namely a call to a class constructor to indicate what class the current class is inheriting from. That constructor call is passed <tt>EObject</tt> which uses it to construct an object of that class from which the object is inheriting. That super object is stored in the <tt>VObject</tt> value. When you look up a field or method in a <tt>VObject</tt> and it's not found in the object, the field or method is looked up in the super object. If found, it is returned. We get <a href="https://en.wikipedia.org/wiki/Dynamic_dispatch">dynamic dispatch</a> essentially for free because when a method is returned, it is wrapped with a <tt>(function (this) ...)</tt> whether it came from the object or the super object. That function is always invoked with the object on which the method is invoked, therefore <tt>this</tt> is always bound to the current object. </p>
 		</div>
 	</li>	  
 
