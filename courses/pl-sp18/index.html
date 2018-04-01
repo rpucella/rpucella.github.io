@@ -114,10 +114,54 @@ function run () {
 
       <ul class="simple">
 
-	<li><p class="ann"><span class="hdr">Mar 31:</span> As I mentioned in class, time to start thinking about <a href="./project.html">final projects</a>. Please send me an email by Wednesday night (one per team) describing what you'd like to do. If you have no idea, please get in touch with me before then and we'll figure something out for you to work on. Note that next week we'll be looking at type systems, and afterward we'll dip our toes into compilation.</p></li>
+	<li><p class="ann"><span class="hdr">Mar 31:</span> As I
+	mentioned in class, time to start thinking
+	about <a href="./project.html">final projects</a>. Please send
+	me an email by Wednesday night (one per team) describing what
+	you'd like to do. If you have no idea, please get in touch
+	with me before then and we'll figure something out for you to
+	work on. Note that next week we'll be looking at type systems,
+	and afterward we'll dip our toes into compilation.</p></li>
 
-	<li><p class="ann"><span class="hdr">Mar 6:</span> <a href="homework5.html">Homework 5</a> is out. Due next Tuesday night.</p></li>
+	<li><p class="ann"><span class="hdr">Mar 10:</span> I have
+	simplified the C-style mutable state implementation that I
+	presented in lecture. Recall that in lecture, I presented a
+	syntactic transformation that transformed every application
+	into one that first wrapped every argument into a reference
+	cell before performing the application. This required
+	primitive operations in the top-level environment to be wrapped with a function that pulled
+	out the values in the reference cells before calling the
+	underlying primitive operations, since primitive operations
+	    are passed values. The new implementation keeps the original
+	    function application, keeps the original primitive
+	    operations, and only changes how the surface syntax
+	for <tt>fun</tt> is parsed. There is now a syntactic
+	    transformation that transforms a <tt>fun</tt> into
+	one that first wraps all of its arguments with reference cells
+	before evaluating the body. I have changed the slides
+	    accordingly, so you should be able to follow what's going
+	    on there.</p></li>
 
+	<li><p class="ann"><span class="hdr">Mar
+	6:</span> <a href="homework5.html">Homework 5</a> is out. Due
+	    next Tuesday night.</p></li>
+
+	<li><p class="ann"><span class="hdw">Feb 28:</span> I
+	mentioned in class that the core of FUNC (the language with
+	single-argument functions) is basically
+	    the <a href="https://en.wikipedia.org/wiki/Lambda_calculus">lambda
+	calculus</a>. The main practical consequence is that we
+	basically get for free the encoding capabilities of the lambda
+	calculus. Example 1: we don't actually need recursive
+	functions&mdash;we can implement recursion. Here is factorial
+	    the way we can write it in the language from the homework, which allows recursive functions:<br>
+	    &nbsp;&nbsp;<tt> (fun f (n) (if (= n 0) 1 (* n (f (- n 1)))))</tt><br>
+	    But it turns out we can also write it as follows:<br>
+	    &nbsp;&nbsp;<tt> (Z (fun (f) (fun (n) (if (= n 0) 1 (* n (f (- n 1)))))))</tt><br>
+	    where <tt>Z</tt> is a <i><a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">fixed-point combinator</a></i> defined as follows:<br>
+	    &nbsp;&nbsp;<tt> (fun (f) ((fun (x) (f (fun (v) ((x x) v)))) (fun (x) (f (fun (v) ((x x) v))))))</tt><br>
+	    That looks slightly mysterious, I grant you that. But it works. </p></li>
+	
 	<li><p class="ann"><span class="hdr">Feb 20:</span> <a href="homework4.html">Homework 4</a> is out. Due next Tuesday night.</p></li>
 
 	<li><p class="ann"><span class="hdr">Feb 11:</span> <a href="homework3.html">Homework 3</a> is out. Due next Sunday night.</p></li>
@@ -366,7 +410,7 @@ function run () {
 		  <p>Sample code from the lecture: <a href="./code-lect-07-records.scala">records</a> and <a href="./code-lect-07-objects.scala">objects</a>.</p>
 		  <p>Some notes on the <a href="http://raganwald.com/2014/01/19/prototypes-are-not-classes.html">difference between class-based and prototype-based languages</a>, using JavaScript as an example.</p>
 		  <p>A quick overview of the <a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">difference between inheritance and composition</a> (which I called delegation) &mdash; in some languages, both are ways to get a subclassing relationship between classes.</p>
-		  <p>Some additional sample code, extending our <a href="code-lect-07-inheritance.scala">object system with inheritance</a>. My changes are marked with a comment <tt>INHERITANCE</tt> That turned out to be easier than expected, given how we built up our objects. Objects now take an extra parameter, a super object (that is, an object of the class from which the class is inheriting). In the surface syntax, <tt>class</tt> takes an extra (optional parameter) after its parameters, namely a call to a class constructor to indicate what class the current class is inheriting from. That constructor call is passed <tt>EObject</tt> which uses it to construct an object of that class from which the object is inheriting. That super object is stored in the <tt>VObject</tt> value. When you look up a field or method in a <tt>VObject</tt> and it's not found in the object, the field or method is looked up in the super object. If found, it is returned. We get <a href="https://en.wikipedia.org/wiki/Dynamic_dispatch">dynamic dispatch</a> essentially for free because when a method is returned, it is wrapped with a <tt>(function (this) ...)</tt> whether it came from the object or the super object. That function is always invoked with the object on which the method is invoked, therefore <tt>this</tt> is always bound to the current object. </p>
+		  <p>Some additional sample code, extending our <a href="code-lect-07-inheritance.scala">object system with inheritance</a>. My changes are marked with a comment <tt>INHERITANCE</tt> That turned out to be easier than expected, given how we built up our objects. Objects now take an extra parameter, a super object (that is, an object of the class from which the class is inheriting). In the surface syntax, <tt>class</tt> takes an extra (optional parameter) after its parameters, namely a call to a class constructor to indicate what class the current class is inheriting from. That constructor call is passed <tt>EObject</tt> which uses it to construct an object of that class from which the object is inheriting. That super object is stored in the <tt>VObject</tt> value. When you look up a field or method in a <tt>VObject</tt> and it's not found in the object, the field or method is looked up in the super object. If found, it is returned. We get <a href="https://en.wikipedia.org/wiki/Dynamic_dispatch">dynamic dispatch</a> essentially for free because when a method is returned, it is wrapped with a <tt>(fun (this) ...)</tt> whether it came from the object or the super object. That function is always invoked with the object on which the method is invoked, therefore <tt>this</tt> is always bound to the current object. </p>
 		</div>
 	</li>	  
 
