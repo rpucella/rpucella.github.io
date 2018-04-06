@@ -114,6 +114,9 @@ function run () {
 
       <ul class="simple">
 
+	<li><p class="ann"><span class="hdr">Apr 5:</span> Code from the
+	    lecture on types is up. I'll add some notes over the weekend.</p></li>
+	    
 	<li><p class="ann"><span class="hdr">Mar 31:</span> As I
 	mentioned in class, time to start thinking
 	about <a href="./project.html">final projects</a>. Please send
@@ -414,7 +417,49 @@ function run () {
 		</div>
 	</li>	  
 
-	
+	<li><p><span class="hdr">Mar 5:</span><b>Types</b></p>
+	  <div class="lect">
+	    <p><a href="code-lect-08-types.scala">Sample code from the lecture</a>.</p>
+	    <p>Wikipedia's entry on <a href="https://en.wikipedia.org/wiki/Type_system">type systems</a> is reasonable.</p>
+<!--	    <p>At the end of lecture, I mentioned the problem of
+	    giving a reasonable type to reference cells. The sample
+	    code types function <tt>ref</tt> as <tt>(-> ((int)) (ref
+	    int))</tt>, and therefore will only work to create integer
+	    reference cells. There is no way, say, to create a Boolean
+	    referenece cells. A more general type for reference cells
+	    uses <i>type variables</i> to give
+	    a <i><a href="https://en.wikipedia.org/wiki/Generic_programming">generic
+	    type</a></i> to <tt>ref</tt>, along the lines of <tt>(->
+  ((a)) (ref a))</tt>. The modifications necessary to the type
+checker are not extensive, except for the case of <tt>ECall</tt>,
+which
+	    requires <a href="https://en.wikipedia.org/wiki/Unification_(computer_science)">unification</a>
+	    in order to figure out the types to assign to the type
+	    variables to obtain the result type of the call. (I may
+	    provide some sample code in the future for this, or it can
+	    be a final project.) Type systems with generics are known
+	    as polymorphic type systems.
+	    </p>
+-->
+	    <p>
+	      Towards the end of the lecture, we
+  discussed <a href="https://en.wikipedia.org/wiki/Parametric_polymorphism">parametric
+  polymorphism</a> as a way to extend the type system to type more
+	      expressions.</p>
+
+	    <p>Even more advanced type systems can be obtained by
+  using <a href="https://en.wikipedia.org/wiki/Dependent_type">dependent
+  types</a>, which allow types to depend on values! Thus, you can
+  write not only the type of lists over a type A, but you can also
+  write a type <tt>(list n A)</tt> for lists of length <i>n</i> over a
+  type A, where <i>n</i> is a value in the language. Using such a type
+	      system, we can type a concatenate function on lists with a function type taking arguments
+	      <tt>(list n A)</tt> and <tt>(list m A)</tt> with a return type <tt>(list (+ m n) A)</tt>. These type systems have a pretty complex type checking algorithm.</p>
+</div>
+	</li>	  
+
+
+
 	<!--
 	<li><p><span class="hdr">Oct 25:</span><b>Continuations</b></p>
 		<div class="lect">
