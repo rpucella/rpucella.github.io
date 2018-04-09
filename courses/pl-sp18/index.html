@@ -41,7 +41,7 @@
 	  padding-left: 3em;
         }
     	span.hdr {
-   	  padding-right: 1em
+   	  padding-right: 3px;
     	}
 
     </style>
@@ -114,6 +114,8 @@ function run () {
 
       <ul class="simple">
 
+	<li><p class="ann"><span class="hdr">Apr 8:</span> Notes on types added.</p></li>
+	    
 	<li><p class="ann"><span class="hdr">Apr 5:</span> Code from the
 	    lecture on types is up. I'll add some notes over the weekend.</p></li>
 	    
@@ -419,7 +421,8 @@ function run () {
 
 	<li><p><span class="hdr">Apr 5:</span><b>Types</b></p>
 	  <div class="lect">
-	    <p><a href="code-lect-08-types.scala">Sample code from the lecture</a>.</p>
+	    <p><a href="notes-types.pdf">Notes</a> from the lecture.</p>
+	    <p><a href="code-lect-08-types.scala">Sample code</a> from the lecture.</p>
 	    <p>Wikipedia's entry on <a href="https://en.wikipedia.org/wiki/Type_system">type systems</a> is reasonable.</p>
 <!--	    <p>At the end of lecture, I mentioned the problem of
 	    giving a reasonable type to reference cells. The sample
@@ -454,7 +457,7 @@ which
   write a type <tt>(list n A)</tt> for lists of length <i>n</i> over a
   type A, where <i>n</i> is a value in the language. Using such a type
 	      system, we can type a concatenate function on lists with a function type taking arguments
-	      <tt>(list n A)</tt> and <tt>(list m A)</tt> with a return type <tt>(list (+ m n) A)</tt>. These type systems have a pretty complex type checking algorithm.</p>
+	      <tt>(list n A)</tt> and <tt>(list m A)</tt> with a return type <tt>(list (+ m n) A)</tt>. These type systems have a pretty complex type-checking algorithm.</p>
 </div>
 	</li>	  
 
