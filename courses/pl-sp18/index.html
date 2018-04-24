@@ -466,67 +466,26 @@ which
 	  <div class="lect">
 	  <p><a href="./notes-recursion.pdf">Notes from the lecture</a> on tail-recursion.</p>
 	  <p><a href="./code-lect-09-tail.scala">Sample code</a> from the lecture with a tail-recursive evaluator for TFUNC.</p>
+	  <p>A description of <a href="http://www.owlnet.rice.edu/~comp210/96spring/Labs/lab09.html">tail recursion</a> from the perspective of Scheme, a language that is pretty close to what we're implementing.</p>
 	</div>	</li>
 
+	<li><p><span class="hdr">Apr 19:</span><b>Compilation</b></p>
+	  <div class="lect">
+	  <p><a xxxhref="./notes-compilation.pdf">Notes from the lecture</a>.</p>
+	  <p>Sample ccode from the lecture: a <a href="./code-lect-10-compile-1.scala">compiler for a virtual machine with symbolic instructions</a> and a <a href="code-lect-10-compile-2.scala">compiler for a virtual machine with numeric instructions and some optimizations.</p>
+	</div>	</li>
+	
 	<!--
 	<li><p><span class="hdr">Oct 25:</span><b>Continuations</b></p>
 		<div class="lect">
 		  <p><a href="./lect-07-continuations.pdf">Notes from the lecture</a>.</p>
 		  <p>Sample code from the lecture: the code <a href="./code-lect-07-cps.py">implementing the CPS transformation</a>, and the code that additionally <a href="./code-lect-07-callcc.py">implements <tt>call/cc</tt></a> (sometimes called <tt>call-with-current-continuation</tt>).</p>
-		  <p>A description of <a href="http://www.owlnet.rice.edu/~comp210/96spring/Labs/lab09.html">tail recursion</a> from the perspective of Scheme, a language that is pretty close to what we're implementing.</p>
 		  <p>Wikipedia's entry on <a href="https://en.wikipedia.org/wiki/Continuation-passing_style">continuation-passing style</a>, which is actually not bad.</p>
 		  <p>A <a href="http://community.schemewiki.org/?call-with-current-continuation">quick overview of <tt>call/cc</tt></a>, again from the Scheme perspective.</p>
 		  <p>The relationship between <a href="http://matt.might.net/articles/by-example-continuation-passing-style/">continuation-passing style and asynchronous programming in JavaScript</a>.</p>
 		</div>
 	</li>	  
 
-	<li><p><span class="hdr">Nov 1:</span><b>Compilation 1</b></p>
-	  <div class="lect">
-	    <p><a href="./lect-0809-compiling.pdf">Notes</a> and <a href="./code-lect-08-comp-env.py">sample code</a> from the lecture. (The notes include the next lecture as well.)</p>
-		</div>
-	</li>	  
-
-	<li><p><span class="hdr">Nov 8:</span><b>Compilation 2</b></p>
-	  <div class="lect">
-	    <p><a href="lect-0809-compiling.pdf">Notes from the lecture</a> (including last week).</p>
-	    <p>Sample code from the lecture: <a href="code-lect-09-compiler1.py">naive compiler</a>, <a href="code-lect-09-compiler2.py">compiler with primitive operations optimization</a>, <a href="code-lect-09-compiler3.py">compiler with primitive operations + continuations optimization</a>.</p>
-	  </div>
-	</li>	  
-
-	<li><p><span class="hdr">Nov 15:</span><b>Types</b></p>
-	  <div class="lect">
-	    <p><a href="lect-10-types.pdf">Notes from the lecture</a>.</p>
-	    <p><a href="code-lect-10-types.py">Sample code from the lecture</a>, with a simple type checker.</p>
-	    <p>Wikipedia's entry on <a href="https://en.wikipedia.org/wiki/Type_system">type systems</a> is reasonable.</p>
-	    <p>At the end of lecture, I mentioned the problem of
-	    giving a reasonable type to reference cells. The sample
-	    code types function <tt>ref</tt> as <tt>(-> ((int)) (ref
-	    int))</tt>, and therefore will only work to create integer
-	    reference cells. There is no way, say, to create a Boolean
-	    referenece cells. A more general type for reference cells
-	    uses <i>type variables</i> to give
-	    a <i><a href="https://en.wikipedia.org/wiki/Generic_programming">generic
-	    type</a></i> to <tt>ref</tt>, along the lines of <tt>(->
-  ((a)) (ref a))</tt>. The modifications necessary to the type
-checker are not extensive, except for the case of <tt>ECall</tt>,
-which
-	    requires <a href="https://en.wikipedia.org/wiki/Unification_(computer_science)">unification</a>
-	    in order to figure out the types to assign to the type
-	    variables to obtain the result type of the call. (I may
-	    provide some sample code in the future for this, or it can
-	    be a final project.) Type systems with generics are known
-	    as polymorphic type systems.
-	    </p>
-
-<p>
-  Adding generics  are one way to extend
-  type systems to type more expressions while still
-  maintaining safety. More advanced type systems
-  using <a href="https://en.wikipedia.org/wiki/Dependent_type">dependent
-    types</a> are even more expressive, and also more complex
-  to check.
-</div>
-	</li>	  
 
 	<li><p><span class="hdr">Nov 29:</span><b>Concurrency</b></p>
 	  <div class="lect">
