@@ -114,6 +114,12 @@ function run () {
 
       <ul class="simple">
 
+	<li><p class="ann"><span class="hdr">Apr 28:</span>Notes and sample code for exceptions and continuations added.</p></li>
+
+	<li><p class="ann"><span class="hdr">Apr 21:</span>Notes and sample code for tail compilation added.</p></li>
+
+	<li><p class="ann"><span class="hdr">Apr 14:</span>Notes and sample code for tail recursion added.</p></li>
+
 	<li><p class="ann"><span class="hdr">Apr 8:</span> Notes on types added.</p></li>
 	    
 	<li><p class="ann"><span class="hdr">Apr 5:</span> Code from the
@@ -477,17 +483,17 @@ which
 	  <p>A description of a real compiler, <a href="https://aosabook.org/en/ghc.html">The Glasgow Haskell Compiler</a>, giving an excellent overview of the steps involved in compilation, couched in a fairly approachable manner without skimping on the technical details.</p>
 	</div>	</li>
 	
-	<!--
-	<li><p><span class="hdr">Oct 25:</span><b>Continuations</b></p>
+	<li><p><span class="hdr">Apr 26:</span><b>Exceptions and Continuations</b></p>
 		<div class="lect">
-		  <p><a href="./lect-07-continuations.pdf">Notes from the lecture</a>.</p>
-		  <p>Sample code from the lecture: the code <a href="./code-lect-07-cps.py">implementing the CPS transformation</a>, and the code that additionally <a href="./code-lect-07-callcc.py">implements <tt>call/cc</tt></a> (sometimes called <tt>call-with-current-continuation</tt>).</p>
+		  <p><a href="./notes-exceptions.pdf">Notes from the lecture</a>.</p>
+		  <p>Sample code from the lecture: the <a href="code-lect-11-exceptions.scala">straightforward implementation of exceptions</a> by extending the type of results, the <a href="./code-lect-11-continuations.scala">conversion to continuation-passing style</a>, and the implementation of <a href="code-lect-11-continuations-exceptions.scala">exceptions using continuations</a>.</p>
 		  <p>Wikipedia's entry on <a href="https://en.wikipedia.org/wiki/Continuation-passing_style">continuation-passing style</a>, which is actually not bad.</p>
-		  <p>A <a href="http://community.schemewiki.org/?call-with-current-continuation">quick overview of <tt>call/cc</tt></a>, again from the Scheme perspective.</p>
+<!--		  <p>A <a href="http://community.schemewiki.org/?call-with-current-continuation">quick overview of <tt>call/cc</tt></a>, again from the Scheme perspective.</p> -->
 		  <p>The relationship between <a href="http://matt.might.net/articles/by-example-continuation-passing-style/">continuation-passing style and asynchronous programming in JavaScript</a>.</p>
 		</div>
 	</li>	  
 
+	<!--
 
 	<li><p><span class="hdr">Nov 29:</span><b>Concurrency</b></p>
 	  <div class="lect">
