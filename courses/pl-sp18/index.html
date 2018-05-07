@@ -114,6 +114,8 @@ function run () {
 
       <ul class="simple">
 
+	<li><p class="ann"><span class="hdr">Mar 5:</span>Implementation of <tt>amb</tt> added.</p></li>
+
 	<li><p class="ann"><span class="hdr">Apr 28:</span>Notes and sample code for exceptions and continuations added.</p></li>
 
 	<li><p class="ann"><span class="hdr">Apr 21:</span>Notes and sample code for tail compilation added.</p></li>
@@ -496,8 +498,7 @@ which
 
 	<li><p><span class="hdr">May 3:</span><b>More on Continuations</b></p>
 		<div class="lect">
-		  <!-- <p><a href="">Notes from the lecture</a>.</p> -->
-		  <!-- <p>Sample code from the lecture: <a href="">an implementation of amb</a>.</p> Note that most of the code is implemented as primitives in the standard environment coded directly in the abstract representation. -->
+		  <p>Sample code from the lecture: <a href="code-lect-12-amb.scala">an implementation of amb</a>. Note that most of the code is implemented as primitives in the standard environment coded directly in the abstract representation.</p>
 		  <p>The basis of the implementation of <tt>amb</tt> in the sample code is from an overview of the <a href="http://matt.might.net/articles/programming-with-continuations--exceptions-backtracking-search-threads-generators-coroutines/">use of continuations to implement non-local control structures</a> by Matthew Might.</p>
 		  <p>I mentioned in class that we can use continuations to implement coroutines, which are a cooperative form of multithreading. (A coroutine explicitly cedes control to another.) The paper <a href="https://www.cs.indiana.edu/ftp/techreports/TR158.pdf">Continuations and Coroutines</a> by Haynes, Friedman, and Wand describe how that can be done. It is technical, but readable.</p>
 		  <p>Once you get how to implement coroutines with continuations, you are pretty close to being able to implement a preemptive multithreading system, where you can spawn threads and the runtime system is in charge of switching from one to the other at regular short intervals. The implementation of the programming language <a href="https://www.amazon.com/Concurrent-Programming-ML-John-Reppy/dp/0521714729">Concurrent
