@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Foundations of Computer Science (Fall 2018)</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+      
+        code,tt,pre {
+          font-size: 110%;
+        }
+
+	ul.annoucements p { 
+    	  padding-left: 5em;
+    	  text-indent: -5em; 
+        }
+
+	ul.annoucements p span {
+   	  padding-right: 1em
+	}
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	table.office-hours td {
+	  padding-left: 30px;
+	}
+
+    </style>
+
+    <script>
+      window.addEventListener("load",run);
+
+      function run () {
+        // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+        // actually, for anything with "scrollto" class
+
+        // offset is given by the 'top' div (adjusted for padding)
+        var off = document.getElementById("top").clientHeight;
+        console.log(off);
+        //var elts = document.querySelectorAll("div.navbar a");
+        var elts = document.querySelectorAll("a.scrollto");
+        for (var i=0; i<elts.length; i++) {
+          var href=elts[i].getAttribute("href").slice(1);
+          elts[i].setAttribute("onclick","return false;");
+          elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+        }
+
+      }
+
+
+      </script>
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="scrollto" href="#top"><b>Foundations of Computer Science FA18</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Foundations of Computer Science (Fall 2017)</h1>
+    
+    <p class="subtitle">ENGR 3520 / Tue 15:20-17:50 / AC 326</p>
+    
+    <p>This course explores the notion of computation. We're going to
+      develop formal tools for defining what we mean by computation
+      through various models, including automata and the lambda
+      calculus. We will examine how some of these alternative models
+      of computations correspond to different programming paradigms.
+</p>
+
+
+    
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <ul class="simple annoucements">
+
+	<!--	<li><p><a href="announcements.html">Older announcements...</a></p></li> -->
+
+         <li><p><span>Sep 4:</span>
+	    Welcome to FoCS!</p>
+	</li>
+	
+      </ul>
+      
+    </div>
+
+
+    
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Information</h3>
+
+      <p><b>Prerequisites:</b> Discrete Mathematics is no longer a formal prerequisite for FoCS. Prior experience programming will be helpful, since I will not teach programming, as will facility with basic set-theoretic concepts.</p>
+
+      <p><b>Instructor:</b> <a href="http://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</p>
+
+      <p><b>Office hours:</b> Tue TBD / MH 353</p>
+
+      <p><b>Textbooks:</b> There is no required textbook for the course. We will be working off notes and online references.</p>
+
+      <p>
+	There are several excellent books on Theory of Computation
+      (the first part of the course), but they are a bit expensive considering that we will 
+	be covering only a small part of their content. If you need extra assistance, though, any of these books would be useful:
+      <ul>
+	<li>Sisper, <i><a href="https://www.amazon.com/Introduction-Theory-Computation-Michael-Sipser/dp/1133187811">Introduction to the Theory of Computation</a></i></li>
+	<li>Hopcroft, Motwani, Ullman, <i><a href="https://www.amazon.com/Introduction-Automata-Theory-Languages-Computation/dp/0321455363">Automata Theory, Languages, and Computation</a></i></li>
+      </ul>
+      The library has those two books on reserve. Feel free to go and consult them.
+      </p>
+
+      <p>
+      An inexpensive and reasonable book is the following, although it uses Ruby instead of OCaml:
+      <ul>
+	<li>Stuart, <i><a href="http://computationbook.com">Understanding Computation</a></i></li>
+      </ul>
+      It very much follows the spirit of this iteration of FoCS.
+      </p>
+    
+      <p><b>Programming:</b> All programming in this course will be done
+      using the programming
+      language <a href="https://ocaml.org/">OCaml</a>. The OCaml
+      interpreter can be downloaded from the web site, and
+	supports installations on most common systems. Here are a couple of reasonable books on OCaml that you might
+      want to get your hands on if you prefer learning your
+      programming language from a book instead of the web:</p>
+      
+      <ul>
+	<li>Hickey, <i><a href="http://courses.cms.caltech.edu/cs134/cs134b/book.pdf">Introduction
+	      to Objective Caml</a></i> (PDF)</li>
+	<li>Downey, Monje, <i><a href="http://greenteapress.com/thinkocaml/">Think
+	  OCaml</a></i></li>
+	<li>Minsky, Madhavapeddy, Hickey, <i><a href="https://realworldocaml.org/">Real World
+	  OCaml</a></i></li>
+      </ul>
+
+      <p>Some online resources:</p>
+      <ul>
+
+	<li><a href="https://ocaml.org/learn/tutorials/basics.html">OCaml: The Basics</a> is a very small tutorial giving you the basics of interacting with OCaml.</li>
+
+	<li>Some information on
+	  the <a href="http://caml.inria.fr/pub/docs/manual-ocaml/toplevel.html#sec256">commands
+	    you can use in the OCaml shell</a>, which can be
+	  useful</li>
+
+	<li>The <a href="http://caml.inria.fr/pub/docs/manual-ocaml/index.html">official
+	    OCaml manual</a></li>
+
+	<li>There are no official IDEs for OCaml, but many
+	  people swear
+	  by <a href="https://github.com/diml/utop"><i>utop</i></a>,
+	  which is an OCaml shell replacement. There's also
+	  <a href="http://camelia.sourceforge.net/"><i>Camelia</i></a>,
+	  but I've never used it. There is
+	  an <a href="http://www.algo-prog.info/ocaide/">Eclipse
+	    plug-in</a> for OCaml.
+	</li>
+      </ul>
+      
+
+      <p><b>Grading:</b> The final grade is based on weekly homework
+      (70%) and two exams (15% each).  All work will be done
+      individually. Late homeworks will be penalized (10% per 24
+      hours) and no homework will be accepted after its solution has
+      been discussed in class.
+
+      <b>Please do not post your code on a public available repository
+	like GitHub. I hate to do this kind of policing, but we've had
+	some issues in the past, and I'd like to avoid a repeat if
+	possible.</b>
+
+      <p><b>Ninjas:</b> We have a ninja for the class: Taylor Sheneman
+      (<tt>taylor.sheneman</tt> at the
+      usual <tt>students</tt>.<tt>olin</tt>.<tt>edu</tt>). His office
+      hours will be posted here when they're settled.</p>
+      </p>
+
+      <p>I will expect all of us to follow the <a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a>.</p>
+
+     </div>
+
+
+    <hr class="section">
+    <div class="section" id="lectures">
+
+      <h3>Lectures and Readings</h3>
+
+      <p>Schedule and topics subject to last-minute changes.</p>
+      
+      <ul class="lectures">
+	
+	<li><p><span class="hdr">Sep 4:</span><b>Introduction / OCaml</b></p>
+	</li>	  
+
+	<li><p><b>MACHINE MODELS OF COMPUTATION</b></p></li>
+
+	<li><p><span class="hdr">Sep 11:</span><b>Formal languages</b></p>
+	</li>	  
+
+
+	<li><p><span class="hdr">Sep 18:</span><b>Finite automata</b></p>
+	</li>
+	
+
+	<li><p><span class="hdr">Sep 25:</span><b>Intermezzo: Higher-order programming</b></p>
+	</li>	  
+
+
+	<li><p><span class="hdr">Oct 2:</span><b>Turing machines</b></p>
+	</li>	  
+	
+	
+	<li><p><span class="hdr">Oct 9:</span><b>Undecidability</b></p>
+	</li>	  
+
+	
+	<li><p><b>ALTERNATIVE MODELS OF COMPUTATION</b></p></li>
+
+	
+	<li><p><span class="hdr">Oct 16</span><b>Generative grammars</b></p>
+	</li>	  
+
+	<li><p><span class="hdr">Oct 23</span><b>Midterm examination</b></p>
+	</li>
+	
+	<li><p><span class="hdr">Oct 30</span><b>Lambda calculus</b></p>
+	</li>	  
+
+	<li><p><span class="hdr">Nov 6</span><b>Dataflow</b></p>
+	</li>	  
+	
+	<li><p><span class="hdr">Nov 13</span><b>Concurrency</b></p>
+	</li>	  
+
+
+	<li><p><b>FUNCTIONAL PROGRAMMING</b></p></li>
+
+	<li><p><span class="hdr">Nov 27</span><b>Recursive data structures</b></p>
+	</li>
+	
+	<li><p><span class="hdr">Dec 4</span><b></b></p>
+	</li>	  
+
+
+      </ul>
+
+    </div>
+
+
+    <hr class="section">
+    <div class="section" id="homeworks">
+      <h3>Homeworks</h3>
+      <ul class="simple">
+    </div>
+
+  </body>
+</html>
