@@ -196,16 +196,13 @@ li ul {margin-top:6px;}
       <li><p>When you're ready to submit, send an email with your file <tt>homework2.ml</tt> as an attachment to <tt>olin.submissions@gmail.com</tt> with subject <i>Homework 2 submission</i>.</p></li>
     </ul>
 
-<!--
+
     <hr>
 
     <p class="subtitle">Updates</p>
     <ul class="simple">
-      <li>Jan 21: changed sample outputs for <tt>nth</tt> to match type of the functon.</li>
-      <li>Jan 23: changed last sample output for <tt>multM</tt> to a more meaningful one.</li>
-      <li>Jan 24: fixed incorrect outer product outputs.</li>
+      <li>Sep 14: added sample outputs</li>
     </ul>
--->
 	
 
 <hr>
@@ -298,6 +295,7 @@ li ul {margin-top:6px;}
 
        (22,"Z","+",20,20) ]
 
+   
    let p_times : diagram =   (* Z := X * Y via T1,T2,T3 *) 
      [ (0,"","",1,1);
    
@@ -310,7 +308,9 @@ li ul {margin-top:6px;}
    
        (10,"T1","-",11,-1);
        (11,"Y","+",12,12);
-       (* Z -> T2 *)
+   
+         (* Z -> T2 *)
+   
        (12,"Z","-",13,20);
        (13,"T2","+",12,12);
        
@@ -403,7 +403,16 @@ li ul {margin-top:6px;}
 	    
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
-<pre>
+  <pre>
+# find 0 p_plus;;
+- : node * location * action * node * node = (0, "", "", 1, 1)
+# find 3 p_plus;;
+- : node * location * action * node * node = (3, "T1", "+", 1, 1)
+# find 10 p_plus;;
+- : node * location * action * node * node = (10, "Y", "-", 11, 20)
+# find 21 p_plus;;
+- : node * location * action * node * node = (21, "Y", "+", 22, 22)
+  </pre>    
 	  </div>
 	  </li>
 
@@ -421,6 +430,12 @@ li ul {margin-top:6px;}
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
         <pre>
+# get_loc [("X",10)] "X";;
+- : int = 10
+# get_loc [("X",10);("Y",20)] "X";;
+- : int = 10
+# get_loc [("Z",30);("X",10);("Y",20)] "X";;
+- : int = 10
 </pre>
   </div>
 	  </li>
@@ -439,6 +454,16 @@ li ul {margin-top:6px;}
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre>
+# set_loc [("X",10)] "X";;
+- : int -> config = <fun>
+# set_loc [("X",10)] "X" 42;;
+- : config = [("X", 42)]
+# set_loc [("X",10);("Y",20)] "X" 42;;
+- : config = [("X", 42); ("Y", 20)]
+# set_loc [("Z",30);("X",10);("Y",20)] "X" 42;;
+- : config = [("Z", 30); ("X", 42); ("Y", 20)]
+# set_loc [("Z",30);("Y",20);("X",10)] "X" 42;;
+- : config = [("Z", 30); ("Y", 20); ("X", 42)]
 </pre>	    
 </div>
 	  </li>
@@ -470,6 +495,29 @@ li ul {margin-top:6px;}
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre>
+# next [(0,"","",-1,-1)] [("X",0)] 0;;
+- : node * config = (-1, [("X", 0)])
+# next [(0,"","",1,1);(1,"","",-1,-1)] [("X",0)] 0;;
+- : node * config = (1, [("X", 0)])
+# next [(0,"X","+",-1,-1)] [("X",0)] 0;;
+- : node * config = (-1, [("X", 1)])
+# next [(0,"X","-",1,-1);(1,"","",-1,-1)] [("X",0)] 0;;
+- : node * config = (-1, [("X", 0)])
+# next [(0,"X","-",1,-1);(1,"","",-1,-1)] [("X",1)] 0;;
+- : node * config = (1, [("X", 0)])
+# next [(0,"X","-",1,-1);(1,"X","+",0,0)] [("X",0)] 1;;
+- : node * config = (0, [("X", 1)])
+
+# next p_plus [("X",10);("Y",3);("Z",0);("T1",0)] 0;;
+- : node * config = (1, [("X", 10); ("Y", 3); ("Z", 0); ("T1", 0)])
+# next p_plus [("X",10);("Y",3);("Z",0);("T1",0)] 3;;
+- : node * config = (1, [("X", 10); ("Y", 3); ("Z", 0); ("T1", 1)])
+# next p_plus [("X",10);("Y",3);("Z",0);("T1",0)] 10;;
+- : node * config = (11, [("X", 10); ("Y", 2); ("Z", 0); ("T1", 0)])
+# next p_plus [("X",10);("Y",3);("Z",0);("T1",0)] 21;;
+- : node * config = (22, [("X", 10); ("Y", 4); ("Z", 0); ("T1", 0)])
+# next p_plus [("X",10);("Y",0);("Z",0);("T1",0)] 10;;
+- : node * config = (20, [("X", 10); ("Y", 0); ("Z", 0); ("T1", 0)])
 </pre>
 </div>
 	  </li>
@@ -486,10 +534,607 @@ li ul {margin-top:6px;}
       various configurations.</p>
 
     <p><i><b>Hint:</b> obviously, function <tt>next</tt> will be pretty useful for this question.</i></p>
+
+    <p>Note that you do not have to produce any output during the run, even though my sample output does show output. Output is merely helpful for you to debug your code and the diagrams you will develop in Questions 2 and 3.</p>
   
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre>
+# run p_empty [("X",10)];;
+[0]  X 10  
+[1]  X 10  
+[1]  X 9  
+[1]  X 8  
+[1]  X 7  
+[1]  X 6  
+[1]  X 5  
+[1]  X 4  
+[1]  X 3  
+[1]  X 2  
+[1]  X 1  
+[1]  X 0  
+- : config = [("X", 0)]
+
+# run p_transfer [("X",10);("Y",3)];;
+[0]  X 10  Y 3  
+[1]  X 10  Y 3  
+[2]  X 9  Y 3  
+[1]  X 9  Y 4  
+[2]  X 8  Y 4  
+[1]  X 8  Y 5  
+[2]  X 7  Y 5  
+[1]  X 7  Y 6  
+[2]  X 6  Y 6  
+[1]  X 6  Y 7  
+[2]  X 5  Y 7  
+[1]  X 5  Y 8  
+[2]  X 4  Y 8  
+[1]  X 4  Y 9  
+[2]  X 3  Y 9  
+[1]  X 3  Y 10  
+[2]  X 2  Y 10  
+[1]  X 2  Y 11  
+[2]  X 1  Y 11  
+[1]  X 1  Y 12  
+[2]  X 0  Y 12  
+[1]  X 0  Y 13  
+- : config = [("X", 0); ("Y", 13)]
+
+# run p_copy [("X",10);("Y",3);("T1",0)];;
+[0]  X 10  Y 3  T1 0  
+[1]  X 10  Y 3  T1 0  
+[2]  X 9  Y 3  T1 0  
+[3]  X 9  Y 4  T1 0  
+[1]  X 9  Y 4  T1 1  
+[2]  X 8  Y 4  T1 1  
+[3]  X 8  Y 5  T1 1  
+[1]  X 8  Y 5  T1 2  
+[2]  X 7  Y 5  T1 2  
+[3]  X 7  Y 6  T1 2  
+[1]  X 7  Y 6  T1 3  
+[2]  X 6  Y 6  T1 3  
+[3]  X 6  Y 7  T1 3  
+[1]  X 6  Y 7  T1 4  
+[2]  X 5  Y 7  T1 4  
+[3]  X 5  Y 8  T1 4  
+[1]  X 5  Y 8  T1 5  
+[2]  X 4  Y 8  T1 5  
+[3]  X 4  Y 9  T1 5  
+[1]  X 4  Y 9  T1 6  
+[2]  X 3  Y 9  T1 6  
+[3]  X 3  Y 10  T1 6  
+[1]  X 3  Y 10  T1 7  
+[2]  X 2  Y 10  T1 7  
+[3]  X 2  Y 11  T1 7  
+[1]  X 2  Y 11  T1 8  
+[2]  X 1  Y 11  T1 8  
+[3]  X 1  Y 12  T1 8  
+[1]  X 1  Y 12  T1 9  
+[2]  X 0  Y 12  T1 9  
+[3]  X 0  Y 13  T1 9  
+[1]  X 0  Y 13  T1 10  
+[4]  X 0  Y 13  T1 10  
+[5]  X 0  Y 13  T1 9  
+[4]  X 1  Y 13  T1 9  
+[5]  X 1  Y 13  T1 8  
+[4]  X 2  Y 13  T1 8  
+[5]  X 2  Y 13  T1 7  
+[4]  X 3  Y 13  T1 7  
+[5]  X 3  Y 13  T1 6  
+[4]  X 4  Y 13  T1 6  
+[5]  X 4  Y 13  T1 5  
+[4]  X 5  Y 13  T1 5  
+[5]  X 5  Y 13  T1 4  
+[4]  X 6  Y 13  T1 4  
+[5]  X 6  Y 13  T1 3  
+[4]  X 7  Y 13  T1 3  
+[5]  X 7  Y 13  T1 2  
+[4]  X 8  Y 13  T1 2  
+[5]  X 8  Y 13  T1 1  
+[4]  X 9  Y 13  T1 1  
+[5]  X 9  Y 13  T1 0  
+[4]  X 10  Y 13  T1 0  
+- : config = [("X", 10); ("Y", 13); ("T1", 0)]
+
+# run p_plus [("X",10);("Y",3);("Z",0);("T1",0)];;
+[0]  X 10  Y 3  Z 0  T1 0  
+[1]  X 10  Y 3  Z 0  T1 0  
+[2]  X 9  Y 3  Z 0  T1 0  
+[3]  X 9  Y 3  Z 1  T1 0  
+[1]  X 9  Y 3  Z 1  T1 1  
+[2]  X 8  Y 3  Z 1  T1 1  
+[3]  X 8  Y 3  Z 2  T1 1  
+[1]  X 8  Y 3  Z 2  T1 2  
+[2]  X 7  Y 3  Z 2  T1 2  
+[3]  X 7  Y 3  Z 3  T1 2  
+[1]  X 7  Y 3  Z 3  T1 3  
+[2]  X 6  Y 3  Z 3  T1 3  
+[3]  X 6  Y 3  Z 4  T1 3  
+[1]  X 6  Y 3  Z 4  T1 4  
+[2]  X 5  Y 3  Z 4  T1 4  
+[3]  X 5  Y 3  Z 5  T1 4  
+[1]  X 5  Y 3  Z 5  T1 5  
+[2]  X 4  Y 3  Z 5  T1 5  
+[3]  X 4  Y 3  Z 6  T1 5  
+[1]  X 4  Y 3  Z 6  T1 6  
+[2]  X 3  Y 3  Z 6  T1 6  
+[3]  X 3  Y 3  Z 7  T1 6  
+[1]  X 3  Y 3  Z 7  T1 7  
+[2]  X 2  Y 3  Z 7  T1 7  
+[3]  X 2  Y 3  Z 8  T1 7  
+[1]  X 2  Y 3  Z 8  T1 8  
+[2]  X 1  Y 3  Z 8  T1 8  
+[3]  X 1  Y 3  Z 9  T1 8  
+[1]  X 1  Y 3  Z 9  T1 9  
+[2]  X 0  Y 3  Z 9  T1 9  
+[3]  X 0  Y 3  Z 10  T1 9  
+[1]  X 0  Y 3  Z 10  T1 10  
+[4]  X 0  Y 3  Z 10  T1 10  
+[5]  X 0  Y 3  Z 10  T1 9  
+[4]  X 1  Y 3  Z 10  T1 9  
+[5]  X 1  Y 3  Z 10  T1 8  
+[4]  X 2  Y 3  Z 10  T1 8  
+[5]  X 2  Y 3  Z 10  T1 7  
+[4]  X 3  Y 3  Z 10  T1 7  
+[5]  X 3  Y 3  Z 10  T1 6  
+[4]  X 4  Y 3  Z 10  T1 6  
+[5]  X 4  Y 3  Z 10  T1 5  
+[4]  X 5  Y 3  Z 10  T1 5  
+[5]  X 5  Y 3  Z 10  T1 4  
+[4]  X 6  Y 3  Z 10  T1 4  
+[5]  X 6  Y 3  Z 10  T1 3  
+[4]  X 7  Y 3  Z 10  T1 3  
+[5]  X 7  Y 3  Z 10  T1 2  
+[4]  X 8  Y 3  Z 10  T1 2  
+[5]  X 8  Y 3  Z 10  T1 1  
+[4]  X 9  Y 3  Z 10  T1 1  
+[5]  X 9  Y 3  Z 10  T1 0  
+[4]  X 10  Y 3  Z 10  T1 0  
+[10]  X 10  Y 3  Z 10  T1 0  
+[11]  X 10  Y 2  Z 10  T1 0  
+[10]  X 10  Y 2  Z 10  T1 1  
+[11]  X 10  Y 1  Z 10  T1 1  
+[10]  X 10  Y 1  Z 10  T1 2  
+[11]  X 10  Y 0  Z 10  T1 2  
+[10]  X 10  Y 0  Z 10  T1 3  
+[20]  X 10  Y 0  Z 10  T1 3  
+[21]  X 10  Y 0  Z 10  T1 2  
+[22]  X 10  Y 1  Z 10  T1 2  
+[20]  X 10  Y 1  Z 11  T1 2  
+[21]  X 10  Y 1  Z 11  T1 1  
+[22]  X 10  Y 2  Z 11  T1 1  
+[20]  X 10  Y 2  Z 12  T1 1  
+[21]  X 10  Y 2  Z 12  T1 0  
+[22]  X 10  Y 3  Z 12  T1 0  
+[20]  X 10  Y 3  Z 13  T1 0  
+- : config = [("X", 10); ("Y", 3); ("Z", 13); ("T1", 0)]
+
+# run p_times [("X",10);("Y",3);("Z",0);("T1",0);("T2",0);("T3",0)];;
+[0]  X 10  Y 3  Z 0  T1 0  T2 0  T3 0  
+[1]  X 10  Y 3  Z 0  T1 0  T2 0  T3 0  
+[2]  X 10  Y 2  Z 0  T1 0  T2 0  T3 0  
+[1]  X 10  Y 2  Z 0  T1 1  T2 0  T3 0  
+[2]  X 10  Y 1  Z 0  T1 1  T2 0  T3 0  
+[1]  X 10  Y 1  Z 0  T1 2  T2 0  T3 0  
+[2]  X 10  Y 0  Z 0  T1 2  T2 0  T3 0  
+[1]  X 10  Y 0  Z 0  T1 3  T2 0  T3 0  
+[10]  X 10  Y 0  Z 0  T1 3  T2 0  T3 0  
+[11]  X 10  Y 0  Z 0  T1 2  T2 0  T3 0  
+[12]  X 10  Y 1  Z 0  T1 2  T2 0  T3 0  
+[20]  X 10  Y 1  Z 0  T1 2  T2 0  T3 0  
+[23]  X 10  Y 1  Z 0  T1 2  T2 0  T3 0  
+[30]  X 10  Y 1  Z 0  T1 2  T2 0  T3 0  
+[31]  X 9  Y 1  Z 0  T1 2  T2 0  T3 0  
+[30]  X 9  Y 1  Z 0  T1 2  T2 0  T3 1  
+[31]  X 8  Y 1  Z 0  T1 2  T2 0  T3 1  
+[30]  X 8  Y 1  Z 0  T1 2  T2 0  T3 2  
+[31]  X 7  Y 1  Z 0  T1 2  T2 0  T3 2  
+[30]  X 7  Y 1  Z 0  T1 2  T2 0  T3 3  
+[31]  X 6  Y 1  Z 0  T1 2  T2 0  T3 3  
+[30]  X 6  Y 1  Z 0  T1 2  T2 0  T3 4  
+[31]  X 5  Y 1  Z 0  T1 2  T2 0  T3 4  
+[30]  X 5  Y 1  Z 0  T1 2  T2 0  T3 5  
+[31]  X 4  Y 1  Z 0  T1 2  T2 0  T3 5  
+[30]  X 4  Y 1  Z 0  T1 2  T2 0  T3 6  
+[31]  X 3  Y 1  Z 0  T1 2  T2 0  T3 6  
+[30]  X 3  Y 1  Z 0  T1 2  T2 0  T3 7  
+[31]  X 2  Y 1  Z 0  T1 2  T2 0  T3 7  
+[30]  X 2  Y 1  Z 0  T1 2  T2 0  T3 8  
+[31]  X 1  Y 1  Z 0  T1 2  T2 0  T3 8  
+[30]  X 1  Y 1  Z 0  T1 2  T2 0  T3 9  
+[31]  X 0  Y 1  Z 0  T1 2  T2 0  T3 9  
+[30]  X 0  Y 1  Z 0  T1 2  T2 0  T3 10  
+[40]  X 0  Y 1  Z 0  T1 2  T2 0  T3 10  
+[41]  X 0  Y 1  Z 0  T1 2  T2 0  T3 9  
+[42]  X 1  Y 1  Z 0  T1 2  T2 0  T3 9  
+[40]  X 1  Y 1  Z 1  T1 2  T2 0  T3 9  
+[41]  X 1  Y 1  Z 1  T1 2  T2 0  T3 8  
+[42]  X 2  Y 1  Z 1  T1 2  T2 0  T3 8  
+[40]  X 2  Y 1  Z 2  T1 2  T2 0  T3 8  
+[41]  X 2  Y 1  Z 2  T1 2  T2 0  T3 7  
+[42]  X 3  Y 1  Z 2  T1 2  T2 0  T3 7  
+[40]  X 3  Y 1  Z 3  T1 2  T2 0  T3 7  
+[41]  X 3  Y 1  Z 3  T1 2  T2 0  T3 6  
+[42]  X 4  Y 1  Z 3  T1 2  T2 0  T3 6  
+[40]  X 4  Y 1  Z 4  T1 2  T2 0  T3 6  
+[41]  X 4  Y 1  Z 4  T1 2  T2 0  T3 5  
+[42]  X 5  Y 1  Z 4  T1 2  T2 0  T3 5  
+[40]  X 5  Y 1  Z 5  T1 2  T2 0  T3 5  
+[41]  X 5  Y 1  Z 5  T1 2  T2 0  T3 4  
+[42]  X 6  Y 1  Z 5  T1 2  T2 0  T3 4  
+[40]  X 6  Y 1  Z 6  T1 2  T2 0  T3 4  
+[41]  X 6  Y 1  Z 6  T1 2  T2 0  T3 3  
+[42]  X 7  Y 1  Z 6  T1 2  T2 0  T3 3  
+[40]  X 7  Y 1  Z 7  T1 2  T2 0  T3 3  
+[41]  X 7  Y 1  Z 7  T1 2  T2 0  T3 2  
+[42]  X 8  Y 1  Z 7  T1 2  T2 0  T3 2  
+[40]  X 8  Y 1  Z 8  T1 2  T2 0  T3 2  
+[41]  X 8  Y 1  Z 8  T1 2  T2 0  T3 1  
+[42]  X 9  Y 1  Z 8  T1 2  T2 0  T3 1  
+[40]  X 9  Y 1  Z 9  T1 2  T2 0  T3 1  
+[41]  X 9  Y 1  Z 9  T1 2  T2 0  T3 0  
+[42]  X 10  Y 1  Z 9  T1 2  T2 0  T3 0  
+[40]  X 10  Y 1  Z 10  T1 2  T2 0  T3 0  
+[50]  X 10  Y 1  Z 10  T1 2  T2 0  T3 0  
+[10]  X 10  Y 1  Z 10  T1 2  T2 0  T3 0  
+[11]  X 10  Y 1  Z 10  T1 1  T2 0  T3 0  
+[12]  X 10  Y 2  Z 10  T1 1  T2 0  T3 0  
+[13]  X 10  Y 2  Z 9  T1 1  T2 0  T3 0  
+[12]  X 10  Y 2  Z 9  T1 1  T2 1  T3 0  
+[13]  X 10  Y 2  Z 8  T1 1  T2 1  T3 0  
+[12]  X 10  Y 2  Z 8  T1 1  T2 2  T3 0  
+[13]  X 10  Y 2  Z 7  T1 1  T2 2  T3 0  
+[12]  X 10  Y 2  Z 7  T1 1  T2 3  T3 0  
+[13]  X 10  Y 2  Z 6  T1 1  T2 3  T3 0  
+[12]  X 10  Y 2  Z 6  T1 1  T2 4  T3 0  
+[13]  X 10  Y 2  Z 5  T1 1  T2 4  T3 0  
+[12]  X 10  Y 2  Z 5  T1 1  T2 5  T3 0  
+[13]  X 10  Y 2  Z 4  T1 1  T2 5  T3 0  
+[12]  X 10  Y 2  Z 4  T1 1  T2 6  T3 0  
+[13]  X 10  Y 2  Z 3  T1 1  T2 6  T3 0  
+[12]  X 10  Y 2  Z 3  T1 1  T2 7  T3 0  
+[13]  X 10  Y 2  Z 2  T1 1  T2 7  T3 0  
+[12]  X 10  Y 2  Z 2  T1 1  T2 8  T3 0  
+[13]  X 10  Y 2  Z 1  T1 1  T2 8  T3 0  
+[12]  X 10  Y 2  Z 1  T1 1  T2 9  T3 0  
+[13]  X 10  Y 2  Z 0  T1 1  T2 9  T3 0  
+[12]  X 10  Y 2  Z 0  T1 1  T2 10  T3 0  
+[20]  X 10  Y 2  Z 0  T1 1  T2 10  T3 0  
+[21]  X 10  Y 2  Z 0  T1 1  T2 9  T3 0  
+[22]  X 10  Y 2  Z 1  T1 1  T2 9  T3 0  
+[20]  X 10  Y 2  Z 1  T1 1  T2 9  T3 1  
+[21]  X 10  Y 2  Z 1  T1 1  T2 8  T3 1  
+[22]  X 10  Y 2  Z 2  T1 1  T2 8  T3 1  
+[20]  X 10  Y 2  Z 2  T1 1  T2 8  T3 2  
+[21]  X 10  Y 2  Z 2  T1 1  T2 7  T3 2  
+[22]  X 10  Y 2  Z 3  T1 1  T2 7  T3 2  
+[20]  X 10  Y 2  Z 3  T1 1  T2 7  T3 3  
+[21]  X 10  Y 2  Z 3  T1 1  T2 6  T3 3  
+[22]  X 10  Y 2  Z 4  T1 1  T2 6  T3 3  
+[20]  X 10  Y 2  Z 4  T1 1  T2 6  T3 4  
+[21]  X 10  Y 2  Z 4  T1 1  T2 5  T3 4  
+[22]  X 10  Y 2  Z 5  T1 1  T2 5  T3 4  
+[20]  X 10  Y 2  Z 5  T1 1  T2 5  T3 5  
+[21]  X 10  Y 2  Z 5  T1 1  T2 4  T3 5  
+[22]  X 10  Y 2  Z 6  T1 1  T2 4  T3 5  
+[20]  X 10  Y 2  Z 6  T1 1  T2 4  T3 6  
+[21]  X 10  Y 2  Z 6  T1 1  T2 3  T3 6  
+[22]  X 10  Y 2  Z 7  T1 1  T2 3  T3 6  
+[20]  X 10  Y 2  Z 7  T1 1  T2 3  T3 7  
+[21]  X 10  Y 2  Z 7  T1 1  T2 2  T3 7  
+[22]  X 10  Y 2  Z 8  T1 1  T2 2  T3 7  
+[20]  X 10  Y 2  Z 8  T1 1  T2 2  T3 8  
+[21]  X 10  Y 2  Z 8  T1 1  T2 1  T3 8  
+[22]  X 10  Y 2  Z 9  T1 1  T2 1  T3 8  
+[20]  X 10  Y 2  Z 9  T1 1  T2 1  T3 9  
+[21]  X 10  Y 2  Z 9  T1 1  T2 0  T3 9  
+[22]  X 10  Y 2  Z 10  T1 1  T2 0  T3 9  
+[20]  X 10  Y 2  Z 10  T1 1  T2 0  T3 10  
+[23]  X 10  Y 2  Z 10  T1 1  T2 0  T3 10  
+[24]  X 10  Y 2  Z 10  T1 1  T2 0  T3 9  
+[23]  X 10  Y 2  Z 10  T1 1  T2 1  T3 9  
+[24]  X 10  Y 2  Z 10  T1 1  T2 1  T3 8  
+[23]  X 10  Y 2  Z 10  T1 1  T2 2  T3 8  
+[24]  X 10  Y 2  Z 10  T1 1  T2 2  T3 7  
+[23]  X 10  Y 2  Z 10  T1 1  T2 3  T3 7  
+[24]  X 10  Y 2  Z 10  T1 1  T2 3  T3 6  
+[23]  X 10  Y 2  Z 10  T1 1  T2 4  T3 6  
+[24]  X 10  Y 2  Z 10  T1 1  T2 4  T3 5  
+[23]  X 10  Y 2  Z 10  T1 1  T2 5  T3 5  
+[24]  X 10  Y 2  Z 10  T1 1  T2 5  T3 4  
+[23]  X 10  Y 2  Z 10  T1 1  T2 6  T3 4  
+[24]  X 10  Y 2  Z 10  T1 1  T2 6  T3 3  
+[23]  X 10  Y 2  Z 10  T1 1  T2 7  T3 3  
+[24]  X 10  Y 2  Z 10  T1 1  T2 7  T3 2  
+[23]  X 10  Y 2  Z 10  T1 1  T2 8  T3 2  
+[24]  X 10  Y 2  Z 10  T1 1  T2 8  T3 1  
+[23]  X 10  Y 2  Z 10  T1 1  T2 9  T3 1  
+[24]  X 10  Y 2  Z 10  T1 1  T2 9  T3 0  
+[23]  X 10  Y 2  Z 10  T1 1  T2 10  T3 0  
+[30]  X 10  Y 2  Z 10  T1 1  T2 10  T3 0  
+[31]  X 9  Y 2  Z 10  T1 1  T2 10  T3 0  
+[30]  X 9  Y 2  Z 10  T1 1  T2 10  T3 1  
+[31]  X 8  Y 2  Z 10  T1 1  T2 10  T3 1  
+[30]  X 8  Y 2  Z 10  T1 1  T2 10  T3 2  
+[31]  X 7  Y 2  Z 10  T1 1  T2 10  T3 2  
+[30]  X 7  Y 2  Z 10  T1 1  T2 10  T3 3  
+[31]  X 6  Y 2  Z 10  T1 1  T2 10  T3 3  
+[30]  X 6  Y 2  Z 10  T1 1  T2 10  T3 4  
+[31]  X 5  Y 2  Z 10  T1 1  T2 10  T3 4  
+[30]  X 5  Y 2  Z 10  T1 1  T2 10  T3 5  
+[31]  X 4  Y 2  Z 10  T1 1  T2 10  T3 5  
+[30]  X 4  Y 2  Z 10  T1 1  T2 10  T3 6  
+[31]  X 3  Y 2  Z 10  T1 1  T2 10  T3 6  
+[30]  X 3  Y 2  Z 10  T1 1  T2 10  T3 7  
+[31]  X 2  Y 2  Z 10  T1 1  T2 10  T3 7  
+[30]  X 2  Y 2  Z 10  T1 1  T2 10  T3 8  
+[31]  X 1  Y 2  Z 10  T1 1  T2 10  T3 8  
+[30]  X 1  Y 2  Z 10  T1 1  T2 10  T3 9  
+[31]  X 0  Y 2  Z 10  T1 1  T2 10  T3 9  
+[30]  X 0  Y 2  Z 10  T1 1  T2 10  T3 10  
+[40]  X 0  Y 2  Z 10  T1 1  T2 10  T3 10  
+[41]  X 0  Y 2  Z 10  T1 1  T2 10  T3 9  
+[42]  X 1  Y 2  Z 10  T1 1  T2 10  T3 9  
+[40]  X 1  Y 2  Z 11  T1 1  T2 10  T3 9  
+[41]  X 1  Y 2  Z 11  T1 1  T2 10  T3 8  
+[42]  X 2  Y 2  Z 11  T1 1  T2 10  T3 8  
+[40]  X 2  Y 2  Z 12  T1 1  T2 10  T3 8  
+[41]  X 2  Y 2  Z 12  T1 1  T2 10  T3 7  
+[42]  X 3  Y 2  Z 12  T1 1  T2 10  T3 7  
+[40]  X 3  Y 2  Z 13  T1 1  T2 10  T3 7  
+[41]  X 3  Y 2  Z 13  T1 1  T2 10  T3 6  
+[42]  X 4  Y 2  Z 13  T1 1  T2 10  T3 6  
+[40]  X 4  Y 2  Z 14  T1 1  T2 10  T3 6  
+[41]  X 4  Y 2  Z 14  T1 1  T2 10  T3 5  
+[42]  X 5  Y 2  Z 14  T1 1  T2 10  T3 5  
+[40]  X 5  Y 2  Z 15  T1 1  T2 10  T3 5  
+[41]  X 5  Y 2  Z 15  T1 1  T2 10  T3 4  
+[42]  X 6  Y 2  Z 15  T1 1  T2 10  T3 4  
+[40]  X 6  Y 2  Z 16  T1 1  T2 10  T3 4  
+[41]  X 6  Y 2  Z 16  T1 1  T2 10  T3 3  
+[42]  X 7  Y 2  Z 16  T1 1  T2 10  T3 3  
+[40]  X 7  Y 2  Z 17  T1 1  T2 10  T3 3  
+[41]  X 7  Y 2  Z 17  T1 1  T2 10  T3 2  
+[42]  X 8  Y 2  Z 17  T1 1  T2 10  T3 2  
+[40]  X 8  Y 2  Z 18  T1 1  T2 10  T3 2  
+[41]  X 8  Y 2  Z 18  T1 1  T2 10  T3 1  
+[42]  X 9  Y 2  Z 18  T1 1  T2 10  T3 1  
+[40]  X 9  Y 2  Z 19  T1 1  T2 10  T3 1  
+[41]  X 9  Y 2  Z 19  T1 1  T2 10  T3 0  
+[42]  X 10  Y 2  Z 19  T1 1  T2 10  T3 0  
+[40]  X 10  Y 2  Z 20  T1 1  T2 10  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 10  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 9  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 8  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 7  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 6  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 5  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 4  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 3  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 2  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 1  T3 0  
+[50]  X 10  Y 2  Z 20  T1 1  T2 0  T3 0  
+[10]  X 10  Y 2  Z 20  T1 1  T2 0  T3 0  
+[11]  X 10  Y 2  Z 20  T1 0  T2 0  T3 0  
+[12]  X 10  Y 3  Z 20  T1 0  T2 0  T3 0  
+[13]  X 10  Y 3  Z 19  T1 0  T2 0  T3 0  
+[12]  X 10  Y 3  Z 19  T1 0  T2 1  T3 0  
+[13]  X 10  Y 3  Z 18  T1 0  T2 1  T3 0  
+[12]  X 10  Y 3  Z 18  T1 0  T2 2  T3 0  
+[13]  X 10  Y 3  Z 17  T1 0  T2 2  T3 0  
+[12]  X 10  Y 3  Z 17  T1 0  T2 3  T3 0  
+[13]  X 10  Y 3  Z 16  T1 0  T2 3  T3 0  
+[12]  X 10  Y 3  Z 16  T1 0  T2 4  T3 0  
+[13]  X 10  Y 3  Z 15  T1 0  T2 4  T3 0  
+[12]  X 10  Y 3  Z 15  T1 0  T2 5  T3 0  
+[13]  X 10  Y 3  Z 14  T1 0  T2 5  T3 0  
+[12]  X 10  Y 3  Z 14  T1 0  T2 6  T3 0  
+[13]  X 10  Y 3  Z 13  T1 0  T2 6  T3 0  
+[12]  X 10  Y 3  Z 13  T1 0  T2 7  T3 0  
+[13]  X 10  Y 3  Z 12  T1 0  T2 7  T3 0  
+[12]  X 10  Y 3  Z 12  T1 0  T2 8  T3 0  
+[13]  X 10  Y 3  Z 11  T1 0  T2 8  T3 0  
+[12]  X 10  Y 3  Z 11  T1 0  T2 9  T3 0  
+[13]  X 10  Y 3  Z 10  T1 0  T2 9  T3 0  
+[12]  X 10  Y 3  Z 10  T1 0  T2 10  T3 0  
+[13]  X 10  Y 3  Z 9  T1 0  T2 10  T3 0  
+[12]  X 10  Y 3  Z 9  T1 0  T2 11  T3 0  
+[13]  X 10  Y 3  Z 8  T1 0  T2 11  T3 0  
+[12]  X 10  Y 3  Z 8  T1 0  T2 12  T3 0  
+[13]  X 10  Y 3  Z 7  T1 0  T2 12  T3 0  
+[12]  X 10  Y 3  Z 7  T1 0  T2 13  T3 0  
+[13]  X 10  Y 3  Z 6  T1 0  T2 13  T3 0  
+[12]  X 10  Y 3  Z 6  T1 0  T2 14  T3 0  
+[13]  X 10  Y 3  Z 5  T1 0  T2 14  T3 0  
+[12]  X 10  Y 3  Z 5  T1 0  T2 15  T3 0  
+[13]  X 10  Y 3  Z 4  T1 0  T2 15  T3 0  
+[12]  X 10  Y 3  Z 4  T1 0  T2 16  T3 0  
+[13]  X 10  Y 3  Z 3  T1 0  T2 16  T3 0  
+[12]  X 10  Y 3  Z 3  T1 0  T2 17  T3 0  
+[13]  X 10  Y 3  Z 2  T1 0  T2 17  T3 0  
+[12]  X 10  Y 3  Z 2  T1 0  T2 18  T3 0  
+[13]  X 10  Y 3  Z 1  T1 0  T2 18  T3 0  
+[12]  X 10  Y 3  Z 1  T1 0  T2 19  T3 0  
+[13]  X 10  Y 3  Z 0  T1 0  T2 19  T3 0  
+[12]  X 10  Y 3  Z 0  T1 0  T2 20  T3 0  
+[20]  X 10  Y 3  Z 0  T1 0  T2 20  T3 0  
+[21]  X 10  Y 3  Z 0  T1 0  T2 19  T3 0  
+[22]  X 10  Y 3  Z 1  T1 0  T2 19  T3 0  
+[20]  X 10  Y 3  Z 1  T1 0  T2 19  T3 1  
+[21]  X 10  Y 3  Z 1  T1 0  T2 18  T3 1  
+[22]  X 10  Y 3  Z 2  T1 0  T2 18  T3 1  
+[20]  X 10  Y 3  Z 2  T1 0  T2 18  T3 2  
+[21]  X 10  Y 3  Z 2  T1 0  T2 17  T3 2  
+[22]  X 10  Y 3  Z 3  T1 0  T2 17  T3 2  
+[20]  X 10  Y 3  Z 3  T1 0  T2 17  T3 3  
+[21]  X 10  Y 3  Z 3  T1 0  T2 16  T3 3  
+[22]  X 10  Y 3  Z 4  T1 0  T2 16  T3 3  
+[20]  X 10  Y 3  Z 4  T1 0  T2 16  T3 4  
+[21]  X 10  Y 3  Z 4  T1 0  T2 15  T3 4  
+[22]  X 10  Y 3  Z 5  T1 0  T2 15  T3 4  
+[20]  X 10  Y 3  Z 5  T1 0  T2 15  T3 5  
+[21]  X 10  Y 3  Z 5  T1 0  T2 14  T3 5  
+[22]  X 10  Y 3  Z 6  T1 0  T2 14  T3 5  
+[20]  X 10  Y 3  Z 6  T1 0  T2 14  T3 6  
+[21]  X 10  Y 3  Z 6  T1 0  T2 13  T3 6  
+[22]  X 10  Y 3  Z 7  T1 0  T2 13  T3 6  
+[20]  X 10  Y 3  Z 7  T1 0  T2 13  T3 7  
+[21]  X 10  Y 3  Z 7  T1 0  T2 12  T3 7  
+[22]  X 10  Y 3  Z 8  T1 0  T2 12  T3 7  
+[20]  X 10  Y 3  Z 8  T1 0  T2 12  T3 8  
+[21]  X 10  Y 3  Z 8  T1 0  T2 11  T3 8  
+[22]  X 10  Y 3  Z 9  T1 0  T2 11  T3 8  
+[20]  X 10  Y 3  Z 9  T1 0  T2 11  T3 9  
+[21]  X 10  Y 3  Z 9  T1 0  T2 10  T3 9  
+[22]  X 10  Y 3  Z 10  T1 0  T2 10  T3 9  
+[20]  X 10  Y 3  Z 10  T1 0  T2 10  T3 10  
+[21]  X 10  Y 3  Z 10  T1 0  T2 9  T3 10  
+[22]  X 10  Y 3  Z 11  T1 0  T2 9  T3 10  
+[20]  X 10  Y 3  Z 11  T1 0  T2 9  T3 11  
+[21]  X 10  Y 3  Z 11  T1 0  T2 8  T3 11  
+[22]  X 10  Y 3  Z 12  T1 0  T2 8  T3 11  
+[20]  X 10  Y 3  Z 12  T1 0  T2 8  T3 12  
+[21]  X 10  Y 3  Z 12  T1 0  T2 7  T3 12  
+[22]  X 10  Y 3  Z 13  T1 0  T2 7  T3 12  
+[20]  X 10  Y 3  Z 13  T1 0  T2 7  T3 13  
+[21]  X 10  Y 3  Z 13  T1 0  T2 6  T3 13  
+[22]  X 10  Y 3  Z 14  T1 0  T2 6  T3 13  
+[20]  X 10  Y 3  Z 14  T1 0  T2 6  T3 14  
+[21]  X 10  Y 3  Z 14  T1 0  T2 5  T3 14  
+[22]  X 10  Y 3  Z 15  T1 0  T2 5  T3 14  
+[20]  X 10  Y 3  Z 15  T1 0  T2 5  T3 15  
+[21]  X 10  Y 3  Z 15  T1 0  T2 4  T3 15  
+[22]  X 10  Y 3  Z 16  T1 0  T2 4  T3 15  
+[20]  X 10  Y 3  Z 16  T1 0  T2 4  T3 16  
+[21]  X 10  Y 3  Z 16  T1 0  T2 3  T3 16  
+[22]  X 10  Y 3  Z 17  T1 0  T2 3  T3 16  
+[20]  X 10  Y 3  Z 17  T1 0  T2 3  T3 17  
+[21]  X 10  Y 3  Z 17  T1 0  T2 2  T3 17  
+[22]  X 10  Y 3  Z 18  T1 0  T2 2  T3 17  
+[20]  X 10  Y 3  Z 18  T1 0  T2 2  T3 18  
+[21]  X 10  Y 3  Z 18  T1 0  T2 1  T3 18  
+[22]  X 10  Y 3  Z 19  T1 0  T2 1  T3 18  
+[20]  X 10  Y 3  Z 19  T1 0  T2 1  T3 19  
+[21]  X 10  Y 3  Z 19  T1 0  T2 0  T3 19  
+[22]  X 10  Y 3  Z 20  T1 0  T2 0  T3 19  
+[20]  X 10  Y 3  Z 20  T1 0  T2 0  T3 20  
+[23]  X 10  Y 3  Z 20  T1 0  T2 0  T3 20  
+[24]  X 10  Y 3  Z 20  T1 0  T2 0  T3 19  
+[23]  X 10  Y 3  Z 20  T1 0  T2 1  T3 19  
+[24]  X 10  Y 3  Z 20  T1 0  T2 1  T3 18  
+[23]  X 10  Y 3  Z 20  T1 0  T2 2  T3 18  
+[24]  X 10  Y 3  Z 20  T1 0  T2 2  T3 17  
+[23]  X 10  Y 3  Z 20  T1 0  T2 3  T3 17  
+[24]  X 10  Y 3  Z 20  T1 0  T2 3  T3 16  
+[23]  X 10  Y 3  Z 20  T1 0  T2 4  T3 16  
+[24]  X 10  Y 3  Z 20  T1 0  T2 4  T3 15  
+[23]  X 10  Y 3  Z 20  T1 0  T2 5  T3 15  
+[24]  X 10  Y 3  Z 20  T1 0  T2 5  T3 14  
+[23]  X 10  Y 3  Z 20  T1 0  T2 6  T3 14  
+[24]  X 10  Y 3  Z 20  T1 0  T2 6  T3 13  
+[23]  X 10  Y 3  Z 20  T1 0  T2 7  T3 13  
+[24]  X 10  Y 3  Z 20  T1 0  T2 7  T3 12  
+[23]  X 10  Y 3  Z 20  T1 0  T2 8  T3 12  
+[24]  X 10  Y 3  Z 20  T1 0  T2 8  T3 11  
+[23]  X 10  Y 3  Z 20  T1 0  T2 9  T3 11  
+[24]  X 10  Y 3  Z 20  T1 0  T2 9  T3 10  
+[23]  X 10  Y 3  Z 20  T1 0  T2 10  T3 10  
+[24]  X 10  Y 3  Z 20  T1 0  T2 10  T3 9  
+[23]  X 10  Y 3  Z 20  T1 0  T2 11  T3 9  
+[24]  X 10  Y 3  Z 20  T1 0  T2 11  T3 8  
+[23]  X 10  Y 3  Z 20  T1 0  T2 12  T3 8  
+[24]  X 10  Y 3  Z 20  T1 0  T2 12  T3 7  
+[23]  X 10  Y 3  Z 20  T1 0  T2 13  T3 7  
+[24]  X 10  Y 3  Z 20  T1 0  T2 13  T3 6  
+[23]  X 10  Y 3  Z 20  T1 0  T2 14  T3 6  
+[24]  X 10  Y 3  Z 20  T1 0  T2 14  T3 5  
+[23]  X 10  Y 3  Z 20  T1 0  T2 15  T3 5  
+[24]  X 10  Y 3  Z 20  T1 0  T2 15  T3 4  
+[23]  X 10  Y 3  Z 20  T1 0  T2 16  T3 4  
+[24]  X 10  Y 3  Z 20  T1 0  T2 16  T3 3  
+[23]  X 10  Y 3  Z 20  T1 0  T2 17  T3 3  
+[24]  X 10  Y 3  Z 20  T1 0  T2 17  T3 2  
+[23]  X 10  Y 3  Z 20  T1 0  T2 18  T3 2  
+[24]  X 10  Y 3  Z 20  T1 0  T2 18  T3 1  
+[23]  X 10  Y 3  Z 20  T1 0  T2 19  T3 1  
+[24]  X 10  Y 3  Z 20  T1 0  T2 19  T3 0  
+[23]  X 10  Y 3  Z 20  T1 0  T2 20  T3 0  
+[30]  X 10  Y 3  Z 20  T1 0  T2 20  T3 0  
+[31]  X 9  Y 3  Z 20  T1 0  T2 20  T3 0  
+[30]  X 9  Y 3  Z 20  T1 0  T2 20  T3 1  
+[31]  X 8  Y 3  Z 20  T1 0  T2 20  T3 1  
+[30]  X 8  Y 3  Z 20  T1 0  T2 20  T3 2  
+[31]  X 7  Y 3  Z 20  T1 0  T2 20  T3 2  
+[30]  X 7  Y 3  Z 20  T1 0  T2 20  T3 3  
+[31]  X 6  Y 3  Z 20  T1 0  T2 20  T3 3  
+[30]  X 6  Y 3  Z 20  T1 0  T2 20  T3 4  
+[31]  X 5  Y 3  Z 20  T1 0  T2 20  T3 4  
+[30]  X 5  Y 3  Z 20  T1 0  T2 20  T3 5  
+[31]  X 4  Y 3  Z 20  T1 0  T2 20  T3 5  
+[30]  X 4  Y 3  Z 20  T1 0  T2 20  T3 6  
+[31]  X 3  Y 3  Z 20  T1 0  T2 20  T3 6  
+[30]  X 3  Y 3  Z 20  T1 0  T2 20  T3 7  
+[31]  X 2  Y 3  Z 20  T1 0  T2 20  T3 7  
+[30]  X 2  Y 3  Z 20  T1 0  T2 20  T3 8  
+[31]  X 1  Y 3  Z 20  T1 0  T2 20  T3 8  
+[30]  X 1  Y 3  Z 20  T1 0  T2 20  T3 9  
+[31]  X 0  Y 3  Z 20  T1 0  T2 20  T3 9  
+[30]  X 0  Y 3  Z 20  T1 0  T2 20  T3 10  
+[40]  X 0  Y 3  Z 20  T1 0  T2 20  T3 10  
+[41]  X 0  Y 3  Z 20  T1 0  T2 20  T3 9  
+[42]  X 1  Y 3  Z 20  T1 0  T2 20  T3 9  
+[40]  X 1  Y 3  Z 21  T1 0  T2 20  T3 9  
+[41]  X 1  Y 3  Z 21  T1 0  T2 20  T3 8  
+[42]  X 2  Y 3  Z 21  T1 0  T2 20  T3 8  
+[40]  X 2  Y 3  Z 22  T1 0  T2 20  T3 8  
+[41]  X 2  Y 3  Z 22  T1 0  T2 20  T3 7  
+[42]  X 3  Y 3  Z 22  T1 0  T2 20  T3 7  
+[40]  X 3  Y 3  Z 23  T1 0  T2 20  T3 7  
+[41]  X 3  Y 3  Z 23  T1 0  T2 20  T3 6  
+[42]  X 4  Y 3  Z 23  T1 0  T2 20  T3 6  
+[40]  X 4  Y 3  Z 24  T1 0  T2 20  T3 6  
+[41]  X 4  Y 3  Z 24  T1 0  T2 20  T3 5  
+[42]  X 5  Y 3  Z 24  T1 0  T2 20  T3 5  
+[40]  X 5  Y 3  Z 25  T1 0  T2 20  T3 5  
+[41]  X 5  Y 3  Z 25  T1 0  T2 20  T3 4  
+[42]  X 6  Y 3  Z 25  T1 0  T2 20  T3 4  
+[40]  X 6  Y 3  Z 26  T1 0  T2 20  T3 4  
+[41]  X 6  Y 3  Z 26  T1 0  T2 20  T3 3  
+[42]  X 7  Y 3  Z 26  T1 0  T2 20  T3 3  
+[40]  X 7  Y 3  Z 27  T1 0  T2 20  T3 3  
+[41]  X 7  Y 3  Z 27  T1 0  T2 20  T3 2  
+[42]  X 8  Y 3  Z 27  T1 0  T2 20  T3 2  
+[40]  X 8  Y 3  Z 28  T1 0  T2 20  T3 2  
+[41]  X 8  Y 3  Z 28  T1 0  T2 20  T3 1  
+[42]  X 9  Y 3  Z 28  T1 0  T2 20  T3 1  
+[40]  X 9  Y 3  Z 29  T1 0  T2 20  T3 1  
+[41]  X 9  Y 3  Z 29  T1 0  T2 20  T3 0  
+[42]  X 10  Y 3  Z 29  T1 0  T2 20  T3 0  
+[40]  X 10  Y 3  Z 30  T1 0  T2 20  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 20  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 19  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 18  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 17  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 16  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 15  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 14  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 13  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 12  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 11  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 10  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 9  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 8  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 7  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 6  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 5  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 4  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 3  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 2  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 1  T3 0  
+[50]  X 10  Y 3  Z 30  T1 0  T2 0  T3 0  
+[10]  X 10  Y 3  Z 30  T1 0  T2 0  T3 0  
+- : config =
+[("X", 10); ("Y", 3); ("Z", 30); ("T1", 0); ("T2", 0); ("T3", 0)]
 </pre>	    
 </div>
 	  </li>
@@ -523,13 +1168,53 @@ li ul {margin-top:6px;}
 	    </p>
 
 	    <p>To permit me to test your code, make sure your diagram
-	      takes its inputs in locations <tt>X</tt> and <tt>Y</tt>
-	      and leaves its result in location <tt>Z</tt>. You can
-	      use whatever temporaries you want.</p>
+	      takes its inputs in locations <tt>X</tt> and <tt>Y</tt> and
+	      leaves its result in location <tt>Z</tt>. You can use
+	      whatever temporaries you want. In particular, you do not have to
+	      have the same number of temporaries as I do below in my
+	      sample outputs. Because of that, your sample outputs might
+	      different from mine. It's okay. The final result should be
+	      the same, though.</p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
   <pre>
+# calculate p_sub ["X";"Y"] "Z" ["T1";"T2"] [10;0];;
+[0]  X 10  Y 0  Z 0  T1 0  T2 0  
+[1]  X 10  Y 0  Z 0  T1 0  T2 0  
+[2]  X 9  Y 0  Z 0  T1 0  T2 0  
+   <i>... skipping the rest</i>
+- : int = 10
+# calculate p_sub ["X";"Y"] "Z" ["T1";"T2"] [0;10];;
+[0]  X 0  Y 10  Z 0  T1 0  T2 0  
+[1]  X 0  Y 10  Z 0  T1 0  T2 0  
+[4]  X 0  Y 10  Z 0  T1 0  T2 0  
+   <i>... skipping the rest</i>
+- : int = 0
+# calculate p_sub ["X";"Y"] "Z" ["T1";"T2"] [10;10];;
+[0]  X 10  Y 10  Z 0  T1 0  T2 0  
+[1]  X 10  Y 10  Z 0  T1 0  T2 0  
+[2]  X 9  Y 10  Z 0  T1 0  T2 0  
+   <i>... skipping the rest</i>
+- : int = 0
+# calculate p_sub ["X";"Y"] "Z" ["T1";"T2"] [10;9];;
+[0]  X 10  Y 9  Z 0  T1 0  T2 0  
+[1]  X 10  Y 9  Z 0  T1 0  T2 0  
+[2]  X 9  Y 9  Z 0  T1 0  T2 0  
+   <i>... skipping the rest</i>
+- : int = 1
+# calculate p_sub ["X";"Y"] "Z" ["T1";"T2"] [10;3];;
+[0]  X 10  Y 3  Z 0  T1 0  T2 0  
+[1]  X 10  Y 3  Z 0  T1 0  T2 0  
+[2]  X 9  Y 3  Z 0  T1 0  T2 0  
+   <i>... skipping the rest</i>
+- : int = 7
+# calculate p_sub ["X";"Y"] "Z" ["T1";"T2"] [3;10];;
+[0]  X 3  Y 10  Z 0  T1 0  T2 0  
+[1]  X 3  Y 10  Z 0  T1 0  T2 0  
+[2]  X 2  Y 10  Z 0  T1 0  T2 0  
+   <i>... skipping the rest</i>
+- : int = 0
 </pre>
 	  </div>
 	  </li>
@@ -544,11 +1229,51 @@ li ul {margin-top:6px;}
 	    <p>To permit me to test your code, make sure your diagram
 	      takes its inputs in locations <tt>X</tt> and <tt>Y</tt>
 	      and leaves its result in location <tt>Z</tt>. You can
-	      use whatever temporaries you want.</p>
+	      use whatever temporaries you want. In particular, you do not have to
+	      have the same number of temporaries as I do below in my
+	      sample outputs. Because of that, your sample outputs might
+	      different from mine. It's okay. The final result should be
+	      the same, though.</p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
   <pre>
+# calculate p_max ["X";"Y"] "Z" ["T1";"T2";"T3"] [0;0];;
+[0]  X 0  Y 0  Z 0  T1 0  T2 0  T3 0  
+[1]  X 0  Y 0  Z 0  T1 0  T2 0  T3 0  
+[4]  X 0  Y 0  Z 0  T1 0  T2 0  T3 0
+   <i>... skipping the rest</i>
+- : int = 0
+# calculate p_max ["X";"Y"] "Z" ["T1";"T2";"T3"] [10;0];;
+[0]  X 10  Y 0  Z 0  T1 0  T2 0  T3 0  
+[1]  X 10  Y 0  Z 0  T1 0  T2 0  T3 0  
+[2]  X 9  Y 0  Z 0  T1 0  T2 0  T3 0  
+   <i>... skipping the rest</i>
+- : int = 10
+# calculate p_max ["X";"Y"] "Z" ["T1";"T2";"T3"] [10;7];;
+[0]  X 10  Y 7  Z 0  T1 0  T2 0  T3 0  
+[1]  X 10  Y 7  Z 0  T1 0  T2 0  T3 0  
+[2]  X 9  Y 7  Z 0  T1 0  T2 0  T3 0  
+   <i>... skipping the rest</i>
+- : int = 10
+# calculate p_max ["X";"Y"] "Z" ["T1";"T2";"T3"] [0;10];;
+[0]  X 0  Y 10  Z 0  T1 0  T2 0  T3 0  
+[1]  X 0  Y 10  Z 0  T1 0  T2 0  T3 0  
+[4]  X 0  Y 10  Z 0  T1 0  T2 0  T3 0  
+   <i>... skipping the rest</i>
+- : int = 10
+# calculate p_max ["X";"Y"] "Z" ["T1";"T2";"T3"] [7;10];;
+[0]  X 7  Y 10  Z 0  T1 0  T2 0  T3 0  
+[1]  X 7  Y 10  Z 0  T1 0  T2 0  T3 0  
+[2]  X 6  Y 10  Z 0  T1 0  T2 0  T3 0  
+   <i>... skipping the rest</i>
+- : int = 10
+# calculate p_max ["X";"Y"] "Z" ["T1";"T2";"T3"] [10;10];;
+[0]  X 10  Y 10  Z 0  T1 0  T2 0  T3 0  
+[1]  X 10  Y 10  Z 0  T1 0  T2 0  T3 0  
+[2]  X 9  Y 10  Z 0  T1 0  T2 0  T3 0  
+   <i>... skipping the rest</i>
+- : int = 10
 </pre>
 	  </div>
 	  </li>
@@ -567,11 +1292,51 @@ li ul {margin-top:6px;}
 	    <p>To permit me to test your code, make sure your diagram
 	      takes its inputs in locations <tt>X</tt> and <tt>Y</tt>
 	      and leaves its result in location <tt>Z</tt>. You can
-	      use whatever temporaries you want.</p>
+	      use whatever temporaries you want. In particular, you do not have to
+	      have the same number of temporaries as I do below in my
+	      sample outputs. Because of that, your sample outputs might
+	      different from mine. It's okay. The final result should be
+	      the same, though.</p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
   <pre>
+# calculate p_diff ["X";"Y"] "Z" ["T1";"T2";"T3";"T4"] [0;0];;
+[0]  X 0  Y 0  Z 0  T1 0  T2 0  T3 0  T4 0  
+[1]  X 0  Y 0  Z 0  T1 0  T2 0  T3 0  T4 0  
+[4]  X 0  Y 0  Z 0  T1 0  T2 0  T3 0  T4 0  
+   <i>... skipping the rest</i>
+- : int = 0
+# calculate p_diff ["X";"Y"] "Z" ["T1";"T2";"T3";"T4"] [10;0];;
+[0]  X 10  Y 0  Z 0  T1 0  T2 0  T3 0  T4 0  
+[1]  X 10  Y 0  Z 0  T1 0  T2 0  T3 0  T4 0  
+[2]  X 9  Y 0  Z 0  T1 0  T2 0  T3 0  T4 0  
+   <i>... skipping the rest</i>
+- : int = 10
+# calculate p_diff ["X";"Y"] "Z" ["T1";"T2";"T3";"T4"] [0;10];;
+[0]  X 0  Y 10  Z 0  T1 0  T2 0  T3 0  T4 0  
+[1]  X 0  Y 10  Z 0  T1 0  T2 0  T3 0  T4 0  
+[4]  X 0  Y 10  Z 0  T1 0  T2 0  T3 0  T4 0  
+   <i>... skipping the rest</i>
+- : int = 10
+# calculate p_diff ["X";"Y"] "Z" ["T1";"T2";"T3";"T4"] [10;10];;
+[0]  X 10  Y 10  Z 0  T1 0  T2 0  T3 0  T4 0  
+[1]  X 10  Y 10  Z 0  T1 0  T2 0  T3 0  T4 0  
+[2]  X 9  Y 10  Z 0  T1 0  T2 0  T3 0  T4 0  
+   <i>... skipping the rest</i>
+- : int = 0
+# calculate p_diff ["X";"Y"] "Z" ["T1";"T2";"T3";"T4"] [10;7];;
+[0]  X 10  Y 7  Z 0  T1 0  T2 0  T3 0  T4 0  
+[1]  X 10  Y 7  Z 0  T1 0  T2 0  T3 0  T4 0  
+[2]  X 9  Y 7  Z 0  T1 0  T2 0  T3 0  T4 0  
+   <i>... skipping the rest</i>
+- : int = 3
+# calculate p_diff ["X";"Y"] "Z" ["T1";"T2";"T3";"T4"] [7;10];;
+[0]  X 7  Y 10  Z 0  T1 0  T2 0  T3 0  T4 0  
+[1]  X 7  Y 10  Z 0  T1 0  T2 0  T3 0  T4 0  
+[2]  X 6  Y 10  Z 0  T1 0  T2 0  T3 0  T4 0  
+   <i>... skipping the rest</i>
+- : int = 3
 </pre>
 	  </div>
 	  </li>
@@ -621,6 +1386,16 @@ li ul {margin-top:6px;}
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre>
+# rename [("X","A");("Y","B");("Z","C")] "X";;
+- : location = "A"
+# rename [("X","A");("Y","B");("Z","C")] "Y";;
+- : location = "B"
+# rename [("X","A");("Y","B");("Z","C")] "Z";;
+- : location = "C"
+# rename [("X","A");("Y","B");("Z","C")] "W";;
+- : location = "W"
+# rename [("X","A");("Y","B");("Z","C")] "A";;
+- : location = "A"
 </pre>
 	  </div>
 	  </li>
@@ -637,12 +1412,30 @@ li ul {margin-top:6px;}
 	      by renaming every location in the diagram via the
 	      renaming list <tt>rename_list</tt>. </p>
 
-	    <p>The idea is by appending the result of <tt>incl diag offset stop rename_list</tt> to a diagram, you add a bunch of nodes with entry point at <tt>offset</tt> (= <tt>0 + offset</tt>, the <b>start</b> node of the subroutine) that perform the operations in <tt>diag</tt> on the locations obtained by renaming the locations in <tt>diag</tt> according to <tt>rename_list</tt>, and that exits by jumping to node <tt>stop</tt> in the diagram.</p>
+	    <p>The idea is that by appending the result of <tt>incl diag offset stop rename_list</tt> to a diagram, you add a bunch of nodes with entry point at <tt>offset</tt> (= <tt>0 + offset</tt>, the <b>start</b> node of the subroutine) that perform the operations in <tt>diag</tt> on the locations obtained by renaming the locations in <tt>diag</tt> according to <tt>rename_list</tt>, and that exits by jumping to node <tt>stop</tt> in the diagram.</p>
 
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre>
+# incl [] 1000 99 [("X","A");("Y","B")];;
+- : diagram = []
+# incl [(0,"","",-1,-1)] 1000 99 [("X","A");("Y","B")];;
+- : diagram = [(1000, "", "", 99, 99)]
+# incl [(0,"","",1,1);(1,"X","-",1,-1)] 1000 99 [("X","A");("Y","B")];;
+- : diagram = [(1000, "", "", 1001, 1001); (1001, "A", "-", 1001, 99)]
+# incl [(0,"","",1,1);(1,"X","-",2,-1);(2,"Y","+",1,1)] 1000 99 [("X","A");("Y","B")];;
+- : diagram =
+[(1000, "", "", 1001, 1001); (1001, "A", "-", 1002, 99);
+ (1002, "B", "+", 1001, 1001)]
+# incl p_plus 200 99 [("X","A");("Y","B")];;
+- : diagram =
+[(200, "", "", 201, 201); (201, "A", "-", 202, 204);
+ (202, "Z", "+", 203, 203); (203, "T1", "+", 201, 201);
+ (204, "T1", "-", 205, 210); (205, "A", "+", 204, 204);
+ (210, "B", "-", 211, 220); (211, "T1", "+", 210, 210);
+ (220, "T1", "-", 221, 99); (221, "B", "+", 222, 222);
+ (222, "Z", "+", 220, 220)]
 </pre>
 </div>
 	  </li>
@@ -665,11 +1458,63 @@ li ul {margin-top:6px;}
 	    <p>To permit me to test your code, make sure your diagram
 	      takes its inputs in locations <tt>X</tt> and <tt>Y</tt>
 	      and leaves its result in location <tt>Z</tt>. You can
-	      use whatever temporaries you want.</p>
+	      use whatever temporaries you want. In particular, you do not have to
+	      have the same number of temporaries as I do below in my
+	      sample outputs. Because of that, your sample outputs might
+	      different from mine. It's okay. The final result should be
+	      the same, though.</p>
 	    
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre>
+# calculate p_div ["X";"Y"] "Z" ["T1";"T2";"T3";"T4";"T5";"T6";"T7";"T8"] [0;0];;
+[0]  X 0  Y 0  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1]  X 0  Y 0  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1000]  X 0  Y 0  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+   <i>... skipping the rest</i>
+- : int = 0
+# calculate p_div ["X";"Y"] "Z" ["T1";"T2";"T3";"T4";"T5";"T6";"T7";"T8"] [0;3];;
+[0]  X 0  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1]  X 0  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1000]  X 0  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+   <i>... skipping the rest</i>
+- : int = 0
+# calculate p_div ["X";"Y"] "Z" ["T1";"T2";"T3";"T4";"T5";"T6";"T7";"T8"] [3;5];;
+[0]  X 3  Y 5  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1]  X 3  Y 5  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1000]  X 3  Y 5  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+   <i>... skipping the rest</i>
+- : int = 0
+# calculate p_div ["X";"Y"] "Z" ["T1";"T2";"T3";"T4";"T5";"T6";"T7";"T8"] [5;3];;
+[0]  X 5  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1]  X 5  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1000]  X 5  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+   <i>... skipping the rest</i>
+- : int = 1
+# calculate p_div ["X";"Y"] "Z" ["T1";"T2";"T3";"T4";"T5";"T6";"T7";"T8"] [6;3];;
+[0]  X 6  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1]  X 6  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1000]  X 6  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+   <i>... skipping the rest</i>
+- : int = 2
+# calculate p_div ["X";"Y"] "Z" ["T1";"T2";"T3";"T4";"T5";"T6";"T7";"T8"] [7;3];;
+[0]  X 7  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1]  X 7  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1000]  X 7  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+   <i>... skipping the rest</i>
+- : int = 2
+# calculate p_div ["X";"Y"] "Z" ["T1";"T2";"T3";"T4";"T5";"T6";"T7";"T8"] [8;3];;
+[0]  X 8  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1]  X 8  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1000]  X 8  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+   <i>... skipping the rest</i>
+- : int = 2
+# calculate p_div ["X";"Y"] "Z" ["T1";"T2";"T3";"T4";"T5";"T6";"T7";"T8"] [9;3];;
+[0]  X 9  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1]  X 9  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+[1000]  X 9  Y 3  Z 0  T1 0  T2 0  T3 0  T4 0  T5 0  T6 0  T7 0  T8 0  
+   <i>... skipping the rest</i>
+- : int = 3
 </pre>
 </div>
 	    <p>Note that this does not compute fast. <tt>25 div 3</tt>
