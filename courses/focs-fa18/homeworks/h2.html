@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 2</title>
+
+    <link rel="stylesheet" href="../alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+      ol.question > li {
+      font-weight: bold;
+      }
+
+      ol.question > li > * {
+      font-weight: normal;
+      }
+      
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+      li > p { margin-top:0;}
+
+
+      table.diagram {
+      border-collapse: collapse;
+      }
+
+      table.diagram td, table.diagram th {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+      }
+
+      table.diagram th {
+    text-align: center;
+    background-color: #666;
+    color: white;
+      }
+
+      
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="../index.html"><b>Foundations of Computer Science FA18</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 2</h1>
+    
+    <p class="subtitle">Due date: Thursday, Sep 20 (23h59)</p>
+
+    <ul>
+      <li><p>This homework is to be done
+    individually. You may discuss problems with fellow students, but
+    all submitted work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+	is someone else helping you.</p></li>
+      <li><p><b>Please do not post your solutions on a public website or a public repository like GitHub.</b></p></li>
+
+      <li><p>All programming is to be done in OCaml v4.</p></li>
+
+      <li><p>Code your answers by modifying the
+      file <a href="homework2.ml"><tt>homework2.ml</tt></a> provided. Add your
+      <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+      <li><p><b>Please do not change the types in the signature of the
+	function stubs I provide</b>. Doing so will make it
+	impossible to load your code into the testing infrastructure,
+	and make me unhappy.</p></li>
+
+      <li><p>Feel free to define helper functions if you need them.</p></li>
+    </ul>
+
+
+    <hr>
+
+    
+    <p class="subtitle">Electronic submission instructions:</p>
+
+    <ul>
+      <li><p>Start a <i>new</i> OCaml shell.</p></li>
+      <li><p>Load your homework code via <tt>#use "homework2.ml";;</tt></p></li>
+      <li><p>If there are any error, do not submit. I can't test what I
+	can't <tt>#use</tt>.</p></li>
+      <li><p>When you're ready to submit, send an email with your file <tt>homework2.ml</tt> as an attachment to <tt>olin.submissions@gmail.com</tt> with subject <i>Homework 2 submission</i>.</p></li>
+    </ul>
+
+<!--
+    <hr>
+
+    <p class="subtitle">Updates</p>
+    <ul class="simple">
+      <li>Jan 21: changed sample outputs for <tt>nth</tt> to match type of the functon.</li>
+      <li>Jan 23: changed last sample output for <tt>multM</tt> to a more meaningful one.</li>
+      <li>Jan 24: fixed incorrect outer product outputs.</li>
+    </ul>
+-->
+	
+
+<hr>
+
+    <p>In this homework, we are going to implement (in OCaml) a simulator for the flow diagrams that represent programs for the abacus model.</p>
+    
+    <p>Flow diagrams are great to present on the board because they
+    are highly graphical, but that makes them slightly awkward to
+    write down textually. One approach is described
+    in <a href="http://www.math.mcgill.ca/~barr/papers/pga.pdf">Lambek's
+	notes</a> (beginning of Chapter 2) and uses a table to represent a diagram. Consider the simple flow diagram to transfer the content of a location <tt>X</tt> to location <tt>Y</tt>:</p>
+
+    <center><img  width="250px" src="transfer.png"></center>
+
+    <p>One way to represent this is to number all the nodes in the
+      diagram (<b>start</b> is <i>always</i> 0), and use the table:</p>
+
+    <center>
+    <table class="diagram">
+      <tr>
+	<th>node</th>
+	<th>location</th>
+	<th>action</th>
+	<th>success</th>
+	<th>failure</th>
+      </tr>
+      <tr><td>0</td><td></td><td></td><td>1</td><td>1</td></tr>
+      <tr><td>1</td><td>X</td><td>-</td><td>2</td><td>-1</td></tr>
+      <tr><td>2</td><td>Y</td><td>+</td><td>1</td><td>1</td></tr>
+    </table>
+    </center>
+
+    <p>Each row in the table describes a node in the flow diagram. For
+    each node, the location acted upon is described (blank in case of a node that simply goes to another node, like <b>start</b>), the action to be performed on the location (either <b>+</b> or <tt>-</tt>), and which node to go to in the case of the action succeeding and the action failing. Some actions like <tt>+</tt> always succeed. By convention, in such a case, we put the failure field to point to the same node as the success field.  We reserve <b>-1</b> to represent <b>stop</b>.</p>
+      
+    <p>We can represent such a table in OCaml using a list of tuples, where each row of the table is a tuple in the list. Here are the types we will use for flow diagrams:</p>
+    <pre>
+   type location = string
+   type node = int
+   type action = string
+               
+   type diagram = (node * location * action * node * node) list
+    </pre>
+    <p>Thus, a diagram is a list of tuples, each tuple consisting of an integer identifying the node, a string identifying the location acted upong (<tt>""</tt> if no location), a string identifying the action (<tt>"+"</tt> or <tt>"-"</tt>, or <tt>""</tt> if no action), and two integers identifying the nodes to go to in case of success and failure, respectively. The above transfer flow diagram can therefore be captured by:</p>
+
+    <pre>
+   let p_transfer : diagram =
+     [ (0,"","",1,1);
+       (1,"X","-",2,-1);
+       (2,"Y","+",1,1) ]    </pre>
+
+    <p>And that's it. For the sake of looking at more examples, consider the following diagrams in table form:</p>
+
+    <pre>
+   let p_empty : diagram = 
+     [ (0,"","",1,1);
+       (1,"X","-",1,-1) ]
+
+   let p_copy: diagram =  (* X -> X; Y -> X + Y via T1*)
+     [ (0,"","",1,1);
+       (1,"X","-",2,4);
+       (2,"Y","+",3,3);
+       (3,"T1","+",1,1);
+       (4,"T1","-",5,-1);
+       (5,"X","+",4,4) ]    </pre>
+
+    <p>Here are the flow diagrams calculating addition and multiplication &mdash; note that the input locations <i>X</i> and <i>Y</i> are untouched by executing the diagrams:</p>
+
+    <pre>
+   let p_plus : diagram =   (* Z := X + Y via T1 *)
+      [(0,"","",1,1);
+   
+         (* Z := X *)
+
+       (1,"X","-",2,4);
+       (2,"Z","+",3,3);
+       (3,"T1","+",1,1);
+       (4,"T1","-",5,10);
+       (5,"X","+",4,4);
+   
+         (* Y -> T1 *)
+   
+       (10,"Y","-",11,20);
+       (11,"T1","+",10,10);
+   
+       (20,"T1","-",21,-1);
+       (21,"Y","+",22,22);
+   
+         (* Z -> Z + 1 *)
+
+       (22,"Z","+",20,20) ]
+
+   let p_times : diagram =   (* Z := X * Y via T1,T2,T3 *) 
+     [ (0,"","",1,1);
+   
+         (* Z := 0 *)
+   
+         (* Y -> T1 *)
+   
+       (1,"Y","-",2,10);
+       (2,"T1","+",1,1);
+   
+       (10,"T1","-",11,-1);
+       (11,"Y","+",12,12);
+       (* Z -> T2 *)
+       (12,"Z","-",13,20);
+       (13,"T2","+",12,12);
+       
+         (* Z := T2 + X *)   (* p_plus with X -> T2,  Y -> X, Z -> Z, T1 -> T3 *)
+
+       (20,"T2","-",21,23);
+       (21,"Z","+",22,22);
+       (22,"T3","+",20,20);
+       (23,"T3","-",24,30);
+       (24,"T2","+",23,23);
+       (30,"X","-",31,40);
+       (31,"T3","+",30,30);
+       (40,"T3","-",41,50);
+       (41,"X","+",42,42);
+       (42,"Z","+",40,40);
+   
+         (* empty T2 *)
+   
+       (50,"T2","-",50,10) ]  </pre>
+
+    <p>I have chosen a node numbering scheme that makes it reasonable to identify the parts of the diagram. Obviously, you don't have to number nodes that way.</p>
+      
+    <p>As we discussed in class, executing such a flow diagram
+      consists of transforming <i>configurations</i>, which are just a 
+      mapping of locations to natural numbers, starting with an
+      initial configuration and stopping when the node is <b>stop</b>
+      (-1). A configuration has type:</p>
+
+    <pre>
+   type config = (location * int) list
+    </pre>
+
+    <p>For example, here is the configuration stating that <tt>X</tt>
+      holds value 2 and <tt>Y</tt> holds value
+      5: <tt>[("X",2);("Y",5)]</tt>.
+
+      <p>In Question 1 below, you will implement functions to transform those
+	configurations according to the actions described in a flow
+	diagram. In order to help you visualize and debug your
+	functions, it will be handy to be able to print a
+	configuration, as well as the node in the diagram you are
+	currently on as you're executing the diagram. Printing in
+	OCaml is a bit painful &mdash; a side effect of having the
+	language be based on expressions only &mdash; and I
+	implemented a function for you that can be used to print a
+	configuration. The function is included in the
+	starting <tt>homework2.ml</tt> file, and has the following
+	signature:</p>
+
+      <pre>
+   print_config : node -> config -> unit
+      </pre>
+
+      <p>It takes a node number and a configuration to
+	print. The result is printed on the screen, and the special
+	value <tt>()</tt> of type <tt>unit</tt> is returned. Value <tt>()</tt> is
+	roughly equivalent to <tt>None</tt> in Python. To use such a
+	function, put it in a <tt>let</tt> before the expression you
+	want to evaluate, such as:</p>
+
+      <pre>
+   let _ = print_config 99 [("X",1);("Y";2);("Z";3)]  in
+   <i>expression_to_evaluate</i>
+      </pre>
+
+    <p>This will print the following before
+      evaluating and returning the value of <tt><i>expression_to_evaluate</i></tt>:
+      <pre>
+   [99]  X 1  Y 2  Z 3
+      </pre>	
+
+<hr>
+
+    <ol class="question">
+      <li> <p><b>Flow diagrams simulator</b></p>
+
+	<ol class="subquestion">
+
+	  <li> <p>Code a function <tt class="code">find</tt> of
+	      type <tt class="code">node -> diagram -> (node *
+	      location * action * node * node)</tt>
+	      which takes a node number <tt>n</tt> and a flow diagram
+	      table <tt>diag</tt> and returns the tuple
+	      in diagram table <tt>diag</tt> corresponding to
+	      node <tt>n</tt>. 
+
+	    <p>You should probably <tt>failwith</tt> a useful error
+	      message if the node
+	      cannot be found in the diagram table.</p>
+	    
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+	  </div>
+	  </li>
+
+
+
+	  <li> <p>Code a function <tt class="code">get_loc</tt> of
+          type <tt class="code">config -> location -> int</tt> which
+          takes a configuration and a location name and return the
+              content of that location in the configuration.</p>
+
+	    <p>You should
+              probably <tt>failwith</tt> a useful error message if
+          the lcoation does not exist in the configuration.</p>
+        
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+        <pre>
+</pre>
+  </div>
+	  </li>
+
+	  
+  <li> <p>Code a function <tt class="code">set_loc</tt> of type
+      <tt class="code">config -> location -> int -> config</tt> which
+      takes a configuration <tt>cfg</tt>, a location <tt>loc</tt>, and
+      a value <tt>n</tt>, and returns a new configuration in which
+      location <tt>loc</tt> has been changed to now hold
+      value <tt>n</tt>.</p>
+
+    <p>You should probably <tt>failwith</tt> a useful
+      error message if the location does not exist in the configuration.</p>
+  
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+</pre>	    
+</div>
+	  </li>
+
+
+	  <li><p>Code a function <tt class="code">next</tt> of type
+	      <tt class="code">diagram -> config -> node -> (node *
+		config)</tt> which takes a flow diagram table, a
+		configuration, and a
+		node number <tt>n</tt> in the table, and basically
+	      performs the action in the diagram at
+		node <tt>n</tt>. The result is a new node number
+		(obtained by following either the success or failure path after
+		perfoming the action) paired with the new
+		configuration (obtained after performing the
+	      action).</p>
+
+	    <p>Note that there are three kind of
+	      actions:
+	      <ul style="list-style-type: none;">
+		<li><tt>""</tt> which means do nothing and go to the success node</li>
+		<li><tt>"+"</tt> which means add 1 to
+		  the specified location and go to the success node</li>
+		<li><tt>"-"</tt>
+		which means subtract 1 from the specified location if
+		  possible, and go to the success or failure node accordingly.</li></ul> </p>
+	      
+  
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+</pre>
+</div>
+	  </li>
+
+
+
+  <li> <p>Code a function <tt class="code">run</tt> of type
+      <tt class="code">diagram -> config -> config</tt> which takes a
+      flow diagram table and an initial configuration, and starting
+      with node <tt>0</tt>, repeatedly computes the next configuration
+      until node <tt>-1</tt> is reached, at which point the
+      configuration reached is returned. This is where it might be
+      useful to print the configuration as you loop through the
+      various configurations.</p>
+
+    <p><i><b>Hint:</b> obviously, function <tt>next</tt> will be pretty useful for this question.</i></p>
+  
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+</pre>	    
+</div>
+	  </li>
+
+	</ol>
+      </li>
+
+      
+      <li> <p><b>Designing simple flow diagrams</b></p>
+
+        <p>In this question, I will ask you to come up with flow
+	  diagram tables. You can test your diagrams
+	  with the code you wrote in Question 1. </p>
+
+	<p>For submission purposes, I ask you to define those flow
+	  diagram tables as constants using <tt>let</tt> with a fixed
+	  name given below in each question. There is already a
+	  placeholder in <tt>homework2.ml</tt> for those answers. Just
+	  replace the placeholder with your definition.</p>
+
+	<p><i>I strongly suggest you draw flow diagrams on paper and
+	    convince yourself they work before you code them up.</i></p>
+
+	<ol class="subquestion">
+
+	  <li><p>
+	      Design a flow diagram <tt class="code">p_sub</tt> that
+	      calculates <tt>Z := X &minusd; Y</tt>, defined to
+	      be <tt>X - Y</tt> when <tt>X &ge; Y</tt> and <tt>0</tt>
+	      otherwise.
+	    </p>
+
+	    <p>To permit me to test your code, make sure your diagram
+	      takes its inputs in locations <tt>X</tt> and <tt>Y</tt>
+	      and leaves its result in location <tt>Z</tt>. You can
+	      use whatever temporaries you want.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+</pre>
+	  </div>
+	  </li>
+
+
+
+	  <li><p>
+	      Design a flow diagram <tt class="code">p_max</tt> that
+	      calculates <tt>Z := max(X, Y)</tt>, with the usual definition.
+	    </p>
+
+	    <p>To permit me to test your code, make sure your diagram
+	      takes its inputs in locations <tt>X</tt> and <tt>Y</tt>
+	      and leaves its result in location <tt>Z</tt>. You can
+	      use whatever temporaries you want.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+</pre>
+	  </div>
+	  </li>
+
+
+
+	  <li><p>
+	      Design a flow diagram <tt class="code">p_diff</tt> that
+	      calculates <tt>Z := |X - Y|</tt>, the absolute value of
+	      the difference between <tt>X</tt>
+	      and <tt>Y</tt>. Thus, <tt>|X - Y|</tt> is equal to <tt>X -
+		Y</tt> when <tt>X &ge; Y</tt> and equal to <tt>Y - X</tt>
+	      when <tt>X &le; Y</tt>. 
+	    </p>
+
+	    <p>To permit me to test your code, make sure your diagram
+	      takes its inputs in locations <tt>X</tt> and <tt>Y</tt>
+	      and leaves its result in location <tt>Z</tt>. You can
+	      use whatever temporaries you want.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+  <pre>
+</pre>
+	  </div>
+	  </li>
+
+
+	</ol>
+      </li>
+
+      <li> <p><b>More complex flow diagrams</b></p>
+	
+	<p>Coding complex flow diagrams using tables is made
+	      difficult by the fact that we don't have the notion of
+	      "subroutine" that we informally use when drawing
+	      flow diagrams on paper. Let's remedy the situation. The
+	      idea behind a subroutine is just that it's a node in the flow
+	      diagram that we can replace by a flow diagram actually
+	      calculating the function used in the node.</p>
+
+	    <p>There are many ways of getting something like that to
+	    work. We'll take the most straightforward one. Since a
+	    flow diagram table is just a list of nodes, we'll
+	    implement a subroutine <i>S</i> by basically just adding
+	    the nodes of <i>S</i> to our table, making sure that we
+	    adjust the node numbers and the locations used in the
+	    added nodes so that they don't clash with the nodes
+	    already in our diagram.  Adding the nodes of the
+	    subroutine to a diagram is just a matter of appending the
+	    nodes to our diagram. The OCaml <tt>@</tt> operation can
+	    be used to append two lists.</p>
+
+	    <ol class="subquestion">
+
+	      
+	  <li><p>Code a function <tt class="code">rename</tt> of
+	      type <tt class="code">(location * location) list ->
+	      location -> location</tt> which takes a list of
+	      the form <tt>[(<i>x<sub>1</sub></i>,<i>y<sub>1</sub></i>);
+		(<i>x<sub>2</sub></i>,<i>y<sub>2</sub></i>); ...]</tt> and a location <tt>l</tt>, and
+	      if <tt>l</tt> is one
+	      of <tt><i>x<sub>1</sub></i></tt>, <tt><i>x<sub>2</sub></i></tt>, ..., then the
+	      function returns the corresponding <tt><i>y<sub>i</sub></i></tt>, and otherwise just returns
+	      the original location <tt>l</tt>. Intuitively, the list
+	      is an indication to rename <tt><i>x<sub>i</sub></i></tt>
+	      to <tt><i>y<sub>i</sub></i></tt>.
+	    </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+</pre>
+	  </div>
+	  </li>
+
+
+	      
+	  <li><p>Code a function <tt class="code">incl</tt> of
+	      type <tt class="code">diagram -> int -> int -> (location
+		* location) list -> diagram</tt> where <tt>incl diag
+		offset stop rename_list</tt>  returns a diagram
+	      obtained from <tt>diag</tt> by replacing every node
+	      number <tt>n</tt> by <tt>n + offset</tt>, by replacing
+	      any stop node (-1) by the number in <tt>stop</tt>, and
+	      by renaming every location in the diagram via the
+	      renaming list <tt>rename_list</tt>. </p>
+
+	    <p>The idea is by appending the result of <tt>incl diag offset stop rename_list</tt> to a diagram, you add a bunch of nodes with entry point at <tt>offset</tt> (= <tt>0 + offset</tt>, the <b>start</b> node of the subroutine) that perform the operations in <tt>diag</tt> on the locations obtained by renaming the locations in <tt>diag</tt> according to <tt>rename_list</tt>, and that exits by jumping to node <tt>stop</tt> in the diagram.</p>
+
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+</pre>
+</div>
+	  </li>
+
+	      
+	  <li><p>
+	      Design a flow diagram <tt class="code">p_div</tt> that
+	      calculates integer division, <tt>Z := X div Y</tt>,
+	      defined to be 0 when <tt>Y</tt> is 0, and to be the
+	      largest number <tt>Z</tt> such that <tt>Z * Y &le;
+		X</tt>. </p>
+
+	    <p>Use the fact that <tt>Z := X div Y</tt> is the
+	      smallest natural number <tt>Z</tt> such that <tt>Y =
+		0</tt> or <tt>(Z + 1) * Y &gt; X</tt>, which is
+	      equivalent to the smallest natural number <tt>Z</tt>
+	      such that <tt>Y * ((X + 1) &minusd; ((Z + 1) * Y)) =
+		0</tt>. To help you out, you may want to consider using <tt>incl</tt> from above.</p>
+
+	    <p>To permit me to test your code, make sure your diagram
+	      takes its inputs in locations <tt>X</tt> and <tt>Y</tt>
+	      and leaves its result in location <tt>Z</tt>. You can
+	      use whatever temporaries you want.</p>
+	    
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+</pre>
+</div>
+	    <p>Note that this does not compute fast. <tt>25 div 3</tt>
+	      takes a bit more than 25K iterations on the flow diagram I designed.</p>
+
+	  </li>
+
+	  
+
+	</ol>
+      </li>
+
+
+    </ol>
+	
+    
+
+  </body>
+</html>
