@@ -197,19 +197,47 @@ li ul {margin-top:6px;}
     </ul>
 
 
-<!--
-
     <hr>
 
     <p class="subtitle">Updates</p>
     <ul class="simple">
-      <li>Sep 14: added sample outputs</li>
+      <li><b>Sep 25:</b> I've create a function <tt>string_in_regexp</tt> available in file <tt><a href="./string_in_regexp.ml">string_in_regexp.ml</a></tt> that lets you check if a string is in the language described by a regular expression, and that does not suffer from the limitations of function <tt>lang</tt> from the homework. You can just <tt>#use</tt> it after loading your own file, or just copy and paste the content into your file. (There's no need to have it in your submitted homework.) Here are some sample outputs for <tt>regexp_d</tt>:
+
+	<pre>
+# string_in_regexp "" regexp_d;;
+- : bool = false
+# string_in_regexp "d" regexp_d;;
+- : bool = true
+# string_in_regexp "dd" regexp_d;;
+- : bool = false
+# string_in_regexp "ddd" regexp_d;;
+- : bool = true
+# string_in_regexp "dddd" regexp_d;;
+- : bool = false
+# string_in_regexp "ddddd" regexp_d;;
+- : bool = true
+# string_in_regexp "eeded" regexp_d;;
+- : bool = false
+# string_in_regexp "eededd" regexp_d;;
+- : bool = true
+# string_in_regexp "eededdee" regexp_d;;
+- : bool = true
+# string_in_regexp "dededededee" regexp_d;;
+- : bool = true
+# string_in_regexp "dededededeed" regexp_d;;
+- : bool = false
+# string_in_regexp "eededeeeeeedee" regexp_d;;
+- : bool = true
+# string_in_regexp "eededeeeeeedede" regexp_d;;
+- : bool = false
+# string_in_regexp "eededeeeeeededde" regexp_d;;
+- : bool = true
+# string_in_regexp "eededeeeeeededdde" regexp_d;;
+- : bool = false
+	</pre>
+      </li>
     </ul>
 	
-<hr>
-
--->
-
 
 <hr>
 
