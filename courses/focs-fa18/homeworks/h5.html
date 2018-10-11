@@ -156,7 +156,7 @@ li ul {margin-top:6px;}
     
     <h1 class="clear">Homework 5</h1>
     
-    <p class="subtitle">Due date: Thursday, Oct 4 (23h59)</p>
+    <p class="subtitle">Due date: Thursday, Oct 18 (23h59)</p>
 
     <ul>
       <li><p>This homework is to be done
@@ -229,11 +229,38 @@ tape head in direction <i>dir</i>, left when it is 0, and right when
 it is 1.
     </p>
 
+<p>In OCaml, like in most modern languages like Python and Javascript,
+functions are values like any other &mdash; they can be put into lists
+and records, they can be passed as arguments to other functions, they
+can be returned from other functions. For example, here is a function that takes a
+one-argument function as an argument as well as an integer, and
+applies the function twice in succession to the integer:</p>
+<pre># let twice (f:int -> int) (x:int):int = f (f x);; 
+val twice : (int -> int) -> int -> int = &lt;fun>
+
+# let double x = 2 * x;;
+val double : int -> int = &lt;fun>
+
+# double 10;;
+- : int = 20
+
+# twice double 10;;
+- : int = 40
+
+# let square x = x * x;;
+val square : int -> int = &lt;fun>
+
+# square 20;;
+- : int = 400
+
+# twice square 20;;
+- : int = 160000</pre>
+
 <p>
-One difference between our Turing machines implementation and that of
+Another difference between our Turing machines implementation and that of
 finite automata is that symbols are no longer characters, but rather
 strings (though I'm using the name <tt>symbol</tt> to refer to them
-for clarity). That's because in future homeworks, we will want to mark
+for clarity). That's because we may want to mark
 up elements of the alphabet, and it's easier to mark up symbols when
 they are represented as strings instead of characters. I've given you
 a function
@@ -271,6 +298,9 @@ let asbs =
       delta = d }
 </pre>
 <p>
+  Note the function <tt>d</tt> defined locally and placed inside the record. </p>
+
+<p>
 I also provided you with further sample Turing machines <tt>anbn</tt>
 and 
 <tt>anbncn</tt> accepting &lcub;a<sup>n</sup>b<sup>n</sup> | n &ge;
@@ -279,7 +309,7 @@ and
 </p>
 
 <p>
-Recall from lecture that a configuration records the current state of
+Recall from lecture that a configuration captures the current state of
 a Turing machine, the content of the tape, and the position of the
 tape head. Type <tt> 'a config</tt> is the type of a configuration,
 defined as follows:</p>
@@ -697,7 +727,7 @@ start  [>] b  b  a
 	      all strings of 
 	      even length with the property that the two middle
 	      symbols of the string are the same (i.e., for all
-	      strings <i>w</i>=<i>x<sub>1</sub>x<sub>2</sub>...x<sub>2n</sub></i> of length <i>2n</i> we
+	      strings <i>x<sub>1</sub>x<sub>2</sub>...x<sub>2n</sub></i> of length <i>2n</i> in the language we
 	      have <i>x<sub>n</sub></i> = <i>x<sub>n+1</sub></i>).
 	    </p>
 
@@ -807,7 +837,7 @@ start  [>] a  a  b  b  a
 	      Design a Turing machine
 	      <tt class="code">tm_q3_b</tt> that decides
 	      the language consisting of all strings over the
-	      alphabet <tt>{a,b,c}</tt> which form a palindrome if you only look at <tt>b</tt>s and <tt>c</tt>s, but that are interspersed with <tt>a</tt>s arbitrarily. Thus, for example, <tt>aaaabacaacaabaa</tt> is in the language: if you disregard the <tt>a</tt>s, the <tt>b</tt>s and <tt>c</tt>s are laid as out as <tt>...b...c...c...b...</tt> which forms a palindrome with respect to <tt>b</tt>s and <tt>c</tt>s.
+	      alphabet <tt>{a,b,c}</tt> which form a palindrome if you only look at <tt>b</tt>s and <tt>c</tt>s, but that are interspersed with <tt>a</tt>s arbitrarily. Thus, for example, <tt>aaaabacaacaabaa</tt> is in the language: if you disregard the <tt>a</tt>s, the <tt>b</tt>s and <tt>c</tt>s are laid as out as <tt>&mdash;b&mdash;c&mdash;c&mdash;b&mdash;</tt> which forms a palindrome with respect to <tt>b</tt>s and <tt>c</tt>s.
 	    </p>
 
 <div class="code">
