@@ -115,6 +115,12 @@
 
 	<!--	<li><p><a href="announcements.html">Older announcements...</a></p></li> -->
 
+        <li><p><span>Oct 5:</span> Class notes and remarks on Turing machines posted below.</p>
+	</li>
+	
+        <li><p><span>Sep 28:</span> <a href="homeworks/h4.html">Homework 4</a> is out. Due next Thursday before midnight.</p>
+	</li>
+
         <li><p><span>Sep 26</span> Class notes and remarks on finite automata posted below.</p>
 	</li>
 	
@@ -314,16 +320,35 @@ over alphabet {0,1}, and N=4.</p>
 
 
 	<li><p><span class="hdr">Oct 2:</span><b>Turing machines</b></p>
-	</li>	  
+	  <div class="lect">
+	    <p><a href="notes/turing.pdf">Notes from the lecture.</a> These cover this lecture and the next. (I just noticed that the Turing machine diagrams I give in the notes mess up the transitions on a blank symbol, printing <tt>/</tt> instead of <tt>_/_</tt> &mdash; I'll fix that in an upcoming revision. Sorry about that.)</p>
+	    
+	    <p><a href="https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf"><i>On Computable Numbers, with an Application to the Entscheidungsproblem</i></a>, the original paper by Turing that describes his machines. (Though it's not the most accessible description.)</p>
+	    
+	    <p>There are machines that are more expressive than finite
+	    automata (i.e. accept non-regular languages) but less
+	    expressive than Turing machines. One example
+	    is <a href="https://en.wikipedia.org/wiki/Pushdown_automaton">pushdown
+	    automata</a>, which are finite automata equipped with a
+	    stack. They accept a class of languages that is larger
+	    (and includes) regular languages, but smaller than what is
+	      accepted by Turing machines.</p>
+
+	    <p>I talked about the possibility of adding a counter to finite automata. The resulting model is called a <a href="https://en.wikipedia.org/wiki/Counter_automaton">counter automaton</a>. When equipped with a single counter, it can accept languages such as {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup> | n &ge; 0}, but cannot accept all languages that Turing machines accept. When equipped with two counters, the resulting machines are equivalent to Turing machines.</p>
+	    
+	</li>
+
 	
-	
-	<li><p><span class="hdr">Oct 9:</span><b>Universal machines and undecidable languages</b></p>
+	<li><p><span class="hdr">Oct 9:</span><b>Turing Machines and Alternatives</b></p>
 	</li>	  
 
 	
-	<li><p><span class="hdr">Oct 16</span><b>Midterm examination</b></p>
-	</li>	  
+	<li><p><span class="hdr">Oct 16</span><b>Universal Turing Machines and Undecidability</b></p>
+	</li>
 
+	<!-- midterm? -->
+	
+		     
 	<li><p><b>ALTERNATIVE MODELS OF COMPUTATION</b></p></li>
 
 	
@@ -361,6 +386,7 @@ over alphabet {0,1}, and N=4.</p>
       <li><a href="homeworks/h1.html">Homework 1</a> &mdash; Due Wednesday Sep 12 (23h59)</li>
       <li><a href="homeworks/h2.html">Homework 2</a> &mdash; Due Thursday Sep 20 (23h59)</li>
       <li><a href="homeworks/h3.html">Homework 3</a> &mdash; Due Thursday Sep 27 (23h59)</li>
+      <li><a href="homeworks/h4.html">Homework 4</a> &mdash; Due Thursday Oct 4 (23h59)</li>
       </ul>
     </div>
 
