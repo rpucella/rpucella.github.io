@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Topics in Computing: Databases (Spring 2019)</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+        span.underline { text-decoration: underline; }
+
+        a, a:link, a:visited {
+	    color: #003d99;
+          /* font-weight: bold; */
+	}
+
+	a:hover {
+  	  text-decoration: underline;
+	} 
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 3px;
+    	}
+
+    </style>
+
+    <script>
+
+window.addEventListener("load",run);
+
+function run () {
+    // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+    // actually, for anything with "scrollto" class
+    
+    // offset is given by the 'top' div (adjusted for padding)
+    var off = document.getElementById("top").clientHeight;
+    console.log(off);
+    //var elts = document.querySelectorAll("div.navbar a");
+    var elts = document.querySelectorAll("a.scrollto");
+    for (var i=0; i<elts.length; i++) {
+        var href=elts[i].getAttribute("href").slice(1);
+        elts[i].setAttribute("onclick","return false;");
+        elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+    }
+    
+    // SETUP SEND EMAIL LINK
+    document.getElementById("send_email").addEventListener("click",function(){
+        window.open("mailto:riccardo.pucella@olin.edu");
+    });
+}
+
+      </script>
+  </head>
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="scrollto" href="#top"><b>Databases SP19</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Topics in Computing: Databases (Spring 2019)</h1>
+
+<p>
+Databases are omnipresent. They power everything from monolithic
+enterprise system to serverless web apps. Whenever there's data to be
+manipulated, the first impulse should be to stash it into a database
+first. But there are many kinds of databases, each offering different
+guarantees as well as different benefits. 
+</p>
+
+<h3>
+Goals of the course
+</h3>
+
+<p>Understand the different kinds of database models that are out there,
+and their suitability for a given representational task: 
+<ul>
+  <li> relational databases</li>
+
+  <li> non-relational (NoSQL) databases:
+    <ul>
+      <li> key-value stores</li>
+      <li> document-based stores</li>
+      <li> column-based stores</li>
+      <li> graph-based stores</li>
+    </ul>
+  </li>
+</ul>
+
+<p>
+Understand the tradeoffs between the various database models. 
+</p>
+
+<p>
+Understand the various data structures and algorithms that underlie these database models
+</p>
+
+<p>
+Understand how to query these models.
+</p>
+
+<p>
+Understand transactional guarantees, replication, concurrency control.
+</p>
+
+<h3>
+Structure
+</h3>
+
+<p>
+The approach will be hands on. Rather than work as clients of various
+databases (i.e., learning how to use MySQL, or AWS Redshift, or Apache
+Cassandra, or MongoDB), I want us to understand databases by basically
+implementing them. We'll implement the essential aspects of the
+various database models -- in Python -- to get a feel for what each
+model does, from the inside out. 
+</p>
+
+<p>
+This may fail miserably when put to the test, but I think we'll have a
+lot of fun whatever happens :)
+</p>
+
+
+</p>
+
+<!--    
+    <p class="subtitle">ENGR 3599 / Thursday 1:30-4:00 PM / AC 128 </p>
+    
+    <p>This course is an introduction to the theory, design, and
+    implementation of programming languages. Topics covered may
+    include: semantics of programming languages, types, higher-order
+    functions and lambda calculus, objects, laziness, continuations,
+    monads, objects, and concurrency. Class work revolves around the
+    implementation of interpreters for a variety of small programming
+    languages.</p> 
+
+    
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <ul class="simple">
+
+	<li><p class="ann"><span class="hdr">Jan 25:</span> Welcome all!</p></li>
+
+      </ul>
+      
+    </div>
+
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Information</h3>
+
+      <p>Prerequisites: ENGR 2510</p>
+
+      <p>Instructor: <a href="http://www.rpucella.net">Riccardo Pucella</a> (<a id="send_email" href="#">send email</a>)</p>
+
+      <p>Office hours: </p>
+
+      <p>Textbook: </p>
+
+	
+      <p>Programming: </p>
+
+      <p>Grading: </p>
+
+    <p>Ninja: </p>
+
+      <p>I expect all of us to follow the <b><a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a></b>.</p>
+
+     </div>
+
+
+
+    <hr class="section">
+    <div class="section" id="lectures">
+      <h3>Lectures and Readings</h3>
+
+      <p>Schedule and topics subject to changes.</p>
+
+      <ul class="lectures">
+	
+	<li><p><span class="hdr">Jan ??:</span><b>Introduction</b></p>
+		<div class="lect">
+		</div>
+	</li>	  
+
+
+      </ul>
+
+    </div>
+
+
+
+    <hr class="section">
+    <div class="section" id="homeworks">
+      <h3>Homeworks</h3>
+
+      <ul class="simple">
+      </ul>
+
+    </div>
+    -->
+
+  </body>
+</html>
