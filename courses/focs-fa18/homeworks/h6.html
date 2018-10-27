@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Homework 6</title>
+
+    <link rel="stylesheet" href="../alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+      ol.question > li {
+      font-weight: bold;
+      }
+
+      ol.question > li > * {
+      font-weight: normal;
+      }
+      
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+      li > p { margin-top:0;}
+
+
+      table.diagram {
+      border-collapse: collapse;
+      }
+
+      table.diagram td, table.diagram th {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+      }
+
+      table.diagram th {
+    text-align: center;
+    background-color: #666;
+    color: white;
+      }
+
+      
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../../index.html"><img src="../../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="../index.html"><b>Foundations of Computer Science FA18</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Homework 6</h1>
+    
+    <p class="subtitle">Due date: Thursday, November 1 (23h59)</p>
+
+    <ul>
+      <li><p>This homework is to be done
+    individually. You may discuss problems with fellow students, but
+    all submitted work must be entirely your own, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+	is someone else helping you.</p></li>
+      <li><p><b>Please do not post your solutions on a public website or a public repository like GitHub.</b></p></li>
+
+      <li><p>All programming is to be done in OCaml v4.</p></li>
+
+      <li><p>Code your answers by modifying the
+      file <a href="homework6.ml"><tt>homework6.ml</tt></a> provided. Add your
+      <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+      <li><p><b>Please do not change the types in the signature of the
+	function stubs I provide</b>. Doing so will make it
+	impossible to load your code into the testing infrastructure,
+	and make me unhappy.</p></li>
+
+      <li><p>Feel free to define helper functions if you need them.</p></li>
+    </ul>
+
+
+    <hr>
+
+    
+    <p class="subtitle">Electronic submission instructions:</p>
+
+    <ul>
+      <li><p>Start a <i>new</i> OCaml shell.</p></li>
+      <li><p>Load your homework code via <tt>#use "homework6.ml";;</tt></p></li>
+      <li><p>If there are any error, do not submit. I can't test what I
+	can't <tt>#use</tt>.</p></li>
+      <li><p>When you're ready to submit, send an email with your file <tt>homework6.ml</tt> as an attachment to <tt>olin.submissions@gmail.com</tt> with subject <i>Homework 6 submission</i>.</p></li>
+    </ul>
+
+
+    <hr>
+
+
+        <ol class="question">
+      <li> <p><b>Higher-Order Functions (1)</b></p>
+
+	<p>For each function you have to code in this question, full
+	  points will be awarded if the 
+	  function does not use explicit recursion &mdash; that is, if you use
+	  <tt>List.map</tt> or <tt>List.filter</tt>
+	  or <tt>List.fold_right</tt> or some other higher-order function
+	  in the <tt>List</tt> library. If you can't get it to work
+	  without recursion, please provide a version with explicit
+	  recursion.</p>
+
+	<ol class="subquestion">
+
+	  <li>
+	    <p>The OCaml <tt>List</tt> module contains
+	  functions <tt>for_all</tt> and <tt>exists</tt> that both
+	    take a predicate and a list, and return <tt>true</tt> if all the
+	    elements of the list satisfy the predicate (for
+	    <tt>for_all</tt>), or at least one element of the list satisfies
+	    the predicate (for <tt>exists</tt>).</p>
+
+	    <p>Code a function <tt class="code">count</tt> of
+	      type <tt class="code">('a -> bool) -> 'a list -> int</tt>
+	      where <tt>count p xs</tt> returns the number of
+	      elements in <tt>xs</tt> that satisfy
+	      predicate <tt>p</tt>.</p> 
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre>
+# count (fun x -> x) [];;
+- : int = 0
+# count (fun x -> x) [true];;
+- : int = 1
+# count (fun x -> x) [false];;
+- : int = 0
+# count (fun x -> x) [false;true;false;true];;
+- : int = 2
+# count (fun x -> x > 0) [];;
+- : int = 0
+# count (fun x -> x > 0) [1];;
+- : int = 1
+# count (fun x -> x > 0) [1;-2];;
+- : int = 1
+# count (fun x -> x > 0) [1;-2;3;-4;5];;
+- : int = 3
+</pre>
+</div>
+	  </li>
+
+
+	  <li>
+	    <p>Code a function <tt class="code">all_pairs</tt> of type
+	      <tt class="code">'a list -> 'b list -> ('a * 'b)
+	      list</tt> where <tt>all_pairs xs ys</tt> returns all
+	      the ways of pairing up an element of <tt>xs</tt> with an
+	      element of <tt>ys</tt>.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# all_pairs [] [];;
+- : ('a * 'b) list = []
+# all_pairs [1;2] [];;
+- : (int * 'a) list = []
+# all_pairs [] ["a";"b";"c"];;
+- : ('a * string) list = []
+# all_pairs [1] ["a";"b";"c"];;
+- : (int * string) list = [(1, "a"); (1, "b"); (1, "c")]
+# all_pairs [1;2] ["a"];;
+- : (int * string) list = [(1, "a"); (2, "a")]
+# all_pairs [1;2] ["a";"b";"c"];;
+- : (int * string) list =
+[(1, "a"); (1, "b"); (1, "c"); (2, "a"); (2, "b"); (2, "c")]
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li>
+	    <p>Code a function <tt class="code">increasing_pairs</tt> of type
+	      <tt class="code">int list -> int list -> (int * int)
+	      list</tt> where <tt>increasingl_pairs xs ys</tt> returns all
+	      the ways of pairing up an element of <tt>xs</tt> with an
+	      element of <tt>ys</tt> in such a way that the first element of the pair is strictly less than the second element of the pair.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# increasing_pairs [] [];;
+- : (int * int) list = []
+# increasing_pairs [] [1;5;10;15];;
+- : (int * int) list = []
+# increasing_pairs [1;7;14;21;28] [];;
+- : (int * int) list = []
+# increasing_pairs [1] [1;5;10;15];;
+- : (int * int) list = [(1, 5); (1, 10); (1, 15)]
+# increasing_pairs [1;7] [1;5;10;15];;
+- : (int * int) list = [(1, 5); (1, 10); (1, 15); (7, 10); (7, 15)]
+# increasing_pairs [1;7;14;21;28] [1];;
+- : (int * int) list = []
+# increasing_pairs [1;7;14;21;28] [1;5];;
+- : (int * int) list = [(1, 5)]
+# increasing_pairs [1;7;14;21;28] [1;5;10];;
+- : (int * int) list = [(1, 5); (1, 10); (7, 10)]
+# increasing_pairs [1;7;14;21;28] [1;5;10;15];;
+- : (int * int) list = [(1, 5); (1, 10); (1, 15); (7, 10); (7, 15); (14, 15)]
+# increasing_pairs [1;5;10;15] [1;7;14;21;28];;
+- : (int * int) list =
+[(1, 7); (1, 14); (1, 21); (1, 28); (5, 7); (5, 14); (5, 21); (5, 28);
+  (10, 14); (10, 21); (10, 28); (15, 21); (15, 28)]
+</pre>
+	  </div>
+	  </li>
+
+      
+
+	  <li>
+	    <p>Code a function <tt class="code">extent</tt> of
+	      type <tt class="code">int list -> (int * int)</tt>
+	      where <tt>extent xs</tt> returns the pair of the smallest and largest number in the list <tt>xs</tt>. It should raise an error with <tt>failwith</tt> if the list is empty.</p>
+
+        <p><b>Hint</b>: use <tt>fold_right</tt>, and use the first element of the list as the base of the folding.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# extent [];;
+Exception: Failure "empty list!".
+# extent [10];;
+- : int * int = (10, 10)
+# extent [10;20];;
+- : int * int = (10, 20)
+# extent [20;10];;
+- : int * int = (10, 20)
+# extent [10;20;12;22;8;18];;
+- : int * int = (8, 22)
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li>
+	    <p><b>(Challenging)</b> Code a function <tt class="code">all_but_last</tt> of
+	      type <tt class="code">'a list -> 'a list</tt>
+	      where <tt>all_but_last xs</tt> returns all the elements in the list in the original order, except without the last element. If the list is empty, either raise an error with <tt>failwith</tt> or return the empty list, whichever is easiest.</p>
+
+        <p>For full credit, don't use reverse.</p>
+
+        <p><b>Hint</b>: use <tt>fold_right</tt> with a function that instead of just returning the new list, also returns an indication whether you're at the end of the list or not.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# all_but_last [10];;
+- : int list = []
+# all_but_last [10;20];;
+- : int list = [10]
+# all_but_last [10;20;30];;
+- : int list = [10; 20]
+# all_but_last [10;20;30;40;50;60;70];;
+- : int list = [10; 20; 30; 40; 50; 60]
+# all_but_last ["a";"b";"c";"d"];;
+- : string list = ["a"; "b"; "c"]
+</pre>
+	  </div>
+	  </li>
+
+
+
+	</ol>
+      </li>
+
+
+      <li> <p><b>Higher-Order Functions (2)</b></p>
+
+	<p>For each function you have to code in this question, full
+	  points will be awarded if the 
+	  function does not use explicit recursion &mdash; that is, if you use
+	  <tt>List.map</tt> or <tt>List.filter</tt>
+	  or <tt>List.fold_right</tt>  or some other higher-order function
+	  in the <tt>List</tt> library. If you can't get it to 
+	  work without recursion, please provide a version with explicit recursion.</p>
+
+	<ol class="subquestion">
+
+	  <li>
+	    <p>Code a function <tt class="code">graph</tt> of type
+	      <tt class="code">('a -> 'b) list -> 'a list -> ('a * 'b)
+		    list</tt> where <tt>graph fs xs</tt> returns the pairs of each element of <tt>xs</tt> paired with the result of applying <tt>f</tt> to that element &mdash; in other words, <tt>graph</tt> returns the graph of a function over the given domain <tt>xs</tt></p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# let dbl x = "double "^(string_of_int x);;
+val dbl : int -> string = &lt;fun>
+# let neg x = "negation "^(string_of_int x);;
+val neg : int -> string = &lt;fun>
+
+# graph dbl [];;
+- : (int * string) list = []
+# graph dbl [1;1;1];;
+- : (int * string) list = [(1, "double 1"); (1, "double 1"); (1, "double 1")]
+# graph dbl [1;2;3;4;5];;
+- : (int * string) list =
+[(1, "double 1"); (2, "double 2"); (3, "double 3"); (4, "double 4");
+ (5, "double 5")]
+# graph neg [];;
+- : (int * string) list = []
+# graph neg [1;1;1];;
+- : (int * string) list =
+[(1, "negation 1"); (1, "negation 1"); (1, "negation 1")]
+# graph neg [1;2;3;4;5];;
+- : (int * string) list =
+[(1, "negation 1"); (2, "negation 2"); (3, "negation 3"); (4, "negation 4");
+ (5, "negation 5")]
+</pre>
+	  </div>
+	  </li>
+      
+
+	  <li>
+	    <p>Code a function <tt class="code">mapf</tt> of type
+	      <tt class="code">('a -> 'b) list -> 'a list -> 'b
+		list</tt> where <tt>mapf fs xs</tt> returns all the results of
+	      applying a function in <tt>fs</tt> to a value
+	      in <tt>xs</tt>. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# let dbl x = "double "^(string_of_int x);;
+val dbl : int -> string = &lt;fun>
+# let neg x = "negation "^(string_of_int x);;
+val neg : int -> string = &lt;fun>
+
+# mapf [] [];;
+- : 'a list = []
+# mapf [] [1;2;3];;
+- : 'a list = []
+# mapf [dbl; neg] [];;
+- : string list = []
+# mapf [dbl] [3];;
+- : string list = ["double 3"]
+# mapf [dbl] [1;2;3];;
+- : string list = ["double 1"; "double 2"; "double 3"]
+# mapf [dbl;neg] [3];;
+- : string list = ["double 3"; "negation 3"]
+# mapf [dbl;neg] [1;2;3];;
+- : string list =
+["double 1"; "negation 1"; "double 2"; "negation 2"; "double 3"; "negation 3"]
+# mapf [(fun x -> "+"^x);(fun x -> "-"^x)] ["hello";"world"];;
+- : string list = ["+hello"; "-hello"; "+world"; "-world"]
+</pre>
+	  </div>
+	  </li>
+
+
+	  <li>
+	  <p>Code a function <tt class="code">prepend</tt> of
+	    type <tt class="code">'a -> 'a list list -> 'a list list</tt>
+	    where <tt>preprend x xss</tt> returns the list 
+	    obtained by prepending <tt>x</tt> to every list in <tt>xss</tt>.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# prepend 1 [];;
+- : int list list = []
+# prepend 1 [[]];;
+- : int list list = [[1]]
+# prepend 1 [[66]];;
+- : int list list = [[1; 66]]
+# prepend 1 [[66];[99]];;
+- : int list list = [[1; 66]; [1; 99]]
+# prepend 1 [[66];[99];[]];;
+- : int list list = [[1; 66]; [1; 99]; [1]]
+# prepend 1 [[66];[99];[];[66;99]];;
+- : int list list = [[1; 66]; [1; 99]; [1]; [1; 66; 99]]
+# prepend "+" [["hello";"world"];["goodbye"]];;
+- : string list list = [["+"; "hello"; "world"]; ["+"; "goodbye"]]
+</pre>
+</div>
+
+	</li>
+
+
+	<li>
+	  <p>Code a function <tt class="code">prefixes</tt> of
+	    type <tt class="code">'a list -> 'a list list</tt>
+	    where <tt>prefixes xs</tt> returns the list of all
+	    prefixes of <tt>xs</tt>: if 
+	    <tt>xs</tt> is <tt>[x1; x2; x3]</tt> then the prefixes
+	    of <tt>xs</tt> are <tt>[]</tt>, <tt>[x1]</tt>, <tt>[x1;
+	    x2]</tt>, and <tt>[x1; x2; x3]</tt>. (Note that the empty 
+	    list is a prefix of every list.)</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# prefixes [];;
+- : 'a list list = [[]]
+# prefixes [1];;
+- : int list list = [[]; [1]]
+# prefixes [1;2;3;4];;
+- : int list list = [[]; [1]; [1; 2]; [1; 2; 3]; [1; 2; 3; 4]]
+# prefixes ["a";"b"];;
+- : string list list = [[]; ["a"]; ["a"; "b"]]
+</pre>
+</div>
+
+	</li>
+
+
+	  <li>
+        
+	    <p><b>(Challenging)</b> Code a function <tt class="code">inject</tt> of
+	    type <tt class="code">'a -> 'a list -> 'a list list</tt>
+	    where <tt>inject a xs</tt> returns all the ways in which value 
+	    <tt>a</tt> can be added to the list <tt>xs</tt>. </p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# inject 99 [];;
+- : int list list = [[99]]
+# inject 99 [1];;
+- : int list list = [[99; 1]; [1; 99]]
+# inject 99 [1;2];;
+- : int list list = [[99; 1; 2]; [1; 99; 2]; [1; 2; 99]]
+# inject 99 [1;2;3;4];;
+- : int list list =
+[[99; 1; 2; 3; 4]; [1; 99; 2; 3; 4]; [1; 2; 99; 3; 4]; [1; 2; 3; 99; 4]; 
+ [1; 2; 3; 4; 99]]
+# inject "X" ["a";"b"];;
+- : string list list = [["X"; "a"; "b"]; ["a"; "X"; "b"]; ["a"; "b"; "X"]]
+</pre>
+	  </div>
+	    <p><b>Hint:</b> many ways to do this; I first applied <tt>List.fold_right</tt>
+	      to get a list of every element <tt>x</tt> in <tt>xs</tt> paired with the suffix of <tt>xs</tt> starting from that <tt>x</tt>, and used that within another <tt>List.fold_right</tt>. It's not necessarily the easiest way to get it though.</p>
+
+	</li>
+
+
+	  <li><b>(Optional, for not credit, but in case you get bored...)</b>
+
+	  <p>Code a function <tt class="code">permutations</tt> of type
+	  <tt class="code">'a list -> 'a list list</tt> where <tt>permutations
+	    xs</tt> returns the list of all permutations
+	    of <tt>xs</tt>. A permutation of a list is a list
+	    containing the exact same elements, but in a different
+	  order, treating repeated elements as distinct.</p>
+
+<div class="code">
+  <p onClick="toggleShowHide(this)">Show sample output</p>
+<pre class="code">
+# permutations [];;
+- : 'a list list = [[]]
+# permutations [1];;
+- : int list list = [[1]]
+# permutations [1;2];;
+- : int list list = [[1; 2]; [2; 1]]
+# permutations [1;2;3;4];;
+- : int list list =
+[[1; 2; 3; 4]; [2; 1; 3; 4]; [2; 3; 1; 4]; [2; 3; 4; 1]; [1; 3; 2; 4];
+ [3; 1; 2; 4]; [3; 2; 1; 4]; [3; 2; 4; 1]; [1; 3; 4; 2]; [3; 1; 4; 2];
+ [3; 4; 1; 2]; [3; 4; 2; 1]; [1; 2; 4; 3]; [2; 1; 4; 3]; [2; 4; 1; 3];
+ [2; 4; 3; 1]; [1; 4; 2; 3]; [4; 1; 2; 3]; [4; 2; 1; 3]; [4; 2; 3; 1];
+ [1; 4; 3; 2]; [4; 1; 3; 2]; [4; 3; 1; 2]; [4; 3; 2; 1]]
+# permutations ["a";"b"];;
+- : string list list = [["a"; "b"]; ["b"; "a"]]
+</pre>
+	  </div>
+
+	    <p> <b>Hint:</b> use <tt>inject</tt>.</p>
+	</li>
+
+
+	</ol>
+
+      </li>
+
+    </ol>    
+
+    
+
+  </body>
+</html>
