@@ -198,8 +198,16 @@ li ul {margin-top:6px;}
 
 
     <hr>
+    <p class="subtitle">Updates</p>
+    <ul class="simple">
+      <li><b>Oct 28:</b> Fixed the type of <tt>graph</tt> in the writeup for Question 2A. The type of <tt>graph</tt> should be <tt>('a -> 'b) -> 'a list -> ('a * 'b) list</tt>. It was correct in <tt>homework6.ml</tt>. 
+      </li>
+    </ul>
+	
 
 
+    <hr>
+    
         <ol class="question">
       <li> <p><b>Higher-Order Functions (1)</b></p>
 
@@ -389,8 +397,8 @@ Exception: Failure "empty list!".
 
 	  <li>
 	    <p>Code a function <tt class="code">graph</tt> of type
-	      <tt class="code">('a -> 'b) list -> 'a list -> ('a * 'b)
-		    list</tt> where <tt>graph fs xs</tt> returns the pairs of each element of <tt>xs</tt> paired with the result of applying <tt>f</tt> to that element &mdash; in other words, <tt>graph</tt> returns the graph of a function over the given domain <tt>xs</tt></p>
+	      <tt class="code">('a -> 'b) -> 'a list -> ('a * 'b)
+		    list</tt> where <tt>graph f xs</tt> returns the list made up of each element of <tt>xs</tt> paired with the result of applying <tt>f</tt> to that element &mdash; in other words, <tt>graph</tt> returns the graph of a function over the given domain <tt>xs</tt></p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
@@ -545,7 +553,7 @@ val neg : int -> string = &lt;fun>
 	</li>
 
 
-	  <li><b>(Optional, for not credit, but in case you get bored...)</b>
+	  <li><b>(Optional, not for credit, but in case you get bored...)</b>
 
 	  <p>Code a function <tt class="code">permutations</tt> of type
 	  <tt class="code">'a list -> 'a list list</tt> where <tt>permutations
