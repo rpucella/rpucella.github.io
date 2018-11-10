@@ -283,7 +283,7 @@ val my_defs : (string * string) list =
 
     <p>By default, and to make your life easier, <tt>simplify</tt> and <tt>simplify_verbose</tt> 
 always add the definitions of stuff we did in class (including natural number
-      arithmetic, complete with a predecessor function) to whatever definitions you provide, so that they are available to you without you need do do anything special:</p>
+      arithmetic, complete with a predecessor function) to whatever definitions you provide, so that they are available to you without you needing to do anything special:</p>
 
 <pre>
 let default_defs = [ 
@@ -369,6 +369,7 @@ let default_defs = [
 
     <p>Yeah, that's not great. The clue that something went wrong is the <tt>pluss</tt> there at the beginning.</p>
 
+    <!--
     <p>You can of course create your own definitions that you can pass to <tt>simplify</tt> or <tt>simplify_verbose</tt>. For instance, you can define <tt>_8</tt> and use it:</p>
 
     <pre>
@@ -383,8 +384,9 @@ let default_defs = [
  = &lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;x -> &lt;x -> &lt;y -> y>>> (&lt;f -> &lt;x -> f (f (f (f x)))>> &lt;x -> &lt;x -> &lt;y -> y>>> &lt;x -> &lt;y -> x>>))))
  = &lt;x -> &lt;y -> y>>
 - : string = "&lt;x -> &lt;y -> y>>"   </pre>
-
-    <p>In fact, all the questions below ask you to create
+																			-->
+    
+    <p>All the questions below ask you to create
     definitions. For each question, you should put all your
     definitions into a list of definitions that is self-contained,
     meaning that I can pass it (and only it) to <tt>simplify</tt> to test your
