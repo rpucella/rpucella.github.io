@@ -421,13 +421,13 @@ let default_defs = [
   <p onClick="toggleShowHide(this)">Show sample output</p>
 	    <pre class="code">
 # simplify q1_defs "and true true";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q1_defs "and true false";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 # simplify q1_defs "and false true";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 # simplify q1_defs "and false false";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 </pre>
 </div>
       </li>
@@ -438,13 +438,13 @@ let default_defs = [
   <p onClick="toggleShowHide(this)">Show sample output</p>
 	    <pre class="code">
 # simplify q1_defs "or true true";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q1_defs "or true false";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q1_defs "or false true";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q1_defs "or false false";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 </pre>
 </div>
 
@@ -459,17 +459,17 @@ let default_defs = [
   <p onClick="toggleShowHide(this)">Show sample output</p>
 	    <pre class="code">
 # simplify q1_defs "minus _3 _0";;
-- : string = "<f -> <x -> f (f (f x))>>"
+- : string = "&lt;f -> &lt;x -> f (f (f x))>>"
 # simplify q1_defs "minus _3 _2";;
-- : string = "<f -> <x -> f x>>"
+- : string = "&lt;f -> &lt;x -> f x>>"
 # simplify q1_defs "minus _3 _3";;
-- : string = "<f -> <x -> x>>"
+- : string = "&lt;f -> &lt;x -> x>>"
 # simplify q1_defs "minus _3 _4";;
-- : string = "<f -> <x -> x>>"
+- : string = "&lt;f -> &lt;x -> x>>"
 # simplify q1_defs "minus _0 _0";;
-- : string = "<f -> <x -> x>>"
+- : string = "&lt;f -> &lt;x -> x>>"
 # simplify q1_defs "minus _0 _2";;
-- : string = "<f -> <x -> x>>"
+- : string = "&lt;f -> &lt;x -> x>>"
 </pre>
 </div>
 
@@ -485,19 +485,19 @@ let default_defs = [
   <p onClick="toggleShowHide(this)">Show sample output</p>
 	    <pre class="code">
 # simplify q1_defs "geq _3 _0";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q1_defs "geq _3 _2";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q1_defs "geq _3 _3";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q1_defs "geq _3 _4";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 # simplify q1_defs "geq _3 _5";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 # simplify q1_defs "geq _0 _0";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q1_defs "geq _0 _1";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 </pre>
 </div>
         
@@ -552,7 +552,7 @@ let default_defs = [
 
 	<p>We saw in class an encoding of natural numbers
 	  0,1,2,3,... In this question, we consider an encoding of
-	  intergers, ...,-3,-2,-1,0,1,2,3,... </p>
+	  integers, ...,-3,-2,-1,0,1,2,3,... </p>
 
 	<p>The encoding is dead simple. An integer is a pair of a
 	sign and a natural number. The sign will be represented by a
@@ -813,32 +813,34 @@ let default_defs = [
 </pre>
         <p>The <tt>and</tt> is how you specify mutual recursion. What happens if you replace the <tt>and</tt> by <tt>let rec</tt>? Why does that happen?</p>
 
-        <p>Intuitively, you need to define <tt>even</tt> and <tt>odd</tt> at the same time, and not separately. It looks like our <tt>Y</tt> combinator is not up to the task. But that's false. Code terms <tt>even</tt> and <tt>odd</tt> which each take a Church numeral and return <tt>true</tt> if the numeral is even (respectively, odd), and false otherwise.
+            <p>Intuitively, you need to define <tt>even</tt> and <tt>odd</tt> at the same time, and not separately. It looks like our <tt>Y</tt> combinator is not up to the task. But that's not true. You can so use <tt>Y</tt> to define mutually recursive functions.</p>
+
+	    <p>Code terms <tt>even</tt> and <tt>odd</tt> which each take a Church numeral and return <tt>true</tt> if the numeral is even (respectively, odd), and false otherwise.
         </p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 	    <pre class="code">
 # simplify q3_defs "even _0";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q3_defs "even _1";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 # simplify q3_defs "even _2";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q3_defs "even _3";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 # simplify q3_defs "even _4";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q3_defs "odd _0";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 # simplify q3_defs "odd _1";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q3_defs "odd _2";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 # simplify q3_defs "odd _3";;
-- : string = "<x -> <y -> x>>"
+- : string = "&lt;x -> &lt;y -> x>>"
 # simplify q3_defs "odd _4";;
-- : string = "<x -> <y -> y>>"
+- : string = "&lt;x -> &lt;y -> y>>"
 </pre>
 </div>
 
