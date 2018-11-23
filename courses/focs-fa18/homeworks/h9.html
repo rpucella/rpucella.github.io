@@ -423,11 +423,11 @@ using <tt>prefix</tt>. For example:</p>
 
 	<ol class="subquestion">
 
-	  <li> <p>Code a function <tt class="code">scale</tt> of
-	      type <tt class="code">int -> int stream -> int
-		stream</tt> where <tt>scale n s</tt> returns the
-	      stream obtained by multiplying every element
-	      of <tt>s</tt> by <tt>n</tt>:</p>
+	  <li> <p>Code a dataflow network <tt class="code">scale</tt>
+	      of type <tt class="code">int network</tt> with one input
+	      such that <tt>scale</tt> takes an input stream and produces
+	      a stream obtained by multiplying every element of the
+	      input stream by <tt>n</tt>:</p>
 	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scale n &lt;a1 a2 a3 ...&gt; = &lt;n*a1 n*a2 n*a3 ...&gt;</tt></p>
 	    </p>
 
@@ -450,11 +450,10 @@ using <tt>prefix</tt>. For example:</p>
 	  </li>
 
 
-	  <li> <p>Code a function <tt class="code">mult</tt> of
-	      type <tt class="code">int stream -> int stream -> int
-		stream</tt> where <tt>mult s1 s2</tt> returns the
+	  <li> <p>Code a network <tt class="code">mult</tt> of
+	      type <tt class="code">int network</tt> with two inputs such that <tt>mult</tt> produces the
 	      stream obtained by multiplying the corresponding
-	      elements of <tt>s1</tt> and <tt>s2</tt>:</p>
+	      elements of the input streams:</p>
 	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mult &lt;a1 a2 a3 ...&gt; &lt;b1 b2 b3 ...&gt; =
 		&lt;a1*b1 a2*b2 a3*b3 ...&gt;</tt></p>
 	    </p>
@@ -481,85 +480,19 @@ using <tt>prefix</tt>. For example:</p>
 </div>
 	  </li>
 
-	  <li> <p>Code a function <tt class="code">zip</tt> of
-	      type <tt class="code">'a stream -> 'b stream -> ('a * 'b) stream</tt> where <tt>zip s1 s2</tt> takes streams <tt>s1</tt> and <tt>s2</tt> and returns the stream of pairs of pairwise elements from <tt>s1</tt> and <tt>s2</tt>:
-	    </p>
-
-	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zip &lt;a1 a2 a3 ...&gt; &lt;b1 b2 b3 ...&gt; = &lt;(a1,b1) (a2,b2) (a3,b3) ...&gt;</tt></p>
-
-<div class="code">
-  <p onClick="toggleShowHide(this)">Show sample output</p>
-<pre class="code">
-# prip (zip nats nats);;
-&lt; (0,0) (1,1) (2,2) (3,3) (4,4) (5,5) (6,6) (7,7) (8,8) (9,9) (10,10) (11,11) 
-  (12,12) (13,13) (14,14) (15,15) (16,16) (17,17) (18,18) (19,19) ...>
-- : unit = ()
-# prip (zip nats evens);;
-&lt; (0,0) (1,2) (2,4) (3,6) (4,8) (5,10) (6,12) (7,14) (8,16) (9,18) (10,20) 
-  (11,22) (12,24) (13,26) (14,28) (15,30) (16,32) (17,34) (18,36) (19,38) ...>
-- : unit = ()
-# prip (zip odds evens);;
-&lt; (1,0) (3,2) (5,4) (7,6) (9,8) (11,10) (13,12) (15,14) (17,16) (19,18) 
-  (21,20) (23,22) (25,24) (27,26) (29,28) (31,30) (33,32) (35,34) (37,36) 
-  (39,38) ...>
-  - : unit = ()
-# prs (map (fun (x,y) -> y) (zip nats s_as));;
-&lt; a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 ...>
-- : unit = ()</pre>
-	  </div>
-	  </li>
-
-	  <li> <p>Code a function <tt class="code">unzip</tt> of
-	      type <tt class="code">('a * 'b) stream -> ('a stream *
-		'b stream)</tt> where <tt>unzip s</tt> takes a stream
-	      of pairs <tt>s</tt> and returns <i>a pair of
-	      streams</i>, the first being the stream of all first
-	      elements of the pairs in <tt>s</tt>, the second being
-	      the stream of all second elements of pairs in <tt>s</tt>:
-	    </p>
-
-	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unzip &lt;(a1,b1) (a2,b2) (a3,b3) ...&gt; = (&lt;a1
-		a2 a3...&gt;, &lt;b1 b2 b3 ...&gt;)</tt></p>
-
-<div class="code">
-  <p onClick="toggleShowHide(this)">Show sample output</p>
-<pre class="code">
-# pri (let (s1,s2) = unzip(cst(66,99)) in s1);;
-&lt; 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 66 ...>
-- : unit = ()
-# pri (let (s1,s2) = unzip(cst(66,99)) in s2);;
-&lt; 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 99 ...>
-- : unit = ()
-# pri (let (s1,s2) = unzip(zip nats evens) in s1);;
-&lt; 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 ...>
-- : unit = ()
-# pri (let (s1,s2) = unzip(zip nats evens) in s2);;
-&lt; 0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 ...>
-- : unit = ()
-# pri (let (s1,s2) = unzip(map (fun x -> (x*10,x+5)) nats) in s1);;
-&lt; 0 10 20 30 40 50 60 70 80 90 100 110 120 130 140 150 160 170 180 190 ...>
-- : unit = ()
-# pri (let (s1,s2) = unzip(map (fun x -> (x*10,x+5)) nats) in s2);;
-&lt; 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ...>
-- : unit = ()
-# prs (let (s1,s2) = unzip (cst (10,"x")) in s2);;
-&lt; x x x x x x x x x x x x x x x x x x x x ...>
-- : unit = ()</pre>
-	  </div>
-	  </li>
 
 
 	  <li> <p>Code a function <tt class="code">fold</tt> of
-	      type <tt class="code">('a -> 'b -> 'b) -> 'b stream ->
-		'a stream -> 'b stream</tt> where <tt>fold f init_s
-	      s</tt> returns the stream obtained by the result of
-	      calling <tt>f</tt> over each element of <tt>s</tt> and
-	      passing in the previous value of the resulting
-	      stream. The initial "previous" value is the first
-	      element of <tt>init_s</tt>:
+	      type <tt class="code">('a -> 'a -> 'a) -> 'a
+	      network</tt> where <tt>fold f</tt> returns a dataflow
+	      network with two inputs <i>s</i> and <i>t</i> that produces the stream
+	      obtained by the result of calling <tt>f</tt> over each
+	      element of the <i>t</i>, passing in the
+	      previous value of the resulting stream as well. The
+	      initial "previous" value is the first element of <i>s</i>.
 	    </p>
 
-	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fold f &lt;i1 i2 i3 ...&gt; &lt;a1 a2 a3 ...&gt; =<br>
+	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fold f) &lt;i1 i2 i3 ...&gt; &lt;a1 a2 a3 ...&gt; =<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(f a1 i1) (f a2 (f a1 i1)) (f a3 (f a2 (f a1 i1))) ...&gt;</tt></p>
 
 <div class="code">
@@ -594,11 +527,10 @@ using <tt>prefix</tt>. For example:</p>
 	  </div>
 	  </li>
 
-	  <li> <p>Code a function <tt class="code">running_max</tt> of
-	      type <tt class="code">int stream -> int stream</tt>
-	      where <tt>running_max s</tt> returns the stream consisting
-	      of the maximum value in <tt>s</tt> from the start
-	      of <tt>s</tt> up to the corresponding position:</p>
+<li> <p>Code a dataflow network <tt class="code">running_max</tt> 
+	      type <tt class="code">int network</tt> with one input <i>s</i> which produces
+     the stream consisting 
+	      of the maximum value in <tt>s</tt> seen from the start of <tt>s</tt>:
 	    
 	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;running_max &lt;a1 a2 a3 ...&gt; = &lt;max(a1)
 		max(a1,a2) max(a1,a2,a3) ...&gt;</tt></p>
@@ -624,10 +556,10 @@ using <tt>prefix</tt>. For example:</p>
 	  </div>
 	  </li>
 
-<li> <p><b>(Challenging)</b>  Code a function <tt class="code">stutter</tt> of
-	      type <tt class="code">'a stream -> 'a stream</tt>
-    where <tt>stutter s</tt> returns the stream consisting of every
-    element of <tt>s</tt> repeated twice in a row:</p>
+<li> <p> Code a dataflow network <tt class="code">stutter</tt> of
+    type <tt class="code">'a network</tt> with one input stream <i>s</i>
+    which produces the stream consisting of every
+    element of <tt>s</tt> "doubled up", that is, repeated twice in sequence:</p>
 
   <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stutter &lt;a1 a2 a3 ...&gt; = &lt;a1 a1 a2 a2 a3 a3 ...&gt;</tt></p>
     
@@ -670,16 +602,9 @@ looking for.
 
 <p>
 In this question, we will mostly be dealing with streams of floating 
-point numbers. To make your life a bit easier, you may want to code 
-functions <tt>scalef</tt>, <tt>addf</tt>, and <tt>psumsf</tt>:
-</p>
-<pre>
-scalef : float -> float stream -> float stream
-addf   : float stream -> float stream -> float stream
-psumsf : float stream -> float stream
-</pre>
-<p>
-that basically do what <tt>scale</tt>, <tt>add</tt>,
+point numbers. To make your life a bit easier, you may want to code dataflow
+networks such as <tt>natsf</tt>, <tt>scalef</tt>, <tt>addf</tt>, and <tt>psumsf</tt> 
+that basically do what <tt>nats</tt>, <tt>scale</tt>, <tt>add</tt>,
 and <tt>psums</tt> do, but with floating point numbers instead of
 integers. 
 </p>
@@ -708,8 +633,9 @@ integers.
 	    <p>which gets closer and closer to arctan x.</p>
 
 	    <p>Code a function <tt class="code">arctan</tt> with type
-	      <tt class="code">float -> float stream</tt>
-	      where <tt>arctan x</tt> returns a stream of approximations to
+	      <tt class="code">float -> float network</tt>
+	      where <tt>arctan x</tt> returns a dataflow network
+	      producing the stream of approximations to
 	      arctan x given by (*) above</p>
 
 <div class="code">
@@ -762,8 +688,8 @@ val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
 	      (*), and thus &pi; can be
 	      approximated by the difference of the two streams, each properly scaled. </p>
 
-	    <p>Code a function <tt class="code">pi</tt> with type <tt class="code">unit -> float stream</tt>
-	      where <tt>pi ()</tt> returns a stream providing
+	    <p>Code a dataflow network <tt class="code">pi</tt> with type <tt class="code">float network</tt>
+	      which produces the stream providing
 	      approximations to &pi; using (**)</p>
 
 <div class="code">
@@ -816,10 +742,12 @@ val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
 	      guess gets closer and closer to a zero of f(x).</p>
 
 	    <p>Code a function <tt class="code">newton</tt> with type
-	      <tt class="code">(float -> float) -> (float -> float) ->
-		float -> float stream</tt> where <tt>newton f df
-		guess</tt> returns the stream of guesses given by 
-	      (***) for function <tt>f</tt> with its derivative <tt>df</tt>, and initial
+	      <tt class="code">(float -> float) -> (float -> float) -> 
+		float -> float network</tt> where <tt>newton f df
+		guess</tt> returns a dataflow network that produces
+		the stream of approximations of guesses given by 
+	      (***) for function <tt>f</tt> with its
+		derivative <tt>df</tt> and an initial
 	      guess <tt>guess</tt>.
 	    </p>
 
@@ -885,8 +813,9 @@ val sqrt : float -> float AbsStream.stream = <fun>
     &frasl; <sub>(1/n)</sub></p>
 
 	    <p>Code a function <tt class="code">derivative</tt> with type
-	      <tt class="code">(float -> float) -> float -> float stream</tt>
-	      where <tt>derivative f x</tt> returns the stream of approximations of the
+	      <tt class="code">(float -> float) -> float -> float network</tt>
+	      where <tt>derivative f x</tt> returns a dataflow
+	      network that produces the  stream of approximations of the
 	      derivative of <tt>f</tt> at point <tt>x</tt> given by (****).
 	    </p>
 
@@ -961,9 +890,10 @@ val d : float stream = <abstr>
 	      happens if the stream does <i>not</i> converge?)</p>
 
 	    <p>Code a function <tt class="code">limit</tt> with type
-	      <tt class="code">float -> float stream -> float stream</tt>
-	      where <tt>limit epsilon s</tt> returns the elements of
-	      stream <tt>s</tt> that differ from their subsequent
+	      <tt class="code">float -> float network</tt>
+	      where <tt>limit epsilon s</tt> returns a dataflow
+	      network with one input <i>s</i> which produces a stream
+	      of elements of <tt>s</tt> that differ from their subsequent
 	      element by less than <tt>epsilon</tt> (in absolute value).</p>
 
 <div class="code">
@@ -997,9 +927,33 @@ val d : float stream = <abstr>
 	  </div>
 	  </li>
 
-
 	</ol>
       </li>
+
+      <li> <p><b>Optional: super challenge</b></p>
+
+	<p>This question is here purely for your entertainment and if
+	  you like puzzles or challenges.</p>
+
+	<p>One question I wanted to give you was to create a dataflow
+	  network <tt>prefixes</tt> with one input <i>s</i> that would produce a stream
+	  of prefixes of <i>s</i>, so that 
+
+	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prefixes &lt;a1 a2 a3 a4
+	    ...&gt; = &lt;a1 a1 a2 a1 a2 a3 a1 a2 a3 a4 ...&gt;</tt></p>
+	    </p>
+
+	<p>I spent about 5 hours on it, and couldn't do it, at least
+	not without encoding something like lists into integers (which
+	probably wouldn't play so well with the limited precision
+	integers of OCaml.) I still don't know if it can be done or
+	  not.</p>
+
+	<p>The question: come up with a dataflow network to compute
+	  the prefixes, if one exists.</p>
+
+      </li>
+
 
     </ol>
 
