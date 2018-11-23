@@ -156,7 +156,7 @@ li ul {margin-top:6px;}
     
     <h1 class="clear">Homework 9</h1>
     
-    <p class="subtitle">Due date: Friday, November 16 (23h59)</p>
+    <p class="subtitle">Due date: Friday, November 30 (23h59)</p>
 
     <ul>
       <li><p>This homework is to be done
@@ -201,21 +201,20 @@ li ul {margin-top:6px;}
 
     <p>We are going to provide ways to construct dataflow networks as we saw in class, but textually. Consider the following primitive components that I described in class:
     </p>
-<ul>
-  <li>cst: create a constant stream of values</li>
-  <li>map: map a function on an input stream to produce an output stream</li>
-  <li>map2: map a function over two input streams to produce an
-  output stream</li>
-  <li>fby: take two input streams and produce an output stream made up
+<ul style="list-style: none;">
+  <li><p><b>cst</b>: create a constant stream of values</p></li>
+  <li><p><b>map</b>: map a function on an input stream to produce an output stream</p></li>
+  <li><p><b>map2</b>: map a function over two input streams to produce an
+      output stream</p></li>
+  <li><p><b>fby</b>: take two input streams and produce an output stream made up
   of the first element of the first input stream followed by all the
-  elements of the second input stream</li>
-  <li>splitFirst: take an input stream and produce an output stream
-  made of the first element of the input stream repeatedly indefinitely </li>
-  <li>splitRest: take an input stream and produce  an output stream
-  made up of the input stream but starting at its second element</li>
-  <li>filter: take two input streams and produce an output stream by
+      elements of the second input stream</p></li>
+  <li><p><b>splitFirst</b>: take an input stream and produce an output stream
+  made of the first element of the input stream repeatedly indefinitely, and <b>splitRest</b>: take an input stream and produce  an output stream
+      made up of the input stream but starting at its second element. (Note that in class, I presented a single primitive component <i>split</i> that had two outputs &mdash; the above splits (!) that component into two, one per output.)</p></li>
+  <li><p><b>filter</b>: take two input streams and produce an output stream by
   taking a pair of element of each stream and keeping the element of
-  the second stream if a predicate apply to both elements returns true</li>
+      the second stream if a predicate applied to both elements returns true</p></li>
 </ul>
 
 <p>Consider the following dataflow network for computing the infinite
@@ -238,7 +237,7 @@ li ul {margin-top:6px;}
   which has no inputs). The followed-by component takes its inputs
   from wires <i>a</i> and <i>b</i>, and the map component takes its
   input from the <i>result</i> wire. (Note that the <i>result</i>
-  wires forks into two, but since the same values flow on both forks,
+  wire forks into two, but since the same values flow on both forks,
   we give it a single name.)
 </p>
 
@@ -246,9 +245,9 @@ li ul {margin-top:6px;}
 This means that we can represent the above dataflow network using the
 following list of wires and components giving values to those wires:
 <ul style="list-style: none;">
-  <li>result = fby a b</li>
-  <li>a = cst 0</li>
-  <li>b = map (fun x -> x +1) result</li>
+  <li><i>result</i> = fby <i>a</i> <i>b</i></li>
+  <li><i>a</i> = cst 0</li>
+  <li><i>b</i> = map (fun x -> x +1) <i>result</i></li>
 </ul>
 The dataflow network as a whole has no inputs, and its output is
 the <i>result</i> wire. In the notation of the homework, it is
@@ -301,7 +300,7 @@ Primitive <tt>component <i>net</i> <i>args</i></tt> includes
 dataflow network <i>net</i> in your network, attaching the wires
 supplied as arguments in <i>args</i> to the input wires
 of <tt>net</tt>. The output wire of <i>net</i> is the output wire of
-the primitive.
+the primitive. (Wires with the same name will be considered different in the dataflow network included, and should not clash &mdash; the same way you can use the same local variable names in a helper function that you're calling from another function and they will not clash.)
 </p>
 
 
@@ -379,6 +378,27 @@ of <i>net</i>. Thus, for example:</p>
 - : int list =
 [2; 3; 5; 7; 11; 13; 17; 19; 23; 29; 31; 37; 41; 43; 47; 53; 59; 61; 67; 71]
 </pre>
+<p>Another useful testing function is <tt>nth</tt>:</p>
+<ul style="list-style: none;">
+  <li><tt>nth : int -> 'a network -> 'a</tt></li>
+</ul>where <tt>nth <i>n</i> <i>net</i></tt> takes a number <i>n</i> and
+a dataflow network <i>net</i> (having no input streams) and returns
+the <i>n</i><sup>th</sup> element of the stream produced on the output wire
+of <i>net</i>. Thus, for example:</p>
+<pre>
+# nth 0 nats;;
+- : int = 0
+# nth 100 nats;;
+- : int = 100
+# nth 1000 nats;;
+- : int = 1000
+# nth 0 primes;;
+- : int = 2
+# nth 100 primes;;
+- : int = 547
+# nth 1000 primes;;
+- : int = 7927
+</pre>
 
 <p>
 What about networks that expect one or more input streams? We can't
@@ -403,7 +423,7 @@ using <tt>prefix</tt>. For example:</p>
 </pre>
     </p>
 
-<p>One final note: the dataflow networks my code lets you write are
+<p>One final note: the dataflow networks this code lets you write are
   what we might call <i>homogeneous dataflow networks</i>. Every wire
   in the network must carry values of the same type, represented by
   the type associate with a network. For instance, a dataflow network
@@ -428,24 +448,23 @@ using <tt>prefix</tt>. For example:</p>
 	      such that <tt>scale</tt> takes an input stream and produces
 	      a stream obtained by multiplying every element of the
 	      input stream by <tt>n</tt>:</p>
-	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scale n &lt;a1 a2 a3 ...&gt; = &lt;n*a1 n*a2 n*a3 ...&gt;</tt></p>
+	    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(scale n) &lt;a1 a2 a3 ...&gt; = &lt;n*a1 n*a2 n*a3 ...&gt;</tt></p>
 	    </p>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# pri (scale 2 nats);;
-&lt; 0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 ...>
-- : unit = ()
-# pri (scale 3 evens);;
-&lt; 0 6 12 18 24 30 36 42 48 54 60 66 72 78 84 90 96 102 108 114 ...>
-- : unit = ()
-# pri (scale 4 odds);;
-&lt; 4 12 20 28 36 44 52 60 68 76 84 92 100 108 116 124 132 140 148 156 ...>
-- : unit = ()
-# pri (scale 0 nats);;
-&lt; 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...>
-- : unit = ()</pre>
+# prefix 20 (apply (scale 0) [nats]);;
+- : int list = [0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0]
+# prefix 20 (apply (scale 3) [nats]);;
+- : int list =
+[0; 3; 6; 9; 12; 15; 18; 21; 24; 27; 30; 33; 36; 39; 42; 45; 48; 51; 54; 57]
+# prefix 20 (apply (scale 3) [evens]);;
+- : int list =
+[0; 6; 12; 18; 24; 30; 36; 42; 48; 54; 60; 66; 72; 78; 84; 90; 96; 102; 108;
+ 114]# prefix 20 (apply (scale 3) [stairs 4]);;
+- : int list = [0; 3; 6; 9; 0; 3; 6; 9; 0; 3; 6; 9; 0; 3; 6; 9; 0; 3; 6; 9]
+</pre>
 </div>
 	  </li>
 
@@ -461,25 +480,24 @@ using <tt>prefix</tt>. For example:</p>
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# pri (mult nats nats);;
-&lt; 0 1 4 9 16 25 36 49 64 81 100 121 144 169 196 225 256 289 324 361 ...>
-- : unit = ()
-# pri (mult nats evens);;
-&lt; 0 2 8 18 32 50 72 98 128 162 200 242 288 338 392 450 512 578 648 722 ...>
-- : unit = ()
-# pri (mult nats odds);;
-&lt; 0 3 10 21 36 55 78 105 136 171 210 253 300 351 406 465 528 595 666 741 ...>
-- : unit = ()
-# pri (mult (cst 4) nats);;
-&lt; 0 4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 ...>
-- : unit = ()
-# pri (mult (cst 0) nats);;
-&lt; 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...>
-- : unit = ()
+# prefix 20 (apply mult [nats;nats]);;
+- : int list =
+[0; 1; 4; 9; 16; 25; 36; 49; 64; 81; 100; 121; 144; 169; 196; 225; 256; 289;
+ 324; 361]
+# prefix 20 (apply mult [nats;evens]);;
+- : int list =
+[0; 2; 8; 18; 32; 50; 72; 98; 128; 162; 200; 242; 288; 338; 392; 450; 512;
+ 578; 648; 722]
+# prefix 20 (apply mult [evens;evens]);;
+- : int list =
+[0; 4; 16; 36; 64; 100; 144; 196; 256; 324; 400; 484; 576; 676; 784; 900;
+ 1024; 1156; 1296; 1444]
+# prefix 20 (apply mult [evens;stairs 4]);;
+- : int list =
+[0; 2; 8; 18; 0; 10; 24; 42; 0; 18; 40; 66; 0; 26; 56; 90; 0; 34; 72; 114]
 </pre>
 </div>
 	  </li>
-
 
 
 	  <li> <p>Code a function <tt class="code">fold</tt> of
@@ -498,31 +516,16 @@ using <tt>prefix</tt>. For example:</p>
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# pri (fold (fun a r -> a+r) (cst 0) nats);;
-&lt; 0 1 3 6 10 15 21 28 36 45 55 66 78 91 105 120 136 153 171 190 ...>
-- : unit = ()
-# pri (fold (fun a r -> a+r) (cst 10) evens);;
-&lt; 10 12 16 22 30 40 52 66 82 100 120 142 166 192 220 250 282 316 352 390 ...>
-- : unit = ()
-# pri (fold (fun a r -> a*r) (cst 2) nats);;
-&lt; 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...>
-- : unit = ()
-# pri (fold (fun a r -> a*r) (cst 2) odds);;
-&lt; 2 6 30 210 1890 20790 270270 4054050 68918850 1309458150 27498621150 
-  632468286450 15811707161250 426916093353750 12380566707258750 383797567925021250 
-  3441947704670925442 564333184370304966 2433583747991732126 2676045803129794834 
-  ...>
-- : unit = ()
-# prs (fold (fun a r -> r^a) (cst "") s_as);;
-&lt; a0 a0a1 a0a1a2 a0a1a2a3 a0a1a2a3a4 a0a1a2a3a4a5 a0a1a2a3a4a5a6 a0a1a2a3a4a5a6a7 
-  a0a1a2a3a4a5a6a7a8 a0a1a2a3a4a5a6a7a8a9 a0a1a2a3a4a5a6a7a8a9a10 
-  a0a1a2a3a4a5a6a7a8a9a10a11 a0a1a2a3a4a5a6a7a8a9a10a11a12 
-  a0a1a2a3a4a5a6a7a8a9a10a11a12a13 a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14 
-  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15 
-  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15a16 
-  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15a16a17 
-  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15a16a17a18 
-  a0a1a2a3a4a5a6a7a8a9a10a11a12a13a14a15a16a17a18a19 ...>
+# prefix 20 (apply (fold (fun a r -> a + r)) [nats; nats]);;
+- : int list =
+[0; 1; 3; 6; 10; 15; 21; 28; 36; 45; 55; 66; 78; 91; 105; 120; 136; 153; 171; 190]
+# prefix 20 (apply (fold (fun a r -> a + r)) [nats; evens]);;
+- : int list =
+[0; 2; 6; 12; 20; 30; 42; 56; 72; 90; 110; 132; 156; 182; 210; 240; 272; 306; 342;
+380]
+# prefix 10 (apply (fold (fun a r -> a * r)) [odds;odds]);;
+- : int list =
+[1; 3; 15; 105; 945; 10395; 135135; 2027025; 34459425; 654729075]
 - : unit = ()</pre>
 	  </div>
 	  </li>
@@ -538,21 +541,29 @@ using <tt>prefix</tt>. For example:</p>
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# pri (running_max odds);;
-&lt; 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 ...>
-- : unit = ()
-# pri (running_max odds);;
-&lt; 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 ...>
-- : unit = ()
-# pri (running_max (map (fun x -> (-x)) nats));;
-&lt; 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...>
-- : unit = ()
-# pri (running_max (map (fun x -> if x mod 2 = 0 then x else -x) nats));;
-&lt; 0 0 2 2 4 4 6 6 8 8 10 10 12 12 14 14 16 16 18 18 ...>
-- : unit = ()
-# pri (running_max s_ampl);;
-&lt; 0 1 1 1 1 1 2 2 2 2 2 2 2 2 2 3 3 3 3 3 ...>
-- : unit = ()</pre>
+# prefix 20 (apply running_max [nats]);;
+- : int list =
+[0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19]
+# prefix 20 (apply running_max [stairs 3]);;
+- : int list = [0; 1; 2; 2; 2; 2; 2; 2; 2; 2; 2; 2; 2; 2; 2; 2; 2; 2; 2; 2]
+# prefix 20 (apply running_max [stairs 5]);;
+- : int list = [0; 1; 2; 3; 4; 4; 4; 4; 4; 4; 4; 4; 4; 4; 4; 4; 4; 4; 4; 4]
+# let insert0s = network ["input"] "result" [
+   ("result", fby "first" "a");
+   ("zero", cst 0);
+   ("a", fby "zero" "rec");
+   ("first", splitFirst "input");
+   ("rec", rcomponent ["rest"]);
+   ("rest", splitRest "input")  ];;
+val insert0s : int network = <abstr>
+# prefix 20 (apply insert0s [nats]);;
+- : int list = [0; 0; 1; 0; 2; 0; 3; 0; 4; 0; 5; 0; 6; 0; 7; 0; 8; 0; 9; 0]
+# prefix 20 (apply running_max [apply insert0s [nats]]);;
+- : int list = [0; 0; 1; 1; 2; 2; 3; 3; 4; 4; 5; 5; 6; 6; 7; 7; 8; 8; 9; 9]
+# prefix 20 (apply running_max [apply insert0s [stairs 4]]);
+  ;;
+- : int list = [0; 0; 1; 1; 2; 2; 3; 3; 3; 3; 3; 3; 3; 3; 3; 3; 3; 3; 3; 3]
+</pre>
 	  </div>
 	  </li>
 
@@ -568,15 +579,16 @@ using <tt>prefix</tt>. For example:</p>
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# pri (stutter nats);;
-&lt; 0 0 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 ...>
-- : unit = ()
-# pri (stutter (stutter nats));;
-&lt; 0 0 0 0 1 1 1 1 2 2 2 2 3 3 3 3 4 4 4 4 ...>
-- : unit = ()
-# prs (stutter s_as);;
-&lt; a0 a0 a1 a1 a2 a2 a3 a3 a4 a4 a5 a5 a6 a6 a7 a7 a8 a8 a9 a9 ...>
-- : unit = ()</pre>
+# prefix 20 (apply stutter [nats]);;
+- : int list = [0; 0; 1; 1; 2; 2; 3; 3; 4; 4; 5; 5; 6; 6; 7; 7; 8; 8; 9; 9]
+# prefix 20 (apply stutter [evens]);;
+- : int list =
+[0; 0; 2; 2; 4; 4; 6; 6; 8; 8; 10; 10; 12; 12; 14; 14; 16; 16; 18; 18]
+# prefix 20 (apply stutter [stairs 4]);;
+- : int list = [0; 0; 1; 1; 2; 2; 3; 3; 0; 0; 1; 1; 2; 2; 3; 3; 0; 0; 1; 1]
+# prefix 20 (apply stutter [apply stutter [stairs 4]]);;
+- : int list = [0; 0; 0; 0; 1; 1; 1; 1; 2; 2; 2; 2; 3; 3; 3; 3; 0; 0; 0; 0]
+</pre>
 </div>
 	  </li>
 
@@ -641,33 +653,31 @@ integers.
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 	    <pre class="code">
-# prf (arctan 0.0);;
-&lt; 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. ...>
-- : unit = ()
-# prf (arctan 1.0);;
-&lt; 1. 0.666666666667 0.866666666667 0.72380952381 0.834920634921 
-  0.744011544012 0.820934620935 0.754267954268 0.81309148368 
-  0.760459904732 0.808078952351 0.764600691482 0.804600691482 
-  0.767563654445 0.802046413065 0.769788348549 0.800091378852 
-  0.771519950281 0.798546977308 0.772905951667 ...>
-- : unit = ()
-# prf (scalef 4.0 (arctan 1.0));;
-&lt; 4. 2.66666666667 3.46666666667 2.89523809524 3.33968253968 
-  2.97604617605 3.28373848374 3.01707181707 3.25236593472 3.04183961893 
-  3.23231580941 3.05840276593 3.21840276593 3.07025461778 3.20818565226 
-  3.0791533942 3.20036551541 3.08607980112 3.19418790923 3.09162380667 ...>
-- : unit = ()
-
-# let rec dropN n s = if n = 0 then s else let (s1,s2) = split s in dropN (n-1) s2;;
-val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
-
-# prf (dropN 1000 (scalef 4.0 (arctan 1.0)));;
-&lt; 3.14259165434 3.14059464985 3.14258966232 3.1405966379 
-  3.14258767822 3.14059861805 3.142585702 3.14060059034 3.14258373362 
-  3.14060255482 3.14258177303 3.14060451154 3.14257982018 3.14060646054 
-  3.14257787503 3.14060840186 3.14257593752 3.14061033556 3.14257400762 
-  3.14061226167 ...>
-- : unit = ()</pre>
+# prefix 20 (arctan 0.0);;
+- : float list =
+[0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.; 0.;
+ 0.]
+# prefix 20 (arctan 1.0);;
+- : float list =
+[1.; 0.666666666666666741; 0.866666666666666696; 0.723809523809523903;
+ 0.834920634920635063; 0.744011544011544124; 0.820934620934621107;
+ 0.754267954267954455; 0.813091483679719174; 0.760459904732350811;
+ 0.808078952351398483; 0.764600691481833294; 0.80460069148183333;
+ 0.767563654444796351; 0.802046413065486; 0.769788348549357;
+ 0.800091378852387236; 0.771519950280958655; 0.798546977307985628;
+ 0.77290595166696]
+# prefix 20 (apply (scalef 4.0) [arctan 1.0]);;
+- : float list =
+[4.; 2.66666666666666696; 3.46666666666666679; 2.89523809523809561;
+ 3.33968253968254025; 2.97604617604617649; 3.28373848373848443;
+ 3.01707181707181782; 3.25236593471887669; 3.04183961892940324;
+ 3.23231580940559393; 3.05840276592733318; 3.21840276592733332;
+ 3.0702546177791854; 3.20818565226194385; 3.07915339419742784;
+ 3.20036551540954894; 3.08607980112383462; 3.19418790923194251;
+ 3.09162380666784]
+# nth 1000 (apply (scalef 4.0) [arctan 1.0]);;
+- : float = 3.14259165433954424
+</pre>
 </div>
 
 	    <p>The last example shows that this way of computing &pi; converges very
@@ -695,22 +705,18 @@ val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# prf (pi ());;
-&lt; 3.18326359833 3.14059702933 3.14162102933 3.14159177218 3.1415926824 
-  3.14159265262 3.14159265362 3.14159265359 3.14159265359 3.14159265359 
-  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
-  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 ...>
-- : unit = ()
-
-# let rec dropN n s = if n = 0 then s else let (s1,s2) = split s in dropN (n-1) s2;;
-val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
-
-# prf (dropN 100 (pi ()));;
-&lt; 3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
-  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
-  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
-  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 ...>
-- : unit = ()
+# prefix 20 pi;;
+- : float list =
+[3.18326359832636; 3.14059702932606033; 3.14162102932503462;
+ 3.14159177218217733; 3.14159268240439937; 3.14159265261530862;
+ 3.141592653623555; 3.14159265358860251; 3.14159265358983619;
+ 3.14159265358979223; 3.141592653589794; 3.141592653589794;
+ 3.141592653589794; 3.141592653589794; 3.141592653589794; 3.141592653589794;
+ 3.141592653589794; 3.141592653589794; 3.141592653589794; 3.141592653589794]
+# nth 100 pi;;
+- : float = 3.141592653589794
+# nth 1000 pi;;
+- : float = 3.141592653589794
 </pre>
 	  </div>
 	  </li>
@@ -754,42 +760,37 @@ val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# prf (newton (fun x -> 3.0 *. x -. 2.0) (fun x -> 3.0) 1.0);;
-&lt; 1. 0.666666666667 0.666666666667 0.666666666667 0.666666666667 
-  0.666666666667 0.666666666667 0.666666666667 0.666666666667 
-  0.666666666667 0.666666666667 0.666666666667 0.666666666667 
-  0.666666666667 0.666666666667 0.666666666667 0.666666666667 
-  0.666666666667 0.666666666667 0.666666666667 ...>
-- : unit = ()
+# prefix 10 (newton (fun x -> 3. *. x -. 2.) (fun x -> 3.) 1.);;
+- : float list =
+[1.; 0.666666666666666741; 0.666666666666666741; 0.666666666666666741;
+ 0.666666666666666741; 0.666666666666666741; 0.666666666666666741;
+ 0.666666666666666741; 0.666666666666666741; 0.666666666666666741]
 
-# let sqrt v = newton (fun x -> x *. x -. v) (fun x -> 2.0 *. x) 1.0;;
-val sqrt : float -> float AbsStream.stream = <fun>
+# let sqrt v = newton (fun x -> x *. x -. v) (fun x -> 2. *. x) 1.0;;
+val sqrt : float -> float network = <fun>
 
-# prf (sqrt 4.0);;
-&lt; 1. 2.5 2.05 2.0006097561 2.00000009292 2. 2. 2. 2. 2. 2. 2. 
-  2. 2. 2. 2. 2. 2. 2. 2. ...>
-- : unit = ()
-# prf (sqrt 9.0);;
-&lt; 1. 5. 3.4 3.02352941176 3.00009155413 3.0000000014 3. 3. 3. 
-  3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. ...>
-- : unit = ()
-# prf (sqrt 2.0);;
-&lt; 1. 1.5 1.41666666667 1.41421568627 1.41421356237 1.41421356237 
-  1.41421356237 1.41421356237 1.41421356237 1.41421356237 1.41421356237 
-  1.41421356237 1.41421356237 1.41421356237 1.41421356237 1.41421356237 
-  1.41421356237 1.41421356237 1.41421356237 1.41421356237 ...>
-- : unit = ()
-# prf (sqrt 3.0);;
-&lt; 1. 2. 1.75 1.73214285714 1.73205081001 1.73205080757 1.73205080757 
-  1.73205080757 1.73205080757 1.73205080757 1.73205080757 1.73205080757 
-  1.73205080757 1.73205080757 1.73205080757 1.73205080757 1.73205080757 
-  1.73205080757 1.73205080757 1.73205080757 ...>
-- : unit = ()
-# prf (sqrt 144.0);;
-&lt; 1. 72.5 37.2431034483 20.5547955554 13.7802299906 12.1149915067 
-  12.0005457307 12.0000000124 12. 12. 12. 12. 12. 12. 12. 12. 12. 12. 
-  12. 12. ...>
-- : unit = ()
+# prefix 10 (sqrt 4.);;
+- : float list =
+[1.; 2.5; 2.05; 2.00060975609756087; 2.00000009292229475;
+ 2.00000000000000222; 2.; 2.; 2.; 2.]
+# prefix 10 (sqrt 9.);;
+- : float list =
+[1.; 5.; 3.4; 3.0235294117647058; 3.00009155413138; 3.00000000139698386; 3.;
+ 3.; 3.; 3.]
+# prefix 10 (sqrt 2.);;
+- : float list =
+[1.; 1.5; 1.41666666666666674; 1.41421568627450989; 1.41421356237468987;
+ 1.41421356237309515; 1.41421356237309492; 1.41421356237309515;
+ 1.41421356237309492; 1.41421356237309515]
+# prefix 10 (sqrt 3.);;
+- : float list =
+[1.; 2.; 1.75; 1.73214285714285721; 1.7320508100147276; 1.73205080756887719;
+ 1.73205080756887742; 1.73205080756887719; 1.73205080756887742;
+ 1.73205080756887719]
+# prefix 10 (sqrt 144.);;
+- : float list =
+[1.; 72.5; 37.2431034482758605; 20.5547955554420376; 13.7802299905638;
+ 12.11499150672641; 12.0005457307424379; 12.0000000124086874; 12.; 12.]
 </pre>
 	  </div>
 	  </li>
@@ -822,53 +823,34 @@ val sqrt : float -> float AbsStream.stream = <fun>
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
 <pre class="code">
-# let rec dropN n s = if n = 0 then s else let (s1,s2) = split s in dropN (n-1) s2;;
-val dropN : int -> 'a AbsStream.stream -> 'a AbsStream.stream = <fun>
-
-# let d = derivative (fun x -> x *. x) 4.0;;
-val d : float stream = <abstr>
+# prefix 10 (derivative (fun x-> x *. x) 4.0);;
    (* The derivative of x^2 is just 2x *)
-
-# prf d;;
-&lt; 9. 8.5 8.33333333333 8.25 8.2 8.16666666667 8.14285714286 8.125 
-  8.11111111111 8.1 8.09090909091 8.08333333333 8.07692307692 8.07142857143 
-  8.06666666667 8.0625 8.05882352941 8.05555555556 8.05263157895 8.05 ...>
-- : unit = ()
-# prf (dropN 1000 d);;
-&lt; 8.000999001 8.00099800399 8.00099700897 8.00099601593 8.00099502488 
-  8.00099403578 8.00099304866 8.00099206349 8.00099108028 8.00099009901 
-  8.00098911968 8.00098814229 8.00098716683 8.0009861933 8.00098522167 
-  8.00098425197 8.00098328417 8.00098231828 8.00098135427 8.00098039216 ...>
-- : unit = ()
-
-# prf (derivative (fun x -> x *. x +. 10.0) 4.0);;
+- : float list =
+[9.; 8.5; 8.33333333333332504; 8.25; 8.20000000000000284;
+ 8.16666666666668561; 8.14285714285715656; 8.125; 8.11111111111107519;
+ 8.09999999999998721]
+# nth 1000 (derivative (fun x -> x *. x) 4.0);;
+- : float = 8.00099900099941408
+# prefix 10 (derivative (fun x-> x *. x +. 10.0) 4.0);;
     (* The derivative of x^2 + 10 is still just 2x *)
-&lt; 9. 8.5 8.33333333333 8.25 8.2 8.16666666667 8.14285714286 8.125 
-  8.11111111111 8.1 8.09090909091 8.08333333333 8.07692307692 8.07142857143 
-  8.06666666667 8.0625 8.05882352941 8.05555555556 8.05263157895 8.05 ...>
-- : unit = ()
-# prf (derivative (fun x -> 3.0 *. x) 4.0);;
+- : float list =
+[9.; 8.5; 8.33333333333332504; 8.25; 8.20000000000000284;
+ 8.16666666666668561; 8.14285714285715656; 8.125; 8.11111111111107519;
+ 8.09999999999998721]
+# prefix 10 (derivative (fun x -> 3.0 *. x) 4.0);;
     (* The derivative of 3x is 3 *)
-&lt; 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. ...>
-- : unit = ()
-
-# let d = derivative (fun x-> x *. x *. x +. x *. x +. 2.0 *. x) 2.0;;
-val d : float stream = <abstr>
+- : float list =
+[3.; 3.; 3.; 3.; 3.00000000000000711; 3.; 3.00000000000001421; 3.;
+ 2.99999999999998934; 2.99999999999998934]
+# prefix 10 (derivative (fun x-> x *. x *. x +. x *. x +. 2.0 *. x) 2.0);;
    (* The derivative of x^3 + x^2 + 2x is 3x^2 + 2x + 2 *)
-
-# prf d;;
-&lt; 26. 21.75 20.4444444444 19.8125 19.44 19.1944444444 19.0204081633 
-  18.890625 18.7901234568 18.71 18.6446280992 18.5902777778 18.5443786982 
-  18.5051020408 18.4711111111 18.44140625 18.4152249135 18.3919753086 
-  18.3711911357 18.3525 ...>
-- : unit = ()
-# prf (dropN 1000 d);;
-&lt; 18.006994005 18.006987024 18.0069800568 18.0069731036 18.0069661642 
-  18.0069592386 18.0069523268 18.0069454286 18.0069385442 18.0069316734 
-  18.0069248161 18.0069179725 18.0069111423 18.0069043256 18.0068975224 
-  18.0068907325 18.006883956 18.0068771928 18.0068704429 18.0068637063 ...>
+- : float list =
+[26.; 21.75; 20.4444444444444606; 19.8125; 19.4400000000000261;
+ 19.1944444444444144; 19.0204081632652766; 18.890625; 18.7901234567901305;
+ 18.7100000000000222]
 </pre>
 	  </div>
+	    <p><b>Though questions:</b> <i>Could you somehow modify function <tt>newton</tt> so that it doesn't require you to provide the first derivative of the function for which you want to find a root? Perhaps you could compute the derivative automatically using <tt>derivative</tt>? Also: <tt>derivative</tt> converges horribly. Could you think of a way to improve it?</i></p>
 	  </li>
 </li>
 
@@ -898,32 +880,26 @@ val d : float stream = <abstr>
 
 <div class="code">
   <p onClick="toggleShowHide(this)">Show sample output</p>
-<pre class="code">
-# prf (limit 0.00001 (map (fun n -> 1.0 /. (float (n+1))) nats));;
-&lt; 0.00316455696203 0.00315457413249 0.00314465408805 0.00313479623824 
-  0.003125 0.00311526479751 0.00310559006211 0.0030959752322 
-  0.00308641975309 0.00307692307692 0.00306748466258 0.00305810397554 
-  0.0030487804878 0.00303951367781 0.0030303030303 0.00302114803625 
-  0.00301204819277 0.003003003003 0.00299401197605 0.00298507462687 ...>
-- : unit = ()
-# prf (limit 0.0000000001 (pi ()));;
-&lt; 3.14159265362 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
-  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
-  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 
-  3.14159265359 3.14159265359 3.14159265359 3.14159265359 3.14159265359 ...>
-- : unit = ()
-# prf (limit 0.0000000001 (newton (fun x -> x *. x -. 10.0) (fun x -> 2.0 *. x) 1.0));;
-&lt; 3.16227766017 3.16227766017 3.16227766017 3.16227766017 3.16227766017 
-  3.16227766017 3.16227766017 3.16227766017 3.16227766017 3.16227766017 
-  3.16227766017 3.16227766017 3.16227766017 3.16227766017 3.16227766017 
-  3.16227766017 3.16227766017 3.16227766017 3.16227766017 3.16227766017 ...>
-- : unit = ()
-# prf (limit 0.0000001 (derivative (fun x -> x *. x) 4.0));;
-&lt; 8.00031625552 8.00031615556 8.00031605563 8.00031595577 8.00031585597 
-  8.00031575622 8.00031565656 8.00031555697 8.00031545741 8.00031535794 
-  8.0003152585 8.00031515917 8.00031505985 8.00031496063 8.00031486146 
-  8.00031476236 8.00031466331 8.00031456432 8.00031446541 8.00031436655 ...>
-- : unit = ()</pre>
+  <pre class="code">
+# prefix 10 (apply (limit 0.00000000001) [pi]);;
+- : float list =
+[3.14159265358860251; 3.14159265358983619; 3.14159265358979223;
+ 3.141592653589794; 3.141592653589794; 3.141592653589794; 3.141592653589794;
+ 3.141592653589794; 3.141592653589794; 3.141592653589794]
+# prefix 10 (apply (limit 0.00000000001)
+               [newton (fun x -> x *. x -. 10.) (fun x -> 2. *. x) 1.]);;
+- : float list =
+[3.16227766016837952; 3.16227766016837908; 3.16227766016837952;
+ 3.16227766016837908; 3.16227766016837952; 3.16227766016837908;
+ 3.16227766016837952; 3.16227766016837908; 3.16227766016837952;
+ 3.16227766016837908]
+# prefix 10 (apply (limit 0.0000001) [derivative (fun x -> x *. x) 4.]);;
+- : float list =
+[8.00031625552450265; 8.00031615555879583; 8.00031605562637;
+ 8.00031595577122445; 8.00031585596800454; 8.00031575622316637;
+ 8.00031565656377097; 8.00031555696997; 8.00031545740871763;
+ 8.00031535793515]
+</pre>
 	  </div>
 	  </li>
 
@@ -932,7 +908,7 @@ val d : float stream = <abstr>
 
       <li> <p><b>Optional: super challenge</b></p>
 
-	<p>This question is here purely for your entertainment and if
+	<p>This question is here purely for your entertainment, if
 	  you like puzzles or challenges.</p>
 
 	<p>One question I wanted to give you was to create a dataflow
