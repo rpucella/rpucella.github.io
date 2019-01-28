@@ -180,7 +180,7 @@ li > p { margin-top:0;}
 	  The sample code in <tt>homework0.py</tt> contains three
 	  classes, <tt>BooksDictionary</tt>, <tt>BooksTuples</tt>,
 	  and <tt>BooksFile</tt>. They all implement straightforward
-	  CRUD operations on a simple collection of books represented,
+	  <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> operations on a simple collection of books represented,
 	  respectively, as a dictionary, a list of tuples, and a
 	  tab-separated file.
 	</p>
@@ -199,7 +199,7 @@ li > p { margin-top:0;}
 	  
 	<p>The last  method <tt>isbns</tt> will give you a way to iterate over the books in the collection.</p>
 
-	<p>I immplemented a function <tt>make_test(coll)</tt> taking an instance of one of the above classes and populates it with books. The sample outputs below are using this function.</p>
+	<p>I gave you a function <tt>make_test(coll)</tt> which takes an instance of one of the above classes and populates it with books. The sample outputs below use this function.</p>
 	
 
 	<ol class="subquestion">
@@ -215,7 +215,7 @@ li > p { margin-top:0;}
           class <tt>BooksFile</tt> where the collection of books is 
               implemented as a file on the filesystem. The name of the file that holds the books is provided as an argument to the constructor of the class. (I already implemented the constructor, which initializes the file to be empty if the file already exists.)</p>
 
-	    <p>The CRUD operations should operate directly on the file -- creating a book should append to the file, reading a book should read through each book of the file and return the attributes of the book when it finds it, etc. Please don't read the file as a whole in memory and access it there. I want you to think about how to access data directly in the file.</p>
+	    <p>The CRUD operations should operate directly on the file &mdash; creating a book should append to the file, reading a book should read through each book of the file and return the attributes of the book when it finds it, etc. Please don't read the file as a whole in memory and access it there. I want you to think about how to access data directly in the file.</p>
 
 	    <p>You can store data however you want. I suggest you go for something simple, either one book per line, with all the attributes of a book separated by <tt>\t</tt>, or any character which you can be reasonably confident will not appear in any attribute. Alternatively, you can put one attribute per line.</p>
 	    
