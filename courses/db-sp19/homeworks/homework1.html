@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<h1 id="homework-1">Homework 1</h1>
+<h2 id="due-date-sunday-february-17-23h59">Due date: Sunday February 17 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done <strong>in teams of 2</strong>. You may discuss problems with fellow students, but all submitted work must be entirely your own, and should not be from any other course, present, past, or future. If you use a solution from another source you must cite it -- this includes when that source is someone else helping you.</p></li>
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub</strong>.</p></li>
+<li><p>All programming is to be done in Python (v3.7).</p></li>
+<li><p>Code your answers by modifying the file <a href="homework1.py">homework1.py</a> provided. Add your team members' <strong>name</strong> and <strong>email address</strong>, and any <strong>remarks</strong> that you wish to make to the instructor to the block comment at the head of the file.</p></li>
+<li><p>Feel free to define helper functions/classes if you need them.</p></li>
+</ul>
+<h2 id="electronic-submission-instructions">Electronic submission instructions:</h2>
+<ul>
+<li><p>Make sure your file loads without issue -- try executing <code>import homework1</code> from a fresh python shell for a quick check</p></li>
+<li><p>When you're ready to submit, send an email with your file <code>homework1.py</code> as an attachment to <code>olin.submissions@gmail.com</code> with subject <em>Homework 1 submission</em>.</p></li>
+<li><p>Only one submission per team please</p></li>
+</ul>
+<hr />
+<h2 id="description">Description</h2>
+<p>In this homework, we're going to implement code to represent an Entity-Relationship (ER) model, and to instantiate such a model with actual data. Remember, the ER model is conceptual, so the focus is not particularly on usability, but rather, on expressiveness.</p>
+<p>File <code>homework1.py</code> contains skeleton classes that you will fill out the implement an ER model. The main class is <code>ERModel</code>, with the following interface:</p>
+<pre><code>class ERModel (object):
+
+   def __init__ (self)
+   # Instantiate an empty ER model.
+
+   def entity_sets (self)
+   # Return a list of all entity set names.
+
+   def create_entity_set (self,name,attributes,attributes_key)
+   # Create an entity set with a given &#39;name&#39; and described 
+   # by a list of &#39;attributes&#39; and a sublist &#39;attributes_key&#39;
+   # stating which attributes are used as a primary key for entities
+   # in the set, and adds it to the model.
+
+   def read_entity_set (self,name)
+   # Return the entity set object with the given &#39;name&#39; in the model.
+
+   def relationship_sets (self)
+   # Return a list of all relationship set names.
+
+   def create_relationship_set (self,name,roles,attributes=[])
+   # Create a relationship set with a given &#39;name&#39; and described 
+   # by a dictionary &#39;roles&#39; mapping role names to entity set names
+   # and by a list of &#39;attributes&#39;, and adds it to the model.
+
+   def read_relationship_set (self,name)
+   # Return the relationship set object with the given &#39;name&#39; in the
+   # model.</code></pre>
+<p>As we saw, an ERModel is made up of entity sets and relationship sets. An ERModel is initially empty, and you can add entity sets via <code>create_entity_set</code> and relationship sets via <code>create_relationship_sets</code>. Note that the entity and relationship sets you create are empty (they contain no entities or relationships -- those are added elsewhere). You can also get a specific entity set or relationship set from the ER model via <code>read_entity_set</code> and <code>read_relationship_set</code>. This is a restricted set of CRUD operations: you can only create and read entity and relationship sets. Methods <code>entity_sets</code> and <code>relationship_sets</code> will give you a list of the names of all the entity sets and of all the relationship sets in a model, respectively.</p>
+<p>When creating an entity set via <code>ERModel.create_entity_set</code>, the method will instantiate an object of <code>EntitySet</code> class, specifying the list of attributes describing the entities in the set, and the sublist of attributes used to construct a primary key for entitites in the set:</p>
+<pre><code>class EntitySet (object):
+
+   def __init__ (self,attributes,attributes_key)
+   # Instantiate an entity set with entities described by a list
+   # of &#39;attributes&#39; and a sublist &#39;attributes_key&#39; stating
+   # which attributes are used as primary key for entities in
+   # the set.
+
+   def entity_keys (self)
+   # Return the list of primary keys of the entities in the set.
+
+   def create_entity (self,attributes)
+   # Create an entity in the entity set from a dictionary &#39;attributes&#39;
+   # mapping each attribute name of the entity set to a value.
+   
+   def read_entity (self,key)
+   # Return the entity in the entity set with primary key given by
+   # &#39;key&#39;.
+
+   def delete_entity (self,key)
+   # Delete the entity in the entity set with primary key given by
+   # &#39;key&#39;.</code></pre>
+<p>Again, <code>EntitySet</code> supports CRUD operations for creation, reading, and deleting entities in the entity set. (There is no update, but could be added.) Those operations are keyed by the primary keys of entities. The primary keys corresponding to entities and returned by <code>entity_keys</code> and used as arguments to <code>read_entity</code> and <code>delete_entity</code> are dictionaries mapping an attribute name which is part of the key (as specified in the creation of the entity set) to the value of that attribute in the entity. For instance, if an an entity set was created specifying attributes <code>[&quot;title&quot;,&quot;isbn&quot;,&quot;year&quot;,&quot;numberPages&quot;]</code> and a key specified by attributes <code>[&quot;isbn&quot;]</code>, then a possible primary key for an entity would be</p>
+<pre><code>{
+   &quot;isbn&quot;: &quot;0062255655&quot;
+}</code></pre>
+<p>When creating an entity via <code>EntitySet.create_entity</code>, the method will instantiate an object of <code>Entity</code> class, specifying a dictionary mappin every attribute name to a value, and also providing the list of attributes used to construct the primary key of the entity.</p>
+<pre><code>class Entity (object):
+
+    def __init__ (self,attributes,attributes_key)
+    # Instantiate an entity from a dictionary &#39;attributes&#39; mapping
+    # every attribute name to a value, and a list &#39;attributes_key&#39;
+    # listing the attributes used to construct the primnary key of
+    # the entity.
+
+    def attribute (self,name)
+    # Return the value of attribute &#39;name&#39; in the entity.
+
+    def primary_key (self)
+    # Return the primary key (as a dictionary) for the entity.</code></pre>
+<p>Relationship sets (and relationships) are similar to entity sets (and entities). When creating a relationship set via <code>ERModel.create_relationship_set</code>, the method will instantiate an object of <code>RelationshipSet</code> class, specifying the entity set name corresponding to each role, and a list of attributes for the relationships in the set:</p>
+<pre><code>class RelationshipSet (object):
+
+   def __init__ (self,roles,attributes)
+   # Instantiate a relationship set with relationships described
+   # by a dictionary &#39;roles&#39; from role names to entity set objects
+   # associated with each role, and a list of attributes for the
+   # relationships.
+    
+   def relationship_keys (self)
+   # Return the primary keys of the relationships in the
+   # relationship set.
+
+   def create_relationship (self,role_keys,attributes={})
+   # Create a new relationship in the relationship set from
+   # a dictionary &#39;role_keys&#39; mapping every role in the
+   # relationship to the primary key of an entity participating
+   # in the relationship, and an (optional) dictionary &#39;attributes&#39;
+   # associated a value with every attribute of the relationship.
+
+   def read_relationship (self,pkey)
+   # Return the relationship in the relationship set with primary
+   # key given by &#39;pkey&#39;.
+
+   def delete_relationship (self,pkey)
+   # Delete the relationship in the relationship set with primary
+   # key given by &#39;pkey&#39;.</code></pre>
+<p>Again, <code>RelationshipSet</code> supports CRUD operations for creation, reading, and deleting relationships in the relationship set. (There is no update, but could be added.) Those operations are keyed by the primary keys of relationships. The primary key of a relationship is a dictionary mapping each role to the primary key of the entity associated with that role. For example, if a relationship associates entities <code>E1</code>, <code>E2</code>, <code>E3</code> with roles <code>&quot;r1&quot;</code>, <code>&quot;r2&quot;</code>, <code>&quot;r3&quot;</code> and the primary keys of <code>E1</code>, <code>E2</code>, <code>E3</code> are given by dictionaries <code>K1</code>, <code>K2</code>, <code>K3</code>, then the primary key of the relationship is the dictionary</p>
+<pre><code>{
+  &quot;r1&quot;: K1,
+  &quot;r2&quot;: K2,
+  &quot;r3&quot;: K3
+}</code></pre>
+<p>When creating a relationship via <code>RelationshipSet.create_relationship</code>, the method will instantiate an object of <code>Relationship</code> class, specifying a dictionary mapping every role name to the primary key of the entity associated with that role for the relationship being constructed, and a dictionary mapping every attribute name to the value of that attribute for the relationship between constructued:</p>
+<pre><code>class Relationship (object):
+
+   def __init__ (self,role_keys,attributes)
+   # Instantiate a relationship by providing a dictionary
+   # &#39;role_keys&#39; mapping every role name to the primary key of the
+   # entity associated with that role, and a dictionary
+   # &#39;attributes&#39; mapping every attribute name to a value.
+
+   def attribute (self,name)
+   # Return the value of attribute &#39;name&#39; in the relationship.
+        
+   def role_key (self,role)
+   # Return the primary key of the entity associate with &#39;role&#39; name.
+   
+   def primary_key (self)
+   # Return the primary key of the relationship, namely a
+   # dictionary mapping every role name to the primary key of the
+   # entity associated with that role.</code></pre>
+<hr />
+<h2 id="question-1">Question 1</h2>
+<h3 id="part-a">Part A</h3>
+<p>Complete the implementation of <code>ERModel</code> to handle entity sets, including an implementation of <code>EntitySet</code> and <code>Entity</code>. I have provided an implementation of <code>__str__</code> in <code>Entity</code>, meaning that you should be able to <code>print()</code> an entity and see a reasonably readable output.</p>
+<p>I have given you a function <code>sample_entities_model</code> that creates a simple model with two entity sets, <code>Books</code> and <code>Persons</code>, populated with books and persons of the kind we saw in Homework 0. You can use this to test your functions. Note that I've used the last name of a person as a primary key for the <code>Persons</code> entity set, which is stupid (why?) but for the purpose of this example, it's good enough.</p>
+<p>Here is my sample output of printing the persons in entity set <code>Books</code>:</p>
+<pre><code>&gt;&gt;&gt; c = sample_entities_model()
+&gt;&gt;&gt; for pk in c.read_entity_set(&quot;Persons&quot;).entity_keys():
+...    print(c.read_entity_set(&quot;Persons&quot;).read_entity(pk))
+... 
+[firstName=Barbara|lastName=Tuchman|birthYear=1912]
+[firstName=Neil|lastName=Gaiman|birthYear=1960]
+[firstName=Terry|lastName=Pratchett|birthYear=1948]
+[firstName=John|lastName=Keegan|birthYear=1934]
+[firstName=Jonathan|lastName=Lethem|birthYear=1964]
+[firstName=Margaret|lastName=MacMillan|birthYear=1943]
+[firstName=David|lastName=Kertzer|birthYear=1948]
+[firstName=Ted|lastName=Chiang|birthYear=1967]
+[firstName=Saunders|lastName=Mac Lane|birthYear=1909]
+[firstName=Ieke|lastName=Moerdijk|birthYear=1958]
+[firstName=Barbara|lastName=Kingsolver|birthYear=1955]</code></pre>
+<h3 id="part-b">Part B</h3>
+<p>Code a function <code>show_title_books_more_500_pages ()</code> that prints the titles of the books in the <code>sample_entities_model()</code> collection that have more than 500 pages.</p>
+<p>Sample output:</p>
+<pre><code>&gt;&gt;&gt; show_title_books_more_500_pages()
+A Distant Mirror
+The Guns of August
+American Gods
+The Fortress of Solitude
+The War That Ended Peace
+Sheaves in Geometry and Logic
+The Poisonwood Bible</code></pre>
+<hr />
+<h2 id="question-2">Question 2</h2>
+<h3 id="part-a-1">Part A</h3>
+<p>Complete the implementation of <code>ERModel</code> to handle relationship sets, including an implementation of <code>RelationshipSet</code> and <code>Relationship</code>. I have provided an implementation of <code>__str__</code> in <code>Relationship</code>, meaning that you should be able to <code>print()</code> a relationship and see a reasonably readable output (basically, the keys of the entities in the relationship).</p>
+<p>I have given you a function <code>sample_relationships_model</code> that extends the model returned by <code>sample_entities_model</code> with its two entity sets <code>Books</code> and <code>Persons</code> with a relationship set <code>AuthoredBy</code> that relates a book with its authors.You can use this to test your functions.</p>
+<p>Here is my sample output of printing the relationships in the relationship set <code>AuthoredBy</code>:</p>
+<pre><code>&gt;&gt;&gt; c = sample_relationships_model()
+&gt;&gt;&gt; for rk in c.read_relationship_set(&quot;AuthoredBy&quot;).relationship_keys():
+...    print(c.read_relationship_set(&quot;AuthoredBy&quot;).read_relationship(rk))
+... 
+&lt;[isbn=0345349571] [lastName=Tuchman] &gt;
+&lt;[isbn=034538623X] [lastName=Tuchman] &gt;
+&lt;[isbn=0393356182] [lastName=Gaiman] &gt;
+&lt;[isbn=0060558121] [lastName=Gaiman] &gt;
+&lt;[isbn=0062255655] [lastName=Gaiman] &gt;
+&lt;[isbn=0060853980] [lastName=Gaiman] &gt;
+&lt;[isbn=0060853980] [lastName=Pratchett] &gt;
+&lt;[isbn=0307274939] [lastName=Keegan] &gt;
+&lt;[isbn=0712666451] [lastName=Keegan] &gt;
+&lt;[isbn=1101972120] [lastName=Chiang] &gt;
+&lt;[isbn=0679768173] [lastName=Kertzer] &gt;
+&lt;[isbn=0812980660] [lastName=MacMillan] &gt;
+&lt;[isbn=0571205992] [lastName=Lethem] &gt;
+&lt;[isbn=0375724886] [lastName=Lethem] &gt;
+&lt;[isbn=0387977102] [lastName=Mac Lane] &gt;
+&lt;[isbn=0387977102] [lastName=Moerdijk] &gt;
+&lt;[isbn=0387984032] [lastName=Mac Lane] &gt;
+&lt;[isbn=0060175400] [lastName=Kingsolver] &gt;</code></pre>
+<h3 id="part-b-1">Part B</h3>
+<p>Code a function <code>show_title_books_by_barbara ()</code> that prints the titles of the books in the <code>sample_relationships_model()</code> collection that have an author whose first name is <code>Barbara</code>.</p>
+<p>Sample output:</p>
+<pre><code>&gt;&gt;&gt; show_title_books_by_barbara()
+A Distant Mirror
+The Guns of August
+The Poisonwood Bible</code></pre>
+<h3 id="part-c">Part C</h3>
+<p>Code a function <code>show_name_authors_more_one_book ()</code> that prints the name (first name and last name) of the authors that have authored more than one book.</p>
+<p>Sample output:</p>
+<pre><code>&gt;&gt;&gt; show_name_authors_more_one_book()
+Barbara Tuchman
+Neil Gaiman
+John Keegan
+Jonathan Lethem
+Saunders Mac Lane</code></pre>
+<h3 id="part-d">Part D</h3>
+<p>Code a function <code>show_title_books_more_one_author ()</code> that prints the title of the books that have more than one author.</p>
+<p>Sample output:</p>
+<pre><code>&gt;&gt;&gt; show_title_books_more_one_author()
+Good Omens
+Sheaves in Geometry and Logic</code></pre>
+</body>
+</html>
