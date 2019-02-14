@@ -11,7 +11,7 @@
 <h1 id="homework-1">Homework 1</h1>
 <h2 id="due-date-sunday-february-17-23h59">Due date: Sunday February 17 (23h59)</h2>
 <ul>
-<li><p>This homework is to be done <strong>in teams of 2</strong>. You may discuss problems with fellow students, but all submitted work must be entirely your own, and should not be from any other course, present, past, or future. If you use a solution from another source you must cite it -- this includes when that source is someone else helping you.</p></li>
+<li><p>This homework is to be done <strong>in teams of 2 <span color="blue;">or 3</span></strong>. You may discuss problems with fellow students, but all submitted work must be entirely your own, and should not be from any other course, present, past, or future. If you use a solution from another source you must cite it -- this includes when that source is someone else helping you.</p></li>
 <li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub</strong>.</p></li>
 <li><p>All programming is to be done in Python (v3.7).</p></li>
 <li><p>Code your answers by modifying the file <a href="homework1.py">homework1.py</a> provided. Add your team members' <strong>name</strong> and <strong>email address</strong>, and any <strong>remarks</strong> that you wish to make to the instructor to the block comment at the head of the file.</p></li>
@@ -22,6 +22,12 @@
 <li><p>Make sure your file loads without issue -- try executing <code>import homework1</code> from a fresh python shell for a quick check</p></li>
 <li><p>When you're ready to submit, send an email with your file <code>homework1.py</code> as an attachment to <code>olin.submissions@gmail.com</code> with subject <em>Homework 1 submission</em>.</p></li>
 <li><p>Only one submission per team please</p></li>
+</ul>
+<hr />
+<h2 id="updates">Updates</h2>
+<p><span style="color:blue;">Changes are coded in blue</span></p>
+<ul>
+<li>2/13/19: added Question 3 for teams of 3; added an explanation about sharing of entity set and relationship set objects; added some guidance about when to raise an exception</li>
 </ul>
 <hr />
 <h2 id="description">Description</h2>
@@ -55,7 +61,8 @@
    def read_relationship_set (self,name)
    # Return the relationship set object with the given &#39;name&#39; in the
    # model.</code></pre>
-<p>As we saw, an ERModel is made up of entity sets and relationship sets. An ERModel is initially empty, and you can add entity sets via <code>create_entity_set</code> and relationship sets via <code>create_relationship_sets</code>. Note that the entity and relationship sets you create are empty (they contain no entities or relationships -- those are added elsewhere). You can also get a specific entity set or relationship set from the ER model via <code>read_entity_set</code> and <code>read_relationship_set</code>. This is a restricted set of CRUD operations: you can only create and read entity and relationship sets. Methods <code>entity_sets</code> and <code>relationship_sets</code> will give you a list of the names of all the entity sets and of all the relationship sets in a model, respectively.</p>
+<p>As we saw, an ERModel is made up of entity sets and relationship sets. An ERModel is initially empty, and you can add entity sets via <code>create_entity_set</code> and relationship sets via <code>create_relationship_set</code>. Note that the entity and relationship sets you create are empty (they contain no entities or relationships -- those are added elsewhere). You can also get a specific entity set or relationship set from the ER model via <code>read_entity_set</code> and <code>read_relationship_set</code>. This is a restricted set of CRUD operations: you can only create and read entity and relationship sets. Methods <code>entity_sets</code> and <code>relationship_sets</code> will give you a list of the names of all the entity sets and of all the relationship sets in a model, respectively.</p>
+<p><span style="color:blue;">Methods <code>create_entity_set</code> and <code>create_relationship_set</code> should raise an exception if an entity set or relationship set of the given name already exists, while <code>read_entity_set</code> and <code>read_relationship_set</code> should raise an exception if an entity set or relationship set of the given name does not exist.</span></p>
 <p>When creating an entity set via <code>ERModel.create_entity_set</code>, the method will instantiate an object of <code>EntitySet</code> class, specifying the list of attributes describing the entities in the set, and the sublist of attributes used to construct a primary key for entitites in the set:</p>
 <pre><code>class EntitySet (object):
 
@@ -83,6 +90,7 @@
 <pre><code>{
    &quot;isbn&quot;: &quot;0062255655&quot;
 }</code></pre>
+<p><span style="color:blue;">Methods <code>create_entity</code> should raise an exception if an entity with the same primary key already exists in the entity set, while <code>read_entity</code> and <code>delete_entity</code> should raise an exception if an entity with the given primary key does not exist in the entity set.</span></p>
 <p>When creating an entity via <code>EntitySet.create_entity</code>, the method will instantiate an object of <code>Entity</code> class, specifying a dictionary mappin every attribute name to a value, and also providing the list of attributes used to construct the primary key of the entity.</p>
 <pre><code>class Entity (object):
 
@@ -130,6 +138,7 @@
   &quot;r2&quot;: K2,
   &quot;r3&quot;: K3
 }</code></pre>
+<p><span style="color:blue;">Methods <code>create_relationship</code> should raise an exception if a relationship with the same primary key already exists in the relationship set, while <code>read_relationship</code> and <code>delete_relationship</code> should raise an exception if a relationship with the given primary key does not exist in the relationship set.</span></p>
 <p>When creating a relationship via <code>RelationshipSet.create_relationship</code>, the method will instantiate an object of <code>Relationship</code> class, specifying a dictionary mapping every role name to the primary key of the entity associated with that role for the relationship being constructed, and a dictionary mapping every attribute name to the value of that attribute for the relationship between constructued:</p>
 <pre><code>class Relationship (object):
 
@@ -149,6 +158,7 @@
    # Return the primary key of the relationship, namely a
    # dictionary mapping every role name to the primary key of the
    # entity associated with that role.</code></pre>
+<p><span style="color:blue;">The entity set object returned by <code>ERModel.read_entity_set</code> should be the same object as stored in the <code>ERModel</code> instance, and similarly for the relationship set object returned by <code>ERModel.read_relationship_set</code>. In other words, the entity set or relationship set object is <em>shared</em>. This means, for example, when we add an entity to the entity set returned by <code>ERModel.read_entity_set</code>, we also are modifying the entity set inside the <code>ERModel</code> instance. There is some convenience with this approach, and also some disadvantages. Feel free to think about the pros and cons. The sample code I provided you does rely on this sharing, though.</span></p>
 <hr />
 <h2 id="question-1">Question 1</h2>
 <h3 id="part-a">Part A</h3>
@@ -231,5 +241,16 @@ Saunders Mac Lane</code></pre>
 <pre><code>&gt;&gt;&gt; show_title_books_more_one_author()
 Good Omens
 Sheaves in Geometry and Logic</code></pre>
+<hr />
+<div style="color:blue;">
+<h2>Question 3 (for teams of 3 only)</h2>
+<p>Recall that a cardinality constraint on a relationship set R describes in how many relationships in R an entity may participate. We'll focus exclusively on binary relationship sets, that is, relationship sets that associate entities in two entity sets.</p>
+<p>Let R be a relationship set associating entities in A with entities in B. A many-to-many cardinality constraint (M:M) indicates that entities in A can be in 0 or more relationships with an entity in B, and vice versa. A one-to-many cardinality constraint (1:M) indicates that entities in A can be in at most one relationship with an entity in B, but entities in B can be in 0 or more relationships with an entity in A. Many-to-one (M:1) and one-to-one (1:1) were described in the notes.</p>
+<p>In this question, you'll extend relationship sets with <strong>cardinality constraints</strong>. Again, we'll only do that for binary relationship sets, that is, relationship sets that have exactly two roles. (You can ignore cardinality constraints if the relationship set is not binary.) Moreover, we'll want to do that in a way that <em>does not</em> break backward compatibility with the code above. In other word, the code you wrote before this question should work perfectly well even after you implement this question.</p>
+<p>First, extend the <code>RelationshipSet</code> class so that its <code>__init__</code> constructor takes an extra <em>optional</em> argument <code>cardinality</code> which represents a cardinality constraint on the relationship set. There are many equivalent ways we can express cardinality constraints. We'll take an easy one: we'll pass a list of roles, those roles that have a <strong>1</strong> cardinality constraint, that is, those roles whose entities are required to be in at most one relationship with an entity in the other role.</p>
+<p>For example, if a relationship set has two roles <code>role_a</code> and <code>role_b</code> and the cardinality constraint we want to impose is that entities in <code>role_a</code> participate in at most one relationship with entities in <code>role_b</code> but no such restriction the other way (a 1:M constraint), we represent this cardinality constraint with the list <code>[&quot;role_a&quot;]</code>. If it's entities in <code>role_b</code> that we want restricted to at most one relationship with entities in <code>role_a</code> but no such restriction on entities in <code>role_a</code> (a M:1 constraint), we represent this cardinality constraint with the list <code>[&quot;role_b&quot;]</code>. And if we want both entities in <code>role_a</code> to be restricted to at most one relationship with entities in <code>role_b</code> and also entities in <code>role_b</code> to be restrictedd to at most one relationship with entities in <code>role_a</code> (a 1:1 constraint), we represent this cardinality constraint with the list <code>[&quot;role_a&quot;,&quot;role_b&quot;]</code>. An M:M relationship (the default!) is therefore represented by the list <code>[]</code>.</p>
+<p>Enforce the cardinality constraint in the <code>create_relationship</code> method of <code>RelationshipSet</code>: if the method is asked to create a relationship that violates the constraint, then throw an exception with a message indicating which cardinality constraint has been violated.</p>
+<p>Finally, modify method <code>create_relationship_set</code> of class <code>ERModel</code> to take an <em>optional</em> argument <code>cardinality</code> that represents a cardinality constraint to impose on the relationship set created, and creates the relationship set with the specified cardinality constraint (if any).</p>
+</div>
 </body>
 </html>
