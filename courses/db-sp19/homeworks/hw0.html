@@ -1,260 +1,58 @@
-<!DOCTYPE html>
-<html>
-
-  <head>
-    
-    <meta charset="utf-8">
-    <title>Homework 0</title>
-
-    <link rel="stylesheet" href="../alt.css" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
-
-    <script src="../autoscroll.js"></script>
-    
-    <style>
-
-      hr { margin-top: 50px; }
-
-        code,tt,pre {
-          font-size: 110%;
-        }
-	
-        div.lect {
-	  padding-top: 0;
-       	  padding-left: 3em;
-	  margin-top:0;
-        }
-    	p.ann { 
-    	  padding-left: 3em;
-    	  text-indent: -3em; 
-    	}
-	p.ann_ctd{
-	  padding-left: 3em;
-        }
-    	span.hdr {
-   	  padding-right: 1em
-    	}
-
-	.hidden {
-	  visibility: hidden;
-        }
-
-        tt.code {
-           font-weight: bold;
-        }
-
-      div.code {
-      border: 1px solid #c6c6c6;
-      border-radius: 5px;
-      padding: 0px;
-      margin-bottom: 20px;
-      }
-      
-      div.code p {
-      margin:0px;
-      padding:5px 10px;
-      background:#eeeeee;
-      font-style: italic;
-      cursor:pointer;
-      }
-
-      div.code p:hover {
-      background:#cccccc;
-      }
-
-      div.code pre { 
-      display:none;
-      padding: 10px;
-      font-size:100%;
-      }
-
-      div.code.visible pre  {
-      display:block;
-      }
-
-ol.question {
-    padding-top:1em;
-    list-style-type: decimal;
-}
-
-ol.subquestion {
-    list-style-type: upper-alpha;
-}
-
-      ol.question > li {
-      font-weight: bold;
-      }
-
-      ol.question > li > * {
-      font-weight: normal;
-      }
-      
-ol > li {
-    padding:4px 8px; /* Add some spacing around the content */
-}
-
-li ol,
-li ul {margin-top:6px;}
-
-li > p { margin-top:0;}
-    </style>
-
-    <script>
-      function toggleShowHide (p) { 
-      var div = p.parentNode;
-        if (div.className && div.className.startsWith("visible")) {
-          div.className = "code";
-      } else {
-        div.className = "visible code";
-      }
-      }
-    </script>
-
-
-  </head>
-
-
-  <body>
-
-    <div class="navbar">
-
-      <div class="home">
-	<a href="../../../index.html"><img src="../../../home.png" style="height: 1.6em;"></a>
-      </div>
-
-      <ul>
-	<li><a class="scrollto" href="../index.html"><b>Databases SP19</b></a></li> 
-	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
-	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
-	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
-	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
-      </ul>
-    </div>
-
-
-    <!-- padding -->
-    <div id="top" style="height: 5em;"></div>
-    
-    <h1 class="clear">Homework 0</h1>
-    
-    <p class="subtitle">Due date: Sunday, Feb 3 (23h59)</p>
-
-    <ul>
-      <li><p>This homework is to be done
-    individually. You may discuss problems with fellow students, but
-    all submitted work must be entirely your own, and should not be from any
-    other course, present, past, or future. If you use a solution from
-    another source you must cite it &mdash; this includes when that source
-	is someone else helping you.</p></li>
-      <li><p><b>Please do not post your solutions on a public website or a public repository like GitHub.</b></p></li>
-
-      <li><p>All programming is to be done in Python (v3.7).</p></li>
-
-      <li><p>Code your answers by modifying the
-      file <a href="homework0.py"><tt>homework0.py</tt></a> provided. Add your
-      <span style="text-decoration:underline;">name</span>, your <span style="text-decoration:underline;">email address</span>, and any <span style="text-decoration:underline;">remarks</span> that you
-      wish to make to the instructor to the block comment at the head of the file.</p></li>
-
-      <li><p>Feel free to define helper functions if you need them.</p></li>
-    </ul>
-
-
-    <hr>
-
-    
-    <p class="subtitle">Electronic submission instructions:</p>
-
-    <ul>
-      <li><p>Start a <i>new</i> Python 3 shell.</p></li>
-      <li><p>Load your homework code via <tt>import homework0</tt>. Make sure your code loads without error.</p></li>
-      <li><p>When you're ready to submit, send an email with your file <tt>homework0.py</tt> as an attachment to <tt>olin.submissions@gmail.com</tt> with subject <i>Homework 0 submission</i>.</p></li>
-    </ul>
-
-
-    <hr>
-
-    <ol class="question">
-      <li> <p><b>Defining APIs</b></p>
-
-	<p>
-	  The sample code in <tt>homework0.py</tt> contains three
-	  classes, <tt>BooksDictionary</tt>, <tt>BooksTuples</tt>,
-	  and <tt>BooksFile</tt>. They all implement straightforward
-	  <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> operations on a simple collection of books represented,
-	  respectively, as a dictionary, a list of tuples, and a
-	  tab-separated file.
-	</p>
-
-	<p>
-	  The methods that each class should implement are as follows:
-
-	  <div style="margin-left: 20px;">
-	    <p><tt><i><b>create (isbn,author,title,year,pages,publisher,country)</b></i></tt> should add the described book to the collection, where each book is described by an ISBN (string), an author (string), a title (string), a year of publication (integer), a number of pages (integer), a publisher (string), and a country of publication (string). This method does not return a result. If a book with the same ISBN exists, you should raise an exception.</p>
-	    <p><tt><i><b>read (isbn)</b></i></tt> should lookup a book with that given ISBN in the collection, and return the found as a dictionary with keys <tt><i>isbn</i></tt>, <tt><i>author</i></tt>, <tt><i>title</i></tt>, <tt><i>year</i></tt>, <tt><i>pages</i></tt>, <tt><i>publisher</i></tt>, <tt><i>country</i></tt>. If a book with the given ISBN does not exist, you should raise an exception.</p>
-	    <p><tt><i><b>update (isbn,author,title,year,pages,publisher,country)</b></i></tt> should update the entry of the book with ISBN <tt><i>isbn</i></tt> in the collection, replacing it by the book specified in the arguments to <tt><i>update</i></tt>. This method does not return a result. If a book with the given ISBN does not exist, you should raise an exception.</p>
-	<p><tt><i><b>delete (isbn)</b></i></tt> should remove the book with ISBN <tt><i>isbn</i></tt> from the collection. This method does not return a result. If a book with the given ISBN does not exist, you should raise an exception.</p>
-
-	<p><tt><i><b>isbns ()</b></i></tt> should return the list of all ISBNs of the books in the collection. The order is not important.</p>
-	  </div>
-	  
-	<p>The last  method <tt>isbns</tt> will give you a way to iterate over the books in the collection.</p>
-
-	<p>I gave you a function <tt>make_test(coll)</tt> which takes an instance of one of the above classes and populates it with books. The sample outputs below use this function.</p>
-	
-
-	<ol class="subquestion">
-
-	  <li> <p>Complete the implementation of class <tt>BooksDictionary</tt> where the collection of books is implemented as a dictionary keyed by the ISBN value. </p>
-
-
-	  <li> <p>Complete the implementation of
-          class <tt>BooksTuples</tt> where the collection of books is
-              implemented as a list of tuples, where each tuple holds the attributes of the book.</p>
-
-	  <li> <p>Complete the implementation of
-          class <tt>BooksFile</tt> where the collection of books is 
-              implemented as a file on the filesystem. The name of the file that holds the books is provided as an argument to the constructor of the class. (I already implemented the constructor, which initializes the file to be empty if the file already exists.)</p>
-
-	    <p>The CRUD operations should operate directly on the file &mdash; creating a book should append to the file, reading a book should read through each book of the file and return the attributes of the book when it finds it, etc. Please don't read the file as a whole in memory and access it there. I want you to think about how to access data directly in the file.</p>
-
-	    <p>You can store data however you want. I suggest you go for something simple, either one book per line, with all the attributes of a book separated by <tt>\t</tt>, or any character which you can be reasonably confident will not appear in any attribute. Alternatively, you can put one attribute per line.</p>
-	    
-	  </li>
-
-
-
-	</ol>
-      </li>
-
-      <li> <p><b>Using APIs</b></p>
-
-	<ol class="subquestion">
-
-	  <li><p>Code a function <tt><b>find_books_of_author (coll,author)</b></tt> taking a collection <tt><b>coll</b></tt> of books as an instance of one of the classes in Question 1, and returning the list of all books in the collection with author <tt><b>author</b></tt>. Each book in the list should be represented as a dictionary with keys <tt><i>isbn</i></tt>, <tt><i>author</i></tt>, <tt><i>title</i></tt>, <tt><i>year</i></tt>, <tt><i>pages</i></tt>, <tt><i>publisher</i></tt>, <tt><i>country</i></tt>, that is, a dictionary as returned by method <tt>read</tt>. </p>
-	    
-	  </li>
-
-	  <li><p>Code a function <tt><b>count_pages_of_author (coll,author)</b></tt> taking a collection <tt><b>coll</b></tt> of books as an instance of one of the classes in Question 1, and returning the sum of all the pages in all of the books in the collection with author <tt><b>author</b></tt>. The result should be an integer.</p>
-	  </li>
-
-	  <li><p>Code a function <tt><b>group_books_by_author (coll)</b></tt> taking a collection <tt><b>coll</b></tt> of books as an instance of one of the classes in Question 1, and returning a dictionary keyed by author, where the value associated with an author <i>a</i> is the list of all books with that author <o>a</o> in the collection. Each book in the list should be represented as a dictionary with keys <tt><i>isbn</i></tt>, <tt><i>author</i></tt>, <tt><i>title</i></tt>, <tt><i>year</i></tt>, <tt><i>pages</i></tt>, <tt><i>publisher</i></tt>, <tt><i>country</i></tt>, that is, a dictionary as returned by method <tt>read</tt>. </p>
-	  </li>
-
-	  <li><p>Code a function <tt><b>count_pages_by_author (coll)</b></tt> taking a collection <tt><b>coll</b></tt> of books as an instance of one of the classes in Question 1, and returning a dictionary keyed by author, where the value associated with an author <i>a</i> is the sum of all the pages of all books with author <i>a</i> in the collection. </p>
-	  </li>
-
-	  <li><p>Code a function <tt><b>remove_old_books_of_author (coll,author,year)</b></tt> taking a collection <tt><b>coll</b></tt> of books as an instance of one of the classes in Question 1, and deleting all books with author <tt><b>author</b></tt> and with year of publication earlier than <tt><b>year</b></tt>. This function should not return a result. </p>
-	    
-	  </li>
-
-
-	</ol>
-      </li>
-
-
-    </ol>
-	
-    
-
-  </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<h1 id="homework-0">Homework 0</h1>
+<h2 id="due-date-sunday-feb-3-23h59">Due date: Sunday, Feb 3 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems with fellow students, but all submitted work must be entirely your own, and should not be from any other course, present, past, or future. If you use a solution from another source you must cite it -- this includes when that source is someone else helping you.</p></li>
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub</strong>.</p></li>
+<li><p>All programming is to be done in Python (v3.7).</p></li>
+<li><p>Code your answers by modifying the file <a href="homework0.py">homework0.py</a> provided. Add your <strong>name</strong> and <strong>email address</strong>, and any <strong>remarks</strong> that you wish to make to the instructor to the block comment at the head of the file.</p></li>
+<li><p>Feel free to define helper functions/classes if you need them.</p></li>
+</ul>
+<h2 id="electronic-submission-instructions">Electronic submission instructions:</h2>
+<ul>
+<li><p>Make sure your file loads without issue -- try executing <code>import homework1</code> from a fresh python shell for a quick check</p></li>
+<li><p>When you're ready to submit, send an email with your file <code>homework0.py</code> as an attachment to <code>olin.submissions@gmail.com</code> with subject <em>Homework 0 submission</em>.</p></li>
+</ul>
+<hr />
+<h2 id="question-1---defining-apis">Question 1 - Defining APIs</h2>
+<p>The sample code in <code>homework0.py</code> contains three classes, <code>BooksDictionary</code>, <code>BooksTuples</code>, and <code>BooksFile</code>. They all implement straightforward <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> operations on a simple collection of books represented, respectively, as a dictionary, a list of tuples, and a tab-separated file.</p>
+<p>The methods that each class should implement are as follows:</p>
+<ul>
+<li><p><strong><code>create isbn,author,title,year,pages,publisher,country)</code></strong> should add the described book to the collection, where each book is described by an ISBN (string), an author (string), a title (string), a year of publication (integer), a number of pages (integer), a publisher (string), and a country of publication (string). This method does not return a result. If a book with the same ISBN exists, you should raise an exception.</p></li>
+<li><p><strong><code>read (isbn)</code></strong> should lookup a book with that given ISBN in the collection, and return the found as a dictionary with keys <code>isbn</code>, <code>author</code>, <code>title</code>, <code>year</code>, <code>pages</code>, <code>publisher</code>, <code>country</code>. If a book with the given ISBN does not exist, you should raise an exception.</p></li>
+<li><p><strong><code>update (isbn,author,title,year,pages,publisher,country)</code></strong> should update the entry of the book with ISBN <code>isbn</code> in the collection, replacing it by the book specified in the arguments to <code>update</code>. This method does not return a result. If a book with the given ISBN does not exist, you should raise an exception.</p></li>
+<li><p><strong><code>delete (isbn)</code></strong> should remove the book with ISBN <code>isbn</code> from the collection. This method does not return a result. If a book with the given ISBN does not exist, you should raise an exception.</p></li>
+<li><p><strong><code>isbns ()</code></strong> should return the list of all ISBNs of the books in the collection. The order is not important.</p></li>
+</ul>
+<p>The last method <code>isbns</code> will give you a way to iterate over the books in the collection.</p>
+<p>I gave you a function <code>make_test(coll)</code> which takes an instance of one of the above classes and populates it with books. The sample outputs below use this function.</p>
+<h3 id="part-a">Part A</h3>
+<p>Complete the implementation of class <code>BooksDictionary</code> where the collection of books is implemented as a dictionary keyed by the ISBN value.</p>
+<h3 id="part-b">Part B</h3>
+<p>Complete the implementation of class <code>BooksTuples</code> where the collection of books is implemented as a list of tuples, where each tuple holds the attributes of the book.</p>
+<h3 id="part-c">Part C</h3>
+<p>Complete the implementation of class <code>BooksFile</code> where the collection of books is implemented as a file on the filesystem. The name of the file that holds the books is provided as an argument to the constructor of the class. (I already implemented the constructor, which initializes the file to be empty if the file already exists.)</p>
+<p>The CRUD operations should operate directly on the file — creating a book should append to the file, reading a book should read through each book of the file and return the attributes of the book when it finds it, etc. Please don't read the file as a whole in memory and access it there. I want you to think about how to access data directly in the file.</p>
+<p>You can store data however you want. I suggest you go for something simple, either one book per line, with all the attributes of a book separated by `or any character which you can be reasonably confident will not appear in any attribute. Alternatively, you can put one attribute per line.</p>
+<h2 id="question-2---using-apis">Question 2 - Using APIs</h2>
+<h3 id="part-a-1">Part A</h3>
+<p>Code a function <strong><code>find_books_of_author (coll,author)</code></strong> taking a collection <code>coll</code> of books as an instance of one of the classes in Question 1, and returning the list of all books in the collection with author <code>author</code>. Each book in the list should be represented as a dictionary with keys <code>isbn</code>, <code>author</code>, <code>title</code>, <code>year</code>, <code>pages</code>, <code>publisher</code>, <code>country</code>, that is, a dictionary as returned by method <code>read</code>.</p>
+<h3 id="part-b-1">Part B</h3>
+<p>Code a function <strong><code>count_pages_of_author (coll,author)</code></strong> taking a collection <code>coll</code> of books as an instance of one of the classes in Question 1, and returning the sum of all the pages in all of the books in the collection with author <code>author</code>. The result should be an integer.</p>
+<h3 id="part-c-1">Part C</h3>
+<p>Code a function <strong><code>group_books_by_author (coll)</code></strong> taking a collection <code>coll</code> of books as an instance of one of the classes in Question 1, and returning a dictionary keyed by author, where the value associated with an author <i>a</i> is the list of all books with that author <o>a</o> in the collection. Each book in the list should be represented as a dictionary with keys <code>isbn</code>, <code>author</code>, <code>title</code>, <code>year</code>, <code>pages</code>, <code>publisher</code>, <code>country</code>, that is, a dictionary as returned by method <code>read</code>.</p>
+<h3 id="part-d">Part D</h3>
+<p>Code a function <strong><code>count_pages_by_author (coll)</code></strong> taking a collection <code>coll</code> of books as an instance of one of the classes in Question 1, and returning a dictionary keyed by author, where the value associated with an author <code>a</code> is the sum of all the pages of all books with author <code>a</code> in the collection.</p>
+<h3 id="part-e">Part E</h3>
+<p>Code a function <strong><code>remove_old_books_of_author (coll,author,year)</code></strong> taking a collection <code>coll</code> of books as an instance of one of the classes in Question 1, and deleting all books with author <code>author</code> and with year of publication earlier than <code>year</code>. This function should not return a result.</p>
+</body>
 </html>
