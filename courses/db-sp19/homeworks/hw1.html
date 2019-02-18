@@ -27,7 +27,8 @@
 <h2 id="updates">Updates</h2>
 <p><span style="color:blue;">Changes are coded in blue</span></p>
 <ul>
-<li>2/13/19: added Question 3 for teams of 3; added an explanation about sharing of entity set and relationship set objects; added some guidance about when to raise an exception</li>
+<li><p>2/14/19: added more sample outputs for entity and relationship sets</p></li>
+<li><p>2/13/19: added Question 3 for teams of 3; added an explanation about sharing of entity set and relationship set objects; added some guidance about when to raise an exception</p></li>
 </ul>
 <hr />
 <h2 id="description">Description</h2>
@@ -105,6 +106,29 @@
 
     def primary_key (self)
     # Return the primary key (as a dictionary) for the entity.</code></pre>
+<p><span style="color: blue;">Here's a sample interaction:</span></p>
+<blockquote>
+<pre><code>&gt;&gt;&gt; t = ERModel()
+
+&gt;&gt;&gt; t.create_entity_set(&quot;Test&quot;,[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;],[&quot;a&quot;,&quot;b&quot;])
+
+&gt;&gt;&gt; t.read_entity_set(&quot;Test&quot;).create_entity({&quot;a&quot;:100,&quot;b&quot;:200,&quot;c&quot;:300})
+
+&gt;&gt;&gt; t.read_entity_set(&quot;Test&quot;).read_entity({&quot;a&quot;:100,&quot;b&quot;:200}).attribute(&quot;a&quot;)
+100
+
+&gt;&gt;&gt; t.read_entity_set(&quot;Test&quot;).read_entity({&quot;a&quot;:100,&quot;b&quot;:200}).attribute(&quot;b&quot;)
+200
+
+&gt;&gt;&gt; t.read_entity_set(&quot;Test&quot;).read_entity({&quot;a&quot;:100,&quot;b&quot;:200}).attribute(&quot;c&quot;)
+300
+
+&gt;&gt;&gt; t.read_entity_set(&quot;Test&quot;).read_entity({&quot;a&quot;:100,&quot;b&quot;:200}).primary_key()
+{&#39;a&#39;: 100, &#39;b&#39;: 200}
+
+&gt;&gt;&gt; print(t.read_entity_set(&quot;Test&quot;).read_entity({&quot;a&quot;:100,&quot;b&quot;:200}))
+[a=100|b=200|c=300]</code></pre>
+</blockquote>
 <p>Relationship sets (and relationships) are similar to entity sets (and entities). When creating a relationship set via <code>ERModel.create_relationship_set</code>, the method will instantiate an object of <code>RelationshipSet</code> class, specifying the entity set name corresponding to each role, and a list of attributes for the relationships in the set:</p>
 <pre><code>class RelationshipSet (object):
 
@@ -158,6 +182,36 @@
    # Return the primary key of the relationship, namely a
    # dictionary mapping every role name to the primary key of the
    # entity associated with that role.</code></pre>
+<p><span style="color:blue;">Here is a sample interaction:</span></p>
+<blockquote>
+<pre><code>&gt;&gt;&gt; t = ERModel()
+
+&gt;&gt;&gt; t.create_entity_set(&quot;E1&quot;,[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;],[&quot;a&quot;,&quot;b&quot;])
+
+&gt;&gt;&gt; t.read_entity_set(&quot;E1&quot;).create_entity({&quot;a&quot;:100,&quot;b&quot;:200,&quot;c&quot;:300})
+
+&gt;&gt;&gt; print(t.read_entity_set(&quot;E1&quot;).read_entity({&quot;a&quot;:100,&quot;b&quot;:200}))
+[a=100|b=200|c=300]
+
+&gt;&gt;&gt; t.create_entity_set(&quot;E2&quot;,[&quot;x&quot;,&quot;y&quot;,&quot;c&quot;],[&quot;x&quot;,&quot;y&quot;])
+
+&gt;&gt;&gt; t.read_entity_set(&quot;E2&quot;).create_entity({&quot;x&quot;:1,&quot;y&quot;:2,&quot;z&quot;:3})
+
+&gt;&gt;&gt; print(t.read_entity_set(&quot;E2&quot;).read_entity({&quot;x&quot;:1,&quot;y&quot;:2}))
+[x=1|y=2|z=3]
+
+&gt;&gt;&gt; t.create_relationship_set(&quot;R&quot;,{&quot;role1&quot;:&quot;E1&quot;,&quot;role2&quot;:&quot;E2&quot;},[&quot;n&quot;])
+
+&gt;&gt;&gt; t.read_relationship_set(&quot;R&quot;).create_relationship({&quot;role1&quot;:{&quot;a&quot;:100,&quot;b&quot;:200}, &quot;role2&quot;: {&quot;x&quot;:1,&quot;y&quot;:2}},{&quot;n&quot;:42})
+
+&gt;&gt;&gt; t.read_relationship_set(&quot;R&quot;).read_relationship({&quot;role1&quot;:{&quot;a&quot;:100,&quot;b&quot;:200},&quot;role2&quot;:{&quot;x&quot;:1,&quot;y&quot;:2}}).attribute(&quot;n&quot;)
+42
+&gt;&gt;&gt; t.read_relationship_set(&quot;R&quot;).read_relationship({&quot;role1&quot;:{&quot;a&quot;:100,&quot;b&quot;:200},&quot;role2&quot;:{&quot;x&quot;:1,&quot;y&quot;:2}}).primary_key()
+{&#39;role1&#39;: {&#39;a&#39;: 100, &#39;b&#39;: 200}, &#39;role2&#39;: {&#39;x&#39;: 1, &#39;y&#39;: 2}}
+
+&gt;&gt;&gt; print(t.read_relationship_set(&quot;R&quot;).read_relationship({&quot;role1&quot;:{&quot;a&quot;:100,&quot;b&quot;:200},&quot;role2&quot;:{&quot;x&quot;:1,&quot;y&quot;:2}}))
+&lt;[a=100|b=200] [x=1|y=2] n=42&gt;</code></pre>
+</blockquote>
 <p><span style="color:blue;">The entity set object returned by <code>ERModel.read_entity_set</code> should be the same object as stored in the <code>ERModel</code> instance, and similarly for the relationship set object returned by <code>ERModel.read_relationship_set</code>. In other words, the entity set or relationship set object is <em>shared</em>. This means, for example, when we add an entity to the entity set returned by <code>ERModel.read_entity_set</code>, we also are modifying the entity set inside the <code>ERModel</code> instance. There is some convenience with this approach, and also some disadvantages. Feel free to think about the pros and cons. The sample code I provided you does rely on this sharing, though.</span></p>
 <hr />
 <h2 id="question-1">Question 1</h2>
