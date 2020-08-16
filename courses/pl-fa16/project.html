@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Final Project</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 130%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           background: #e6e6e6;
+        }
+
+	pre.code {
+	   border: 1px solid #c6c6c6;
+	border-radius: 5px;
+	padding: 10px;
+	font-size:100%;
+      }
+
+      pre.blue {
+      color: blue;
+      }
+
+      span.comment {
+      color:#aaaaaa;
+      font-style:italic;
+      }
+      
+/* from
+    http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
+ */
+
+ol {
+    counter-reset:li; /* Initiate a counter */
+    margin-left:0; /* Remove the default left margin */
+    padding-left:0; /* Remove the default left padding */
+    padding-top:1em;
+}
+ol > li {
+    position:relative; /* Create a positioning context */
+    margin:0 0 6px 2em; /* Give each list item a left margin to make
+    room for the numbers */
+    padding:4px 8px; /* Add some spacing around the content */
+    list-style:none; /* Disable the normal item numbering */
+    /*border-top:2px solid #666;
+    background:#f6f6f6; */
+}
+ol > li:before {
+    counter-increment:li; /* Increment the counter by 1 */
+    /* Position and style the number */
+    position:absolute;
+    top:-2px;
+    left:-2em;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    width:2em;
+    /* Some space between the number and the content in browsers that
+    support
+       generated content but not positioning it (Camino 2 is one
+    example) */
+    margin-right:8px;
+    padding:4px;
+/*    border-top:2px solid #666;
+    color:#fff;
+    background:#666; 
+    font-weight:bold; */
+/*    font-family:"Helvetica Neue", Arial, sans-serif;
+    text-align:center; */
+}
+
+ol.letter > li:before {
+    content:"(" counter(li,lower-alpha) ")"; /* Use the counter as content */
+}
+
+ol.number > li:before {
+    content:"(" counter(li,decimal) ")"; /* Use the counter as content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Programming Languages FA16</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 7em;"></div>
+    
+    <h1 class="clear">Final Project</h1>
+    
+    <p class="subtitle">Topic Proposals Due Date: Friday, Nov 18, 2016<br>
+    Final Presentations: Tuesday, Dec 13, 2016 (4-7pm, AC326)<br>
+    Final Code Due Date: Sunday, Dec 18, 2016</p>
+    
+
+    <p><b>Note on integrity:</b> This project is meant to be done in teams of two. 
+    You may discuss problems with fellow students, but
+    all work must be entirely that of your team, and should not be from any
+    other course, present, past, or future. If you use a solution from
+    another source you must cite it &mdash; this includes when that source
+      is someone else helping you.</p>
+
+    <p>Every source file you submit should begin with a block comment
+      that lists <span style="text-decoration:underline;">the members of your team</span>, your <span style="text-decoration:underline;">email addresses</span>, and any <span style="text-decoration:underline;">remarks</span> that you
+      wish to make to the instructor.</p>
+
+    <p>Projects include a programming component (where you create an
+    artifact) and a final presentation in class during the Final Assessments
+    period. Submission of the programming component should be done by
+    sending source code and any attendant supporting files
+    to <tt>pl.fa16.olin@gmail.com</tt> by the Final Code Due Data. Only one email per team, please.</p>
+
+    <p>The final presentation should be about fifteen minutes, and
+    describe the problem you're trying to solve and the solution
+      you've implemented, including a demo.</p>
+
+    </ul>
+
+<hr>
+
+<h2>New: Team Projects</h2>
+
+<p>(In presentation order)</p>
+<ul>
+  <li>Philip, Hannah: Logic programming</li>
+  <li>Andrew, Kathryn: Probabilistic programming</li>
+  <li>Xiaofan, Lucy: Generic type system</li>
+  <li>Duncan, Griffin: Generic type system</li>
+  <li>Sidd, James: Class and object system</li>
+  <li>Sophie, Lindsey: Logic programming</li>
+  <li>Bonnie, Ian: "Sealion: Compiling a language into C"</li>
+  <li>Deniz, Jacob: Compiling to assembling language or C</li>
+  <li>Sarah, Austin: Implementing functional language features</li>
+</ul>
+
+
+<hr>
+
+<p>As a final project for the course, I'm going to ask you to choose a
+  topic related to programming languages that you would like to
+  investigate and that we have not covered in the course, or that we
+  have not covered deep enough for your taste. This can take the form
+  of extending or modifying one of the interpreters or compilers that
+  we developed in the course, or come up with a completely different
+  one.
+</p>
+
+<p>
+  Here are some possible topics that have come to my mind over the
+  last few weeks. Some of these are things that I thought about
+  talking about in class but ran out of time, others are logical
+  follow-ups to things we've seen, and others are just a completely
+  different take on programming:
+
+  <ul>
+    <li>Indentation-aware parsing (in the style of Python)</li>
+
+    <li>Exceptions</li>
+
+    <li><a href="https://en.wikipedia.org/wiki/Type_inference">Type inference</a></li>
+
+    <li>Support
+    for <a href="https://en.wikipedia.org/wiki/J_(programming_language)">array
+	processing in the style of J</a></li>
+    
+    <li>Support for matrix processing in the stle of Matlab or R (where
+      operations automatically lift to vectors or matrices)</li>
+
+    <li>Implement a subset of a specific programming
+      language the implementation of which you are curious about</li>
+
+    <li>Improve the compilation process for the compiler we developed
+      in class by implementing optimizations such
+      as <a href="https://en.wikipedia.org/wiki/Constant_folding">constant
+      folding</a> and <a href="https://en.wikipedia.org/wiki/Inline_expansion">function
+	inlining</a></li>
+
+    <li>Compile the register machine code presented in class further
+      all the way to assembly language, or to C</li>
+
+    <li>Write a small interpreter for
+    a <a href="https://en.wikipedia.org/wiki/Logic_programming">logic programming language</a></li>
+
+    <li>Write a small interpreter for a <a href="http://probabilistic-programming.org/wiki/Home">probabilistic
+	programming language</a></li>
+
+  </ul>
+  (I'll be adding to this list throughout the week.)</p>
+
+<p>
+  If any of these topics interest you, please get in touch with me,
+  and I can provide some guidance and stuff to read. If you have
+  another idea for a project, and you would like to discuss it with me
+  (maybe because you're wondering about the scope of what you want to
+  do), please get in touch.</p>
+
+</body>
+</html>

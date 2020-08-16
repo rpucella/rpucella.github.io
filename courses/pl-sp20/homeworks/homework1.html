@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 20px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     pre { 
+        margin-left: 30px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="homework-1">Homework 1</h1>
+<h2 id="due-date-sunday-february-2-2020-23h59">Due Date: Sunday, February 2, 2020 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done in teams of 2. You may discuss problems with fellow students, but all submitted work must be entirely your team's own, and should not be from any other course, present, past, or future. If you use a solution from another source you must cite it — this includes when that source is someone else helping you.</p></li>
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+<li><p>All programming is to be done in Scala 2.13.</p></li>
+<li><p>Code your answers by modifying the file <a href="homework1.scala"><code>homework1.scala</code></a> provided. Add your team members' <strong>name</strong>, <strong>email address</strong>, and any <strong>remarks</strong> that you wish to make to the instructor to the block comment at the top of the file.</p></li>
+<li><p><strong>Please do not change the types in the signature of the method stubs I provide</strong>. Doing so will make it impossible to load your code into the testing infrastructure, which tends to make me unhappy.</p></li>
+<li><p>Feel free to define helper functions if you need them.</p></li>
+</ul>
+<h2 id="electronic-submission-instructions">Electronic Submission Instructions</h2>
+<ul>
+<li><p>Run your homework code via <code>scala homework1.scala</code></p></li>
+<li><p>If there are any error, do not submit. I can't test what will not load correctly.</p></li>
+<li><p>When you're ready to submit, send an email with your file <code>homework1.scala</code> as an attachment to <code>olin.submissions@gmail.com</code> with subject <em>Homework 1 submission</em>.</p></li>
+</ul>
+<hr />
+<h2 id="question-1-scala-exercises">Question 1: Scala Exercises</h2>
+<p>This question asks you to complete the implementation of a class <code>Coordinates</code> with parameters <code>(val x : Double, val y : Double)</code> to represent coordinates in the Cartesian plane.</p>
+<p>An instance <code>new Coordinates(x,y)</code> creates a point with coordinates (<code>x</code>, <code>y</code>).</p>
+<p>I have already implemented two accessor methods <code>xCoord () : Double</code> and <code>yCoord () : Double</code> to access the x and y components of a <code>Coordinates</code> instance. (They are not strictly necessary, as you may discover later.)</p>
+<h3 id="a">(A)</h3>
+<p>Define a method <strong><code>toString () : String</code></strong> that returns a string representation of the coordinates as a pair, such as <code>&quot;(1.2, 3.4)&quot;</code>.</p>
+<p>Sample output:</p>
+<pre><code>scala&gt; val c1 = new Coordinates(0, 0)
+c1: Coordinates = (0.0, 0.0)
+
+scala&gt; c1.toString()
+res0: String = (0.0, 0.0)
+
+scala&gt; val c2 = new Coordinates(3, -2)
+c2: Coordinates = (3.0, -2.0)
+
+scala&gt; c2.toString()
+res1: String = (3.0, -2.0)</code></pre>
+<h3 id="b">(B)</h3>
+<p>Define a method <strong><code>isOrigin () : Boolean</code></strong> that returns true exactly when the instance represents the origin of the Cartesian plane, that is, (0, 0).</p>
+<p>Define a method <strong><code>isSame (c : Coordinates) : Boolean</code></strong> that returns true exactly when the instane and argument <code>c</code> represent the same coordinates (same x components and same y components).</p>
+<p>Sample output:</p>
+<pre><code>scala&gt; val c1 = new Coordinates(0, 0)
+c1: Coordinates = (0.0, 0.0)
+
+scala&gt; val c2 = new Coordinates(3, -2)
+c2: Coordinates = (3.0, -2.0)
+
+scala&gt; c1.isOrigin()
+res1: Boolean = true
+
+scala&gt; c2.isOrigin()
+res2: Boolean = false
+
+scala&gt; c1.isSame(c2)
+res3: Boolean = false
+
+scala&gt; c1.isSame(c1)
+res4: Boolean = true
+
+scala&gt; c2.isSame(c1)
+res5: Boolean = false
+
+scala&gt; c2.isSame(c2)
+res6: Boolean = true
+
+scala&gt; c2.isSame(new Coordinates(3, -2))
+res7: Boolean = true
+
+scala&gt; c2.isSame(new Coordinates(-3, 2))
+res8: Boolean = false</code></pre>
+<h3 id="c">(C)</h3>
+<p>Define a method <strong><code>translate (dx : Double, dy : Double) : Coordinates</code></strong> that takes arguments <code>dx</code> and <code>dy</code> and returns a new <code>Coordinates</code> instance that represents the original coordinates but shifted by <code>dx</code> on the x-axis and shifted by <code>dy</code> on the y-axis. Of course, either of <code>dx</code> or <code>dy</code> could be negative.</p>
+<p>Note that <code>translate</code> does not change the instance — it returns a new instance representing the translated coordinates.</p>
+<p>Sample output:</p>
+<pre><code>scala&gt; val c = new Coordinates(10, 20)
+c: Coordinates = (10.0, 20.0)
+
+scala&gt; c.translate(100, 200)
+res9: Coordinates = (110.0, 220.0)
+
+scala&gt; c
+res10: Coordinates = (10.0, 20.0)
+
+scala&gt; c.translate(-100, 200)
+res11: Coordinates = (-90.0, 220.0)
+
+scala&gt; c.translate(-100, -200)
+res12: Coordinates = (-90.0, -180.0)
+
+scala&gt; c.translate(-c.xCoord(), -c.yCoord())
+res13: Coordinates = (0.0, 0.0)</code></pre>
+<h3 id="d">(D)</h3>
+<p>Define a method <strong><code>scale (s : Double) : Coordinates</code></strong> that takes a scaling factor as argument and return a new <code>Coordinates</code> instance representing the current point scaled by that scaling factor.</p>
+<p>Note that <code>scale</code> does not change the instance — it returns a new instance representing the scaled coordinates.</p>
+<p>Sample output:</p>
+<pre><code>scala&gt; val c = new Coordinates(10, 20)
+c: Coordinates = (10.0, 20.0)
+
+scala&gt; c.scale(2)
+res14: Coordinates = (20.0, 40.0)
+
+scala&gt; c
+res15: Coordinates = (10.0, 20.0)
+
+scala&gt; c.scale(-2)
+res16: Coordinates = (-20.0, -40.0)
+
+scala&gt; c.scale(0.5)
+res17: Coordinates = (5.0, 10.0)
+
+scala&gt; c.scale(-0.5)
+res18: Coordinates = (-5.0, -10.0)
+
+scala&gt; c.scale(0)
+res19: Coordinates = (0.0, 0.0)
+
+scala&gt; c.scale(1)
+res20: Coordinates = (10.0, 20.0)</code></pre>
+<h3 id="e">(E)</h3>
+<p>Define a method <strong><code>rotate (angle : Double) : Coordinates</code></strong> that takes an angle in <em>degrees</em> and returns a new <code>Coordinates</code> instance representing the current point rotated counterclockwise about the origin by the specified angle.</p>
+<p>Note that <code>rotate</code> does not change the instance — it returns a new instance representing the rotated coordinates.</p>
+<p>You will find functions <code>math.sin</code> and <code>math.cos</code> useful, as well as the constant <code>math.Pi</code>. You'll want to remind yourself how to perform a rotation in the plane.</p>
+<p>Sample output:</p>
+<pre><code>scala&gt; val c = new Coordinates(10, 20)
+c: Coordinates = (10.0, 20.0)
+
+scala&gt; c.rotate(90)
+res21: Coordinates = (-20.0, 10.000000000000002)
+
+scala&gt; c
+res22: Coordinates = (10.0, 20.0)
+
+scala&gt; c.rotate(180)
+res23: Coordinates = (-10.000000000000002, -20.0)
+
+scala&gt; c.rotate(270)
+res24: Coordinates = (19.999999999999996, -10.000000000000004)
+
+scala&gt; c.rotate(360)
+res25: Coordinates = (10.000000000000005, 19.999999999999996)
+
+scala&gt; c.rotate(0)
+res26: Coordinates = (10.0, 20.0)
+
+scala&gt; c.rotate(45)
+res27: Coordinates = (-7.071067811865474, 21.213203435596427)</code></pre>
+<hr />
+<h2 id="question-2-new-abstract-representation-expressions">Question 2: New Abstract Representation Expressions</h2>
+<p>Consider the abstract representation for the small language of arithmetic expressions we saw in class. The sample code I gave you implements abstract class <code>Exp</code> and expressions <code>EInteger</code>, <code>EPlus</code>, <code>ETimes</code>, and <code>EIf</code>.</p>
+<p>In this question we will add new expressions to the language.</p>
+<h3 id="a-1">(A)</h3>
+<p>Define a new subclass of expression <strong><code>ENeg (val e : Exp)</code></strong> that represents the operation of negating an expression, that is, <code>ENeg(e)</code> is meant to represent operation <code>-e</code>. Make sure you supply an appropriate <code>toString()</code> method as well as an <code>eval()</code> method.</p>
+<p>Sample output:</p>
+<pre><code>scala&gt; def i (x : Int) : Exp = new EInteger(x)
+i: (x: Int)Exp
+
+scala&gt; val e = new ENeg(i(1))
+e: ENeg = ENeg(EInteger(1))
+
+scala&gt; e.eval()
+res28: Int = -1
+
+scala&gt; (new EPlus(i(1), new ENeg(i(1)))).eval()
+res29: Int = 0
+
+scala&gt; (new ENeg(new EPlus(i(1), i(2)))).eval()
+res30: Int = -3
+
+scala&gt; (new ENeg(i(0))).eval()
+res31: Int = 0</code></pre>
+<h3 id="b-1">(B)</h3>
+<p>Define a new subclass of expression <strong><code>EMax (val e1 : Exp, val e2 : Exp)</code></strong> which represents the operation of taking the maximum of two expressions, that is, <code>EMax(e1,e2)</code> represents operation <code>max(e1,e2)</code>. Make sure you supply an appropriate <code>toString()</code> method as well as an appropriate <code>eval()</code> method.</p>
+<p>Sample output:</p>
+<pre><code>scala&gt; def i (x : Int) : Exp = new EInteger(x)
+i: (x: Int)Exp
+
+scala&gt; (new EMax(i(1), i(2))).eval()
+res32: Int = 2
+
+scala&gt; (new EMax(i(1), new EMax(i(2), i(3)))).eval()
+res33: Int = 3
+
+scala&gt; (new EMax(new EPlus(i(1), i(2)), new EPlus(i(2), i(3)))).eval()
+res34: Int = 5
+
+scala&gt; (new EMax(new EPlus(i(1), i(2)), new ETimes(i(2), i(3)))).eval()
+res35: Int = 6
+
+scala&gt; (new EMax(i(2), i(1))).eval()
+res36: Int = 2
+
+scala&gt; (new EMax(i(3), i(3))).eval()
+res37: Int = 3
+
+scala&gt; (new EMax(i(2), i(-2))).eval()
+res38: Int = 2
+
+scala&gt; (new EMax(i(-3), i(-2))).eval()
+res39: Int = -2</code></pre>
+<h3 id="c-1">(C)</h3>
+<p>Define a new subclass of expression <strong><code>EWithin (val e1 : Exp, val e2 : Exp, val e3 : Exp)</code></strong> which represents an operation that takes three arguments (x, y, z) and returns the closest value to x (possibly x itself) that lies between y and z (both inclusive). Do not assume that y is less than z. Make sure you supply an appropriate <code>toString</code> method as well as an appropriate <code>eval</code> method.</p>
+<p>Sample output:</p>
+<pre><code>scala&gt; def i (x:Int) : Exp = new EInteger(x)
+i: (x: Int)Exp
+
+scala&gt; (new EWithin(i(2), i(1), i(3))).eval()
+res40: Int = 2
+
+scala&gt; (new EWithin(i(0), i(1), i(3))).eval()
+res41: Int = 1
+
+scala&gt; (new EWithin(i(4), i(1), i(3))).eval()
+res42: Int = 3
+
+scala&gt; (new EWithin(new EPlus(i(1), i(2)), new EPlus(i(3), i(4)), new EPlus(i(5), i(6)))).eval()
+res44: Int = 7</code></pre>
+<hr />
+<h2 id="question-3-new-abstract-representation-functionality">Question 3: New Abstract Representation Functionality</h2>
+<p>We continue with the abstract representation for the small language of arithmetic expressions we saw in class and in Question 2 above.</p>
+<p>Method <code>toString</code> in class <code>Exp</code> does give us a string corresponding to the expression, but it's a bit unreadable. I mean, it is an accurate representation of the tree making up the the abstract representation, but it would be nice if we could get a more readable output that is closer to how we usually write arithmetical expressions. For instance, the abstract representation given by <code>new EPlus(new EInteger(3), new EInteger(4))</code> could be output as <code>&quot;3 + 4&quot;</code>, which would be more readable than the default <code>&quot;EPlus(EInteger(3), EInteger(4))&quot;</code> returned by method <code>toString</code>.</p>
+<p>To get that, we first add an abstract method</p>
+<pre><code>def readable () : String</code></pre>
+<p>to the <code>Exp</code> abstract class, then write an implementation of method <code>readable</code> in every subclass of <code>Exp</code>. Don't forget the subclasses you had to write for Question 2. I'm not going to be super specific about what <code>readable</code> returns, but it should be something that is readable by someone that knows basic arithmetic. For example, <code>max(3 + 4, - (5 * 6))</code>.</p>
+<p>Feel feel to over-parenthesize — it is a suprisingly difficult problem to write down an arithmetic expression with a minimal number of parentheses.</p>
+<p>Sample output:</p>
+<pre><code>scala&gt; def i (x:Int) : Exp = new EInteger(x)
+i: (x: Int)Exp
+
+scala&gt; i(5).readable()
+res45: String = 5
+
+scala&gt; val e1 = new EPlus(i(3), i(5))
+e1: EPlus = EPlus(EInteger(3), EInteger(5))
+
+scala&gt; e1.readable()
+res47: String = 3 + 5
+
+scala&gt; val e2 = new ETimes(i(4), e1)
+e2: ETimes = ETimes(EInteger(4), EPlus(EInteger(3), EInteger(5)))
+
+scala&gt; e2.readable()
+res48: String = (4) * (3 + 5)
+
+scala&gt; val e3 = new EMax(e1, e2)
+e3: EMax = EMax(EPlus(EInteger(3), EInteger(5)), ETimes(EInteger(4), EPlus(EInteger(3), EInteger(5))))
+
+scala&gt; e3.readable()
+res50: String = max(3 + 5, (4) * (3 + 5))
+
+scala&gt; val e4 = new EWithin(e1, e2, e3)
+e4: EWithin = EWithin(EPlus(EInteger(3), EInteger(5)), ETimes(EInteger(4), EPlus(EInteger(3), EInteger(5))), EMax(EPlus(EInteger(3), EInteger(5)), ETimes(EInteger(4), EPlus(EInteger(3), EInteger(5)))))
+
+scala&gt; e4.readable()
+res51: String = within(3 + 5, (4) * (3 + 5), max(3 + 5, (4) * (3 + 5)))
+
+scala&gt; val e5 = new ENeg(e4)
+e5: ENeg = ENeg(EWithin(EPlus(EInteger(3), EInteger(5)), ETimes(EInteger(4), EPlus(EInteger(3), EInteger(5))), EMax(EPlus(EInteger(3), EInteger(5)), ETimes(EInteger(4), EPlus(EInteger(3), EInteger(5))))))
+
+scala&gt; e5.readable()
+res52: String = - (within(3 + 5, (4) * (3 + 5), max(3 + 5, (4) * (3 + 5))))</code></pre>
+
+</body>
+
+</html>

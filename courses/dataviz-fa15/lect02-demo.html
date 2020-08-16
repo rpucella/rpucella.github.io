@@ -1,0 +1,62 @@
+<!-- demo for SVG 
+
+  ideas:
+
+  - simple picture (no javascript)
+  - style upon hover (via name)
+  - move up 10 when clicked (if not at position < 0)
+  - loop to move up repeatedly
+  - click to disappear (hide)
+  - button to unhide everything?
+
+-->
+
+<html>
+
+<head>
+
+  <style>
+
+.yellows {
+ fill:yellow; stroke: black; stroke-width: 5px;
+}
+  </style>
+
+</head>
+
+<body>
+
+  <svg id="svgdemo" height="1000" width="1000">
+    <g class="yellows">
+       <rect id="r1" x="10" y="200" width="500" height="300" />
+       <circle id="c1" cx="700" cy="500" r="100" />
+    </g>
+  </svg>
+
+<script>
+
+window.addEventListener("load",run);
+
+
+function run () {
+
+   document.getElementById("r1").addEventListener("click",function() { clickElt(this,"y"); });
+   document.getElementById("c1").addEventListener("click",function() { clickElt(this,"cy"); });
+
+}
+
+function clickElt (elt,y_attr) {
+   var y = parseInt(elt.getAttributeNS(null,y_attr));
+   if (y > 0) {
+     elt.setAttributeNS(null,y_attr,y-10);
+   }
+}
+
+// setInterval   //  -10  @ 10 ms
+// clearInterval
+
+</script>
+
+</body>
+
+</html>

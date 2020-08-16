@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Course Policies</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+      
+	.hidden {
+	  visibility: hidden;
+        }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+    </style>
+
+    <script>
+      window.addEventListener("load",run,false);
+
+      function run () {
+        // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+        // actually, for anything with "scrollto" class
+
+        // offset is given by the 'top' div (adjusted for padding)
+        var off = document.getElementById("top").clientHeight;
+        console.log(off);
+        //var elts = document.querySelectorAll("div.navbar a");
+        var elts = document.querySelectorAll("a.scrollto");
+        for (var i=0; i<elts.length; i++) {
+          var href=elts[i].getAttribute("href").slice(1);
+          elts[i].setAttribute("onclick","return false;");
+          elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+        }
+
+        // SETUP SEND EMAIL LINK
+        document.getElementById("send_email").addEventListener("click",send_email);
+      }
+
+
+      function send_email () {
+        window.open("mailto:riccardo.pucella@olin.edu");
+      }
+
+      </script>
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Programming Languages SP17</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+
+    <h1 class="clear">Course Policies</h1>
+
+    <h3>Late days, Penalties, and Extensions</h3>
+    <p>Each student has five &quot;late days&quot; which can be
+      applied to any of the homework assignments. A late day
+      extends the due date by 24 hours. <b>At most three late days
+        can be used on any single assignment.</b> (This allows us
+      to grade your assignments are return them to you within a
+      reasonable period.)</p>
+    <p>Late days are intended to help you manage your time
+      effectively. They are not meant to be a substitute for
+      starting assignments early. If you exhaust your late days,
+      a 10% penalty will be applied per day, up until the
+      solutions are released; after the solutions are released,
+      no assignments will be accepted. </p>
+    <p>Late days are not meant to be used for medical emergencies or
+      extenuating circumstances. In those situations, please have your senior tutor contact the instructor.</p>
+    
+    <h3>Collaboration</h3>
+    <p>Discussion and the exchange of ideas are essential to doing academic
+      work. For assignments in this course, you are encouraged to
+      consult with your classmates as you work on problem
+      sets. However, after discussions with peers, make sure that you
+      can work through the problem yourself and ensure that any answers
+      you submit for evaluation are the result of your own efforts. In
+      addition, you must cite any books, articles, websites, lectures,
+      etc that have helped you with your work using appropriate
+      citation practices. Similarly, you must list the names of
+      students with whom you have collaborated on problem sets.</p>
+    
+    <p>Do not pass solutions to problem sets nor accept them from
+      another student. Do not post course materials (including problem
+      sets, solutions, exams, etc.) to websites or course-content archives. Also, it is never okay to look up solutions to
+      homework problems in this class, i.e., don't look on the web for
+      solutions. If you are ever in doubt, ask the course staff to
+      clarify what is and isn't appropriate. <p>
+
+  </body>
+</html>

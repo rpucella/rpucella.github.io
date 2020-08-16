@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Foundations of Computer Science (Spring 2017)</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+      
+        code,tt,pre {
+          font-size: 110%;
+        }
+
+	ul.annoucements p { 
+    	  padding-left: 5em;
+    	  text-indent: -5em; 
+        }
+
+	ul.annoucements p span {
+   	  padding-right: 1em
+	}
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	table.office-hours td {
+	  padding-left: 30px;
+	}
+
+    </style>
+
+    <script>
+      window.addEventListener("load",run);
+
+      function run () {
+        // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+        // actually, for anything with "scrollto" class
+
+        // offset is given by the 'top' div (adjusted for padding)
+        var off = document.getElementById("top").clientHeight;
+        console.log(off);
+        //var elts = document.querySelectorAll("div.navbar a");
+        var elts = document.querySelectorAll("a.scrollto");
+        for (var i=0; i<elts.length; i++) {
+          var href=elts[i].getAttribute("href").slice(1);
+          elts[i].setAttribute("onclick","return false;");
+          elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+        }
+
+      }
+
+
+      </script>
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="scrollto" href="#top"><b>Foundations of Computer Science SP17</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Foundations of Computer Science (Spring 2017)</h1>
+    
+    <p class="subtitle">ENGR 3520 / Thu 16:00-18:30 / AC 318</p>
+    
+    <p>This course explores the notion of computation. We're going to develop
+    formal tools for defining what we mean by computation, through
+    various forms of automata. We'll develop ways to talk about the
+    efficiency of computations, by quantifying their time
+    complexity. We will examine alternative models of
+    computations, and see how they correspond to different
+    programming paradigms: functional programming, logic programming,
+    and object-oriented programming. We will end with a discussion of
+    basic data structures and algorithms.
+</p>
+
+
+    
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <ul class="simple annoucements">
+
+	<li>
+	  <p><span>Apr 22:</span>
+	    <a disabled_href="./homework9.html">Homework 9</a> is out. Due next Friday. Also note that the submission deadline for Homework 8 has also been pushed to Friday April 28th.</p>
+	</li>
+
+	<li>
+	  <p><span>Apr 16:</span>
+	    Lecture notes on the lambda calculus are out, as is <a disabled_href="./homework8.html">Homework 8</a>. Due Sunday April 23th.</p>
+	</li>
+
+	<li>
+	  <p><span>Apr 9:</span>
+	    <a disabled_href="./homework7.html">Homework 7</a> is out. Due Sunday April 16th.</p>
+	</li>
+
+	<li>
+	  <p><span>Apr 7:</span>
+	    Lecture notes on grammars available below.</p>
+	</li>
+
+	<li>
+	  <p><span>Apr 1:</span>
+	    Question 3 of <a disabled_href="homework6.html">Homework 6</a> is out.</p>
+	</li>
+
+	<li><p><a href="announcements.html">Older announcements...</a></p></li>
+	
+      </ul>
+      
+    </div>
+
+
+    
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Information</h3>
+
+      <p><b>Prerequisites:</b> We're part of a pilot that removes Discrete Mathematics as a prerequisite for FoCS. This means that there are no prerequisites, but prior experience programming will be helpful, as will previous exposure to set-theoretic concepts.</p>
+
+      <p><b>Instructor:</b> <a href="http://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</p>
+
+      <!-- <p><b>Office hours:</b> Thu 15:00-16:00 / MH 353</p> -->
+
+      <p><b>Textbooks:</b> There is no required textbook for the course. We will be working off notes and online references.</p>
+
+      <p>
+	There are several excellent books on Theory of Computation
+      (the first part of the course), but they are a bit expensive considering that we will 
+	be covering only a small part of their content. If you need extra assistance, though, any of these books would be useful:
+      <ul>
+	<li>Sisper, <i><a href="https://www.amazon.com/Introduction-Theory-Computation-Michael-Sipser/dp/1133187811">Introduction to the Theory of Computation</a></i></li>
+	<li>Hopcroft, Motwani, Ullman, <i><a href="https://www.amazon.com/Introduction-Automata-Theory-Languages-Computation/dp/0321455363">Automata Theory, Languages, and Computation</a></i></li>
+      </ul>
+      The library has those two books on reserve.
+      </p>
+
+      <p>
+      An inexpensive and still reasonable book is the following, which uses Ruby instead of OCaml:
+      <ul>
+	<li>Stuart, <i><a href="http://computationbook.com">Understanding Computation</a></i></li>
+      </ul>
+      </p>
+    
+      <p><b>Programming:</b> All programming in this course will be done
+      using the programming
+      language <a href="https://ocaml.org/">OCaml</a>. The OCaml
+      interpreter can be downloaded from the web site, and
+	supports installations on most common systems. Here are a couple of reasonable books on OCaml that you might
+      want to get your hands on if you prefer learning your
+      programming language from a book instead of the web:</p>
+      
+      <ul>
+	<li>Hickey, <i><a href="http://courses.cms.caltech.edu/cs134/cs134b/book.pdf">Introduction
+	      to Objective Caml</a></i> (PDF)</li>
+	<li>Downey, Monje, <i><a href="http://greenteapress.com/thinkocaml/">Think
+	  OCaml</a></i></li>
+	<li>Minsky, Madhavapeddy, Hickey, <i><a href="https://realworldocaml.org/">Real World
+	  OCaml</a></i></li>
+      </ul>
+
+      <p>Some online resources:</p>
+      <ul>
+
+	<li><a href="http://www.csc.villanova.edu/~dmatusze/resources/ocaml/ocaml.html"><i>A
+	      Concise Introduction to Objective Caml</i></a> &mdash;
+	  written for OCaml v3; one difference is that you
+	  should write <tt>#use "file.ml";;</tt> to load a
+	  file of definitions</li>
+
+	<li>Some information on
+	  the <a href="http://caml.inria.fr/pub/docs/manual-ocaml/toplevel.html#sec256">commands
+	    you can use in the OCaml shell</a>, which can be
+	  useful</li>
+
+	<li>The <a href="http://caml.inria.fr/pub/docs/manual-ocaml/index.html">official
+	    OCaml manual</a></li>
+
+	<li>There are no official IDEs for OCaml, but many
+	  people swear
+	  by <a href="https://github.com/diml/utop"><i>utop</i></a>,
+	  which is an OCaml shell replacement. There's also
+	  <a href="http://camelia.sourceforge.net/"><i>Camelia</i></a>,
+	  but I've never used it. There is
+	  an <a href="http://www.algo-prog.info/ocaide/">Eclipse
+	    plug-in</a> for OCaml.
+	</li>
+      </ul>
+      
+
+
+      <p><b>Grading:</b> The final grade is based on weekly homework (60%)
+      and two exams (20% each). The exact weighting is subject to change. 
+	All work will be done
+      individually. Late homeworks will be penalized (10% per 24 hours)
+      and no homework will be accepted after its solution has been
+      discussed in class.
+
+      <p><b>Ninjas:</b> We have three ninjas for the class: Sarah Walters (<tt>sarah.walters</tt>), Austin Greene (<tt>austin.greene</tt>), and Deniz Celik (<tt>deniz.celik</tt>). All emails at <tt>students.olin.edu</tt>.</p>
+
+      <p><b>Office hours:</b>
+	<table class="office-hours">
+	  <tr><td>Monday</td><td>19:00 - 21:00</td><td>Austin in EH1</td></tr>
+	  <tr><td>Tuesday</td><td>18:00 - 20:00</td><td>Deniz in EH1</td></tr>
+	  <tr><td>Wednesday</td><td>18:00 - 20:00</td><td>Deniz in EH1</td></tr>
+	  <tr><td>Wednesday</td><td>20:00 - 22:00</td><td>Sarah in EH1</td></tr>
+	  <tr><td>Thursday</td><td>15:00 - 16:00</td><td>Riccardo in MH 353</td></tr>
+	  <tr><td>Thursday</td><td>18:00 - 20:00</td><td>Austin in EH1</td></tr>
+	  <tr><td>Thursday</td><td>21:00 - 23:00</td><td>Sarah in EH1</td></tr>
+	</table>
+      </p>
+
+      <p>I will expect all of us to follow the <a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a>.</p>
+
+     </div>
+
+
+    <hr class="section">
+    <div class="section" id="lectures">
+
+      <h3>Lectures and Readings</h3>
+
+      <p>Schedule and topics subject to changes.</p>
+      
+      <ul class="lectures">
+	
+	<li><p><span class="hdr">Jan 19:</span><b>Introduction / OCaml</b></p>
+	  <div class="lect">
+
+	    <p><a href="http://www.sosmath.com/algebra/factor/fac11/fac11.html">How to solve a cubic equation</a>. Some <a href="https://en.wikipedia.org/wiki/Cubic_function#History">history</a> on the problem, including the famous <q>solve-offs</q>.</p>
+	    
+	    <p><a href="https://en.wikipedia.org/wiki/%C3%89variste_Galois">&Eacute;variste
+		Galois</a>, who proved that there is no general
+	      formula for the solutions of the quintic (and above)
+	      equation.</p>
+	    
+	    <p><a href="https://en.wikipedia.org/wiki/Hilbert's_problems">Hilbert's
+		problems</a>, ten of which were presented at the ICM
+	      in Paris in
+	      1900. His <a href="https://en.wikipedia.org/wiki/Hilbert's_tenth_problem">tenth
+		problem</a> spoke directly to the notion of computation.</p>
+	    
+	    <p>An <a href="notes-ocaml.html">annotated
+		version</a> of the sample interaction with OCaml I
+	      gave in class.</p> 
+	    
+	  </div>
+	</li>	  
+
+	<li><p><b>MACHINE MODELS OF COMPUTATION</b></p></li>
+
+	<li><p><span class="hdr">Jan 26:</span><b>Formal languages</b></p>
+	  <div class="lect">
+	    <p><a href="01-languages.pdf">Notes from the lecture.</a></p>
+	    <p>Regular expressions are often used to search for patterns in text. <a href="http://www.cs.columbia.edu/~tal/3261/fall07/handout/egrep_mini-tutorial.htm">Here is an example of how they are used in egrep</a>.</p>
+
+	  </div>
+	</li>	  
+
+
+
+	<li><p><span class="hdr">Feb 2:</span><b>Finite automata</b></p>
+	  <div class="lect">
+	    <p><a href="02-automata.pdf">Notes from the lecture.</a></p>
+	    <p>Some <a href="02-automata-supp.pdf">supplementary notes</a> on finite automata, fleshing out things that I mentioned but did not pursue: showing that the language accepted by a finite automaton must be regular, showing that the complement of a regular language is regular, and showing how we can argue that some languages are not regular.</p>
+	  </div>
+	</li>	  
+	
+
+	<li><p><span class="hdr">Feb 9:</span><b>Intermezzo: functional programming</b></p>
+		<div class="lect">
+		  <p>Snow Day!</p>
+		  <p>The <a href="./notes-functional.html">content of
+		  the lecture</a>. It is reasonably self-contained,
+		  and you should be able to work through the material
+		    on your own. It covers higher-order functions such
+		    as <tt>map</tt>, <tt>filter</tt>,
+		    and <tt>fold_right</tt>. </p>
+
+		</div>
+	</li>	  
+	
+
+
+	<li><p><span class="hdr">Feb 16:</span><b>Turing machines</b></p>
+	  <div class="lect">
+	    <p><a href="03-turing.pdf">Notes from the lecture.</a> These include a formal description of multi-tape Turing machines, as well as an indication how you can simulate a multi-tape Turing machine with a single-tape Turing machine.</p>
+	    
+	    <p>The <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis">Church-Turing thesis</a>.</p>
+	    
+	    <p>I mentioned that there were machines that were more expressive than finite automata but less expressive than Turing machines. One example is <a href="https://en.wikipedia.org/wiki/Pushdown_automaton">pushdown automata</a>, which are finite automata equipped with a stack. They accept a class of languages that is larger (and includes) regular languages, but smaller than decidable languages.</p>
+	    
+	  </div>
+	</li>	  
+	
+	
+
+	<li><p><span class="hdr">Feb 23:</span><b>Undecidability</b></p>
+	  <div class="lect">
+	    <p><a href="04-undecidability.pdf">Notes from the lecture.</a></p>
+
+	    <p>Note that our counting argument actually shows that there exists not-only undecidable languages, but non-enumerable languages. (Why?)</p>
+
+	    <p><a href="http://io9.gizmodo.com/5873581/the-odd-genius-who-showed-that-one-infinity-was-greater-than-another">Georg Cantor</a> the odd genius.</p>
+	    
+	    <p>A quick introduction
+	      to <a href="https://en.wikipedia.org/wiki/Universal_Turing_machine">Universal
+		Turing machines</a> from Wikipedia. Moore gives a
+	      <a href="https://courses.washington.edu/fit100/sp11/files/Moore%20turing.pdf">multi-tape implementation of a Universal Turing
+		machine in 15 states</a>.
+
+	    <p>I mentioned that showing the Cantor-Bernstein theorem, that <i>A &le; B</i> and <i>B &le; A</i> implies <i>A &asymp; B</i> is a bit tricky. <a href="http://www.cut-the-knot.org/WhatIs/Infinity/CBS.shtml">Here is the most intuitive proof of that result</a> that I know.</p>
+	    
+
+	  </div>
+	</li>	  
+
+	
+	<li><p><span class="hdr">Mar 9:</span><b>Midterm examination</b></p>
+	</li>
+
+
+	
+	<li><p><b>ALGORITHMS AND DATA STRUCTURES</b></p></li>
+
+
+	<li><p><span class="hdr">Mar 23:</span><b>Algorithmic complexity</b></p>
+	  <div class="lect">
+	    <p>Aaronson has a wonderfully <a href="http://www.scottaaronson.com/papers/pnp.pdf">extensive survey of the P versus NP</a> question. Warning: it gets pretty technical, but the initial sections on motivations and arguments is interesting in its own right.</p>
+	    
+	    <p>Determining the running time of recursive functions
+	    (i.e., anything you write in Ocaml) requires solving
+	    recurrence equations. There is no general method for
+	    solving recurrence equations, but many different
+	      techniques that apply in subsets of cases. <a href="https://users.cs.duke.edu/~reif/courses/alglectures/skiena.lectures/lecture3.pdf">This</a> is a
+	    reasonable
+	      overview. <a href="http://www.cs.cmu.edu/~rweba/algf09/solverecurrencesSF.pdf">This</a>
+	    goes into more detail about the so-called <i>iteration
+		method</i> for solving recurrence equations: substitute until you spot a pattern.</p>
+		</div>
+	</li>	  
+
+
+	<li><p><span class="hdr">Mar 30:</span><b>Recursive data structures</b></p>
+	  <div class="lect">
+	    <p>A reasonable overview of <a href="http://www.cs.cornell.edu/courses/cs3110/2011sp/lectures/lec04-types/types.htm">algebraic data types</a> in OCaml.</p>
+	    
+	    <p>Wikipedia page
+	    on <a href="https://en.wikipedia.org/wiki/Binary_search_tree">binary
+	    search trees</a> and on the version of self-balanced
+	    binary search trees I described in
+	    class, <a href="https://en.wikipedia.org/wiki/AVL_tree">AVL
+	    trees</a>. The description of the rotations that restore
+	    the balanced height property after an insertion is
+	    reasonably clear there. There are basically four cases to
+	      consider, depending on the local form of unbalance.</p>
+	    <p>A <a href="https://www.cs.usfca.edu/~galles/visualization/AVLtree.html">cute visualization</a> of what happens when you insert
+	    into an AVL tree. Try starting with the empty tree, and
+	    inserting 1, 2, 3, 4, 5, 6, 7, 8... You'll see the tree
+	      grow "to the right" and then rebalance itself repeatedly.</p>
+	    <p>An <a href="https://cs.nyu.edu/courses/fall02/V22.0310-002/lectures/lecture-16.html">analysis
+		of the height of AVL trees</a>, showing that it is
+	      always logarithmic in the number of nodes.</p>
+	    
+	  </div>
+	</li>	  
+
+
+
+	<li><p><b>ALTERNATIVE MODELS OF COMPUTATION</b></p></li>
+
+	<li><p><span class="hdr">Apr 6:</span><b>Generative grammars</b></p>
+		<div class="lect">
+		  <p><a href="05-grammars.pdf">Notes</a> from the lecture.</p> 
+		  <p>The main area of CS where you'll encounter grammars is probably when parsing input, which is often described using a grammar from which a parser can be automatically generated. There are many good tutorials and introductions to parsing. <a href="http://homepages.cwi.nl/~storm/teaching/sc1112/intro-parsing.pdf">Here's a reasonable high-level presentation.</a>
+		</div>
+	</li>	  
+
+
+	<li><p><span class="hdr">Apr 13:</span><b>Lambda Calculus</b></p>
+		<div class="lect">
+		  <p><a href="06-lambda.pdf">Notes</a> from the lecture.</p>
+
+		  <p>A general discussion of <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">fixed-point combinators</a>, of which <i>Y</i> is an example.</p>
+
+		  <p>Some additional introductory references on the lambda calculus: <a href="http://palmstroem.blogspot.com/2012/05/lambda-calculus-for-absolute-dummies.html">The Lambda Calculus for Absolute Dummies (Like Myself)</a>, Jung's <a href="https://pdfs.semanticscholar.org/7fbb/69ab3be000788c106cbfe11f0c5208457746.pdf">A Short Introduction to the Lambda Calculus</a>, and Rojas's <a href="http://www.inf.fu-berlin.de/lehre/WS03/alpi/lambda.pdf">A Tutorial Introduction to the Lambda Calculus</a>. Note that all of these references use the standard presentation of the calculus, with &lambda;x.M instead of &lt;x &rarr; M&gt;</p> 
+		</div>
+	</li>	  
+
+
+	<li><p><span class="hdr">Apr 20:</span><b>Dataflow</b></p>
+	  <div class="lect">
+	    <p>The <a href="streams-tutorial.html">streams programming tutorial</a> I gave in class.</p>
+
+	    <p>There are two main sources for the dataflow
+	    computational model, neither of which is exactly what I
+	    presented in class: Gilles Kahn's work
+	    on <a href="https://en.wikipedia.org/wiki/Kahn_process_networks">Kahn
+		Process Networks</a>, and Jack Dennis's work on
+	    <a href="http://www.capsl.udel.edu/courses/cpeg852/2014/slides/Topic-A-Dataflow-part1.pdf">dataflow
+	      architectures</a>.</p>
+
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Apr 27:</span><b>Logic and Computation</b></p>
+	  <div class="lect">
+	    <p>Wikipedia has a reasonable overview of both <a href="https://en.wikipedia.org/wiki/Natural_deduction">natural deduction</a> as a proof system for logic, and the <a href="https://en.wikipedia.org/wiki/Simply_typed_lambda_calculus">simply-typed &lambda;-calculus</a>.
+	    The correspondence between (intuitionistic) propositional logic and the simply-typed &lambda;-calculus I alluded to is called the Curry-Howard Isomorphism, or Propositions as Types. <a href="http://homepages.inf.ed.ac.uk/wadler/papers/propositions-as-types/propositions-as-types.pdf">Philip Wadler has an eminently readable summary</a>. </p>
+	    <p>An example of a more advanced type system is that of dependent types, which correspond to first-order predicate logic. Intuitively, dependent types are types that may depend on the runtime value of expressions. <a href="http://wiki.portal.chalmers.se/agda/pmwiki.php">Adga</a> is a functional programming language with a dependent type system.</p>
+	    <p><a href="https://coq.inria.fr/">Coq</a> is an environment that lets you prove theorems in a very expressive logic via a Curry-Howard Isomorphism. <a href="./coq-demo.html">Here is the source code of the demo</a> that I did in class proving the correctness of a compiler for a simple language of arithmetic expression into stack machine instructions.</p>
+	  
+	  </div>
+	</li>	  
+	
+      </ul>
+
+    </div>
+
+
+
+    <hr class="section">
+    <div class="section" id="homeworks">
+      <h3>Homeworks</h3>
+    </div>
+
+  </body>
+</html>

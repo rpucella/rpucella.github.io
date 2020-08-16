@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Programming Languages (Spring 2017)</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      ul.normal li {
+      margin-bottom: 5px;
+      }
+      
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+	ul.annoucements p { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+        }
+
+	ul.annoucement p span {
+   	  padding-right: 1em
+	}
+
+      div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+      table.schedule {
+      width:100%;
+      border-collapse: collapse; 
+      border-spacing: 0px;      
+      }
+
+      table.schedule th {
+      background: #dddddd;
+      text-align: left;
+      margin: 0;
+      padding: 5px;
+      }
+
+      table.schedule td {
+      border: 1px solid #cccccc;
+      padding: 5px;
+      vertical-align: top;
+      }
+
+      table.schedule tr.not-yet { 
+      font-style: italic;
+      }
+
+    </style>
+
+    <script>
+      window.addEventListener("load",run,false);
+
+      function run () {
+        // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+        // actually, for anything with "scrollto" class
+
+        // offset is given by the 'top' div (adjusted for padding)
+        var off = document.getElementById("top").clientHeight;
+        console.log(off);
+        //var elts = document.querySelectorAll("div.navbar a");
+        var elts = document.querySelectorAll("a.scrollto");
+        for (var i=0; i<elts.length; i++) {
+          var href=elts[i].getAttribute("href").slice(1);
+          elts[i].setAttribute("onclick","return false;");
+          elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+        }
+
+      }
+
+
+      </script>
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="scrollto" href="#top"><b>Programming Languages SP17</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#sections">Sections</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Programming Languages (Spring 2017)</h1>
+    
+    <p class="subtitle">CS 152 / Tue-Thu 09:00-10:30 / Maxwell Dworkin G125</p>
+    
+    <p>
+      This course is an introduction to the theory, design, and
+      implementation of programming languages. Topics covered in this
+      course include: formal semantics of programming languages
+      (operational, axiomatic, denotational, and translational), type
+      systems, higher-order functions and lambda calculus, laziness,
+      continuations, monads, as well as formal reasoning about
+      programs using proof assistants. </p>
+
+
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <p>Announcements available through <a href="https://canvas.harvard.edu">Canvas</a>.</p>
+
+    </div>
+
+
+    
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Information</h3>
+
+      <p><b>Prerequisites:</b> CS 51. CS 121 is recommended. (1) this is <b>not</b> an introduction to programming; you should already know how to program, ideally in at least couple of languages; (2) we'll be doing math &mdash; you must be very comfortable with recursion, proofs, basic mathematical ideas and notations, including sets, relations, functions, and especially induction.</p> 
+
+
+      <p><b>Instructor:</b> <a href="http://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x73;&#x65;&#x61;&#x73;&#x2E;&#x68;&#x61;&#x72;&#x76;&#x61;&#x72;&#x64;&#x2E;&#x65;&#x64;&#x75;)</p>
+
+      <p><b>Office hours:</b> Tue 10:30-11:30 / MD 233 (Prof. Chen's office)</p>
+
+      <p><b>Textbooks:</b> There is no required textbook for the
+      course. We will be working off class notes and online references.</p>
+
+      <p>While there is no required textbook, there are excellent texts about the topic of the course, which you should definitely seek out if you feel you need the extra help:
+      <ul class="normal">
+	<li>J. C. Mitchell, <b>Foundations for Programming Languages</b>, Cambridge University Press, 2003.<br>
+	  <i>Available <a href="http://nrs.harvard.edu/urn-3:hul.ebook:NLIB_112510">online</a> through Harvard University Libraries eContent Collection. To view on a Mac, follow <a href="http://ezp-prod1.hul.harvard.edu/login?url=http://www.netlibrary.com/Help/DisplayTopic.aspx?Name=ViewingOnline/MacintoshInformation">these instructions</a>.</i>
+	  </li>
+	<li>R. Harper,  <b>Practical Foundations for Programming Languages</b>, Cambridge University Press, 2016.</li>
+	<li>B. C. Pierce,  <b>Types and Programming Languages</b>, MIT Press, 2002.<br>
+	  <i>Available on reserve at the library.</i></li>
+	<li>G. Winskel, <b>The Formal Semantics of Programming Languages: An Introduction</b>, MIT Press, 1993.<br>
+	  <i>Available on reserve at the library.</i></li>
+	<li>S. Krishnamurthi, <b>Programming Languages: Application and Interpretation</a></b><br>
+<i>Available <a href="http://cs.brown.edu/~sk/Publications/Books/ProgLangs/">from the author's web page</a></i>.</li>
+      </ul>
+      </p>
+	
+      <p><b>Grading:</b> 
+
+      There will be an in-class midterm and a final exam. There will be 6 homework assignments. 
+	Your grade will be determined by a weighted average of your
+	scores on homework assignments (50%), the midterm exam (20%),
+	the final exam (25%), and class participation (5%). The
+	weights are meant to be indicative and are subject to
+	change. Participation includes attendance and participation in
+	class, section, and office hours, and contributing to online
+	discussion.</p>
+
+<p>We have some <a href="policies.html">policies on lateness and
+    collaboration</a>.</p>
+
+      <p><b>Programming:</b>
+
+	Most assignments will contain a programming component in OCaml
+	and later in Coq. Prior knowledge of these languages is not
+	required. 
+      </p>
+
+    <p>OCaml is available from the <a href="https://ocaml.org">language's
+    webpage</a>. Some useful links:
+<ul class="normal">
+  <li><a href="https://ocaml.org/docs/install.html">Installation instructions</a></li>
+  <li>Useful <a href="https://github.com/realworldocaml/book/wiki/Installation-Instructions">tools</a> including UTop and Tuareg, an Emacs mode.</li>
+  <li>The OCaml <a href="http://caml.inria.fr/pub/docs/manual-ocaml/libref/index.html">Standard Library</a></li>
+  <li>The <a href="http://caml.inria.fr/pub/docs/manual-ocaml/index.html">official manual</a></li>
+  <li><a href="http://ocaml.org/learn/tutorials/99problems.html">Code examples</a></li>
+</ul>
+
+
+Here are a couple of reasonable books on OCaml that you might
+      want to get your hands on if you prefer learning your
+      programming language from a book instead of the web:</p>
+      
+      <ul>
+	<li>J. Hickey, <b><a href="http://courses.cms.caltech.edu/cs134/cs134b/book.pdf">Introduction
+	      to Objective Caml</a></b> (PDF)</li>
+	<li>Y. Minsky, A. Madhavapeddy, J. Hickey, <b><a href="https://realworldocaml.org/v1/en/html/index.html">Real World
+	  OCaml</a></b>, O'Reilly, 2013.</li>
+      </ul>
+      </p>
+
+<p>Information about Coq will be given when we get to it in the later
+  part of the course.</p>
+
+      <p><b>Course staff:</b> 
+	We have three teaching fellows: Arianna Benson, Eric Lu, and
+	Karen Mardini. <a href="https://calendar.google.com/calendar/embed?src=i4f8kav6ik0tu50iv5bnj72ljc%40group.calendar.google.com&ctz=America/Toronto">Click here for a calendar with the staff's office hours.</a></p>
+
+<!--      <iframe src="https://calendar.google.com/calendar/embed?src=i4f8kav6ik0tu50iv5bnj72ljc%40group.calendar.google.com&ctz=America/Toronto" style="width: 100%; height: 500px;" >
+	<p>Your browser does not support iframes. <a href="https://calendar.google.com/calendar/embed?src=i4f8kav6ik0tu50iv5bnj72ljc%40group.calendar.google.com&ctz=America/Toronto">Here's the link to the calendar.</a></p></iframe> -->
+
+      <p>You should send all questions and issues related to
+	assignments, course content, etc., to <a href="mailto:CS152
+	Course
+	Staff <cs152-staff@seas.harvard.edu>">cs152-staff@seas.harvard.edu</a>
+	or post them on <a href="#">Piazza</a>. You should direct all
+	questions related to grades, special consideration, etc. to
+	Prof. Pucella. In general, sending email to individual course
+	staff will delay a response. Note that course staff may take
+	up to 48 hours to respond. 
+      </p>
+
+<p><b>Assignments:</b>
+Assignments are available through <a href="https://canvas.harvard.edu">Canvas</a>.
+</p>
+
+
+
+
+     </div>
+
+
+    <hr class="section">
+    <div class="section" id="lectures">
+
+      <h3>Lectures and Readings</h3>
+
+      <p>Schedule and topics subject to changes.</p>
+      <p>Readings are not required, but they may help your understanding of the lecture material.</p>
+      
+      <ul class="lectures">
+	
+	<li><p><b>SEMANTICS</b></p></li>
+
+	<table class="schedule">
+	  <tr>
+	    <th>When</th>
+	    <th style="width:30%;">What</th>
+	    <th style="width:20%;">Readings</th>
+	    <th style="width:25%;">Notes</th>
+	    <th style="width:15%;">Assignments</th>
+	  </tr>
+	  <tr>
+	    <td>Jan 24</td>
+	    <td rowspan="5">Operational semantics<br>(Small-step, Large-step)<br>Induction principles<br>IMP</td>
+	    <td rowspan="5">Winskell 2,3,4<br>Pierce 2.4,3<br>Harper 2</td>
+	    <td rowspan="5">- <a href="01-semantics.pdf">Notes on Semantics</a><br>
+	      - <a href="induction.pdf">Proving the induction principle</a></td>
+	  </tr>
+
+	  <tr>
+	    <td>Jan 26</td>
+	  </tr>
+
+	  <tr>
+	    <td>Jan 31</td>
+	    <td>Asg 1 out</td>
+	  </tr>
+
+	  <tr>
+	    <td>Feb 2</td>
+	  </tr>
+
+	  <tr>
+	    <td>Feb 7</td>
+	  </tr>
+
+	  <tr>
+	    <td>Feb 14</td>
+	    <td rowspan="2">Denotational semantics</td>
+	    <td rowspan="2">Winskell 5<br>Mitchell 4.3</td>
+	    <td rowspan="2">- <a href="02-denotational.pdf">Notes on Denotational Semantics</a><br></td>
+	  </tr>
+
+	  <tr>
+	    <td>Feb 16</td>
+	    <td>Asg 1 due<br>Asg 2 out</td>
+	    
+	  </tr>
+
+	</table>
+	
+
+
+
+	
+	<li><p><b>LAMBDA CALCULUS</b></p></li>
+
+	<table class="schedule">
+	  <tr>
+	    <th>When</th>
+	    <th style="width:30%;">What</th>
+	    <th style="width:20%;">Readings</th>
+	    <th style="width:25%;">Notes</th>
+	    <th style="width:15%;">Assignments</th>
+	  </tr>
+
+	  <tr>
+	    <td>Feb 21</td>
+	    <td rowspan="4">Lambda calculus<br>Encodings and recursion<br>Definitional translations<br>Continuations</td>
+	    <td rowspan="4">Pierce 5<br> Mitchell 4.2<br>Harper 30</td>
+	    <td rowspan="6">- <a href="03-lambdacalc.pdf">Notes on Lambda Calculus</a></td>
+	  </tr>
+
+	  <tr>
+	    <td>Feb 23</td>
+	  </tr>
+
+	  <tr>
+	    <td>Feb 28</td>
+	  </tr>
+
+	  <tr>
+	    <td>Mar 2</td>
+	    <!-- <td>Pierce 13<br>Mitchell 5.4, 8.3.2<br>Harper 29,36</td> -->
+	    <td>Asg 2 due (Mar 3)</td>
+	  </tr>
+
+	  <tr>
+	    <td>Mar 7</td>
+	    <td>MIDTERM EXAMINATION</td>
+	    <td rowspan="2"></td>
+	  </tr>
+
+	  <tr>
+	    <td>Mar 9</td>
+	    <td>Denotational semantics of lambda calculus</td>
+	    <td>Asg 3 out</td>
+	  </tr>
+
+	</table>
+
+	
+
+	<li><p><b>TYPES</b></p></li>
+
+	<table class="schedule">
+	  <tr>
+	    <th>When</th>
+	    <th style="width:30%;">What</th>
+	    <th style="width:20%;">Readings</th>
+	    <th style="width:25%;">Notes</th>
+	    <th style="width:15%;">Assignments</th>
+	  </tr>
+
+	  <tr>
+	    <td>Mar 21</td>
+	    <td rowspan="8">Simply-typed lambda calculus<br>Type soundness<br>
+	      Denotational Semantics<br>
+	      Type inference<br>
+	      Parametric polymorphism<br>
+	      Records, Existential types<br>
+	      Subtyping, Effects
+	    </td>
+	    <td rowspan="8">Pierce 9, 11, 13, 15, 22, 23<br>
+	      Mitchell 6.1, 6.2, 6.4
+	    </td>
+	    <td rowspan="8">- <a href="04-typed-lc.pdf">Notes on Typed Lambda Calculi</a></td>
+	  </tr>
+
+	  <tr>
+	    <td>Mar 23</td>
+	  </tr>
+
+	  <tr>
+	    <td>Mar 28</td>
+	  </tr>
+
+
+	  <tr>
+	    <td>Mar 30</td>
+	    <td>Asg 3 due<br>Asg 4 out</td>
+	  </tr>
+
+	  <tr>
+	    <td>Apr 4</td>
+	  </tr>
+
+	  <tr>
+	    <td>Apr 6 </td>
+	  </tr>
+
+	  <tr>
+	    <td>Apr 11</td>
+	  </tr>
+
+	  <tr>
+	    <td>Apr 13</td>
+	    <td>Asg 4 due<br>Asg 5 out</td>
+	  </tr>
+
+	</table>
+
+	
+	<li><b><b>DIRECTIONS</b></b></li>
+
+	<table class="schedule">
+	  <tr>
+	    <th>When</th>
+	    <th style="width:30%;">What</th>
+	    <th style="width:20%;">Readings</th>
+	    <th style="width:25%;">Notes</th>
+	    <th style="width:15%;">Assignments</th>
+	  </tr>
+	
+	  <tr>
+	    <td>Apr 18</td>
+	    <td>Curry-Howard correspondence</td>
+	    <td rowspan="3"></td>
+	    <td></td>
+	  </tr>
+
+	  <tr>
+	    <td>Apr 20</td>
+	    <td>Dependent types</td>
+	    <td>- <a href="dependent.pdf">Sketch of Notes on Dependent Types</a></td>
+	  </tr>
+
+	  <tr>
+	    <td>Apr 25</td>
+	    <td>Concurrency, &pi;-calculus </td>
+	    <td></td>
+	    <td>Asg 5 due</td>
+	  </tr>
+
+	</table>
+
+	<p>&nbsp;</p>
+
+      </ul>
+
+    </div>
+
+
+
+    <hr class="section">
+    <div class="section" id="sections">
+      <h3>Sections</h3>
+
+      <p>We have recitation sections every Friday 14:00-15:00 in Pierce 100f.</p>
+
+	<table class="schedule">
+	  <tr>
+	    <th>When</th>
+	    <th style="width:70%;">Notes</th>
+	  </tr>
+	  <tr>
+	    <td>Feb 3</td>
+	    <td><a href="sections/CS152_Review_Section.pdf">Math review</a></td>
+	  </tr>
+	</table>
+
+
+    </div>
+
+  </body>
+</html>

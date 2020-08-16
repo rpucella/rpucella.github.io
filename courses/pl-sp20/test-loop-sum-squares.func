@@ -1,0 +1,7 @@
+(let ((stop 10000))
+  (loop sum-squares ((i 0)
+                     (sum 0))
+    (if (= i stop)
+      sum
+      (do (print i sum)
+          (sum-squares (+ i 1) (+ sum (* i i)))))))

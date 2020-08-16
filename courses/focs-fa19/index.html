@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Foundations of Computer Science (Fall 2019)</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+      
+        code,tt,pre {
+          font-size: 110%;
+        }
+
+        ul.annoucements li p {
+    	  padding-left: 3em;
+        }
+
+	ul.annoucements li p:first-child { 
+    	  text-indent: -3em; 
+        }
+
+	ul.annoucements p span {
+   	  padding-right: 1em
+	}
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	table.office-hours td {
+	  padding-left: 30px;
+	}
+
+    </style>
+
+    <script>
+      window.addEventListener("load",run);
+
+      function run () {
+        // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+        // actually, for anything with "scrollto" class
+
+        // offset is given by the 'top' div (adjusted for padding)
+        var off = document.getElementById("top").clientHeight;
+        console.log(off);
+        //var elts = document.querySelectorAll("div.navbar a");
+        var elts = document.querySelectorAll("a.scrollto");
+        for (var i=0; i<elts.length; i++) {
+          var href=elts[i].getAttribute("href").slice(1);
+          elts[i].setAttribute("onclick","return false;");
+          elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+        }
+      }
+      </script>
+  </head>
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="scrollto" href="#top"><b>Foundations of Computer Science FA19</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Foundations of Computer Science (Fall 2019)</h1>
+    
+    <p class="subtitle">ENGR 3520 / Tue 15:20-17:50 / AC 326</p>
+    
+    <p>This course explores the notion of computation. We're going to
+      develop formal tools for defining what we mean by computation
+      through various models, including automata and the lambda
+      calculus. We will examine how some of these alternative models
+      of computations correspond to different programming paradigms.
+</p>
+
+
+    
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <ul class="simple annoucements">
+
+        <li><p><span>Dec 9:</span>
+            <a href="homeworks/final.html">Information about the in-class final exam</a> this coming Friday, in AC326.</p>
+        </li>
+        
+          </p>
+        </li>
+        <li><p><span>Nov 26:</span>
+	    <a href="homeworks/homework9.html">Homework 9</a> is out. Due Sunday, December 8, 23h59. Happy Thanksgiving everybody!
+        </li
+        
+        <li><p><span>Nov 15:</span>
+	    <a href="homeworks/homework8.html">Homework 8</a> is out. Due next Thursday, 23h59.
+        </li>
+        
+        <li><p><span>Nov 6:</span>
+	    I added the notes on recursion and combinatory logic to the lambda calculus notes below. I also got inspired last night and implemented the SKI transformation rules I described you in class. It was fun, for some idiosyncratic definition of fun. (It uses techniques we haven't seen yet, of the kind I already used in the implementation of the lambda calculus.) If you want to try it, <a href="./ski.ml">here is the code for function <tt>convert_ski</tt></a>. You can add it at the end of file <tt>homework7.ml</tt> and use it from there, since it uses the lambda calculus implementation from that homework. (And no, it is not needed for the homework &mdash; this is purely for your amusement and edification.)
+        </li>
+        
+        <li><p><span>Nov 4:</span>
+	    <a href="homeworks/homework7.html">Homework 7</a> is out. Due next Monday, 23h59. Lecture notes on the lambda calculus are available below.
+        </li>
+        
+        <li><p><span>Oct 28:</span>
+	    <a href="homeworks/homework6.html">Homework 6</a> is out. Due next Sunday, 23h59.
+        </li>
+        
+        <li><p><span>Oct 16:</span>
+	    <a href="homeworks/homework5.html">Homework 5</a> is out. Due next Thursday, 23h59.
+        </li>
+        
+        <li><p><span>Oct 16: </span>
+            Reading on <a href="notes-functional.html">higher-order programming</a>, which will be useful for next homework. This reading is most beneficial when done interactively, hacking the examples into an OCaml shell and seeing what happens.
+          </p>
+        </li>
+        
+        <li><p><span>Oct 10: </span>
+            <a href="homeworks/midterm.html">Information about the in-class midterm</a> next week. The plan is to have 45 minutes of lecture on higher-order functions, then the midterm for the rest of the time.</p>
+        </li>
+        
+        <li><p><span>Oct 10:</span>
+            Lecture notes on noncomputability are up. I haven't finished writing up the notes on reductions to show other languages than the Halting Problem are noncomputable. Those will be added this weekend.
+          </p>
+        </li>
+        
+        <li><p><span>Oct 9:</span>
+            This concerns Homework 4: it's pretty easy in our implementation of TMs to encode information in the name of the states of the TM in such a way that the resulting Turing machine has infinitely many states. There's nothing in the code that forces the transition function to only refer to finitely many states. For instance, you could define the following transition function <tt>fun (q, a) -> (q ^ "x", a, 1))</tt> which says that state "hello" transitions to state "hellox" and then to state "hellox" and then to state "helloxx", etc, etc. Of course, the set of states reachable by the transition of the TM must all be listed in field states of the TM, but that's not checked anywhere unless you add that check yourself to your <tt>run</tt> fuction.
+          </p>
+          <p>Accordingly, I've create a small function <tt>validateStates</tt> function available <a href="validate-states.ml">here</a> that traverses the transition graph of a TM and checks that every state you can reach from the start state is listed in the <tt>states</tt> field of the TM, and fails on the first state it encounters that isn't listed in the states list.
+          </p>
+
+          <p>
+            Feel free to add this to your file <tt>homework4.ml</tt> (it should go after the type definition for <tt>'a tm</tt>) and use it to check your TMs. I will be running a version of this validation on my end during testing to make sure you haven't defined TMs with infinite states.
+          </p>
+        </li>
+        
+        <li><p><span>Oct 1:</span>
+	    <a href="homeworks/homework4.html">Homework 4</a> is out. Due next Wednesday, 23h59.
+        </li>
+        
+        <li><p><span>Sep 25:</span> Lecture notes on Turing machines as well as general links to related topics can be found below in the schedule.</p></li>
+        
+        <li><p><span>Sep 24:</span>
+            Added a few pictures illustrating the constructions of union, concatenation, and Kleene star of languages in terms of finite automata to the Finite Automata lecture notes.</p>
+        </li>
+        
+        <li><p><span>Sep 20:</span>
+	    <a href="homeworks/homework3.html">Homework 3</a> is out. Due next Friday, 23h59.
+        </li>
+        
+        <li><p><span>Sep 20:</span> Lecture notes on finite automata as well as general links to related topics can be found below in the schedule.</p></li>
+	  
+        <li><p><span>Sep 12:</span>
+	    <a href="homeworks/homework2.html">Homework 2</a> is out. Due next Wednesday, 23h59.
+        </li>
+        
+        <li><p><span>Sep 11:</span> Lecture notes on formal languages as well as general links to related topics can be found below in the schedule.</p></li>
+	  
+        <li><p><span>Sep 4:</span>
+	    <a href="homeworks/homework1.html">Homework 1</a> is out. Due next Wednesday, 23h59. Here is how I picture the workflow: 
+            <ul><li>I provided you with a file <tt>homework1.ml</tt> which contains stubs for the functions you have to write.</li>
+              <li>You should be able to edit <tt>homework1.ml</tt> with any text editor you are familiar with.</li>
+              <li>You can load the definitions in your homework1.ml file using the command <tt>#use "homework1.ml";;</tt> from the OCaml shell, assuming you've started the shell in the directory in which you placed <tt>homework1.ml</tt> (otherwise, use a path to <tt>homework1.ml</tt> in the usual way
+  for your OS).</li>
+              <li>If you make changes to your <tt>homework1.ml</tt> file, you can always reload it with <tt>#use "homework1.ml";;</tt></li>
+              <li>Once in a while, especially if you change the type and name of functions (or helper functions), you may get weird type errors that include numbers. The first step is to kill your shell and restart it.</li>
+            </ul>
+          </p>
+	</li>
+
+         <li><p><span>Aug 26:</span>
+	    Welcome to FOCS!</p>
+	</li>
+	
+      </ul>
+      
+    </div>
+
+
+    
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Information</h3>
+
+      <p><b>Prerequisites:</b> Discrete Mathematics is no longer a formal prerequisite for FoCS. Prior experience programming will be helpful, since I will not teach programming, as will facility with basic set-theoretic concepts.</p>
+
+      <p><b>Instructor:</b> <a href="http://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</p>
+
+      <p><b>Office hours:</b> Tue 14:00-15:20 / MH 353. (Also available online &mdash; send email to coordinate.)</p>
+
+      <p><b>Textbooks:</b> There is no required textbook for the course. We will be working off notes and online references.</p>
+
+      <p>
+	There are several excellent books on Theory of Computation
+      (the first part of the course), but they are a bit expensive considering that we will 
+	be covering only a small part of their content. If you need extra assistance, though, any of these books would be useful:
+      <ul>
+	<li>Sisper, <i><a href="https://www.amazon.com/Introduction-Theory-Computation-Michael-Sipser/dp/1133187811">Introduction to the Theory of Computation</a></i></li>
+	<li>Hopcroft, Motwani, Ullman, <i><a href="https://www.amazon.com/Introduction-Automata-Theory-Languages-Computation/dp/0321455363">Automata Theory, Languages, and Computation</a></i></li>
+      </ul>
+      The library has those two books on reserve. Feel free to go and consult them.
+      </p>
+
+      <p>
+      An inexpensive and reasonable book is the following, although it uses Ruby instead of OCaml:
+      <ul>
+	<li>Stuart, <i><a href="http://computationbook.com">Understanding Computation</a></i></li>
+      </ul>
+      It very much follows the spirit of this iteration of FoCS.
+      </p>
+    
+      <p><b>Programming:</b> All programming in this course will be done
+      using the programming
+      language <a href="https://ocaml.org/">OCaml</a>. The OCaml
+      interpreter can be downloaded from the web site, and
+	supports installations on most common systems. Here are a couple of reasonable books on OCaml that you might
+      want to get your hands on if you prefer learning your
+      programming language from a book instead of the web:</p>
+      
+      <ul>
+	<li>Hickey, <i><a href="http://courses.cms.caltech.edu/cs134/cs134b/book.pdf">Introduction
+	      to Objective Caml</a></i> (PDF)</li>
+	<li>Downey, Monje, <i><a href="http://greenteapress.com/thinkocaml/">Think
+	  OCaml</a></i></li>
+	<li>Minsky, Madhavapeddy, Hickey, <i><a href="https://realworldocaml.org/">Real World
+	  OCaml</a></i></li>
+      </ul>
+
+      <p>Some online resources:</p>
+      <ul>
+
+	<li><a href="https://ocaml.org/learn/tutorials/basics.html">OCaml: The Basics</a> is a very small tutorial giving you the basics of interacting with OCaml.</li>
+
+	<li>Some information on
+	  the <a href="http://caml.inria.fr/pub/docs/manual-ocaml/toplevel.html#sec256">commands
+	    you can use in the OCaml shell</a>, which can be
+	  useful</li>
+
+	<li>The <a href="http://caml.inria.fr/pub/docs/manual-ocaml/index.html">official
+	    OCaml manual</a></li>
+
+	<li>There are no official IDEs for OCaml, but many
+	  people swear
+	  by <a href="https://github.com/diml/utop"><i>utop</i></a>,
+	  which is an OCaml shell replacement. There's also
+	  <a href="http://camelia.sourceforge.net/"><i>Camelia</i></a>,
+	  but I've never used it. There is
+	  an <a href="http://www.algo-prog.info/ocaide/">Eclipse
+	    plug-in</a> for OCaml.
+	</li>
+      </ul>
+      
+      <p><b>Grading:</b> The final grade is based on weekly homework
+      (70%) and two exams (15% each).  All work will be done
+      individually. Late homeworks will be penalized (10% per 24
+      hours) and no homework will be accepted after its solution has
+      been discussed in class.
+
+      <b>Please do not post your code on a public available repository
+	like GitHub.</b> I hate to do this kind of policing, but we've had
+	some issues in the past, and I'd like to avoid a repeat if
+	possible.
+
+      <p><b>Ninjas:</b> We have two ninjas for the class: Evan Lloyd New-Schmidt and Louise Nielsen
+      (<tt>evan.new-schmidt</tt> and <tt>Louise.Nielsen</tt> at  the fairly standard
+        <tt>students</tt>.<tt>olin</tt>.<tt>edu</tt>). Office hours are as follows:
+        <ul>
+          <li>Evan: Sunday 6-8</li>
+          <li>Louise: Monday 6-8</li>
+        </ul>
+      You can also reach out to them directly to schedule something out-of-band. They're very good people.
+      </p>
+
+      <p>I will expect all of us to follow the <a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a>.</p>
+
+     </div>
+
+
+    <hr class="section">
+    <div class="section" id="lectures">
+
+      <h3>Lectures and Readings</h3>
+
+      <p>Schedule and topics subject to change.</p>
+      
+      <ul class="lectures">
+	
+	<li><p><span class="hdr">Sep 3:</span><b>Introduction / OCaml</b></p>
+	  <div class="lect">
+
+	    <p><a href="https://en.wikipedia.org/wiki/Hilbert's_problems">Hilbert's
+		problems</a>, ten of which were presented at the ICM
+		in Paris in
+		1900. His <a href="https://en.wikipedia.org/wiki/Hilbert's_tenth_problem">tenth
+		problem</a> spoke directly to the notion of
+		computation.</p>
+	    
+            <p>An <a href="notes-ocaml.html">annotated variant</a> of
+	      the sample interaction with OCaml I gave in class. This is not meant to replace the
+              links I provided above. This is just to give a flavor of the language.</p> 
+	    
+	  </div>
+	</li>	  
+
+	<li><p><b>MACHINE MODELS OF COMPUTATION</b></p></li>
+
+	<li><p><span class="hdr">Sep 10:</span><b>Formal languages</b></p>
+	  <div class="lect">
+	    <p><a href="notes/languages.pdf">Notes on formal languages</a>.</p>
+	    <p>I mentioned the fact that set comprehension requires some restrictions on the properties allowed for constructing sets. <a href="https://plato.stanford.edu/entries/russell-paradox/">Russell's Paradox</a> is a clear indication of why we need such restrictions.</p>
+	    <p>Union, intersection, and complementation of sets can be described using set comprehensions that uses conjunction, disjunction, and negation, respectively. This close connection between set operations and logic is a reflection of the fact that sets form a <a href="https://en.wikipedia.org/wiki/Boolean_algebra">Boolean algebra</a>.</p>
+	    <p>Regular expressions are often used to search for patterns in text. <a href="http://www.cs.columbia.edu/~tal/3261/fall07/handout/egrep_mini-tutorial.htm">Here is an example of how they are used in egrep</a>. Note that the equivalence between regular expressions and regular languages only holds for <i>pure</i> regular expressions. Most regular expression packages used in practice extend regular expressions in ways that let you express non-regular languages.</p>
+	    <p>If you define two regular expressions to be equal when they denote the same set of strings, then regular expressions obey the laws of <a href="https://en.wikipedia.org/wiki/Kleene_algebra">Kleene algebras</a>.</p>
+	  </div>
+	</li>
+	
+
+	<li><p><span class="hdr">Sep 17:</span><b>Finite automata</b></p>
+	  <div class="lect">
+	    <p><a href="notes/automata.pdf">Notes on finite automata</a>.</p>
+	    <p>The notes include some supplementary material at the
+	    end, fleshing out things that I think are pretty
+	    interesting: (1) I show how the language accepted by a
+	    finite automaton must be regular; (2) I point out how you
+	    can use finite automata to show that the complement of a
+	    regular language is regular; (3) I show how you can use
+	    finite automata to argue that some languages are not
+	    regular. I will talk about this last one next time. </p>
+	    <p>I pointed out in class one reason we study
+              nondeterministic forms of finite automata is that they can be easier
+              to describe than deterministic finite automata. More specifically,
+              there exists languages that can be accepted by nondeterministic finite
+              automata with N states whose smallest deterministic finite automata
+              that accept those same languages have at least 2<sup>N</sup>
+              states. One example is the language over {<tt>a</tt>,<tt>b</tt>}
+              consisting of all strings whose Nth from last symbol
+              is <tt>a</tt>. <a href="https://commons.wikimedia.org/wiki/File:NFA_with_exponential_blown-up_DFA.gif">Here
+                is an illustration</a> of the subset construction for that language,
+              over alphabet {0,1}, and N=4.</p>
+	  </div>
+	</li>	  
+
+
+	<li><p><span class="hdr">Sep 24:</span><b>Turing machines</b></p>
+	  <div class="lect">
+	    <p><a href="notes/turing.pdf">Notes on Turing machines</a>.</p>
+	    
+	    <p><a href="https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf"><i>On Computable Numbers, with an Application to the Entscheidungsproblem</i></a>, the original paper by Turing that describes his machines. (Though it's not the most accessible description.)</p>
+	    
+	    <p>There are machines that are more expressive than finite
+	    automata (i.e. accept non-regular languages) but less
+	    expressive than Turing machines. One example
+	    is <a href="https://en.wikipedia.org/wiki/Pushdown_automaton">pushdown
+	    automata</a>, which are finite automata equipped with a
+	    stack. They accept a class of languages that is larger
+	    (and includes) regular languages, but smaller than what is
+	      accepted by Turing machines.</p>
+
+	    <p>It is conceivable to create finite auomata without memory, but that can count. The resulting model is called a <a href="https://en.wikipedia.org/wiki/Counter_automaton">counter automaton</a>. When equipped with a single counter, it can accept languages such as {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup> | n &ge; 0}, but cannot accept all computable languages. When equipped with two counters, the resulting machines can accept all computable languages, and are equivalent to Turing machines.</p>
+	    
+	    <p>The <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis">Church-Turing thesis</a>.</p>
+	  </div>
+	</li>
+
+	
+	<li><p><span class="hdr">Oct 1:</span><b>Universal Turing Machines and Non-computability</b></p>
+	  <div class="lect">
+	    <p><a href="notes/noncomputable.pdf">Notes from the lecture</a>.</p>
+
+	    <p><a href="http://io9.gizmodo.com/5873581/the-odd-genius-who-showed-that-one-infinity-was-greater-than-another">Georg Cantor</a> the odd genius.</p>
+	    
+	    <p>A quick introduction
+	      to <a href="https://en.wikipedia.org/wiki/Universal_Turing_machine">Universal
+		Turing machines</a> from Wikipedia. Moore gives a
+	      <a href="refs/moore.pdf">multi-tape implementation of a Universal Turing
+		machine in 15 states</a>. </p>
+	  </div>	    
+	</li>	  
+
+        
+	<li><p><span class="hdr">Oct 8</span><b>More Non-computability</b></p>
+	  <div class="lect">
+	    <p>The <a href="https://en.wikipedia.org/wiki/Post_correspondence_problem">Post Correspondence Problem</a>.</p>
+	  </div>
+	</li>
+
+        
+        <li><p><b>INTERMEZZO</b></p></li>
+
+	<li><p><span class="hdr">Oct 15</span><b>Midterm / Higher-Order Programming </b></p>
+          <div class="lect">
+            <p>Notes on <a href="notes-functional.html">higher-order programming</a>.</p>
+
+	    <p>The <a href="combinators.ml">example of higher-order programming, currying, and "point-free" programming</a> that I showed in class at some point. <a href="https://en.wikipedia.org/wiki/Tacit_programming">Point-free</a> programming is a fascinating rabbit hole to dive into. It is mostly useful to allow equational reasoning about programs (a form of verification).</p>
+	    
+	  </div>
+	</li>
+	
+	
+	<li><p><b>ALTERNATIVE MODELS OF COMPUTATION</b></p></li>
+
+	<li><p><span class="hdr">Oct 22</span><b>Production grammars</b></p>
+	  <div class="lect">
+	    
+	  <p><a href="notes/grammars.pdf">Notes</a> from the lecture.</p> 
+
+	  <p>Grammars are used in linguistics (introduced by <a href="https://en.wikipedia.org/wiki/Syntactic_Structures">Chomsky to study the structure of natural languages</a>) and in computer science to implement parsers, that is, turning a string of symbols into a structured artifact like an Abstract Syntax Tree to represent a program in a form that it more amenable to execution and/or compilation. <a href="http://homepages.cwi.nl/~storm/teaching/sc1112/intro-parsing.pdf">Here's
+	  a reasonable high-level presentation</a> of the basics of parsing, to give you a flavor.</p> 
+
+	  <p>A beautiful application of grammars
+	  is <a href="https://en.wikipedia.org/wiki/L-system">L-systems</a>,
+	  a class of grammars that model the growth processes of plant
+	    development.</p>
+
+	  <p><a href="https://en.wikipedia.org/wiki/Pushdown_automaton">Pushdown automata</a> are machine models that exactly capture context-free languages:
+        a language A is context-free if and only if you can find a pushdown automaton that accepts A.</p>
+	    
+	  </div>
+	</li>
+	
+	<li><p><span class="hdr">Oct 29</span><b>Lambda calculus</b></p>
+          <div class="lect">
+	    <p><a href="notes/lambda.pdf">Notes</a> from the lecture. These notes explicitly define a substitution function, something I left undefined in class.</p>
+	    
+	    <p>That the order in which you perform simplifications in the lambda calculus doesn't matter (aside from the possibility of never reaching a normal form) is the <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Rosser_theorem">Church-Rosser property</a>.</p>
+	    
+	    <p>Some additional introductory references on the lambda calculus: <a href="http://palmstroem.blogspot.com/2012/05/lambda-calculus-for-absolute-dummies.html">The Lambda Calculus for Absolute Dummies (Like Myself)</a> and Rojas's <a href="http://www.inf.fu-berlin.de/lehre/WS03/alpi/lambda.pdf">A Tutorial Introduction to the Lambda Calculus</a>. Note that these references use the standard presentation of the calculus, with &lambda;x.M instead of &lt;x &rarr; M&gt;</p> 
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Nov 5</span><b>Recursion and Combinatory Logic</b></p>
+	  <div class="lect">
+            (Lecture notes included in last week's notes on the lambda calculus.)
+	    <p>A general discussion of <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">fixed-point combinators</a>, of which &Theta; is an example.</p>
+            <p>Wikipedia entry on <a href="https://en.wikipedia.org/wiki/Combinatory_logic">Combinatory Logic</a>.</p>
+            <p>Not strictly about the lambda calculus, but many of the ideas from the lambda calculus are embodied in the Lisp programming language, and I would get my CS membership card revoked if I didn't point you to <a href="https://mitpress.mit.edu/sites/default/files/sicp/index.html">Structure and Interpretation of Computer Programs</a>, which uses a Lisp-like language to explore all sorts of ideas for how to approach the art of programming.</p>
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Nov 12</span><b>Tree Structures</b></p>
+	  <div class="lect">
+	    <p>A reasonable overview of <a href="http://www.cs.cornell.edu/courses/cs3110/2011sp/lectures/lec04-types/types.htm">algebraic data types</a> in OCaml.</p>
+	    
+	    <p>Wikipedia page
+	    on <a href="https://en.wikipedia.org/wiki/Binary_search_tree">binary
+	    search trees</a> and on the version of self-balanced
+	    binary search trees I described in
+	    class, <a href="https://en.wikipedia.org/wiki/AVL_tree">AVL
+	    trees</a>. The description of the rotations that restore
+	    the balanced height property after an insertion is
+	    reasonably clear there. There are basically four cases to
+	      consider, depending on the local form of unbalance.</p>
+	    <p>A <a href="https://www.cs.usfca.edu/~galles/visualization/AVLtree.html">cute visualization</a> of what happens when you insert
+	    into an AVL tree. Try starting with the empty tree, and
+	    inserting 1, 2, 3, 4, 5, 6, 7, 8... You'll see the tree
+	      grow "to the right" and then rebalance itself repeatedly.</p>
+
+	    <p>An <a href="https://cs.nyu.edu/courses/fall02/V22.0310-002/lectures/lecture-16.html">analysis
+		of the height of AVL trees</a>, showing that it is
+	      always logarithmic in the number of nodes.</p>
+
+	    <p>Another classic kind of balanced trees are <a href="https://en.wikipedia.org/wiki/Red%E2%80%93black_tree">red-black trees</a>.</p>
+	  </div>
+	</li>	  
+	
+	<li><p><span class="hdr">Nov 19</span><b>Dataflow Networks</b></p>
+	  <div class="lect">
+	    <p>There are two main sources for the dataflow
+	    computational model, neither of which is exactly what I
+	    presented: Gilles Kahn's work
+	    on <a href="https://en.wikipedia.org/wiki/Kahn_process_networks">Kahn
+		Process Networks</a>, and Jack Dennis's work on
+	    <a href="http://www.capsl.udel.edu/courses/cpeg852/2014/slides/Topic-A-Dataflow-part1.pdf">dataflow
+	      architectures</a>.</p>
+
+	    <p>The programming language <a href="https://en.wikipedia.org/wiki/Lucid_(programming_language)">Lucid</a> embodies some of the ideas presented in class in an interesting way.</p>
+
+            <p>Languages with lazy evaluation usually give an easy way to implement dataflow networks. <a href="http://www.cse.chalmers.se/edu/year/2018/course/TDA452/lectures/Laziness.html">Here is a reasonable overview</a> in Haskell with examples that should be familiar.</p>
+
+	  </div>
+	</li>
+        
+	<li><p><span class="hdr">Dec 3</span><b>Quantum Computations</b></p>
+	  <div class="lect">
+	  </div>
+	</li>
+        
+      </ul>
+    </div>
+
+
+    <hr class="section">
+    <div class="section" id="homeworks">
+      <h3>Homeworks</h3>
+      <ul class="simple">
+        <li><a href="homeworks/homework1.html">Homework 1</a> &mdash; Due Wednesday Sep 11 (23h59)</li>
+        <li><a href="homeworks/homework2.html">Homework 2</a> &mdash; Due Wednesday Sep 18 (23h59)</li>
+        <li><a href="homeworks/homework3.html">Homework 3</a> &mdash; Due Friday Sep 27 (23h59)</li>
+        <li><a href="homeworks/homework4.html">Homework 4</a> &mdash; Due Wednesday Oct 9 (23h59)</li>
+        <li><a href="homeworks/homework5.html">Homework 5</a> &mdash; Due Thursday Oct 24 (23h59)</li>
+        <li><a href="homeworks/homework6.html">Homework 6</a> &mdash; Due Sunday Nov 3 (23h59)</li>
+        <li><a href="homeworks/homework7.html">Homework 7</a> &mdash; Due Monday Nov 11 (23h59)</li>
+        <li><a href="homeworks/homework8.html">Homework 8</a> &mdash; Due Thursday Nov 21 (23h59)</li>
+        <li><a href="homeworks/homework9.html">Homework 9</a> &mdash; Due Sunday Dec 8 (23h59)</li>
+      </ul>
+    </div>
+
+  </body>
+</html>

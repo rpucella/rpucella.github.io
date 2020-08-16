@@ -1,0 +1,112 @@
+<html>
+<pre>
+(* The underlying implementation for streams 
+ *
+ * Basically, a stream is a pair of an element and a 
+ * "promise" to compute the rest of the stream.
+ * 
+ * That "promise" is represented as a function
+ *
+ * The implementation memoizes that function: once the function is
+ * called once, it remembers its result, and subsequent calls to the
+ * function directly return the result without executing the body of
+ * the function
+ *
+ * You don't need to know anything about this code -- you will
+ * use functions fby, head, and tail described below instead
+ *)
+
+module AbsStream :
+  sig
+      type 'a stream 
+      val cst : 'a -> 'a stream
+      val fby : 'a stream -> (unit -> 'a stream) -> 'a stream
+      val map : ('a -> 'b) -> 'a stream -> 'b stream
+      val map2 : ('a -> 'b -> 'c) -> 'a stream -> 'b stream -> 'c stream
+      val filter : ('a -> 'b -> bool) -> 'a stream -> 'b stream -> 'b stream
+      val split : 'a stream -> ('a stream * 'a stream)
+      val print_stream : ('a -> string) -> int -> 'a stream -> unit
+    end = 
+  struct
+    type 'a stream = R of 'a * (unit -> 'a stream)
+    let memoize f = 
+      let memoized = ref None in
+      let new_f () = 
+        match !memoized with
+        | None -> let result = f () in memoized := Some result; result
+        | Some v -> v   in
+      new_f
+    let mk h t = R (h, memoize t) 
+    let unmk1 s = let R (h,t) = s in h
+    let unmk2 s = let R (h,t) = s in t ()
+    let rec cst v = mk v (fun () -> cst v)
+    let fby s1 ps2 = mk (unmk1 s1) ps2
+    let rec map f s = mk (f (unmk1 s)) (fun () -> map f (unmk2 s))
+    let rec map2 f s1 s2 = mk (f (unmk1 s1) (unmk1 s2)) (fun () -> map2 f (unmk2 s1) (unmk2 s2))
+    let rec filter p ctl s = if p (unmk1 ctl) (unmk1 s) then mk (unmk1 s) (fun () -> filter p (unmk2 ctl) (unmk2 s)) else filter p (unmk2 ctl) (unmk2 s)
+    let split s = (cst (unmk1 s), unmk2 s)
+    let print_stream tr n s =
+      let rec loop n s = 
+        if n > 0 then (print_string ((tr (unmk1 s))^" "); loop (n-1) (unmk2 s))
+        else (print_string "...>\n") in
+      print_string "&lt; " ; loop n s
+  end
+
+
+(*
+ * 
+ * THESE ARE THE FUNCTIONS YOU GET TO USE
+ *
+ *)
+
+type 'a stream = 'a AbsStream.stream
+let cst : 'a -> 'a stream = AbsStream.cst
+let fby : 'a stream -> (unit -> 'a stream) -> 'a stream = AbsStream.fby
+let map : ('a -> 'b) -> 'a stream -> 'b stream = AbsStream.map
+let map2 : ('a -> 'b -> 'c) -> 'a stream -> 'b stream -> 'c stream = AbsStream.map2
+let filter : ('a -> 'b -> bool) -> 'a stream -> 'b stream -> 'b stream = AbsStream.filter
+let split : 'a stream -> ('a stream * 'a stream) = AbsStream.split
+let print_stream : ('a -> string) -> int -> 'a stream -> unit = AbsStream.print_stream
+
+let pi s = print_stream string_of_int 20 s
+let ps s = print_stream (fun x -> x) 20 s
+let pf s = print_stream string_of_float 20 s
+
+
+
+
+(* Note that feedback has to go through functions in OCaml, so
+   some streams such as nats are obtained by first constructing a
+   function to return that stream *)
+
+
+let rec nats () = fby (cst 0)
+                  (fun () -> (map (fun x -> x+1) (nats ())))
+
+let rec evens () = fby (cst 0)
+                    (fun () -> (map (fun x -> x+2) (evens ())))
+
+let odds () = map (fun x -> x+1) (evens ())
+
+let add s1 s2 = map2 (fun x y -> x+y) s1 s2
+
+let drop s = let (f,r) = split s in r
+
+let rec fib () = fby (cst 0)
+                     (fun () -> fby (cst 1)
+                                    (fun () -> add (fib()) (drop (fib()))))
+
+let rec psums s = fby s
+                      (fun () -> add (psums s) (drop s))
+
+let notdivides c x = x mod c &lt;> 0
+
+let rec sieve s = let (f,r) = split s in
+                  fby f
+                      (fun () -> sieve (filter notdivides f r))
+
+let primes = sieve (map (fun s -> s+2) (nats ()))
+
+
+</pre>
+</html>

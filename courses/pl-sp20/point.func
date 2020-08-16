@@ -1,0 +1,17 @@
+(let ((pt (let ((x (ref 0))
+                (y (ref 0)))
+             (record (getX (fun () (get x)))
+                     (getY (fun () (get y)))
+                     (move (fun (dx dy)
+                              (do (put x (+ (get x) dx))
+                                  (put y (+ (get y) dy)))))))))
+   (do (print pt)
+       (print ((field pt getX)) ((field pt getY)))
+       ((field pt move) 3 -4)
+       (print ((field pt getX)) ((field pt getY)))
+       ((field pt move) 2 1)
+       (print ((field pt getX)) ((field pt getY)))))
+       
+              
+       
+   
