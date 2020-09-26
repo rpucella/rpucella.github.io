@@ -112,11 +112,15 @@
 
       <ul class="simple annoucements">
 
+         <li><p><span>Sep 25</span>
+	    Notes on finite state machines posted to the website.</p>
+	</li>
+	
         <li><p><span>Sep 24</span> Reminder: I will accept submissions for homework 1 until Saturday 23h59. Also, you only need to do 15 out of the 18 questions to get full marks.</p>
 	</li>
 	
         <li><p><span>Sep 21</span>
-            <a href="./slides/slides-fsm-partial.pdf">Slides</a> from this morning's lecture, the first part of Finite State Machines.</p>
+            <a href="./slides/Finite State Machines (Partial).pdf">Slides</a> from this morning's lecture, the first part of Finite State Machines.</p>
 	</li>
 	
         <li><p><span>Sep 17</span>
@@ -273,7 +277,7 @@
 
 	<li><p><span class="hdr">Sep 14 - 16:</span><b>Formal languages</b></p>
 	  <div class="lect">
-	    <p><a href="slides/slides-languages.pdf">Slides from the lecture</a>.</p>
+	    <p><a href="slides/Formal Languages.pdf">Slides from the lecture</a>.</p>
 	    <p>I mentioned the fact that set comprehension requires some restrictions on the properties allowed for constructing sets. <a href="https://plato.stanford.edu/entries/russell-paradox/">Russell's Paradox</a> is why we need such restrictions.</p>
 	    <p>Union, intersection, and complementation of sets can be described using set comprehensions that uses conjunction, disjunction, and negation, respectively. This close connection between set operations and logic is a reflection of the fact that sets form a <a href="https://en.wikipedia.org/wiki/Boolean_algebra">Boolean algebra</a>.</p>
 	    <p>Regular expressions are used to search for patterns in text. <a href="http://www.cs.columbia.edu/~tal/3261/fall07/handout/egrep_mini-tutorial.htm">Here is an example of how they are used in egrep</a>. Note that the equivalence between regular expressions and regular languages only holds for <i>pure</i> regular expressions. Most regular expression packages used in practice extend regular expressions in ways that let you express non-regular languages.</p>
@@ -282,10 +286,11 @@
 	  </div> 
 	</li>
 	
-<!--
-	<li><p><span class="hdr">Sep 17:</span><b>Finite automata</b></p>
+	<li><p><span class="hdr">Sep 21 - 23:</span><b>Finite state machines</b></p>
 	  <div class="lect">
-	    <p><a href="notes/automata.pdf">Notes on finite automata</a>.</p>
+            <p><a href="slides/Finite State Machines.pdf">Slides from the lecture</a>.</p>
+            
+	    <p><a href="notes/Notes - Languages and Finite State Machines.pdf">Notes on formal languages and finite automata</a>.</p>
 	    <p>The notes include some supplementary material at the
 	    end, fleshing out things that I think are pretty
 	    interesting: (1) I show how the language accepted by a
@@ -293,21 +298,24 @@
 	    can use finite automata to show that the complement of a
 	    regular language is regular; (3) I show how you can use
 	    finite automata to argue that some languages are not
-	    regular. I will talk about this last one next time. </p>
-	    <p>I pointed out in class one reason we study
-              nondeterministic forms of finite automata is that they can be easier
-              to describe than deterministic finite automata. More specifically,
-              there exists languages that can be accepted by nondeterministic finite
-              automata with N states whose smallest deterministic finite automata
-              that accept those same languages have at least 2<sup>N</sup>
-              states. One example is the language over {<tt>a</tt>,<tt>b</tt>}
+	      regular. I will talk about this last one next time. </p>
+            
+	    <p>One reason we study nondeterministic forms of finite
+              automata is that they can be easier to describe than
+              deterministic finite automata. More specifically, there
+              exists languages that can be accepted by
+              nondeterministic finite automata with N states whose
+              smallest deterministic finite automata that accept those
+              same languages have at least 2<sup>N</sup> states. One
+              example is the language over {<tt>a</tt>,<tt>b</tt>}
               consisting of all strings whose Nth from last symbol
               is <tt>a</tt>. <a href="https://commons.wikimedia.org/wiki/File:NFA_with_exponential_blown-up_DFA.gif">Here
-                is an illustration</a> of the subset construction for that language,
-              over alphabet {0,1}, and N=4.</p>
+              is an illustration</a> of the subset construction for
+              that language, over alphabet {0,1}, and N=4.</p>
 	  </div>
 	</li>	  
 
+        <!--
 
 	<li><p><span class="hdr">Sep 24:</span><b>Turing machines</b></p>
 	  <div class="lect">
