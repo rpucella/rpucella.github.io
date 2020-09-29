@@ -231,14 +231,11 @@ let prependStringM (m : fa) (s : string) : fa =
 
 
 let rec replaceSource delta state =
-  match delta with
-  | [] -> []
-  | (p, a, q)::delta' -> (state, a, q)::(replaceSource delta' state)
+  failwith "not implemented"
+
 
 let rec transitionsFromState state delta =
-  match delta with
-  | [] -> []
-  | (p, a, q)::delta' -> if p = state then (p, a, q)::(transitionsFromState state delta') else transitionsFromState state delta'
+  failwith "not implemented"
   
                      
 let unionM (m1:fa) (m2:fa):fa = 
@@ -246,21 +243,9 @@ let unionM (m1:fa) (m2:fa):fa =
     then failwith "States not disjoint"
   else if not (equal m1.alphabet m2.alphabet)
     then failwith "Alphabets not equal"
-  else 
-    let new_start = freshState2 m1 m2  in
-    let new_states = new_start :: (m1.states @ m2.states)  in
-    let alphabet = m1.alphabet  in
-    let new_delta = m1.delta @ m2.delta @ 
-      (replaceSource (transitionsFromState m1.start m1.delta) new_start) @
-      (replaceSource (transitionsFromState m2.start m2.delta) new_start)  in
-    let new_final = if (List.mem m1.start m1.final || List.mem m2.start m2.final) 
-                      then m1.final @ m2.final @ [new_start] 
-                    else m1.final @ m2.final  in
-    { states = new_states;
-      alphabet = alphabet;
-      delta = new_delta;
-      start = new_start;
-      final = new_final }
+  else
+    (* complete function here *)
+    failwith "not implemmented"
 
 
 
