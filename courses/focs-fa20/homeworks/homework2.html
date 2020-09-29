@@ -1166,6 +1166,7 @@ let fa2 = { states = [10; 11; 12];
 <p>Given a language A and a symbol <code>a</code>, the language <em>prepend</em>(a, A) is the language obtained by prepending <code>a</code> to every string in A. For example, if A = {<code>aab</code>, <code>aba</code>, <code>b</code>, <code>bb</code>, <code>bbb</code>}, then <em>prepend</em>(a, A) = { <code>aaab</code>, <code>aaba</code>, <code>ab</code>, <code>abb</code>, <code>abbb</code> }.</p>
 <p>If you have a finite automaton accepting A, it is easy to transform it into a finite automaton accepting <em>prepend</em>(a, A): simply add a new start state to the automaton, and add a transition from the new start state to the old start state labeled <code>a</code>. You should convince yourself this construction works.</p>
 <p>Code a function <strong><code>prependM</code></strong> of type <strong><code>fa -&gt; char -&gt; fa</code></strong> where <code>prependM m a</code> returns a finite automaton that accepts <em>prepend</em>(a, A) where A is the language accepted by <code>m</code>.</p>
+<p>Sample output:</p>
 <pre><code># lang fa1 10;;
   &lt;epsilon&gt;
   xxx
@@ -1194,6 +1195,7 @@ let fa2 = { states = [10; 11; 12];
 <h3 id="b-2">(B)</h3>
 <p>Given a language A and a <em>string</em> u, the language <em>prependString</em>(u, A) is the language obtained by prepending the string <code>u</code> to every string in A. For example, if A = {<code>aab</code>, <code>aba</code>, <code>b</code>, <code>bb</code>, <code>bbb</code>}, then <em>prependString</em>(abba, A) = { <code>abbaaab</code>, <code>abbaaba</code>, <code>abbab</code>, <code>abbabb</code>, <code>abbabbb</code> }.</p>
 <p>Code a function <strong><code>prependStringM</code></strong> of type <strong><code>fa -&gt; string -&gt; fa</code></strong> where <code>prependStringM m u</code> returns a finite automaton that accepts <em>prependString</em>(u, A) where A is the language accepted by <code>m</code>.</p>
+<p>Sample output:</p>
 <pre><code># lang fa1 10;;
   &lt;epsilon&gt;
   xxx
@@ -1228,12 +1230,24 @@ let fa2 = { states = [10; 11; 12];
   zzyzyzyz
   zzyzyzyzyz
 - : unit = ()</code></pre>
-<p><strong>Hint:</strong> notice that prependString(abba, A) = prepend(a, prepend(b, prepend (b, prepend(a, A)))). Generalize, and use <code>prependM</code> from part (A). Or you can do it the hard way, adding N states to the finite automaton, where N is the length of the string being prepended. Whichever works for you.</p>
+<p><strong>Hint:</strong> notice that <em>prependString</em>(abba, A) = <em>prepend</em>(a, <em>prepend</em>(b, <em>prepend</em>(b, <em>prepend</em>(a, A)))). Generalize, and use <code>prependM</code> from part (A). Or you can do it the hard way, adding N states to the finite automaton, where N is the length of the string being prepended. Whichever works for you.</p>
 <h3 id="c-2">(C)</h3>
-<p>Code a function <code>replaceSource</code> of type <strong><code>(int * char * int) -&gt; int -&gt; (int * char * int)</code></strong> where <code>replaceSource delta state</code> returns a new transition function made up of all the transitions in <code>delta</code> in which the source state of each transition has been replaced by <code>state</code>. # replaceSource [] 99;; - : (int * 'a * 'b) list = [] # replaceSource [(1, 'a', 2)] 99;; - : (int * char * int) list = [(99, 'a', 2)] # replaceSource [(1, 'a', 2); (1, 'b', 3)] 99;; - : (int * char * int) list = [(99, 'a', 2); (99, 'b', 3)] # replaceSource [(1, 'a', 2); (1, 'b', 3); (2, 'a', 2)] 99;; - : (int * char * int) list = [(99, 'a', 2); (99, 'b', 3); (99, 'a', 2)] # replaceSource fa1.delta 99;; - : (int * char * int) list = [(99, 'x', 1); (99, 'x', 2); (99, 'x', 0)]</p>
+<p>Code a function <code>replaceSource</code> of type <strong><code>(int * char * int) -&gt; int -&gt; (int * char * int)</code></strong> where <code>replaceSource delta state</code> returns a new transition function made up of all the transitions in <code>delta</code> in which the source state of each transition has been replaced by <code>state</code>.</p>
+<p>Sample output:</p>
+<pre><code># replaceSource [] 99;;
+- : (int * &#39;a * &#39;b) list = []
+# replaceSource [(1, &#39;a&#39;, 2)] 99;;
+- : (int * char * int) list = [(99, &#39;a&#39;, 2)]
+# replaceSource [(1, &#39;a&#39;, 2); (1, &#39;b&#39;, 3)] 99;;
+- : (int * char * int) list = [(99, &#39;a&#39;, 2); (99, &#39;b&#39;, 3)]
+# replaceSource [(1, &#39;a&#39;, 2); (1, &#39;b&#39;, 3); (2, &#39;a&#39;, 2)] 99;;
+- : (int * char * int) list = [(99, &#39;a&#39;, 2); (99, &#39;b&#39;, 3); (99, &#39;a&#39;, 2)]
+# replaceSource fa1.delta 99;;
+- : (int * char * int) list = [(99, &#39;x&#39;, 1); (99, &#39;x&#39;, 2); (99, &#39;x&#39;, 0)]</code></pre>
 <p>Order and repetition in the resulting list are irrelevant.</p>
 <h3 id="d-2">(D)</h3>
 <p>Code a function <strong><code>transitionsFromState</code></strong> of type <strong><code>int * (int * char * int) -&gt; (int * char * int)</code></strong> where <code>transitionsFromState state delta</code> returns the list of all transitions in <code>delta</code> that have <code>state</code> as a source state.</p>
+<p>Sample output:</p>
 <pre><code># transitionsFromState 1 [];;
 - : (int * &#39;a * &#39;b) list = []
 # transitionsFromState 1 [(1, &#39;a&#39;, 2)];;
