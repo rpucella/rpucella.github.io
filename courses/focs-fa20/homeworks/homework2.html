@@ -1,0 +1,1298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 20px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     pre { 
+        margin-left: 30px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="homework-2">Homework 2</h1>
+<h2 id="due-date-thursday-october-8-2019-23h59">Due Date: Thursday, October 8, 2019 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems with fellow students, but all submitted work must be entirely your own, and should not be from any other course, present, past, or future. If you use a solution from another source you must cite it — this includes when that source is someone else helping you.</p></li>
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+<li><p>All programming is to be done in OCaml v4.</p></li>
+<li><p>Code your answers by modifying the file <a href="homework2.ml"><code>homework2.ml</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you wish to make to the instructor to the block comment at the head of the file.</p></li>
+<li><p><strong>Please do not change the types in the signature of the function stubs I provide</strong>. Doing so will make it impossible to load your code into the testing infrastructure, and make me unhappy.</p></li>
+<li><p>Feel free to define helper functions if you need them.</p></li>
+</ul>
+<h2 id="electronic-submission-instructions">Electronic Submission Instructions</h2>
+<ul>
+<li><p>Start a <em>fresh</em> OCaml shell.</p></li>
+<li><p>Load your homework code via <code>#use &quot;homework2.ml&quot;;;</code> to make sure that there are no errors when I will load your code.</p></li>
+<li><p>If there are any error, do not submit. I can't test what I can't <code>#use</code>.</p></li>
+<li><p>When you're ready to submit, send an email with your file <code>homework2.ml</code> as an attachment to <code>olin.submissions@gmail.com</code> with subject <em>Homework 2 submission</em>.</p></li>
+</ul>
+<hr />
+<p>Consider the following OCaml type for finite automata:</p>
+<pre><code>type fa = { states: int list;
+            alphabet: string list;
+            delta: (int * string * int) list;
+            start: int;
+            final: int list }</code></pre>
+<p>A finite automaton is described by a record with fields holding the various components of the automaton: the set of states, the alphabet, the transition relation Δ, the start state, and the set of final states. Lists are used to represent sets. The transition relation is represented using list of triples (<em>p</em>,<em>a</em>,<em>q</em>), stating that in state <em>p</em>, reading symbol <em>a</em> makes the machine transition to state <em>q</em>. For simplicity, I'm representing states using integers. It's easy enough to modify this declaration to make finite state machines generic over the type of the state.</p>
+<p>Records are basically dictionaries, except that they are statically typed, and the field names making up a record are part of its type. For information how to work with records in OCaml, <a href="http://www.cs.cornell.edu/courses/cs3110/2011sp/recitations/rec02-ocaml/ocaml.htm">check out this link and scroll down to the <em>Records</em> section</a>. Note that aside from pattern matching, you can also access the fields of a record using the <code>.</code> notation: <code>record.fld</code> will return the value of field <code>fld</code> of <code>record</code>.</p>
+<p>Here is an example of a finite automaton that accepts the language of all strings over <code>{x, y, z}</code> whose last three symbols are <code>y</code>s.</p>
+<pre><code>let faLastThreeY = {
+  states = [0; 1; 2; 3];
+  alphabet = [&#39;x&#39;; &#39;y&#39;; &#39;z&#39;];
+  delta = [ (0, &#39;x&#39;, 0);
+            (0, &#39;y&#39;, 0);
+            (0, &#39;z&#39;, 0);
+            (0, &#39;y&#39;, 1);
+            (1, &#39;y&#39;, 2);
+            (2, &#39;y&#39;, 3); ];
+  start = 0;
+  final = [3]
+} </code></pre>
+<p>Here is an example of a (deterministic) finite automaton that accepts the set of all strings over <code>{x, y}</code> that contains a number of <code>x</code>s that is a multiple of 3.</p>
+<pre><code>let faThreeX = { 
+  states = [1; 2; 3];
+  alphabet = [&#39;x&#39;; &#39;y&#39;];
+  delta = [ (1, &#39;x&#39;, 2);
+            (2, &#39;x&#39;, 3);
+            (3, &#39;x&#39;, 1);
+            (1, &#39;y&#39;, 1);
+            (2, &#39;y&#39;, 2);
+            (3, &#39;y&#39;, 3) ];
+  start = 1;
+  final = [1]
+} </code></pre>
+<hr />
+<h2 id="question-1-simulating-finite-automata">Question 1: Simulating Finite Automata</h2>
+<p>We are going to code up a simulator for finite automata. The only real difficulty is figuring out how to handle choices. What we are going to do is code a function <code>followString</code> below that takes a state and a string of symbols and returns <em>all</em> the states that can be reached by starting from that state and following transitions labeled with the given symbols. Therefore, to check if a finite automaton accepts a string, we start from the start state of the automaton, and check if any of the states reachable by following the symbols from the string is a final state. We're going to build up to that in steps.</p>
+<h3 id="a">(A)</h3>
+<p>Code a function <strong><code>hasFinal</code></strong> of type <strong><code>fa -&gt; int list -&gt; bool</code></strong> where <code>hasFinal m qs</code> returns true if one of the states in <code>qs</code> is a final state of automaton <code>m</code>, and false otherwise.</p>
+<p>Sample output:</p>
+<pre><code># hasFinal faLastThreeY [];;
+- : bool = false
+# hasFinal faLastThreeY [0];;
+- : bool = false
+# hasFinal faLastThreeY [0;1];;
+- : bool = false
+# hasFinal faLastThreeY [0;1;2];;
+- : bool = false
+# hasFinal faLastThreeY [0;1;2;3];;
+- : bool = true
+# hasFinal faLastThreeY [3];;
+- : bool = true
+# hasFinal faThreeX [1;2];;
+- : bool = true</code></pre>
+<h3 id="b">(B)</h3>
+<p>Code a function <strong><code>followSymbol</code></strong> of type <strong><code>fa -&gt; int -&gt; char -&gt; int list</code></strong> where <code>followSymbol m q sym</code> returns the list of states of <code>m</code> that can be reached by a transition labeled <code>sym</code> from state <code>q</code>.</p>
+<p>Sample output:</p>
+<pre><code># followSymbol faLastThreeY 0 &#39;x&#39;;;
+- : int list = [0]
+# followSymbol faLastThreeY 0 &#39;y&#39;;;
+- : int list = [0; 1]
+# followSymbol faLastThreeY 1 &#39;x&#39;;;
+- : int list = []
+# followSymbol faLastThreeY 1 &#39;y&#39;;;
+- : int list = [2]
+# followSymbol faLastThreeY 2 &#39;x&#39;;;
+- : int list = []
+# followSymbol faLastThreeY 2 &#39;y&#39;;;
+- : int list = [3]
+# followSymbol faLastThreeY 3 &#39;x&#39;;;
+- : int list = []
+# followSymbol faLastThreeY 3 &#39;y&#39;;;
+- : int list = []
+# followSymbol faThreeX 1 &#39;x&#39;;;
+- : string list = [2]</code></pre>
+<p>Order and repetition in the resulting list are irrelevant.</p>
+<h3 id="c">(C)</h3>
+<p>Code a function <strong><code>followSymbolFromSet</code></strong> of type <strong><code>fa -&gt; int list -&gt; char -&gt; int list</code></strong> where <code>followSymbolFromSet m qs sym</code> returns the list of states of <code>m</code> that are reachable by following a transition labeled <code>sym</code> from <em>any</em> of the states in <code>qs</code>.</p>
+<p>For your own sanity, it helps if the list you get has no duplicate states. Execution of later functions may slow to a crawl otherwise. The easiest way to avoid duplicate states is to implement a function that adds states to an existing list of states making sure that it only adds a state if it isn't already in the list.</p>
+<p>Sample output:</p>
+<pre><code># followSymbolFromSet faThreeX [] &#39;x&#39;;;
+- : string list = []
+# followSymbolFromSet faThreeX [1] &#39;x&#39;;;
+- : string list = [2]
+# followSymbolFromSet faThreeX [1] &#39;y&#39;;;
+- : string list = [1]
+# followSymbolFromSet faThreeX [1; 2] &#39;x&#39;;;
+- : string list = [2; 3]
+# followSymbolFromSet faThreeX [1; 2] &#39;y&#39;;;
+- : string list = [1; 2]
+# followSymbolFromSet faLastThreeY [0;1] &#39;x&#39;;;
+- : int list = [0]
+# followSymbolFromSet faLastThreeY [0;1] &#39;y&#39;;;
+- : int list = [0; 1; 2]</code></pre>
+<p>Order and repetition in the resulting list are irrelevant.</p>
+<p><strong>Hint</strong>: use <code>followSymbol</code>.</p>
+<h3 id="d">(D)</h3>
+<p>Code a function <strong><code>followStringFromSet</code></strong> of type <strong><code>fa -&gt; int list -&gt; char list -&gt; int list</code></strong> where <code>followStringFromSet m qs syms</code> returns the list of states of <code>m</code> that are reachable by following a sequence of transitions labeled by the symbols in <code>syms</code> (in order) starting from any of the states in <code>qs</code>.</p>
+<p>Again, it helps if the list you get contains no duplicate states.</p>
+<p>Use <code>followStringFromSet</code> to define a function <code>followString</code> of type <strong><code>fa -&gt; int -&gt; char list -&gt; int list</code></strong> where <code>followString m q syms</code> returns the list of states of <code>m</code> that are reachable by following a sequence of transitions labeled by the symbols in <code>sym</code> starting from state <code>q</code>.</p>
+<p>Sample output:</p>
+<pre><code># followStringFromSet faThreeX [] [];;
+- : string list = []
+# followStringFromSet faThreeX [] [&#39;x&#39;];;
+- : string list = []
+# followStringFromSet faThreeX [] [&#39;x&#39;;&#39;y&#39;];;
+- : string list = []
+# followStringFromSet faThreeX [1] [];;
+- : string list = [1]
+# followStringFromSet faThreeX [1] [&#39;x&#39;];;
+- : string list = [2]
+# followStringFromSet faThreeX [1] [&#39;x&#39;;&#39;y&#39;];;
+- : string list = [2]
+# followStringFromSet faThreeX [1] [&#39;x&#39;;&#39;x&#39;];;
+- : string list = [3]
+# followStringFromSet faThreeX [1;2] [&#39;x&#39;;&#39;x&#39;];;
+- : string list = [3; 1]
+# followStringFromSet faThreeX [1;2] [&#39;x&#39;;&#39;x&#39;;&#39;y&#39;];;
+- : string list = [3; 1]
+# followStringFromSet faThreeX [1;2] [&#39;x&#39;;&#39;x&#39;;&#39;y&#39;;&#39;x&#39;];;
+- : string list = [1; 2]
+# followStringFromSet faLastThreeY [0;1] [&#39;x&#39;;&#39;y&#39;;&#39;y&#39;;&#39;y&#39;];;
+- : int list = [0; 1; 2; 3]
+
+# followString faThreeX 1 [];;
+- : int list = [1]
+# followString faThreeX 1 [&#39;x&#39;];;
+- : int list = [2]
+# followString faThreeX 1 [&#39;x&#39;; &#39;y&#39;];;
+- : int list = [2]
+# followString faThreeX 1 [&#39;x&#39;; &#39;x&#39;];;
+- : int list = [3]
+# followString faThreeX 2 [&#39;x&#39;; &#39;x&#39;];;
+- : int list = [1]
+# followString faThreeX 2 [&#39;x&#39;; &#39;x&#39;; &#39;y&#39;];;
+- : int list = [1]
+# followString faLastThreeY 0 [&#39;x&#39;; &#39;y&#39;; &#39;y&#39;; &#39;y&#39;];;
+- : int list = [0; 1; 2; 3]
+# followString faLastThreeY 0 [&#39;x&#39;; &#39;y&#39;; &#39;y&#39;];;
+- : int list = [0; 1; 2]
+# followString faLastThreeY 1 [&#39;x&#39;; &#39;y&#39;; &#39;y&#39;; &#39;y&#39;];;
+- : int list = []</code></pre>
+<p>Order and repetition in the resulting list are irrelevant.</p>
+<h3 id="e">(E)</h3>
+<p>Code a function <strong><code>accept</code></strong> of type <strong><code>fa -&gt; string -&gt; bool</code></strong> where <code>accept m s</code> returns true if and only if finite automaton <code>m</code> accepts the string <code>s</code>. That is, it returns true exactly if there is a way to follow the transitions of <code>m</code> labeled by the symbols in <code>s</code> from the start state to a final state.</p>
+<p>You can use function <code>explode</code> (provided in the homework code) to turn a string into a list of symbols (Ocaml type <code>char</code>). You should probably also use <code>followString</code> and <code>hasFinal</code>...</p>
+<p>For testing purposes, I've provided you with a function <code>lang</code> where <code>lang m k</code> prints out all the strings of length up to <code>k</code> accepted by finite automaton <code>m</code>. Note that it calls <code>accept</code>, so it won't work correctly until you implement that function.</p>
+<p>Sample output:</p>
+<pre><code># accept faThreeX &quot;yxyxy&quot;;;
+- : bool = false
+# accept faThreeX &quot;yxyxyx&quot;;;
+- : bool = true
+# accept faThreeX &quot;yxyxyxy&quot;;;
+- : bool = true
+# accept faLastThreeY &quot;xyy&quot;;;
+- : bool = false
+# accept faLastThreeY &quot;xyyy&quot;;;
+- : bool = true
+# accept faLastThreeY &quot;xyyyy&quot;;;
+- : bool = true
+# lang faLastThreeY 6;;
+  yyy
+  xyyy
+  yyyy
+  zyyy
+  xxyyy
+  yxyyy
+  zxyyy
+  xyyyy
+  yyyyy
+  zyyyy
+  xzyyy
+  yzyyy
+  zzyyy
+  xxxyyy
+  yxxyyy
+  zxxyyy
+  xyxyyy
+  yyxyyy
+  zyxyyy
+  xzxyyy
+  yzxyyy
+  zzxyyy
+  xxyyyy
+  yxyyyy
+  zxyyyy
+  xyyyyy
+  yyyyyy
+  zyyyyy
+  xzyyyy
+  yzyyyy
+  zzyyyy
+  xxzyyy
+  yxzyyy
+  zxzyyy
+  xyzyyy
+  yyzyyy
+  zyzyyy
+  xzzyyy
+  yzzyyy
+  zzzyyy</code></pre>
+<hr />
+<h2 id="question-2-constructing-finite-automata">Question 2: Constructing Finite Automata</h2>
+<p>In this question, you will come up with finite automata. You can test your automata with the code you wrote in Question 1.</p>
+<p>For submission purposes, I ask you to define those finite automata as constants using <code>let</code> with a fixed name given below in each question. There is already a placeholder in <code>homework2.ml</code> for those answers. Just replace the placeholder with your definition.</p>
+<h3 id="a-1">(A)</h3>
+<p>Construct a finite automaton <strong><code>fa_q2_a</code></strong> for the language consisting of all strings over the alphabet <code>{x,y,z}</code> of length 3n+1 or 3n+2 for any n (i.e., of length 1, 2, 4, 5, 7, 8, 10, 11, ...)</p>
+<p>Sample output:</p>
+<pre><code># lang fa_q2_a 6;;
+  x
+  y
+  z
+  xx
+  yx
+  zx
+  xy
+  yy
+  zy
+  xz
+  yz
+  zz
+  xxxx
+  yxxx
+  zxxx
+  xyxx
+  yyxx
+  zyxx
+  xzxx
+  yzxx
+  zzxx
+  xxyx
+  yxyx
+  zxyx
+  xyyx
+  yyyx
+  zyyx
+  xzyx
+  yzyx
+  zzyx
+  xxzx
+  yxzx
+  zxzx
+  xyzx
+  yyzx
+  zyzx
+  xzzx
+  yzzx
+  zzzx
+  xxxy
+  yxxy
+  zxxy
+  xyxy
+  yyxy
+  zyxy
+  xzxy
+  yzxy
+  zzxy
+  xxyy
+  yxyy
+  zxyy
+  xyyy
+  yyyy
+  zyyy
+  xzyy
+  yzyy
+  zzyy
+  xxzy
+  yxzy
+  zxzy
+  xyzy
+  yyzy
+  zyzy
+  xzzy
+  yzzy
+  zzzy
+  xxxz
+  yxxz
+  zxxz
+  xyxz
+  yyxz
+  zyxz
+  xzxz
+  yzxz
+  zzxz
+  xxyz
+  yxyz
+  zxyz
+  xyyz
+  yyyz
+  zyyz
+  xzyz
+  yzyz
+  zzyz
+  xxzz
+  yxzz
+  zxzz
+  xyzz
+  yyzz
+  zyzz
+  xzzz
+  yzzz
+  zzzz
+  xxxxx
+  yxxxx
+  zxxxx
+  xyxxx
+  yyxxx
+  zyxxx
+  xzxxx
+  yzxxx
+  zzxxx
+  xxyxx
+  yxyxx
+  zxyxx
+  xyyxx
+  yyyxx
+  zyyxx
+  xzyxx
+  yzyxx
+  zzyxx
+  xxzxx
+  yxzxx
+  zxzxx
+  xyzxx
+  yyzxx
+  zyzxx
+  xzzxx
+  yzzxx
+  zzzxx
+  xxxyx
+  yxxyx
+  zxxyx
+  xyxyx
+  yyxyx
+  zyxyx
+  xzxyx
+  yzxyx
+  zzxyx
+  xxyyx
+  yxyyx
+  zxyyx
+  xyyyx
+  yyyyx
+  zyyyx
+  xzyyx
+  yzyyx
+  zzyyx
+  xxzyx
+  yxzyx
+  zxzyx
+  xyzyx
+  yyzyx
+  zyzyx
+  xzzyx
+  yzzyx
+  zzzyx
+  xxxzx
+  yxxzx
+  zxxzx
+  xyxzx
+  yyxzx
+  zyxzx
+  xzxzx
+  yzxzx
+  zzxzx
+  xxyzx
+  yxyzx
+  zxyzx
+  xyyzx
+  yyyzx
+  zyyzx
+  xzyzx
+  yzyzx
+  zzyzx
+  xxzzx
+  yxzzx
+  zxzzx
+  xyzzx
+  yyzzx
+  zyzzx
+  xzzzx
+  yzzzx
+  zzzzx
+  xxxxy
+  yxxxy
+  zxxxy
+  xyxxy
+  yyxxy
+  zyxxy
+  xzxxy
+  yzxxy
+  zzxxy
+  xxyxy
+  yxyxy
+  zxyxy
+  xyyxy
+  yyyxy
+  zyyxy
+  xzyxy
+  yzyxy
+  zzyxy
+  xxzxy
+  yxzxy
+  zxzxy
+  xyzxy
+  yyzxy
+  zyzxy
+  xzzxy
+  yzzxy
+  zzzxy
+  xxxyy
+  yxxyy
+  zxxyy
+  xyxyy
+  yyxyy
+  zyxyy
+  xzxyy
+  yzxyy
+  zzxyy
+  xxyyy
+  yxyyy
+  zxyyy
+  xyyyy
+  yyyyy
+  zyyyy
+  xzyyy
+  yzyyy
+  zzyyy
+  xxzyy
+  yxzyy
+  zxzyy
+  xyzyy
+  yyzyy
+  zyzyy
+  xzzyy
+  yzzyy
+  zzzyy
+  xxxzy
+  yxxzy
+  zxxzy
+  xyxzy
+  yyxzy
+  zyxzy
+  xzxzy
+  yzxzy
+  zzxzy
+  xxyzy
+  yxyzy
+  zxyzy
+  xyyzy
+  yyyzy
+  zyyzy
+  xzyzy
+  yzyzy
+  zzyzy
+  xxzzy
+  yxzzy
+  zxzzy
+  xyzzy
+  yyzzy
+  zyzzy
+  xzzzy
+  yzzzy
+  zzzzy
+  xxxxz
+  yxxxz
+  zxxxz
+  xyxxz
+  yyxxz
+  zyxxz
+  xzxxz
+  yzxxz
+  zzxxz
+  xxyxz
+  yxyxz
+  zxyxz
+  xyyxz
+  yyyxz
+  zyyxz
+  xzyxz
+  yzyxz
+  zzyxz
+  xxzxz
+  yxzxz
+  zxzxz
+  xyzxz
+  yyzxz
+  zyzxz
+  xzzxz
+  yzzxz
+  zzzxz
+  xxxyz
+  yxxyz
+  zxxyz
+  xyxyz
+  yyxyz
+  zyxyz
+  xzxyz
+  yzxyz
+  zzxyz
+  xxyyz
+  yxyyz
+  zxyyz
+  xyyyz
+  yyyyz
+  zyyyz
+  xzyyz
+  yzyyz
+  zzyyz
+  xxzyz
+  yxzyz
+  zxzyz
+  xyzyz
+  yyzyz
+  zyzyz
+  xzzyz
+  yzzyz
+  zzzyz
+  xxxzz
+  yxxzz
+  zxxzz
+  xyxzz
+  yyxzz
+  zyxzz
+  xzxzz
+  yzxzz
+  zzxzz
+  xxyzz
+  yxyzz
+  zxyzz
+  xyyzz
+  yyyzz
+  zyyzz
+  xzyzz
+  yzyzz
+  zzyzz
+  xxzzz
+  yxzzz
+  zxzzz
+  xyzzz
+  yyzzz
+  zyzzz
+  xzzzz
+  yzzzz
+  zzzzz
+- : unit = ()</code></pre>
+<h3 id="b-1">(B)</h3>
+<p>Construct a finite automaton <strong><code>fa_q2_b</code></strong> for the language consisting of all strings over the alphabet <code>{x,y,z}</code> with exactly two <code>x</code> and no <code>y</code> in them (and any number of <code>z</code>).</p>
+<p>Sample output:</p>
+<pre><code># lang fa_q2_b 6;;
+  xx
+  zxx
+  xzx
+  xxz
+  zzxx
+  zxzx
+  xzzx
+  zxxz
+  xzxz
+  xxzz
+  zzzxx
+  zzxzx
+  zxzzx
+  xzzzx
+  zzxxz
+  zxzxz
+  xzzxz
+  zxxzz
+  xzxzz
+  xxzzz
+  zzzzxx
+  zzzxzx
+  zzxzzx
+  zxzzzx
+  xzzzzx
+  zzzxxz
+  zzxzxz
+  zxzzxz
+  xzzzxz
+  zzxxzz
+  zxzxzz
+  xzzxzz
+  zxxzzz
+  xzxzzz
+  xxzzzz
+- : unit = ()</code></pre>
+<h3 id="c-1">(C)</h3>
+<p>Construct a finite automaton <strong><code>fa_q2_c</code></strong> for the language consisting of all strings over the alphabet <code>{x,y,z}</code> with exactly two <code>x</code> and one <code>y</code> in them (and any number of <code>z</code>).</p>
+<p>Sample output:</p>
+<pre><code># lang fa_q2_c 6;;
+  yxx
+  xyx
+  xxy
+  zyxx
+  yzxx
+  zxyx
+  xzyx
+  yxzx
+  xyzx
+  zxxy
+  xzxy
+  xxzy
+  yxxz
+  xyxz
+  xxyz
+  zzyxx
+  zyzxx
+  yzzxx
+  zzxyx
+  zxzyx
+  xzzyx
+  zyxzx
+  yzxzx
+  zxyzx
+  xzyzx
+  yxzzx
+  xyzzx
+  zzxxy
+  zxzxy
+  xzzxy
+  zxxzy
+  xzxzy
+  xxzzy
+  zyxxz
+  yzxxz
+  zxyxz
+  xzyxz
+  yxzxz
+  xyzxz
+  zxxyz
+  xzxyz
+  xxzyz
+  yxxzz
+  xyxzz
+  xxyzz
+  zzzyxx
+  zzyzxx
+  zyzzxx
+  yzzzxx
+  zzzxyx
+  zzxzyx
+  zxzzyx
+  xzzzyx
+  zzyxzx
+  zyzxzx
+  yzzxzx
+  zzxyzx
+  zxzyzx
+  xzzyzx
+  zyxzzx
+  yzxzzx
+  zxyzzx
+  xzyzzx
+  yxzzzx
+  xyzzzx
+  zzzxxy
+  zzxzxy
+  zxzzxy
+  xzzzxy
+  zzxxzy
+  zxzxzy
+  xzzxzy
+  zxxzzy
+  xzxzzy
+  xxzzzy
+  zzyxxz
+  zyzxxz
+  yzzxxz
+  zzxyxz
+  zxzyxz
+  xzzyxz
+  zyxzxz
+  yzxzxz
+  zxyzxz
+  xzyzxz
+  yxzzxz
+  xyzzxz
+  zzxxyz
+  zxzxyz
+  xzzxyz
+  zxxzyz
+  xzxzyz
+  xxzzyz
+  zyxxzz
+  yzxxzz
+  zxyxzz
+  xzyxzz
+  yxzxzz
+  xyzxzz
+  zxxyzz
+  xzxyzz
+  xxzyzz
+  yxxzzz
+  xyxzzz
+  xxyzzz
+- : unit = ()</code></pre>
+<h3 id="d-1">(D)</h3>
+<p>Construct a finite automaton <strong><code>fa_q2_d</code></strong> for the language consisting of all strings over the alphabet <code>{x,y,z}</code> in which there are an odd number of <code>x</code>, an even number of <code>y</code>, and any number of <code>z</code>.</p>
+<p>Sample output:</p>
+<pre><code># lang fa_q2_d 6;;
+  x
+  zx
+  xz
+  xxx
+  yyx
+  zzx
+  yxy
+  xyy
+  zxz
+  xzz
+  zxxx
+  xzxx
+  zyyx
+  yzyx
+  xxzx
+  yyzx
+  zzzx
+  zyxy
+  yzxy
+  zxyy
+  xzyy
+  yxzy
+  xyzy
+  xxxz
+  yyxz
+  zzxz
+  yxyz
+  xyyz
+  zxzz
+  xzzz
+  xxxxx
+  yyxxx
+  zzxxx
+  yxyxx
+  xyyxx
+  zxzxx
+  xzzxx
+  yxxyx
+  xyxyx
+  xxyyx
+  yyyyx
+  zzyyx
+  zyzyx
+  yzzyx
+  zxxzx
+  xzxzx
+  zyyzx
+  yzyzx
+  xxzzx
+  yyzzx
+  zzzzx
+  yxxxy
+  xyxxy
+  xxyxy
+  yyyxy
+  zzyxy
+  zyzxy
+  yzzxy
+  xxxyy
+  yyxyy
+  zzxyy
+  yxyyy
+  xyyyy
+  zxzyy
+  xzzyy
+  zyxzy
+  yzxzy
+  zxyzy
+  xzyzy
+  yxzzy
+  xyzzy
+  zxxxz
+  xzxxz
+  zyyxz
+  yzyxz
+  xxzxz
+  yyzxz
+  zzzxz
+  zyxyz
+  yzxyz
+  zxyyz
+  xzyyz
+  yxzyz
+  xyzyz
+  xxxzz
+  yyxzz
+  zzxzz
+  yxyzz
+  xyyzz
+  zxzzz
+  xzzzz
+  zxxxxx
+  xzxxxx
+  zyyxxx
+  yzyxxx
+  xxzxxx
+  yyzxxx
+  zzzxxx
+  zyxyxx
+  yzxyxx
+  zxyyxx
+  xzyyxx
+  yxzyxx
+  xyzyxx
+  xxxzxx
+  yyxzxx
+  zzxzxx
+  yxyzxx
+  xyyzxx
+  zxzzxx
+  xzzzxx
+  zyxxyx
+  yzxxyx
+  zxyxyx
+  xzyxyx
+  yxzxyx
+  xyzxyx
+  zxxyyx
+  xzxyyx
+  zyyyyx
+  yzyyyx
+  xxzyyx
+  yyzyyx
+  zzzyyx
+  yxxzyx
+  xyxzyx
+  xxyzyx
+  yyyzyx
+  zzyzyx
+  zyzzyx
+  yzzzyx
+  xxxxzx
+  yyxxzx
+  zzxxzx
+  yxyxzx
+  xyyxzx
+  zxzxzx
+  xzzxzx
+  yxxyzx
+  xyxyzx
+  xxyyzx
+  yyyyzx
+  zzyyzx
+  zyzyzx
+  yzzyzx
+  zxxzzx
+  xzxzzx
+  zyyzzx
+  yzyzzx
+  xxzzzx
+  yyzzzx
+  zzzzzx
+  zyxxxy
+  yzxxxy
+  zxyxxy
+  xzyxxy
+  yxzxxy
+  xyzxxy
+  zxxyxy
+  xzxyxy
+  zyyyxy
+  yzyyxy
+  xxzyxy
+  yyzyxy
+  zzzyxy
+  yxxzxy
+  xyxzxy
+  xxyzxy
+  yyyzxy
+  zzyzxy
+  zyzzxy
+  yzzzxy
+  zxxxyy
+  xzxxyy
+  zyyxyy
+  yzyxyy
+  xxzxyy
+  yyzxyy
+  zzzxyy
+  zyxyyy
+  yzxyyy
+  zxyyyy
+  xzyyyy
+  yxzyyy
+  xyzyyy
+  xxxzyy
+  yyxzyy
+  zzxzyy
+  yxyzyy
+  xyyzyy
+  zxzzyy
+  xzzzyy
+  yxxxzy
+  xyxxzy
+  xxyxzy
+  yyyxzy
+  zzyxzy
+  zyzxzy
+  yzzxzy
+  xxxyzy
+  yyxyzy
+  zzxyzy
+  yxyyzy
+  xyyyzy
+  zxzyzy
+  xzzyzy
+  zyxzzy
+  yzxzzy
+  zxyzzy
+  xzyzzy
+  yxzzzy
+  xyzzzy
+  xxxxxz
+  yyxxxz
+  zzxxxz
+  yxyxxz
+  xyyxxz
+  zxzxxz
+  xzzxxz
+  yxxyxz
+  xyxyxz
+  xxyyxz
+  yyyyxz
+  zzyyxz
+  zyzyxz
+  yzzyxz
+  zxxzxz
+  xzxzxz
+  zyyzxz
+  yzyzxz
+  xxzzxz
+  yyzzxz
+  zzzzxz
+  yxxxyz
+  xyxxyz
+  xxyxyz
+  yyyxyz
+  zzyxyz
+  zyzxyz
+  yzzxyz
+  xxxyyz
+  yyxyyz
+  zzxyyz
+  yxyyyz
+  xyyyyz
+  zxzyyz
+  xzzyyz
+  zyxzyz
+  yzxzyz
+  zxyzyz
+  xzyzyz
+  yxzzyz
+  xyzzyz
+  zxxxzz
+  xzxxzz
+  zyyxzz
+  yzyxzz
+  xxzxzz
+  yyzxzz
+  zzzxzz
+  zyxyzz
+  yzxyzz
+  zxyyzz
+  xzyyzz
+  yxzyzz
+  xyzyzz
+  xxxzzz
+  yyxzzz
+  zzxzzz
+  yxyzzz
+  xyyzzz
+  zxzzzz
+  xzzzzz
+- : unit = ()</code></pre>
+<h3 id="e-1">(E)</h3>
+<p>Construct a finite automaton <strong><code>fa_q2_e</code></strong> for the language consisting of all strings over the alphabet <code>{x,y,z}</code> in which there are an odd number of <code>x</code>, an even number of <code>y</code>, and exactly one <code>z</code>.</p>
+<p>Sample output:</p>
+<pre><code># lang fa_q2_e 6;;
+  zx
+  xz
+  zxxx
+  xzxx
+  zyyx
+  yzyx
+  xxzx
+  yyzx
+  zyxy
+  yzxy
+  zxyy
+  xzyy
+  yxzy
+  xyzy
+  xxxz
+  yyxz
+  yxyz
+  xyyz
+  zxxxxx
+  xzxxxx
+  zyyxxx
+  yzyxxx
+  xxzxxx
+  yyzxxx
+  zyxyxx
+  yzxyxx
+  zxyyxx
+  xzyyxx
+  yxzyxx
+  xyzyxx
+  xxxzxx
+  yyxzxx
+  yxyzxx
+  xyyzxx
+  zyxxyx
+  yzxxyx
+  zxyxyx
+  xzyxyx
+  yxzxyx
+  xyzxyx
+  zxxyyx
+  xzxyyx
+  zyyyyx
+  yzyyyx
+  xxzyyx
+  yyzyyx
+  yxxzyx
+  xyxzyx
+  xxyzyx
+  yyyzyx
+  xxxxzx
+  yyxxzx
+  yxyxzx
+  xyyxzx
+  yxxyzx
+  xyxyzx
+  xxyyzx
+  yyyyzx
+  zyxxxy
+  yzxxxy
+  zxyxxy
+  xzyxxy
+  yxzxxy
+  xyzxxy
+  zxxyxy
+  xzxyxy
+  zyyyxy
+  yzyyxy
+  xxzyxy
+  yyzyxy
+  yxxzxy
+  xyxzxy
+  xxyzxy
+  yyyzxy
+  zxxxyy
+  xzxxyy
+  zyyxyy
+  yzyxyy
+  xxzxyy
+  yyzxyy
+  zyxyyy
+  yzxyyy
+  zxyyyy
+  xzyyyy
+  yxzyyy
+  xyzyyy
+  xxxzyy
+  yyxzyy
+  yxyzyy
+  xyyzyy
+  yxxxzy
+  xyxxzy
+  xxyxzy
+  yyyxzy
+  xxxyzy
+  yyxyzy
+  yxyyzy
+  xyyyzy
+  xxxxxz
+  yyxxxz
+  yxyxxz
+  xyyxxz
+  yxxyxz
+  xyxyxz
+  xxyyxz
+  yyyyxz
+  yxxxyz
+  xyxxyz
+  xxyxyz
+  yyyxyz
+  xxxyyz
+  yyxyyz
+  yxyyyz
+  xyyyyz
+- : unit = ()</code></pre>
+<hr />
+<h2 id="question-3-finite-automata-constructions">Question 3: Finite Automata Constructions</h2>
+<p>In this question, we implement constructions on finite automata, including some thatcame up in class when we discussed how to go from regular expressions to finite automata.</p>
+<p>The sample outputs use the following simple automata:</p>
+<pre><code>let fa1 = { states = [0; 1; 2];
+            alphabet = [&#39;x&#39;; &#39;y&#39;; &#39;z&#39;];
+            delta = [ (0,&#39;x&#39;,1);
+                      (1,&#39;x&#39;,2);
+                      (2,&#39;x&#39;,0) ];
+            start = 0;
+            final = [0] }
+    
+let fa2 = { states = [10; 11; 12];
+            alphabet = [&#39;x&#39;; &#39;y&#39;; &#39;z&#39;];
+            delta = [ (10,&#39;y&#39;,11);
+                      (11,&#39;z&#39;,12);
+                      (12,&#39;y&#39;,11) ];
+            start = 10;
+            final = [12] }
+        </code></pre>
+<p>The language of <code>fa1</code> is the language described by regular expression <code>(aaa)</code><sup>*</sup>, and the language of <code>fa2</code> is the language described by regular expression <code>(bc)(bc)</code><sup>*</sup>.</p>
+<p>You may assume that the alphabets of the machines are the same and that the set of states of different machines are different. This does mean that you cannot construct an automaton by combining two instances of the same automaton. (<strong>To think about</strong>: how would you get around such a restriction?) The stub functions I provide enforce these assumptions, as you will see.</p>
+<p>Because combining automata often requires adding new states, I have provided you with two functions <code>freshState</code> and <code>freshState2</code> that take respectively one finite automaton and two finite automata and return a state that is <em>not</em> present in the input automata.</p>
+<h3 id="a-2">(A)</h3>
+<p>Given a language A and a symbol <code>a</code>, the language <em>prepend</em>(a, A) is the language obtained by prepending <code>a</code> to every string in A. For example, if A = {<code>aab</code>, <code>aba</code>, <code>b</code>, <code>bb</code>, <code>bbb</code>}, then <em>prepend</em>(a, A) = { <code>aaab</code>, <code>aaba</code>, <code>ab</code>, <code>abb</code>, <code>abbb</code> }.</p>
+<p>If you have a finite automaton accepting A, it is easy to transform it into a finite automaton accepting <em>prepend</em>(a, A): simply add a new start state to the automaton, and add a transition from the new start state to the old start state labeled <code>a</code>. You should convince yourself this construction works.</p>
+<p>Code a function <strong><code>prependM</code></strong> of type <strong><code>fa -&gt; char -&gt; fa</code></strong> where <code>prependM m a</code> returns a finite automaton that accepts <em>prepend</em>(a, A) where A is the language accepted by <code>m</code>.</p>
+<pre><code># lang fa1 10;;
+  &lt;epsilon&gt;
+  xxx
+  xxxxxx
+  xxxxxxxxx
+- : unit = ()
+# lang fa2 10;;
+  yz
+  yzyz
+  yzyzyz
+  yzyzyzyz
+  yzyzyzyzyz
+- : unit = ()
+# lang (prependM fa1 &#39;z&#39;) 10;;
+  z
+  zxxx
+  zxxxxxx
+  zxxxxxxxxx
+- : unit = ()
+# lang (prependM fa2 &#39;z&#39;) 10;;
+  zyz
+  zyzyz
+  zyzyzyz
+  zyzyzyzyz
+- : unit = ()</code></pre>
+<h3 id="b-2">(B)</h3>
+<p>Given a language A and a <em>string</em> u, the language <em>prependString</em>(u, A) is the language obtained by prepending the string <code>u</code> to every string in A. For example, if A = {<code>aab</code>, <code>aba</code>, <code>b</code>, <code>bb</code>, <code>bbb</code>}, then <em>prependString</em>(abba, A) = { <code>abbaaab</code>, <code>abbaaba</code>, <code>abbab</code>, <code>abbabb</code>, <code>abbabbb</code> }.</p>
+<p>Code a function <strong><code>prependStringM</code></strong> of type <strong><code>fa -&gt; string -&gt; fa</code></strong> where <code>prependStringM m u</code> returns a finite automaton that accepts <em>prependString</em>(u, A) where A is the language accepted by <code>m</code>.</p>
+<pre><code># lang fa1 10;;
+  &lt;epsilon&gt;
+  xxx
+  xxxxxx
+  xxxxxxxxx
+- : unit = ()
+# lang fa2 10;;
+  yz
+  yzyz
+  yzyzyz
+  yzyzyzyz
+  yzyzyzyzyz
+- : unit = ()
+# lang (prependStringM fa1 &quot;zxz&quot;) 10;;
+  zxz
+  zxzxxx
+  zxzxxxxxx
+- : unit = ()
+# lang (prependStringM fa2 &quot;zxz&quot;) 10;;
+  zxzyz
+  zxzyzyz
+  zxzyzyzyz
+- : unit = ()
+# lang (prependStringM fa1 &quot;zz&quot;) 10;;
+  zz
+  zzxxx
+  zzxxxxxx
+- : unit = ()
+# lang (prependStringM fa2 &quot;zz&quot;) 10;;
+  zzyz
+  zzyzyz
+  zzyzyzyz
+  zzyzyzyzyz
+- : unit = ()</code></pre>
+<p><strong>Hint:</strong> notice that prependString(abba, A) = prepend(a, prepend(b, prepend (b, prepend(a, A)))). Generalize, and use <code>prependM</code> from part (A). Or you can do it the hard way, adding N states to the finite automaton, where N is the length of the string being prepended. Whichever works for you.</p>
+<h3 id="c-2">(C)</h3>
+<p>Code a function <code>replaceSource</code> of type <strong><code>(int * char * int) -&gt; int -&gt; (int * char * int)</code></strong> where <code>replaceSource delta state</code> returns a new transition function made up of all the transitions in <code>delta</code> in which the source state of each transition has been replaced by <code>state</code>. # replaceSource [] 99;; - : (int * 'a * 'b) list = [] # replaceSource [(1, 'a', 2)] 99;; - : (int * char * int) list = [(99, 'a', 2)] # replaceSource [(1, 'a', 2); (1, 'b', 3)] 99;; - : (int * char * int) list = [(99, 'a', 2); (99, 'b', 3)] # replaceSource [(1, 'a', 2); (1, 'b', 3); (2, 'a', 2)] 99;; - : (int * char * int) list = [(99, 'a', 2); (99, 'b', 3); (99, 'a', 2)] # replaceSource fa1.delta 99;; - : (int * char * int) list = [(99, 'x', 1); (99, 'x', 2); (99, 'x', 0)]</p>
+<p>Order and repetition in the resulting list are irrelevant.</p>
+<h3 id="d-2">(D)</h3>
+<p>Code a function <strong><code>transitionsFromState</code></strong> of type <strong><code>int * (int * char * int) -&gt; (int * char * int)</code></strong> where <code>transitionsFromState state delta</code> returns the list of all transitions in <code>delta</code> that have <code>state</code> as a source state.</p>
+<pre><code># transitionsFromState 1 [];;
+- : (int * &#39;a * &#39;b) list = []
+# transitionsFromState 1 [(1, &#39;a&#39;, 2)];;
+- : (int * char * int) list = [(1, &#39;a&#39;, 2)]
+# transitionsFromState 1 [(1, &#39;a&#39;, 2); (1, &#39;b&#39;, 3)];;
+- : (int * char * int) list = [(1, &#39;a&#39;, 2); (1, &#39;b&#39;, 3)]
+# transitionsFromState 1 [(1, &#39;a&#39;, 2); (1, &#39;b&#39;, 3); (2, &#39;a&#39;, 3)];;
+- : (int * char * int) list = [(1, &#39;a&#39;, 2); (1, &#39;b&#39;, 3)]
+# transitionsFromState 2 [(1, &#39;a&#39;, 2); (1, &#39;b&#39;, 3); (2, &#39;a&#39;, 3)];;
+- : (int * char * int) list = [(2, &#39;a&#39;, 3)]
+# transitionsFromState 3 [(1, &#39;a&#39;, 2); (1, &#39;b&#39;, 3); (2, &#39;a&#39;, 3)];;
+- : (int * char * int) list = []
+# transitionsFromState 1 fa1.delta ;;
+- : (int * char * int) list = [(1, &#39;x&#39;, 2)]
+# transitionsFromState 2 fa1.delta ;;
+- : (int * char * int) list = [(2, &#39;x&#39;, 0)]</code></pre>
+<p>Order and repetition in the resulting list are irrelevant.</p>
+<h3 id="e-2">(E)</h3>
+<p>Code a function <strong><code>unionM</code></strong> of type <strong><code>fa -&gt; fa -&gt; fa</code></strong> where <code>unionM m1 m2</code> returns a finite automaton that accepts the union of the language accepted by <code>m1</code> and the language accepted by <code>m2</code>.</p>
+<p><strong>Hint:</strong> Use the construction detailed in the notes. You will probably benefit from using functions <code>replaceSource</code> and <code>transitionsFromState</code> from parts (C) and (D) above.</p>
+<p>Make sure you handle the cases where either of the two automata accepts the empty string.</p>
+<p>Sample output:</p>
+<pre><code># lang fa1 10;;
+  &lt;epsilon&gt;
+  xxx
+  xxxxxx
+  xxxxxxxxx
+- : unit = ()
+# lang fa2 10;;
+  yz
+  yzyz
+  yzyzyz
+  yzyzyzyz
+  yzyzyzyzyz
+- : unit = ()
+# lang (unionM fa1 fa2) 10;;
+  &lt;epsilon&gt;
+  yz
+  xxx
+  yzyz
+  xxxxxx
+  yzyzyz
+  yzyzyzyz
+  xxxxxxxxx
+  yzyzyzyzyz
+- : unit = ()
+# lang (unionM fa2 fa1) 10;;
+  &lt;epsilon&gt;
+  yz
+  xxx
+  yzyz
+  xxxxxx
+  yzyzyz
+  yzyzyzyz
+  xxxxxxxxx
+  yzyzyzyzyz
+- : unit = ()</code></pre>
+<p><em>If you get bored, give a shot to coding functions <code>concatM</code> and <code>starM</code>, where <code>contactM m1 m2</code> returns a finite automaton that accepts the language obtained by concatenating the languages of <code>m1</code> and <code>m2</code>, and <code>starM m</code> returns a finite automaton that accepts the language obtained by &quot;starring&quot; the language of <code>m</code>.</em></p>
+
+</body>
+
+</html>
