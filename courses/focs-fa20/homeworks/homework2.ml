@@ -199,68 +199,52 @@ let freshState2 (m1:fa) (m2:fa): int =
 
 (* Helper functions to check for disjoint states and same alphabets *)
 
-let rec subset (s : 'a list) (t : 'a list) : bool = 
+let rec subset (s: 'a list) (t: 'a list) : bool = 
   match s with
   | [] -> true
   | x::s' -> if List.mem x t then subset s' t else false
 
-let equal (s : 'a list) (t : 'a list) : bool =
+let equal (s: 'a list) (t: 'a list) : bool =
   (subset s t) && (subset t s)
 
-let rec intersect (s : 'a list) (t : 'a list) : 'a list =
+let rec intersect (s: 'a list) (t: 'a list) : 'a list =
   match s with
   | [] -> []
   | x::s' -> if List.mem x t
                then x :: (intersect s' t)
 	     else intersect s' t
 
-let rec empty (s : 'a list) : bool =
+let rec empty (s: 'a list) : bool =
   match s with
   | [] -> true
   | _ -> false
 
 
 
-
-let prependM (m : fa) (a : char) : fa =
+let rec prependM (m: fa) (a: char) : fa =
   failwith "not implemented"
 
 
-let prependStringM (m : fa) (s : string) : fa =
+let rec prependStringM (m: fa) (s: string) : fa =
   failwith "not implemented"
 
 
-let rec replaceSource delta state =
-  match delta with
-  | [] -> []
-  | (p, a, q)::delta' -> (state, a, q)::(replaceSource delta' state)
+let rec replaceSource (delta: (int * char * int) list) (state: int) : (int * char * int) list =
+  failwith "not implemented"
 
-let rec transitionsFromState state delta =
-  match delta with
-  | [] -> []
-  | (p, a, q)::delta' -> if p = state then (p, a, q)::(transitionsFromState state delta') else transitionsFromState state delta'
+
+let rec transitionsFromState (state: int) (delta: (int * char * int) list) : (int * char * int) list =
+  failwith "not implemented"
   
                      
-let unionM (m1:fa) (m2:fa):fa = 
+let rec unionM (m1: fa) (m2: fa) : fa = 
   if not (empty (intersect m1.states m2.states))
     then failwith "States not disjoint"
   else if not (equal m1.alphabet m2.alphabet)
     then failwith "Alphabets not equal"
-  else 
-    let new_start = freshState2 m1 m2  in
-    let new_states = new_start :: (m1.states @ m2.states)  in
-    let alphabet = m1.alphabet  in
-    let new_delta = m1.delta @ m2.delta @ 
-      (replaceSource (transitionsFromState m1.start m1.delta) new_start) @
-      (replaceSource (transitionsFromState m2.start m2.delta) new_start)  in
-    let new_final = if (List.mem m1.start m1.final || List.mem m2.start m2.final) 
-                      then m1.final @ m2.final @ [new_start] 
-                    else m1.final @ m2.final  in
-    { states = new_states;
-      alphabet = alphabet;
-      delta = new_delta;
-      start = new_start;
-      final = new_final }
+  else
+    (* complete function here *)
+    failwith "not implemmented"
 
 
 
