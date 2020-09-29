@@ -1159,7 +1159,7 @@ let fa2 = { states = [10; 11; 12];
             start = 10;
             final = [12] }
         </code></pre>
-<p>The language of <code>fa1</code> is the language described by regular expression <code>(aaa)</code><sup>*</sup>, and the language of <code>fa2</code> is the language described by regular expression <code>(bc)(bc)</code><sup>*</sup>.</p>
+<p>The language of <code>fa1</code> is the language described by regular expression <code>(xxx)</code><sup>*</sup>, and the language of <code>fa2</code> is the language described by regular expression <code>(yz)(yz)</code><sup>*</sup>.</p>
 <p>You may assume that the alphabets of the machines are the same and that the set of states of different machines are different. This does mean that you cannot construct an automaton by combining two instances of the same automaton. (<strong>To think about</strong>: how would you get around such a restriction?) The stub functions I provide enforce these assumptions, as you will see.</p>
 <p>Because combining automata often requires adding new states, I have provided you with two functions <code>freshState</code> and <code>freshState2</code> that take respectively one finite automaton and two finite automata and return a state that is <em>not</em> present in the input automata.</p>
 <h3 id="a-2">(A)</h3>
