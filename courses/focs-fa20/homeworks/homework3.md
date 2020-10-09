@@ -1,4 +1,4 @@
-# Homework 2
+# Homework 3
 
 ## Due Date: Thursday, October 15, 2020 (23h59)
 
@@ -40,15 +40,15 @@ subject _Homework 3 submission_.
 * * *
 
 
-In this homework, you will be working with and developing [higher order functions](../notes-functional.html).
+In this homework, you will be working with [higher order functions](../notes-functional.html).
 
-For each function you have to code in this homework, full points will
+For each function I ask you to code in this homework, full points will
 be awarded if the function and its helpers do not use explicit
 recursion. In other words, the function and its helpers should not use the `rec`
 keyword for function definitions.
 
 This means that you will have to use `List.map`, `List.filter`,
-`List.fold_right`, or some other higher-order function in the [`List`
+`List.fold_right`, or some other higher-order functions in the [`List`
 module](https://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html). One
 additional function you may find useful is `List.map2`, which acts
 like `List.map` but maps over two lists, passing elements of both
@@ -133,8 +133,9 @@ Sample output:
 
 Code a function **`compose_all`** with type **`('a -> 'a) list -> 'a
 -> 'a`** where `compose_all fs x` returns the result `f1 (f2 (f3
-(... (fk x)...)))` when `fs` is `[f1; f2; ...; fk]`. It 
-returns input `x` when `fs` is empty.
+(... (fk x)...)))` when `fs` is the list `[f1; f2; ...; fk]`.
+
+The function returns its input `x` when `fs` is empty.
 
 Sample output:
 
@@ -153,7 +154,7 @@ Sample output:
 ### (D)
 
 Code a function **`pairs1`** of type `'a -> 'b list -> ('a * 'b)
-list` where `pairs1 x ys` returns the list of all pairs of `x` with an
+list` where `pairs1 x ys` returns the list of all pairs of `x` paired with an
 element of `ys`. 
 
 Sample output:
@@ -198,7 +199,9 @@ Sample output:
 **Hint**: Use `pairs1`. 
 
 
+
 * * *
+
 
 ## Question 2: Higher-Order Functions II
 
@@ -231,7 +234,7 @@ Sample output:
 Code a function `prefixes` of type `'a list -> ('a list) list` where
 `prefixes xs` returns the list of all prefixes of `xs`. For instance,
 the prefixes of `[x1; x2; x3]` are `[]`, `[x1]`, `[x1; x2]`, and `[x1;
-x2; x3]`. Note that the empty list is always a prefix.
+x2; x3]`. Note that the empty list is always a prefix of any list.
 
 Sample output:
 
@@ -250,7 +253,7 @@ Sample output:
 Code a function `suffixes` of type `'a list -> ('a list) list` where
 `suffixes xs` returns the list of all suffixes of `xs`. For instance, the
 suffixes of `[x1; x2; x3]` are `[]`, `[x3]`, `[x2; x3]`, and `[x1; x2; x3]`.
-Note that the empty list is always a suffix.
+Note that the empty list is always a suffix of any list.
 
 Sample output:
 
@@ -423,7 +426,7 @@ state lead to a final state.
 You can use function `explode` (provided in the homework code) to turn
 a string into a list of symbols (Ocaml type `char`). For testing
 purposes, I've provided you with a function `lang` where `lang m k`
-prints out all the strings of length up to `k` accepted by finite
+prints out all the strings of length up to `k` accepted by deterministic finite
 automaton `m`. Note that it calls `accept`, so it won't work correctly
 until you implement that function.
 
@@ -471,7 +474,7 @@ Sample output:
     - : unit = ()
 
 **Hint**: Define a helper function `followString : int -> char list ->
-int` that takes a state `q` and a list of symbols `syms` and gives you back the
+int` that takes a state `q` and a list of symbols `syms` and gives you back the one
 state that you reach if you follow the symbols in `syms` in order
 starting from state `q`. It should be way simpler than `followString`
 and `followStringFromSet` from Homework 2.

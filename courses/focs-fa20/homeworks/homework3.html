@@ -28,7 +28,7 @@
 
 <body>
 
-<h1 id="homework-2">Homework 2</h1>
+<h1 id="homework-3">Homework 3</h1>
 <h2 id="due-date-thursday-october-15-2020-23h59">Due Date: Thursday, October 15, 2020 (23h59)</h2>
 <ul>
 <li><p>This homework is to be done individually. You may discuss problems with fellow students, but all submitted work must be entirely your own, and should not be from any other course, present, past, or future. If you use a solution from another source you must cite it — this includes when that source is someone else helping you.</p></li>
@@ -46,9 +46,9 @@
 <li><p>When you're ready to submit, send an email with your file <code>homework3.ml</code> as an attachment to <code>olin.submissions@gmail.com</code> with subject <em>Homework 3 submission</em>.</p></li>
 </ul>
 <hr />
-<p>In this homework, you will be working with and developing <a href="../notes-functional.html">higher order functions</a>.</p>
-<p>For each function you have to code in this homework, full points will be awarded if the function and its helpers do not use explicit recursion. In other words, the function and its helpers should not use the <code>rec</code> keyword for function definitions.</p>
-<p>This means that you will have to use <code>List.map</code>, <code>List.filter</code>, <code>List.fold_right</code>, or some other higher-order function in the <a href="https://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html"><code>List</code> module</a>. One additional function you may find useful is <code>List.map2</code>, which acts like <code>List.map</code> but maps over two lists, passing elements of both lists to the mapping function and producing a single list as result.</p>
+<p>In this homework, you will be working with <a href="../notes-functional.html">higher order functions</a>.</p>
+<p>For each function I ask you to code in this homework, full points will be awarded if the function and its helpers do not use explicit recursion. In other words, the function and its helpers should not use the <code>rec</code> keyword for function definitions.</p>
+<p>This means that you will have to use <code>List.map</code>, <code>List.filter</code>, <code>List.fold_right</code>, or some other higher-order functions in the <a href="https://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html"><code>List</code> module</a>. One additional function you may find useful is <code>List.map2</code>, which acts like <code>List.map</code> but maps over two lists, passing elements of both lists to the mapping function and producing a single list as result.</p>
 <p>To illustrate, here is the <code>squares</code> function defined using explicit recursion:</p>
 <pre><code>let rec squares (xs: int list): int list =
   match xs with
@@ -95,7 +95,8 @@
 # map_functions [(fun x -&gt; x+1); (fun x -&gt; x+2); (fun x -&gt; x+99)] 100;;
 - : int list = [101; 102; 199]</code></pre>
 <h3 id="c">(C)</h3>
-<p>Code a function <strong><code>compose_all</code></strong> with type <strong><code>('a -&gt; 'a) list -&gt; 'a -&gt; 'a</code></strong> where <code>compose_all fs x</code> returns the result <code>f1 (f2 (f3 (... (fk x)...)))</code> when <code>fs</code> is <code>[f1; f2; ...; fk]</code>. It returns input <code>x</code> when <code>fs</code> is empty.</p>
+<p>Code a function <strong><code>compose_all</code></strong> with type <strong><code>('a -&gt; 'a) list -&gt; 'a -&gt; 'a</code></strong> where <code>compose_all fs x</code> returns the result <code>f1 (f2 (f3 (... (fk x)...)))</code> when <code>fs</code> is the list <code>[f1; f2; ...; fk]</code>.</p>
+<p>The function returns its input <code>x</code> when <code>fs</code> is empty.</p>
 <p>Sample output:</p>
 <pre><code># compose_all [] 10;;
 - : int = 10
@@ -108,7 +109,7 @@
 # compose_all [(fun x -&gt; x+1); (fun x -&gt; x+2); (fun x -&gt; x*3)] 10;;
 - : int = 33</code></pre>
 <h3 id="d">(D)</h3>
-<p>Code a function <strong><code>pairs1</code></strong> of type <code>'a -&gt; 'b list -&gt; ('a * 'b) list</code> where <code>pairs1 x ys</code> returns the list of all pairs of <code>x</code> with an element of <code>ys</code>.</p>
+<p>Code a function <strong><code>pairs1</code></strong> of type <code>'a -&gt; 'b list -&gt; ('a * 'b) list</code> where <code>pairs1 x ys</code> returns the list of all pairs of <code>x</code> paired with an element of <code>ys</code>.</p>
 <p>Sample output:</p>
 <pre><code># pairs1 9 [];;
 - : (int * &#39;a) list = []
@@ -159,7 +160,7 @@
 # cons_all &quot;+&quot; [[&quot;hello&quot;; &quot;world&quot;]; [&quot;goodbye&quot;]];;
 - : string list list = [[&quot;+&quot;; &quot;hello&quot;; &quot;world&quot;]; [&quot;+&quot;; &quot;goodbye&quot;]]</code></pre>
 <h3 id="b-1">(B)</h3>
-<p>Code a function <code>prefixes</code> of type <code>'a list -&gt; ('a list) list</code> where <code>prefixes xs</code> returns the list of all prefixes of <code>xs</code>. For instance, the prefixes of <code>[x1; x2; x3]</code> are <code>[]</code>, <code>[x1]</code>, <code>[x1; x2]</code>, and <code>[x1; x2; x3]</code>. Note that the empty list is always a prefix.</p>
+<p>Code a function <code>prefixes</code> of type <code>'a list -&gt; ('a list) list</code> where <code>prefixes xs</code> returns the list of all prefixes of <code>xs</code>. For instance, the prefixes of <code>[x1; x2; x3]</code> are <code>[]</code>, <code>[x1]</code>, <code>[x1; x2]</code>, and <code>[x1; x2; x3]</code>. Note that the empty list is always a prefix of any list.</p>
 <p>Sample output:</p>
 <pre><code># prefixes [];;
 - : &#39;a list list = [[]]
@@ -170,7 +171,7 @@
 # prefixes [&quot;a&quot;; &quot;b&quot;];;
 - : string list list = [[]; [&quot;a&quot;]; [&quot;a&quot;; &quot;b&quot;]]</code></pre>
 <h3 id="c-1">(C)</h3>
-<p>Code a function <code>suffixes</code> of type <code>'a list -&gt; ('a list) list</code> where <code>suffixes xs</code> returns the list of all suffixes of <code>xs</code>. For instance, the suffixes of <code>[x1; x2; x3]</code> are <code>[]</code>, <code>[x3]</code>, <code>[x2; x3]</code>, and <code>[x1; x2; x3]</code>. Note that the empty list is always a suffix.</p>
+<p>Code a function <code>suffixes</code> of type <code>'a list -&gt; ('a list) list</code> where <code>suffixes xs</code> returns the list of all suffixes of <code>xs</code>. For instance, the suffixes of <code>[x1; x2; x3]</code> are <code>[]</code>, <code>[x3]</code>, <code>[x2; x3]</code>, and <code>[x1; x2; x3]</code>. Note that the empty list is always a suffix of any list.</p>
 <p>Sample output:</p>
 <pre><code># suffixes [];;
 - : &#39;a list list = [[]]
@@ -270,7 +271,7 @@
 } </code></pre>
 <p>(Note the final clause in the <code>match</code> of the transition function <code>delta</code> : the <code>_</code> is a wildcard matching any value, so that every state and character combination that doesn't match any of the preceding clauses will match the final clause and send the automaton to state 13. From state 13, every transition will lead back to state 13, so a state like state 13 is called a <em>sink state</em>. Once the automaton reaches state 13, it remains in state 13. And since state 13 is not a final state, once a string makes the automaton hit state 13, the string will never be accepted.)</p>
 <p>Code a function <strong><code>accept</code></strong> of type <strong><code>dfa -&gt; string -&gt; bool</code></strong> where <code>accept m s</code> returns true if and only if deterministic finite automaton <code>m</code> accepts string <code>s</code>. That is, it returns true exactly if following the transitions of <code>m</code> labeled by the symbols in <code>s</code> from the start state lead to a final state.</p>
-<p>You can use function <code>explode</code> (provided in the homework code) to turn a string into a list of symbols (Ocaml type <code>char</code>). For testing purposes, I've provided you with a function <code>lang</code> where <code>lang m k</code> prints out all the strings of length up to <code>k</code> accepted by finite automaton <code>m</code>. Note that it calls <code>accept</code>, so it won't work correctly until you implement that function.</p>
+<p>You can use function <code>explode</code> (provided in the homework code) to turn a string into a list of symbols (Ocaml type <code>char</code>). For testing purposes, I've provided you with a function <code>lang</code> where <code>lang m k</code> prints out all the strings of length up to <code>k</code> accepted by deterministic finite automaton <code>m</code>. Note that it calls <code>accept</code>, so it won't work correctly until you implement that function.</p>
 <p>Sample output:</p>
 <pre><code># lang dfa1 5;;
   &lt;epsilon&gt;
@@ -312,7 +313,7 @@
   xxyyx
   xyyyx
 - : unit = ()</code></pre>
-<p><strong>Hint</strong>: Define a helper function <code>followString : int -&gt; char list -&gt; int</code> that takes a state <code>q</code> and a list of symbols <code>syms</code> and gives you back the state that you reach if you follow the symbols in <code>syms</code> in order starting from state <code>q</code>. It should be way simpler than <code>followString</code> and <code>followStringFromSet</code> from Homework 2.</p>
+<p><strong>Hint</strong>: Define a helper function <code>followString : int -&gt; char list -&gt; int</code> that takes a state <code>q</code> and a list of symbols <code>syms</code> and gives you back the one state that you reach if you follow the symbols in <code>syms</code> in order starting from state <code>q</code>. It should be way simpler than <code>followString</code> and <code>followStringFromSet</code> from Homework 2.</p>
 
 </body>
 
