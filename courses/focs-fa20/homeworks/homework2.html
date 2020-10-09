@@ -48,8 +48,8 @@
 <hr />
 <p>Consider the following OCaml type for finite automata:</p>
 <pre><code>type fa = { states: int list;
-            alphabet: string list;
-            delta: (int * string * int) list;
+            alphabet: char list;
+            delta: (int * char * int) list;
             start: int;
             final: int list }</code></pre>
 <p>A finite automaton is described by a record with fields holding the various components of the automaton: the set of states, the alphabet, the transition relation Δ, the start state, and the set of final states. Lists are used to represent sets. The transition relation is represented using list of triples (<em>p</em>,<em>a</em>,<em>q</em>), stating that in state <em>p</em>, reading symbol <em>a</em> makes the machine transition to state <em>q</em>. For simplicity, I'm representing states using integers. It's easy enough to modify this declaration to make finite state machines generic over the type of the state.</p>

@@ -43,8 +43,8 @@ subject _Homework 2 submission_.
 Consider the following OCaml type for finite automata:
 
     type fa = { states: int list;
-                alphabet: string list;
-                delta: (int * string * int) list;
+                alphabet: char list;
+                delta: (int * char * int) list;
                 start: int;
                 final: int list }
 
