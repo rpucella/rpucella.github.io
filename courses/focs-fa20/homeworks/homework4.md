@@ -92,47 +92,44 @@ function twice in succession to the integer:
     # twice square 20;;
     - : int = 160000
 
-As in previous homeworks, there is a function `explode` that takes a
-string and explodes it into a list of its constituent symbols.
-
-As a simple example, here is the code implementing a Turing machine
+As a simple example of a Turing machine, here is the code implementing a Turing machine
 accepting the regular language &lcub;a<sup>m</sup>b<sup>n</sup> |
-m,n&ge;0&rcub;:
+m,n& ge; 0&rcub;:
 
-let asbs =
-  let d inp = (match inp with
-               | (1, 'a') -> (1, 'a', 1)
-               | (1, 'b') -> (10, 'b', 1)
-               | (1, '>') -> (1, '>', 1)
-               | (1, '_') -> (777, '_', 1)
-               | (10, 'b') -> (10, 'b', 1)
-               | (10, '_') -> (777, '_', 1)
-               | (777, 'a') -> (777, 'a', 1)
-               | (777, 'b') -> (777, 'b', 1)
-               | (777, '>') -> (777, '>', 1)
-               | (777, '_') -> (777, '_', 1)
-               | (_,c) -> (666,c,1))
-  in { states = [1; 10; 777; 666];
-       input_alphabet = ['a';'b'];
-       tape_alphabet = ['a';'b';'_';'>'];
-       blank = '_';
-       left_marker = '>';
-       start = 1;
-       accept = 777;
-       reject = 666;
-       delta = d }
+    let asbs =
+      let d inp = (match inp with
+                   | (1, 'a') -> (1, 'a', 1)
+                   | (1, 'b') -> (10, 'b', 1)
+                   | (1, '>') -> (1, '>', 1)
+                   | (1, '_') -> (777, '_', 1)
+                   | (10, 'b') -> (10, 'b', 1)
+                   | (10, '_') -> (777, '_', 1)
+                   | (777, 'a') -> (777, 'a', 1)
+                   | (777, 'b') -> (777, 'b', 1)
+                   | (777, '>') -> (777, '>', 1)
+                   | (777, '_') -> (777, '_', 1)
+                   | (_,c) -> (666,c,1))
+      in { states = [1; 10; 777; 666];
+           input_alphabet = ['a';'b'];
+           tape_alphabet = ['a';'b';'_';'>'];
+           blank = '_';
+           left_marker = '>';
+           start = 1;
+           accept = 777;
+           reject = 666;
+           delta = d }
 
 Note the function `d` defined locally and placed inside the record.
 
 I also provided you with further sample Turing machines `anbn`
 and 
 `anbncn` accepting &lcub;a<sup>n</sup>b<sup>n</sup> | n &ge;
-0&rcub; and &lcub;a<sup>n</sup>b<sup>n</sup>c<sup>n</sup> | n&ge;
+0&rcub; and &lcub;a<sup>n</sup>b<sup>n</sup>c<sup>n</sup> | n &ge;
 0&rcub; respectively.  Note that `anbn` uses different symbols for the
 left marker and for the blank, to highlight that your simulator should
 not bake them in and rather read them from the Turing machine description.
 
-Recall from lecture that a configuration captures a snapshot of the
+Recall from lecture that a configuration represents a snapshot of the
 Turing machine during execution: the current state of a Turing
 machine, the content of the tape, and the position of the tape
 head. Type `config` is the type of a configuration, defined as
@@ -656,6 +653,12 @@ viewed as binary numbers.
 (Brownie points if you can construct the Turing machine so that _u_
 and _v_ need not be of the same length, but that's not required.)
 
+**Hint**: how would you do 00101010101011 + 1 by hand, say? 
+
+      00101010101011
+    +              1
+      --------------
+
 Sample output (without showing configurations):
 
     # run tm_q2_plus1 "0#1";;
@@ -723,7 +726,7 @@ Sample output (without showing configurations):
     - : bool = false
 
 
-### (E) (Slight more challenging)
+### (E)
 
 Construct a total Turing machine **`tm_q2_duplicate`** that accepts the
 language consisting of all strings over the alphabet `{a,b}` of the
@@ -798,7 +801,6 @@ Sample output (without showing configurations):
     # run tm_q2_duplicate "ababb";;
     start  [>] a  b  a  b  b
     - : bool = false
-    
     
     # run tm_q2_duplicate "abbaba";;
     start  [>] a  b  b  a  b  a
