@@ -94,7 +94,7 @@ function twice in succession to the integer:
 
 As a simple example of a Turing machine, here is the code implementing a Turing machine
 accepting the regular language &lcub;a<sup>m</sup>b<sup>n</sup> |
-m,n& ge; 0&rcub;:
+m,n &ge; 0&rcub;:
 
     let asbs =
       let d inp = (match inp with
@@ -476,7 +476,7 @@ answers. Just replace the placeholder with your definition.
 
 Construct a total Turing machine **`tm_q2_ab3`** that accepts the language
 consisting of all strings over the alphabet `{a,b}` of the form
-`a`<sup>n</sup>`b`<sup>3n</sup> for any n&ge;0.
+`a`<sup>n</sup>`b`<sup>3n</sup> for any n &ge; 0.
 
 Sample output (without showing the printed configurations):
 
