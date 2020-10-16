@@ -1,4 +1,4 @@
-# Homework 2
+# Homework 3
 
 ## Due Date: Thursday, October 15, 2020 (23h59)
 
