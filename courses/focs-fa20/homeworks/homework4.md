@@ -709,8 +709,8 @@ Sample output (without showing configurations):
     start  [>] 0  #  1  1
     - : bool = false
     
-    # run tm_q2_plus1 "00#1";;
-    start  [>] 0  0  #  1
+    # run tm_q2_plus1 "01#0";;
+    start  [>] 0  1  #  0
     - : bool = false
     
     # run tm_q2_plus1 "1#1";;
