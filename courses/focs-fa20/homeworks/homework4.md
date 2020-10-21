@@ -621,23 +621,23 @@ Sample output (without showing configurations):
     start  [>] 1  1  1  0  #  0  1  1  1  #  0  1  1  0
     - : bool = true
     
-    # run tm_q2_and "0#0"
+    # run tm_q2_and "0#0";;
     start  [>] 0  #  0
     - : bool = false
     
-    # run tm_q2_and "0#01#1"
+    # run tm_q2_and "0#01#1";;
     start  [>] 0  #  0  1  #  1
     - : bool = false
     
-    # run tm_q2_and "00#11#11"
+    # run tm_q2_and "00#11#11";;
     start  [>] 0  0  #  1  1  #  1  1
     - : bool = false
     
-    # run tm_q2_and "001#001#000"
+    # run tm_q2_and "001#001#000";;
     start  [>] 0  0  1  #  0  0  1  #  0  0  0
     - : bool = false
     
-    # run tm_q2_and "001#001#011"
+    # run tm_q2_and "001#001#011";;
     start  [>] 0  0  1  #  0  0  1  #  0  1  1
     - : bool = false
 
@@ -735,7 +735,7 @@ accepts any string that is made up of two consecutive copies of the same sequenc
 
 **Hint**: One way to do this is in two multi-pass steps: (1) replace
 every `a` and `b` in the first half of the input string by two new
-symbols (for instance, `A` and `B`) and every `a` and `b` in the
+      symbols (for instance, `A` and `B`) and every `a` and `b` in the
 second half of the input string by two new symbols (for instance, `C`
 and `D`) -- can you do this without needing the find the middle of the
 string?; (2) match every `A` and `C` and every `B` and `D`, in order.
