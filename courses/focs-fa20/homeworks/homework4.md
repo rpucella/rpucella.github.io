@@ -94,7 +94,7 @@ function twice in succession to the integer:
 
 As a simple example of a Turing machine, here is the code implementing a Turing machine
 accepting the regular language &lcub;a<sup>m</sup>b<sup>n</sup> |
-m,n& ge; 0&rcub;:
+m,n &ge; 0&rcub;:
 
     let asbs =
       let d inp = (match inp with
@@ -476,7 +476,7 @@ answers. Just replace the placeholder with your definition.
 
 Construct a total Turing machine **`tm_q2_ab3`** that accepts the language
 consisting of all strings over the alphabet `{a,b}` of the form
-`a`<sup>n</sup>`b`<sup>3n</sup> for any n&ge;0.
+`a`<sup>n</sup>`b`<sup>3n</sup> for any n &ge; 0.
 
 Sample output (without showing the printed configurations):
 
@@ -621,23 +621,23 @@ Sample output (without showing configurations):
     start  [>] 1  1  1  0  #  0  1  1  1  #  0  1  1  0
     - : bool = true
     
-    # run tm_q2_and "0#0"
+    # run tm_q2_and "0#0";;
     start  [>] 0  #  0
     - : bool = false
     
-    # run tm_q2_and "0#01#1"
+    # run tm_q2_and "0#01#1";;
     start  [>] 0  #  0  1  #  1
     - : bool = false
     
-    # run tm_q2_and "00#11#11"
+    # run tm_q2_and "00#11#11";;
     start  [>] 0  0  #  1  1  #  1  1
     - : bool = false
     
-    # run tm_q2_and "001#001#000"
+    # run tm_q2_and "001#001#000";;
     start  [>] 0  0  1  #  0  0  1  #  0  0  0
     - : bool = false
     
-    # run tm_q2_and "001#001#011"
+    # run tm_q2_and "001#001#011";;
     start  [>] 0  0  1  #  0  0  1  #  0  1  1
     - : bool = false
 
@@ -709,8 +709,8 @@ Sample output (without showing configurations):
     start  [>] 0  #  1  1
     - : bool = false
     
-    # run tm_q2_plus1 "00#1";;
-    start  [>] 0  0  #  1
+    # run tm_q2_plus1 "01#0";;
+    start  [>] 0  1  #  0
     - : bool = false
     
     # run tm_q2_plus1 "1#1";;
@@ -735,7 +735,7 @@ accepts any string that is made up of two consecutive copies of the same sequenc
 
 **Hint**: One way to do this is in two multi-pass steps: (1) replace
 every `a` and `b` in the first half of the input string by two new
-symbols (for instance, `A` and `B`) and every `a` and `b` in the
+      symbols (for instance, `A` and `B`) and every `a` and `b` in the
 second half of the input string by two new symbols (for instance, `C`
 and `D`) -- can you do this without needing the find the middle of the
 string?; (2) match every `A` and `C` and every `B` and `D`, in order.

@@ -80,7 +80,7 @@ val square : int -&gt; int = &lt;fun&gt;
 
 # twice square 20;;
 - : int = 160000</code></pre>
-<p>As a simple example of a Turing machine, here is the code implementing a Turing machine accepting the regular language {a<sup>m</sup>b<sup>n</sup> | m,n&amp; ge; 0}:</p>
+<p>As a simple example of a Turing machine, here is the code implementing a Turing machine accepting the regular language {a<sup>m</sup>b<sup>n</sup> | m,n ≥ 0}:</p>
 <pre><code>let asbs =
   let d inp = (match inp with
                | (1, &#39;a&#39;) -&gt; (1, &#39;a&#39;, 1)
@@ -366,7 +366,7 @@ val square : int -&gt; int = &lt;fun&gt;
 <p>In this question and the next, you will construct Turing machines. You can test your Turing machines with the code you wrote in Question 1.</p>
 <p>For submission purposes, I ask you to define those Turing machines as constants using <code>let</code> with a fixed name given below in each question. There is already a placeholder in <code>homework4.ml</code> for those answers. Just replace the placeholder with your definition.</p>
 <h3 id="a-1">(A)</h3>
-<p>Construct a total Turing machine <strong><code>tm_q2_ab3</code></strong> that accepts the language consisting of all strings over the alphabet <code>{a,b}</code> of the form <code>a</code><sup>n</sup><code>b</code><sup>3n</sup> for any n≥0.</p>
+<p>Construct a total Turing machine <strong><code>tm_q2_ab3</code></strong> that accepts the language consisting of all strings over the alphabet <code>{a,b}</code> of the form <code>a</code><sup>n</sup><code>b</code><sup>3n</sup> for any n ≥ 0.</p>
 <p>Sample output (without showing the printed configurations):</p>
 <pre><code># run tm_q2_ab3 &quot;&quot;;;
 start  [&gt;]
@@ -488,23 +488,23 @@ start  [&gt;] 1  0  1  #  0  1  0  #  0  0  0
 start  [&gt;] 1  1  1  0  #  0  1  1  1  #  0  1  1  0
 - : bool = true
 
-# run tm_q2_and &quot;0#0&quot;
+# run tm_q2_and &quot;0#0&quot;;;
 start  [&gt;] 0  #  0
 - : bool = false
 
-# run tm_q2_and &quot;0#01#1&quot;
+# run tm_q2_and &quot;0#01#1&quot;;;
 start  [&gt;] 0  #  0  1  #  1
 - : bool = false
 
-# run tm_q2_and &quot;00#11#11&quot;
+# run tm_q2_and &quot;00#11#11&quot;;;
 start  [&gt;] 0  0  #  1  1  #  1  1
 - : bool = false
 
-# run tm_q2_and &quot;001#001#000&quot;
+# run tm_q2_and &quot;001#001#000&quot;;;
 start  [&gt;] 0  0  1  #  0  0  1  #  0  0  0
 - : bool = false
 
-# run tm_q2_and &quot;001#001#011&quot;
+# run tm_q2_and &quot;001#001#011&quot;;;
 start  [&gt;] 0  0  1  #  0  0  1  #  0  1  1
 - : bool = false</code></pre>
 <h3 id="d-1">(D)</h3>
@@ -563,8 +563,8 @@ start  [&gt;] 0  #  1  #  0  1
 start  [&gt;] 0  #  1  1
 - : bool = false
 
-# run tm_q2_plus1 &quot;00#1&quot;;;
-start  [&gt;] 0  0  #  1
+# run tm_q2_plus1 &quot;01#0&quot;;;
+start  [&gt;] 0  1  #  0
 - : bool = false
 
 # run tm_q2_plus1 &quot;1#1&quot;;;
