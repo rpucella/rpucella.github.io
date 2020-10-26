@@ -281,55 +281,55 @@ let p_succ = [REGISTER ("X", 0);
 (* QUESTION 1 *)
 
 
-let p_move = [REGISTER ("X", 0);
-              REGISTER ("Y", 1)]
+let p_move: instruction list = [REGISTER ("X", 0);
+                                REGISTER ("Y", 1)]
 
 
-let p_copy = [REGISTER ("X", 0);
-              REGISTER ("Y", 1)]
+let p_copy: instruction list = [REGISTER ("X", 0);
+                                REGISTER ("Y", 1)]
 
 
-let p_swap = [REGISTER ("X", 0);
-              REGISTER ("Y", 1)]
+let p_swap: instruction list = [REGISTER ("X", 0);
+                                REGISTER ("Y", 1)]
 
 
-let p_plus = [REGISTER ("X", 0);
-              REGISTER ("Y", 1);
-              REGISTER ("Z", 2)]
+let p_plus: instruction list = [REGISTER ("X", 0);
+                                REGISTER ("Y", 1);
+                                REGISTER ("Z", 2)]
 
 
-let p_sub = [REGISTER ("X", 0);
-             REGISTER ("Y", 1);
-             REGISTER ("Z", 2)]
+let p_sub: instruction list = [REGISTER ("X", 0);
+                               REGISTER ("Y", 1);
+                               REGISTER ("Z", 2)]
 
 
-let p_max = [REGISTER ("X", 0);
-             REGISTER ("Y", 1);
-	     REGISTER ("Z", 2)]
+let p_max: instruction list = [REGISTER ("X", 0);
+                               REGISTER ("Y", 1);
+                  	     REGISTER ("Z", 2)]
              
            
-let p_diff = [REGISTER ("X", 0);
-              REGISTER ("Y", 1);
-              REGISTER ("Z", 2)]
+let p_diff: instruction list = [REGISTER ("X", 0);
+                                REGISTER ("Y", 1);
+                                REGISTER ("Z", 2)]
                
 
 (* QUESTION 2 *)
 
 
-let p_times = [REGISTER ("X", 0);
-               REGISTER ("Y", 1);
-               REGISTER ("Z", 2)]
+let p_times: instruction list = [REGISTER ("X", 0);
+                                 REGISTER ("Y", 1);
+                                 REGISTER ("Z", 2)]
 
 
-let p_square = [REGISTER ("X", 0);
-                REGISTER ("Z", 1)]
+let p_square: instruction list = [REGISTER ("X", 0);
+                                  REGISTER ("Z", 1)]
 
 
-let p_square_x_2 = [REGISTER ("X", 0);
-                    REGISTER ("Z", 1)]
+let p_square_x_2: instruction list = [REGISTER ("X", 0);
+                                      REGISTER ("Z", 1)]
             
 
 (* QUESTION 3 *)
 
-let p_half = [REGISTER ("X", 0);
-              REGISTER ("Z", 1)]
+let p_half: instruction list = [REGISTER ("X", 0);
+                                REGISTER ("Z", 1)]
