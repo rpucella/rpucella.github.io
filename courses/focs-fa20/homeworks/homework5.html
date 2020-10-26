@@ -69,7 +69,7 @@
 <pre><code>let p_reset = [REGISTER (&quot;X&quot;, 0);
                LABEL &quot;loop&quot;;
                DEC (&quot;X&quot;, &quot;done&quot;);
-               JMP &quot;loop&quot;;
+               JUMP &quot;loop&quot;;
                LABEL &quot;done&quot;;
                TRUE]</code></pre>
 <p>To run the program, you call <code>run</code> passing in the program and also a list with an initial values for the first N registers. For instance:</p>

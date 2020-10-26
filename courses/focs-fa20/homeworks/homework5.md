@@ -70,7 +70,7 @@ Here is a program that gives name `X` to the first register, and decrements it u
     let p_reset = [REGISTER ("X", 0);
                    LABEL "loop";
                    DEC ("X", "done");
-                   JMP "loop";
+                   JUMP "loop";
                    LABEL "done";
                    TRUE]
 
