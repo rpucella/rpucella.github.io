@@ -281,10 +281,6 @@ let p_succ = [REGISTER ("X", 0);
 (* QUESTION 1 *)
 
 
-let p_move: instruction list = [REGISTER ("X", 0);
-                                REGISTER ("Y", 1)]
-
-
 let p_copy: instruction list = [REGISTER ("X", 0);
                                 REGISTER ("Y", 1)]
 
