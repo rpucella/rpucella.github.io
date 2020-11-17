@@ -1,0 +1,412 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 20px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     pre { 
+        margin-left: 30px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="homework-7">Homework 7</h1>
+<h2 id="due-date-sunday-november-29-2020-23h59">Due Date: Sunday, November 29, 2020 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems with fellow students, but all submitted work must be entirely your own, and should not be from any other course, present, past, or future. If you use a solution from another source you must cite it — this includes when that source is someone else helping you.</p></li>
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+<li><p>All programming is to be done in OCaml v4.</p></li>
+<li><p>Code your answers by modifying the file <a href="homework7.ml"><code>homework7.ml</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you wish to make to the instructor to the block comment at the head of the file.</p></li>
+<li><p><strong>Please do not change the types in the signature of the function stubs I provide</strong>. Doing so will make it impossible to load your code into the testing infrastructure, and make me unhappy.</p></li>
+<li><p>Feel free to define helper functions if you need them.</p></li>
+</ul>
+<h2 id="electronic-submission-instructions">Electronic Submission Instructions</h2>
+<ul>
+<li><p>Start a <em>fresh</em> OCaml shell.</p></li>
+<li><p>Load your homework code via <code>#use &quot;homework7.ml&quot;;;</code> to make sure that there will be no errors when I load your code.</p></li>
+<li><p>If there are any error, do not submit. I can't test what I can't <code>#use</code>.</p></li>
+<li><p>When you're ready to submit, send an email with your file <code>homework7.ml</code> as an attachment to <code>olin.submissions@gmail.com</code> with subject <em>Homework 7 submission</em>.</p></li>
+</ul>
+<hr />
+<p>This homework is about the lambda calculus. I've implemented some code for you to simplify lambda-calculus terms using the rules we saw in class. The result is not fast, but it works.</p>
+<p>A term is just a string in OCaml. The syntax of terms is the one we saw in class, adapted to the ASCII character set:</p>
+<ul>
+<li>An identifier can be any sequence of alphanumeric characters (including <code>_</code>, and starting with a letter), such as <code>x</code> or <code>arg_2</code></li>
+<li>An abstraction is written <code>&lt;identifier -&gt; M&gt;</code> where <code>M</code> is a term, such as <code>&lt;x -&gt; x&gt;</code> or <code>&lt;arg -&gt; plus arg arg&gt;</code></li>
+<li>An application is written <code>M N</code>, where <code>M</code> and <code>N</code> are terms
+</li></li>
+<li>Terms can be wrapped in parentheses, such as <code>(&lt;x -&gt; x&gt;)</code> or <code>(ident1 &lt;y -&gt; y&gt;)</code>. Without parentheses, applications associate to the left, so that <code>M N O P</code> parses as <code>((M N) O) P</code>.</li>
+</ul>
+<p>OCaml lets you write multi-line strings, which is super convenient if you want to structure a longer term such as :</p>
+<pre><code># let t = &quot;&lt;x -&gt; 
+             &lt;y -&gt; 
+               &lt;z -&gt; (iszero x)
+                       z 
+                       y&gt;&gt;&gt;&quot;;;
+val t : string =
+  &quot;&lt;x -&gt; \n           &lt;y -&gt; \n             &lt;z -&gt; (iszero x)\n                   z \n                     y&gt;&gt;&gt;&quot;</code></pre>
+<p>The extra whitespace won't affect the simplification rules.</p>
+<p>To simplify terms, I implemented a function <code>simplify</code> that repeatedly simplifies redexes until the term reaches a normal form. (If a normal form is not reached after 5000 steps, you'll get an error.)</p>
+<pre><code># simplify [] &quot;&lt;x -&gt; x&gt;&quot;;;
+Term already in normal form
+- : string = &quot;&lt;x -&gt; x&gt;&quot;
+# simplify [] &quot;&lt;x -&gt; x&gt; z&quot;;;
+- : string = &quot;z&quot;
+# simplify [] &quot;&lt;x -&gt; &lt;y -&gt; y y&gt; x&gt; z&quot;;;
+- : string = &quot;z z&quot;</code></pre>
+<p>A variant of <code>simplify</code> called <code>simplify_verbose</code> reports all intermediate terms that arise during a simplification. That can be quite helpful for debugging.</p>
+<pre><code># simplify_verbose [] &quot;&lt;x -&gt; &lt;y -&gt; y y&gt; x&gt; z&quot;;;
+   &lt;x -&gt; &lt;y -&gt; y y&gt; x&gt; z
+ = &lt;y -&gt; y y&gt; z
+ = z z
+- : string = &quot;z z&quot;</code></pre>
+<p>The first argument to <code>simplify</code> and <code>simplify_verbose</code> is a list of abbreviations that can be used in the term you want to simplify.?Recall that when I presented the lambda calculus in class, I started defining terms as abbreviations, such as <code>true</code> and <code>false</code>, to help us when writing down more interesting terms. The first argument to <code>simplify</code> and <code>simplify_verbose</code> is a sequence of definitions that you can use in your term being simplified, each of the form <em>(name,def)</em> where <em>name</em> is the name of the term being defined, and <em>def</em> is the definition. For example, here are some definitions:</p>
+<pre><code># let my_defs = [
+    (&quot;plus2&quot;, &quot;&lt;n -&gt; succ (succ n)&gt;&quot;);
+    (&quot;plus4&quot;, &quot;&lt;n -&gt; plus2 (plus2 n)&gt;&quot;)
+  ];;
+val my_defs : (string * string) list =
+  [(&quot;plus2&quot;, &quot;&lt;n -&gt; succ (succ n)&gt;&quot;); (&quot;plus4&quot;, &quot;&lt;n -&gt; plus2 (plus2 n)&gt;&quot;)]
+# simplify my_defs &quot;plus4 _1&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f x))))&gt;&gt;&quot;</code></pre>
+<p>By default, and to make your life easier, <code>simplify</code> and <code>simplify_verbose</code> always add the definitions of stuff we did in class (including natural number arithmetic, complete with a predecessor function) to whatever definitions you provide, so that they are available to you without you needing to do anything special:</p>
+<pre><code>let default_defs = [ 
+   (&quot;true&quot;, &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;);
+   (&quot;false&quot;, &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;);
+   (&quot;if&quot;, &quot;&lt;c -&gt; &lt;x -&gt; &lt;y -&gt; c x y&gt;&gt;&gt;&quot;);
+   (&quot;and&quot;, &quot;&lt;a -&gt; &lt;b -&gt; if a b false&gt;&gt;&quot;);
+   (&quot;or&quot;, &quot;&lt;a -&gt; &lt;b -&gt; if a true b&gt;&gt;&quot;);
+   (&quot;not&quot;, &quot;&lt;a -&gt; if a false true&gt;&quot;);
+   
+   (&quot;_0&quot;,&quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;);
+   (&quot;_1&quot;,&quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;);
+   (&quot;_2&quot;,&quot;&lt;f -&gt; &lt;x -&gt; f (f x)&gt;&gt;&quot;);
+   (&quot;_3&quot;,&quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;);
+   (&quot;_4&quot;,&quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt;&quot;);
+   (&quot;_5&quot;,&quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f x))))&gt;&gt;&quot;);
+   (&quot;succ&quot;,&quot;&lt;n -&gt; &lt;f -&gt; &lt;x -&gt; (n f) (f x)&gt;&gt;&gt;&quot;);
+   (&quot;plus&quot;,&quot;&lt;m -&gt; &lt;n -&gt; &lt;f -&gt; &lt;x -&gt; (m f) (n f x)&gt;&gt;&gt;&gt;&quot;);
+   (&quot;times&quot;,&quot;&lt;m -&gt; &lt;n -&gt; &lt;f -&gt; &lt;x -&gt; m (n f) x&gt;&gt;&gt;&gt;&quot;);
+   (&quot;iszero&quot;,&quot;&lt;n -&gt; n &lt;x -&gt; false&gt; true&gt;&quot;);
+   (&quot;pred&quot;,&quot;&lt;n -&gt; &lt;f -&gt; &lt;x -&gt; n &lt;g -&gt; &lt;h -&gt; h (g f)&gt;&gt; &lt;u -&gt; x&gt; &lt;u -&gt; u&gt;&gt;&gt;&gt;&quot;);
+
+   (&quot;pair&quot;,&quot;&lt;x -&gt; &lt;y -&gt; &lt;s -&gt; s x y&gt;&gt;&gt;&quot;);
+   (&quot;first&quot;, &quot;&lt;p -&gt; p &lt;x -&gt; &lt;y -&gt; x&gt;&gt;&gt;&quot;);
+   (&quot;second&quot;, &quot;&lt;p -&gt; p &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt;&quot;);
+   
+   (&quot;empty&quot;, &quot;&lt;p -&gt; first p&gt;&quot;);
+   (&quot;cons&quot;,&quot;&lt;x -&gt; &lt;y -&gt; &lt;p -&gt; (second p) x y&gt;&gt;&gt;&quot;);
+
+   (&quot;Theta&quot;, &quot;&lt;x -&gt; &lt;y -&gt; y ((x x) y)&gt;&gt; &lt;x -&gt; &lt;y -&gt; y ((x x) y)&gt;&gt;&quot;);
+   (&quot;sumto&quot;,&quot;Theta &lt;f -&gt; &lt;n -&gt; (iszero n) _0 (plus n (f (pred n)))&gt;&gt;&quot;)
+]</code></pre>
+<p><strong>Please do not modify <code>default_defs</code>. I will be testing your code with my own definition of <code>default_defs</code>, and I will not see the changes you've made. This will probably make my tests fail on your code.</strong></p>
+<p>You'll note that you have only the first 6 natural numbers defined as literals. This means that if you want to use natural number 8 somewhere, for instance, you will either have to create it by hand, or use the arithmetic operations:</p>
+<pre><code># simplify_verbose [] &quot;plus _4 _4&quot;;;
+   &lt;m -&gt; &lt;n -&gt; &lt;f -&gt; &lt;x -&gt; m f (n f x)&gt;&gt;&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt;
+ = &lt;n -&gt; &lt;f -&gt; &lt;x -&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; f (n f x)&gt;&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt;
+ = &lt;f -&gt; &lt;x -&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; f (&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; f x)&gt;&gt;
+ = &lt;f -&gt; &lt;x -&gt; &lt;x -&gt; f (f (f (f x)))&gt; (&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; f x)&gt;&gt;
+ = &lt;f -&gt; &lt;x -&gt; f (f (f (f (&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; f x))))&gt;&gt;
+ = &lt;f -&gt; &lt;x -&gt; f (f (f (f (&lt;x -&gt; f (f (f (f x)))&gt; x))))&gt;&gt;
+ = &lt;f -&gt; &lt;x -&gt; f (f (f (f (f (f (f (f x)))))))&gt;&gt;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f (f (f (f x)))))))&gt;&gt;&quot;</code></pre>
+<p>When you simplify a term, all abbreviations are expanded out using their definition before simplification occurs. This means that when you get the simplified term back, it will be expressed in terms of the expanded out definitions. Thus, if you want to check that the number 8 you create above is zero or not, you'll get the resulting <code>false</code> as <code>&lt;x -&gt; &lt;y -&gt;y&gt;&gt;</code>:</p>
+<pre><code># simplify_verbose [] &quot;iszero (plus _4 _4)&quot;;;
+   &lt;n -&gt; n &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;&gt; (&lt;m -&gt; &lt;n -&gt; &lt;f -&gt; &lt;x -&gt; m f (n f x)&gt;&gt;&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt;)
+ = &lt;m -&gt; &lt;n -&gt; &lt;f -&gt; &lt;x -&gt; m f (n f x)&gt;&gt;&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;
+ = &lt;n -&gt; &lt;f -&gt; &lt;x -&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; f (n f x)&gt;&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;
+ = &lt;f -&gt; &lt;x -&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; f (&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; f x)&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;
+ = &lt;x -&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; (&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; x)&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;
+ = &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; (&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;)
+ = &lt;x -&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; (&lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; (&lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; (&lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; x)))&gt; (&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;)
+ = &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; (&lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; (&lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; (&lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; (&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;))))
+ = &lt;x -&gt; &lt;y -&gt; y&gt;&gt;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;  </code></pre>
+<p>Don't worry, by the time you're done with this homework, your brain will be rewired so that you'll read <code>&lt;x -&gt; &lt;y -&gt; y&gt;&gt;</code> as <code>false</code> and <code>&lt;x -&gt; &lt;y -&gt; x&gt;&gt;</code> as <code>true</code>. You're welcome.</p>
+A tricky point about definitions: every definition in the list of definitions can only refer to previously defined terms. This means two things. First, that you can't write recursive definitions. If you want recursion, you need to use the Θ combinator — see <code>sumto</code> in the default definitions for an example. It also means that the order of definitions is important, just like in OCaml. What's tricky is that if you mess it up, the simplification process will not complain. An undefined identifier is just that, an identifier, and it is passed around as an identifier. This makes debugging somewhat painful. For instance, suppose you mistakenly wrote <code>pluss</code> instead of <code>plus</code> in the previous example:
+</p>
+
+<pre><code># simplify_verbose [] &quot;iszero (pluss _4 _4)&quot;;;
+   &lt;n -&gt; n &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;&gt; (pluss &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt;)
+ = pluss &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;
+- : string =
+&quot;pluss &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;   </code></pre>
+<p>Yeah, that's not great. The clue that something went wrong is the <code>pluss</code> there at the beginning.</p>
+<p>All the questions below ask you to create definitions. <strong>You will add those definitions to the list <code>q123_defs</code></strong> — there are already placeholders that you will need to replace. That's the list I will test during grading. All the helper functions needed by your definitions should also be in that list. Feel free to add as many helper functions as you need.</p>
+<hr />
+<h2 id="question-1-encodings">Question 1: Encodings</h2>
+<h3 id="a">(A)</h3>
+<p>Code a term <strong><code>xor</code></strong> which takes two Boolean arguments <em>a</em> and <em>b</em> and returns <code>true</code> when exactly one of <em>a</em> or <em>b</em> is true, and returns <code>false</code> otherwise.</p>
+<pre><code># simplify q123_defs &quot;xor true true&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;xor true false&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;xor false true&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;xor false false&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;</code></pre>
+<h3 id="b">(B)</h3>
+<p>Code a term <strong><code>minus</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns <em>m-n</em> if <em>m</em> is greater than <em>n</em>, and 0 otherwise.</p>
+<pre><code># simplify q123_defs &quot;minus _3 _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;
+# simplify q123_defs &quot;minus _3 _2&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;
+# simplify q123_defs &quot;minus _3 _3&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;minus _3 _4&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;minus _0 _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;minus _0 _2&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;</code></pre>
+<p><strong>Hint:</strong> Observe that <code>pred 0</code> is <code>0</code>.</p>
+<h3 id="c">(C)</h3>
+<p>Code a term <strong><code>ge</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns <code>true</code> when <em>m</em> is greater than or equal to <em>n</em>, and <code>false</code> otherwise.</p>
+<p>Code a term <strong><code>gt</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns <code>true</code> when <em>m</em> is greater than (but not equal to) <em>n</em>, and <code>false</code> otherwise.</p>
+<pre><code># simplify q123_defs &quot;ge _3 _0&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;ge _3 _2&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;ge _3 _3&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;ge _3 _4&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;ge _3 _5&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;ge _0 _0&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;ge _0 _1&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+        
+# simplify q123_defs &quot;gt _3 _0&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;gt _3 _2&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;gt _3 _3&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;gt _3 _4&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;gt _3 _5&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;gt _0 _0&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;gt _0 _1&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;gt _1 _0&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;</code></pre>
+<h3 id="d">(D)</h3>
+<p>Code a term <strong><code>max</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns the larger of the two.</p>
+<p>Code a term <strong><code>min</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns the smaller of the two.</p>
+<pre><code># simplify q123_defs &quot;max _3 _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;
+# simplify q123_defs &quot;max _3 _2&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;
+# simplify q123_defs &quot;max _3 _3&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;
+# simplify q123_defs &quot;max _3 _4&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt;&quot;
+# simplify q123_defs &quot;max _3 _5&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f x))))&gt;&gt;&quot;
+# simplify q123_defs &quot;max _0 _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;max _0 _1&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;
+# simplify q123_defs &quot;max _1 _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;
+
+# simplify q123_defs &quot;min _3 _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;min _3 _2&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f x)&gt;&gt;&quot;
+# simplify q123_defs &quot;min _3 _3&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;
+# simplify q123_defs &quot;min _3 _4&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;
+# simplify q123_defs &quot;min _3 _5&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;
+# simplify q123_defs &quot;min _0 _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;min _0 _1&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;min _1 _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;</code></pre>
+<h3 id="e">(E)</h3>
+<p>We saw an encoding of pairs in class. A triple is a package containing three values, <em>(x,y,z)</em>. Your task is to create an encoding for triples.</p>
+<p>Code a term <strong><code>triple</code></strong> which takes three terms and returns a triple of those three terms using your encoding. Code terms <strong><code>firstT</code></strong>, <strong><code>secondT</code></strong>, and <strong><code>thirdT</code></strong> each taking a triple (created by function <code>triple</code>) as an argument and returning the first, second, and third element of the triple, respectively.</p>
+<p>Your terms should satisfy the following properties:</p>
+<pre><code>firstT (triple a b c) = a
+secondT (triple a b c) = b
+thirdT (triple a b c) = c
+    
+
+# simplify q123_defs &quot;firstT (triple a b c)&quot;;;
+- : string = &quot;a&quot;
+# simplify q123_defs &quot;secondT (triple a b c)&quot;;;
+- : string = &quot;b&quot;
+# simplify q123_defs &quot;thirdT (triple a b c)&quot;;;
+- : string = &quot;c&quot;</code></pre>
+<h2 id="question-2-integers">Question 2: Integers</h2>
+<p>We saw in class an encoding of natural numbers 0,1,2,3,... In this question, we consider an encoding of integers, ...,-3,-2,-1,0,1,2,3,...</p>
+<p>The encoding is dead simple. An integer is a pair of a sign and a natural number. The sign will be represented by a Boolean value: <code>true</code> for positive integers, and <code>false</code> for negative integers. Thus, <em>(true,3)</em> is the representation of integer 3, and <em>(false,2)</em> the representation of integer -2. <strong>Integer 0 is always represented as (true,0).</strong></p>
+<h3 id="a-1">(A)</h3>
+<p>Code a term <strong><code>int</code></strong> which takes a natural number <em>n</em> and returns a (positive) integer <em>n</em> in the encoding described above.</p>
+<pre><code># simplify q123_defs &quot;first (int _0)&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (int _0)&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (int _1)&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (int _1)&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (int _2)&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (int _2)&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f x)&gt;&gt;&quot;   </code></pre>
+<h3 id="b-1">(B)</h3>
+<p>Code a term <strong><code>neg_int</code></strong> which takes an integer <em>n</em> in the encoding described above, and returns its negation. Recall that the negation of 2 is -2, and the negation of -3 is 3.</p>
+<pre><code># simplify q123_defs &quot;first (neg_int (int _3))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;second (neg_int (int _3))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (neg_int (neg_int (int _3)))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (neg_int (neg_int (int _3)))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;      </code></pre>
+<h3 id="c-1">(C)</h3>
+<p>Code a term <strong><code>abs</code></strong> which takes an integer <em>n</em> in the encoding described above, and returns its absolute value (as an integer still).</p>
+<pre><code># simplify q123_defs &quot;first (abs (int _2))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (abs (int _2))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f x)&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (abs (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (abs (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f x)&gt;&gt;&quot;</code></pre>
+<h3 id="d-1">(D)</h3>
+<p>Code a term <strong><code>plus_int</code></strong> which takes two integers <em>m</em> and <em>n</em> in the encoding described above and returns integer <em>m+n</em>. Of course, <em>m</em> and <em>n</em> may be negative.</p>
+<pre><code># simplify q123_defs &quot;first (plus_int (int _3) (int _2))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (plus_int (int _3) (int _2))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f x))))&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (plus_int (int _3) (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (plus_int (int _3) (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (plus_int (neg_int (int _3)) (int _2))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;second (plus_int (neg_int (int _3)) (int _2))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (plus_int (neg_int (int _3)) (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;second (plus_int (neg_int (int _3)) (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f x))))&gt;&gt;&quot;      </code></pre>
+<p><strong>Hint:</strong> Just consider all possibilities. You will find functions <code>ge</code> and <code>minus</code> from Question 1 useful here.</p>
+<h3 id="e-1">(E)</h3>
+<p>Code a term <strong><code>times_int</code></strong> which takes two integers <em>m</em> and <em>n</em> in the encoding described above and returns integer <em>m × n</em>. Of course, <em>m</em> and <em>n</em> may be negative.</p>
+<pre><code># simplify q123_defs &quot;first (times_int (int _3) (int _2))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (times_int (int _3) (int _2))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f (f x)))))&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (times_int (int _3) (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;second (times_int (int _3) (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f (f x)))))&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (times_int (neg_int (int _3)) (int _2))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;second (times_int (neg_int (int _3)) (int _2))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f (f x)))))&gt;&gt;&quot;
+
+# simplify q123_defs &quot;first (times_int (neg_int (int _3)) (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;second (times_int (neg_int (int _3)) (neg_int (int _2)))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f (f x)))))&gt;&gt;&quot;      
+  </code></pre>
+<h2 id="question-3-lists-and-recursion">Question 3: Lists and Recursion</h2>
+<h3 id="a-2">(A)</h3>
+<p>Let's encode lists. The encoding is a variant of that for pairs, with a twist. The encoding of pairs we saw encodes a pair as a function that takes a selector function <em>s</em> as an argument and applies that selector function to the two components of the pair.</p>
+<p>For lists, the twist is that there are two kinds of lists that need to be handled differently: empty lists, and non-empty lists. Here is the encoding for an empty list <code>empty</code>, and the encoding for a nonempty list <code>cons x y</code> with first element <code>x</code> and rest <code>y</code> (essentially <code>x::y</code> in OCaml):</p>
+<pre><code>empty = &lt;p -&gt; first p&gt;
+cons  = &lt;x -&gt; &lt;y -&gt; &lt;p -&gt; (second p) x y&gt;&gt;&gt;
+    </code></pre>
+<p>Your goal is to understand this encoding, and to code a term <strong><code>match_list</code></strong> which takes a list <em>L</em> (encoded as above) and two other arguments <em>a</em> and <em>f</em> and returns <em>a</em> if <em>L</em> is the empty list, and otherwise calls <em>f</em> with the head of <em>L</em> and the tail of <em>L</em> as arguments.</p>
+Roughly speaking, <code>match_list lst a &lt;h -&gt; &lt;t -&gt; M&gt;&gt;</code> behaves like <code>match lst with [] -&gt; a | h::t -&gt; M</code> in OCaml.
+</p>
+
+<p>Your function <code>match_list</code> should satisfy the following properties:</p>
+<pre><code>match_list empty a f = a
+match_list (cons h t) a f = f h t
+
+# simplify q123_defs &quot;match_list empty a f&quot;;;
+- : string = &quot;a&quot;
+# simplify q123_defs &quot;match_list (cons h t) a f&quot;;;
+- : string = &quot;f h t&quot;
+# simplify q123_defs &quot;match_list (cons A empty) a &lt;h -&gt; &lt;t -&gt; h&gt;&gt;&quot;;;
+- : string = &quot;A&quot;
+# simplify q123_defs &quot;match_list (cons A (cons B empty)) a &lt;h -&gt; &lt;t -&gt; h&gt;&gt;&quot;;;
+- : string = &quot;A&quot;
+# simplify q123_defs &quot;match_list (cons A (cons B empty)) a &lt;h -&gt; &lt;t -&gt; 
+                       match_list t a &lt;h -&gt; &lt;t -&gt; h&gt;&gt;&gt;&gt;&quot;;;
+- : string = &quot;B&quot;        </code></pre>
+<h3 id="b-2">(B)</h3>
+<p>Code a recursive term <strong><code>sum</code></strong> which takes a list of natural numbers in the encoding described above and returns a natural number (in the encoding we saw in class) representing the sum of its elements.</p>
+<pre><code># simplify q123_defs &quot;sum empty&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;sum (cons _1 empty)&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;
+# simplify q123_defs &quot;sum (cons _1 (cons _3 empty))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt;&quot;
+# simplify q123_defs &quot;sum (cons _1 (cons _3 (cons _5 empty)))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f (f (f (f (f x))))))))&gt;&gt;&quot;      </code></pre>
+<p><strong>Hint:</strong> Use Θ for the recursion.</p>
+<h3 id="c-2">(C)</h3>
+<p>Code a recursive term <strong><code>fold_right</code></strong> which takes a function <em>f</em>, a list <em>L</em> (in the encoding described above), and a base value <em>b</em>, and returns the result of doing a <code>fold_right</code> on list <em>L</em> with folding function <em>f</em> and base value <em>b</em>. It basically should behave exactly like <code>fold_right</code> in OCaml.</p>
+<pre><code># simplify q123_defs &quot;fold_right &lt;a -&gt; &lt;r -&gt; succ r&gt;&gt; empty _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;fold_right &lt;a -&gt; &lt;r -&gt; succ r&gt;&gt; (cons _1 empty) _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;
+# simplify q123_defs &quot;fold_right &lt;a -&gt; &lt;r -&gt; succ r&gt;&gt; (cons _1 (cons _3 empty)) _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f x)&gt;&gt;&quot;
+# simplify q123_defs &quot;fold_right &lt;a -&gt; &lt;r -&gt; succ r&gt;&gt; (cons _1 (cons _3 (cons _5 empty))) _0&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f x))&gt;&gt;&quot;</code></pre>
+<h3 id="d-2">(D)</h3>
+<p>Code a term <strong><code>sum_fold</code></strong> that computes the sum of the natural numbers in a list just like <code>sum</code> does but using <code>fold_right</code> from question (C) instead of using Θ.</p>
+<pre><code># simplify q123_defs &quot;sum_fold empty&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;sum_fold (cons _1 empty)&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;
+# simplify q123_defs &quot;sum_fold (cons _1 (cons _3 empty))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt;&quot;
+# simplify q123_defs &quot;sum_fold (cons _1 (cons _3 (cons _5 empty)))&quot;;;
+- : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f (f (f (f (f x))))))))&gt;&gt;&quot;</code></pre>
+
+</body>
+
+</html>
