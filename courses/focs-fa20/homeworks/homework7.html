@@ -78,7 +78,7 @@ Term already in normal form
  = &lt;y -&gt; y y&gt; z
  = z z
 - : string = &quot;z z&quot;</code></pre>
-<p>The first argument to <code>simplify</code> and <code>simplify_verbose</code> is a list of abbreviations that can be used in the term you want to simplify.?Recall that when I presented the lambda calculus in class, I started defining terms as abbreviations, such as <code>true</code> and <code>false</code>, to help us when writing down more interesting terms. The first argument to <code>simplify</code> and <code>simplify_verbose</code> is a sequence of definitions that you can use in your term being simplified, each of the form <em>(name,def)</em> where <em>name</em> is the name of the term being defined, and <em>def</em> is the definition. For example, here are some definitions:</p>
+<p>The first argument to <code>simplify</code> and <code>simplify_verbose</code> is a list of abbreviations that can be used in the term you want to simplify. Recall that when I presented the lambda calculus in class, I started defining terms as abbreviations, such as <code>true</code> and <code>false</code>, to help us when writing down more interesting terms. The first argument to <code>simplify</code> and <code>simplify_verbose</code> is a sequence of definitions that you can use in your term being simplified, each of the form <em>(name,def)</em> where <em>name</em> is the name of the term being defined, and <em>def</em> is the definition. For example, here are some definitions:</p>
 <pre><code># let my_defs = [
     (&quot;plus2&quot;, &quot;&lt;n -&gt; succ (succ n)&gt;&quot;);
     (&quot;plus4&quot;, &quot;&lt;n -&gt; plus2 (plus2 n)&gt;&quot;)
@@ -92,9 +92,6 @@ val my_defs : (string * string) list =
    (&quot;true&quot;, &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;);
    (&quot;false&quot;, &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;);
    (&quot;if&quot;, &quot;&lt;c -&gt; &lt;x -&gt; &lt;y -&gt; c x y&gt;&gt;&gt;&quot;);
-   (&quot;and&quot;, &quot;&lt;a -&gt; &lt;b -&gt; if a b false&gt;&gt;&quot;);
-   (&quot;or&quot;, &quot;&lt;a -&gt; &lt;b -&gt; if a true b&gt;&gt;&quot;);
-   (&quot;not&quot;, &quot;&lt;a -&gt; if a false true&gt;&quot;);
    
    (&quot;_0&quot;,&quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;);
    (&quot;_1&quot;,&quot;&lt;f -&gt; &lt;x -&gt; f x&gt;&gt;&quot;);
@@ -151,19 +148,36 @@ A tricky point about definitions: every definition in the list of definitions ca
 - : string =
 &quot;pluss &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;f -&gt; &lt;x -&gt; f (f (f (f x)))&gt;&gt; &lt;x -&gt; &lt;x -&gt; &lt;y -&gt; y&gt;&gt;&gt; &lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;   </code></pre>
 <p>Yeah, that's not great. The clue that something went wrong is the <code>pluss</code> there at the beginning.</p>
-<p>All the questions below ask you to create definitions. <strong>You will add those definitions to the list <code>q123_defs</code></strong> — there are already placeholders that you will need to replace. That's the list I will test during grading. All the helper functions needed by your definitions should also be in that list. Feel free to add as many helper functions as you need.</p>
+<p>All the questions below ask you to create definitions. <strong>You will add those definitions to the list <code>q123_defs</code></strong> — there are already placeholders that you will need to replace. That's the list I will test when grading. All the helper functions needed by your definitions should also be in that list. Feel free to add as many helper functions as you need.</p>
 <hr />
 <h2 id="question-1-encodings">Question 1: Encodings</h2>
 <h3 id="a">(A)</h3>
-<p>Code a term <strong><code>xor</code></strong> which takes two Boolean arguments <em>a</em> and <em>b</em> and returns <code>true</code> when exactly one of <em>a</em> or <em>b</em> is true, and returns <code>false</code> otherwise.</p>
-<pre><code># simplify q123_defs &quot;xor true true&quot;;;
+<p>Code a term <strong><code>not</code></strong> which takes a Boolean argument <em>a</em> and return <code>true</code> when <em>a</em> is false and returns <code>false</code> when <em>a</em> is true.</p>
+<p>Code a term <strong><code>and</code></strong> which takes two Boolean arguments <em>a</em> and <em>b</em> and returns <code>true</code> when both <em>a</em> and <em>b</em> are true, and returns <code>false</code> otherwise.</p>
+<p>Code a term <strong><code>or</code></strong> which takes two Boolean arguments <em>a</em> and <em>b</em> and returns <code>true</code> when at least one of <em>a</em> and <em>b</em> is true, and returns <code>false</code> otherwise.</p>
+<pre><code># simplify q123_defs &quot;not true&quot;;;
 - : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
-# simplify q123_defs &quot;xor true false&quot;;;
+# simplify q123_defs &quot;not false&quot;;;
 - : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
-# simplify q123_defs &quot;xor false true&quot;;;
+
+# simplify q123_defs &quot;and true true&quot;;;
 - : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
-# simplify q123_defs &quot;xor false false&quot;;;
+# simplify q123_defs &quot;and true false&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;and false true&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+# simplify q123_defs &quot;and false false&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;
+
+# simplify q123_defs &quot;or true true&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;or true false&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;or false true&quot;;;
+- : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
+# simplify q123_defs &quot;or false false&quot;;;
 - : string = &quot;&lt;x -&gt; &lt;y -&gt; y&gt;&gt;&quot;</code></pre>
+<p><strong>Hint:</strong> Use cascaded <code>if</code>s.</p>
 <h3 id="b">(B)</h3>
 <p>Code a term <strong><code>minus</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns <em>m-n</em> if <em>m</em> is greater than <em>n</em>, and 0 otherwise.</p>
 <pre><code># simplify q123_defs &quot;minus _3 _0&quot;;;
@@ -249,21 +263,7 @@ A tricky point about definitions: every definition in the list of definitions ca
 - : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;
 # simplify q123_defs &quot;min _1 _0&quot;;;
 - : string = &quot;&lt;f -&gt; &lt;x -&gt; x&gt;&gt;&quot;</code></pre>
-<h3 id="e">(E)</h3>
-<p>We saw an encoding of pairs in class. A triple is a package containing three values, <em>(x,y,z)</em>. Your task is to create an encoding for triples.</p>
-<p>Code a term <strong><code>triple</code></strong> which takes three terms and returns a triple of those three terms using your encoding. Code terms <strong><code>firstT</code></strong>, <strong><code>secondT</code></strong>, and <strong><code>thirdT</code></strong> each taking a triple (created by function <code>triple</code>) as an argument and returning the first, second, and third element of the triple, respectively.</p>
-<p>Your terms should satisfy the following properties:</p>
-<pre><code>firstT (triple a b c) = a
-secondT (triple a b c) = b
-thirdT (triple a b c) = c
-    
-
-# simplify q123_defs &quot;firstT (triple a b c)&quot;;;
-- : string = &quot;a&quot;
-# simplify q123_defs &quot;secondT (triple a b c)&quot;;;
-- : string = &quot;b&quot;
-# simplify q123_defs &quot;thirdT (triple a b c)&quot;;;
-- : string = &quot;c&quot;</code></pre>
+<hr />
 <h2 id="question-2-integers">Question 2: Integers</h2>
 <p>We saw in class an encoding of natural numbers 0,1,2,3,... In this question, we consider an encoding of integers, ...,-3,-2,-1,0,1,2,3,...</p>
 <p>The encoding is dead simple. An integer is a pair of a sign and a natural number. The sign will be represented by a Boolean value: <code>true</code> for positive integers, and <code>false</code> for negative integers. Thus, <em>(true,3)</em> is the representation of integer 3, and <em>(false,2)</em> the representation of integer -2. <strong>Integer 0 is always represented as (true,0).</strong></p>
@@ -327,7 +327,7 @@ thirdT (triple a b c) = c
 # simplify q123_defs &quot;second (plus_int (neg_int (int _3)) (neg_int (int _2)))&quot;;;
 - : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f x))))&gt;&gt;&quot;      </code></pre>
 <p><strong>Hint:</strong> Just consider all possibilities. You will find functions <code>ge</code> and <code>minus</code> from Question 1 useful here.</p>
-<h3 id="e-1">(E)</h3>
+<h3 id="e">(E)</h3>
 <p>Code a term <strong><code>times_int</code></strong> which takes two integers <em>m</em> and <em>n</em> in the encoding described above and returns integer <em>m × n</em>. Of course, <em>m</em> and <em>n</em> may be negative.</p>
 <pre><code># simplify q123_defs &quot;first (times_int (int _3) (int _2))&quot;;;
 - : string = &quot;&lt;x -&gt; &lt;y -&gt; x&gt;&gt;&quot;
@@ -349,6 +349,7 @@ thirdT (triple a b c) = c
 # simplify q123_defs &quot;second (times_int (neg_int (int _3)) (neg_int (int _2)))&quot;;;
 - : string = &quot;&lt;f -&gt; &lt;x -&gt; f (f (f (f (f (f x)))))&gt;&gt;&quot;      
   </code></pre>
+<hr />
 <h2 id="question-3-lists-and-recursion">Question 3: Lists and Recursion</h2>
 <h3 id="a-2">(A)</h3>
 <p>Let's encode lists. The encoding is a variant of that for pairs, with a twist. The encoding of pairs we saw encodes a pair as a function that takes a selector function <em>s</em> as an argument and applies that selector function to the two components of the pair.</p>

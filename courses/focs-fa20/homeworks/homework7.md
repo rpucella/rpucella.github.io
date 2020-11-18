@@ -99,7 +99,7 @@ simplification. That can be quite helpful for debugging.
 
 The first argument to `simplify`
 and `simplify_verbose` is a list of abbreviations that
-can be used in the term you want to simplify.?Recall that when
+can be used in the term you want to simplify. Recall that when
 I presented the lambda calculus in class, I started defining
 terms as abbreviations, such as `true`
 and `false`, to help us when writing down more
@@ -127,9 +127,6 @@ arithmetic, complete with a predecessor function) to whatever definitions you pr
        ("true", "<x -> <y -> x>>");
        ("false", "<x -> <y -> y>>");
        ("if", "<c -> <x -> <y -> c x y>>>");
-       ("and", "<a -> <b -> if a b false>>");
-       ("or", "<a -> <b -> if a true b>>");
-       ("not", "<a -> if a false true>");
        
        ("_0","<f -> <x -> x>>");
        ("_1","<f -> <x -> f x>>");
@@ -209,7 +206,7 @@ somewhat painful. For instance, suppose you mistakenly wrote `pluss` instead of 
 Yeah, that's not great. The clue that something went wrong is the `pluss` there at the beginning.
 
 All the questions below ask you to create definitions. **You will add those definitions to
-the list `q123_defs`** &mdash; there are already placeholders that you will need to replace. That's the list I will test during grading. 
+the list `q123_defs`** &mdash; there are already placeholders that you will need to replace. That's the list I will test when grading. 
 All the helper functions needed by your definitions should also be in
 that list. Feel free to add as many helper functions as you need.
 
@@ -222,18 +219,45 @@ that list. Feel free to add as many helper functions as you need.
 
 ### (A)
 
-Code a term **`xor`** which takes two Boolean arguments _a_ and
-_b_ and returns `true` when exactly one of _a_ or _b_
-is true, and returns `false` otherwise.
+Code a term **`not`** which takes a Boolean argument _a_ and return
+`true` when _a_ is false and returns `false` when _a_ is true.
         
-    # simplify q123_defs "xor true true";;
+Code a term **`and`** which takes two Boolean arguments _a_ and
+_b_ and returns `true` when both _a_ and _b_
+are true, and returns `false` otherwise.
+
+Code a term **`or`** which takes two Boolean arguments _a_ and _b_ and
+returns `true` when at least one of _a_ and _b_ is true, and returns
+`false` otherwise.
+
+
+    # simplify q123_defs "not true";;
     - : string = "<x -> <y -> y>>"
-    # simplify q123_defs "xor true false";;
+    # simplify q123_defs "not false";;
     - : string = "<x -> <y -> x>>"
-    # simplify q123_defs "xor false true";;
+    
+    # simplify q123_defs "and true true";;
     - : string = "<x -> <y -> x>>"
-    # simplify q123_defs "xor false false";;
+    # simplify q123_defs "and true false";;
     - : string = "<x -> <y -> y>>"
+    # simplify q123_defs "and false true";;
+    - : string = "<x -> <y -> y>>"
+    # simplify q123_defs "and false false";;
+    - : string = "<x -> <y -> y>>"
+    
+    # simplify q123_defs "or true true";;
+    - : string = "<x -> <y -> x>>"
+    # simplify q123_defs "or true false";;
+    - : string = "<x -> <y -> x>>"
+    # simplify q123_defs "or false true";;
+    - : string = "<x -> <y -> x>>"
+    # simplify q123_defs "or false false";;
+    - : string = "<x -> <y -> y>>"
+
+
+**Hint:** Use cascaded `if`s.
+
+
 
 
 ### (B)
@@ -340,31 +364,8 @@ Code a term **`min`** which takes two Church numeral arguments _m_ and _n_ and r
     - : string = "<f -> <x -> x>>"
 
 
-### (E) 
 
-We saw an encoding of pairs in class. A triple is a package containing three values,
-_(x,y,z)_. Your task is to create an encoding for triples.
-
-Code a term **`triple`** which takes three terms and returns a triple
-of those three terms using your encoding. Code terms **`firstT`**,
-**`secondT`**, and **`thirdT`** each taking a triple (created by
-function `triple`) as an argument and returning the first, second, and
-third element of the triple, respectively.
-
-Your terms should satisfy the following properties:
-
-    firstT (triple a b c) = a
-    secondT (triple a b c) = b
-    thirdT (triple a b c) = c
-        
-
-    # simplify q123_defs "firstT (triple a b c)";;
-    - : string = "a"
-    # simplify q123_defs "secondT (triple a b c)";;
-    - : string = "b"
-    # simplify q123_defs "thirdT (triple a b c)";;
-    - : string = "c"
-
+* * *
 
 ## Question 2: Integers
 
@@ -493,6 +494,8 @@ described above and returns integer _m &times; n_. Of course, _m_ and _n_ may be
     - : string = "<f -> <x -> f (f (f (f (f (f x)))))>>"	  
       
 
+
+* * *
 
 ## Question 3: Lists and Recursion
 
