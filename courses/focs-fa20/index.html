@@ -435,35 +435,37 @@
 	</li>
 
 
-	<li><p><span class="hdr">Nov 9 - 11</span><b>Lambda calculus</b></p>
+	<li><p><span class="hdr">Nov 9 - 16</span><b>Lambda calculus</b></p>
           <div class="lect">
 
-            <p><a href="slides/Lambda Calculus.pdf">First two parts of slides</a> from the lecture, corrected.</p>
+            <p><a href="slides/Lambda Calculus.pdf">Slides</a> from the lectures.</p>
 
 	    <p>That the order in which you perform simplifications in the lambda calculus doesn't matter (aside from the possibility of never reaching a normal form) is the <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Rosser_theorem">Church-Rosser property</a>.</p>
 	    
 	    <p>Some additional introductory references on the lambda calculus: <a href="http://palmstroem.blogspot.com/2012/05/lambda-calculus-for-absolute-dummies.html">The Lambda Calculus for Absolute Dummies (Like Myself)</a> and Rojas's <a href="http://www.inf.fu-berlin.de/lehre/WS03/alpi/lambda.pdf">A Tutorial Introduction to the Lambda Calculus</a>. Note that these references use the standard presentation of the calculus, with &lambda;x.M instead of &lt;x &rarr; M&gt;</p>
 
+	    <p>A general discussion of <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">fixed-point combinators</a>, of which &Theta; is an example.</p>
+
+            <p>Not strictly about the lambda calculus, but many of the ideas from the lambda calculus are embodied in the Lisp programming language, and I would get my CS membership card revoked if I didn't point you to <a href="https://mitpress.mit.edu/sites/default/files/sicp/index.html">Structure and Interpretation of Computer Programs</a>, which uses a Lisp-like language to explore all sorts of ideas for how to approach the art of programming.</p>
             
-	    <!--
-	    <p><a href="notes/lambda.pdf">Notes</a> from the lecture. These notes explicitly define a substitution function, something I left undefined in class.</p>
-            -->
-	    
+          </div>
+        </li>
+
+        <li><p><span class="hdr">Nov 18</span><b>Combinatory Logic / Simply-typed lambda calculus</b></p>
+          <div class="lect">
+
+            <p><a href="slides/Simply-Typed Lambda Calculus.pdf">Slides</a> from the lecture.</p>
+
+            <p>Wikipedia entry on <a href="https://en.wikipedia.org/wiki/Combinatory_logic">Combinatory Logic</a>. A much more detailed (and demanding) entry can be found on the <a href="https://plato.stanford.edu/entries/logic-combinatory/">Stanford Encyclopedia of Philosophy</a> with a lot of contextual detail.</p>
+
+            <p>Wikipedia entry on the <a href="https://en.wikipedia.org/wiki/Simply_typed_lambda_calculus">simply-typed lambda calculus</a> (we covered only the first two sections, if that), which includes a link to Church's original paper <i><a href="https://pdfs.semanticscholar.org/28bf/123690205ae5bbd9f8c84b1330025e8476e4.pdf">A Formulation of the Simple Theory of Types</a></i>. The "simple theory of types" is a simplification of the <a href="https://plato.stanford.edu/entries/type-theory/">theory that Russell devised</a> to try to get around the paradoxes that he discovered. 
+            
 	  </div>
 	</li>	  
 
+        
         <!-- 
 
-	<li><p><span class="hdr">Nov 5</span><b>Recursion and Combinatory Logic</b></p>
-	  <div class="lect">
-            (Lecture notes included in last week's notes on the lambda calculus.)
-	    <p>A general discussion of <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">fixed-point combinators</a>, of which &Theta; is an example.</p>
-            <p>Wikipedia entry on <a href="https://en.wikipedia.org/wiki/Combinatory_logic">Combinatory Logic</a>.</p>
-            <p>Not strictly about the lambda calculus, but many of the ideas from the lambda calculus are embodied in the Lisp programming language, and I would get my CS membership card revoked if I didn't point you to <a href="https://mitpress.mit.edu/sites/default/files/sicp/index.html">Structure and Interpretation of Computer Programs</a>, which uses a Lisp-like language to explore all sorts of ideas for how to approach the art of programming.</p>
-
-	  </div>
-	</li>
-	    
 	<li><p><span class="hdr">Nov 12</span><b>Tree Structures</b></p>
 	  <div class="lect">
 	    <p>A reasonable overview of <a href="http://www.cs.cornell.edu/courses/cs3110/2011sp/lectures/lec04-types/types.htm">algebraic data types</a> in OCaml.</p>
