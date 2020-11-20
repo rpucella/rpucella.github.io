@@ -350,5 +350,4 @@ let q123_defs = [
     ("fold_right", "not_implemented");
     
     ("sum_fold", "not_implemented");
-];
-
+]
