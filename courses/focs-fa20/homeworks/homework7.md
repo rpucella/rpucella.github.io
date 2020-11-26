@@ -1,6 +1,6 @@
 # Homework 7
 
-## Due Date: Sunday, November 29, 2020 (23h59)
+## Due Date: <del>Sunday, November 29</del> Thursday, December 3, 2020 (23h59)
 
 - This homework is to be done individually. You may discuss problems
 with fellow students, but all submitted work must be entirely your
