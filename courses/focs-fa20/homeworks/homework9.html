@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 20px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     pre { 
+        margin-left: 30px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="homework-9">Homework 9</h1>
+<h2 id="due-date-friday-december-18-2020-23h59">Due Date: Friday, December 18, 2020 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems with fellow students, but all submitted work must be entirely your own, and should not be from any other course, present, past, or future. If you use a solution from another source you must cite it — this includes when that source is someone else helping you.</p></li>
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+<li><p>All programming is to be done in OCaml v4.</p></li>
+<li><p>Code your answers by modifying the file <a href="homework9.ml"><code>homework9.ml</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you wish to make to the instructor to the block comment at the head of the file.</p></li>
+<li><p><strong>Please do not change the types in the signature of the function stubs I provide</strong>. Doing so will make it impossible to load your code into the testing infrastructure, and make me unhappy.</p></li>
+<li><p>Feel free to define helper functions if you need them.</p></li>
+</ul>
+<h2 id="electronic-submission-instructions">Electronic Submission Instructions</h2>
+<ul>
+<li><p>Start a <em>fresh</em> OCaml shell.</p></li>
+<li><p>Load your homework code via <code>#use &quot;homework9.ml&quot;;;</code> to make sure that there will be no errors when I load your code.</p></li>
+<li><p>If there are any error, do not submit. I can't test what I can't <code>#use</code>.</p></li>
+<li><p>When you're ready to submit, send an email with your file <code>homework9.ml</code> as an attachment to <code>olin.submissions@gmail.com</code> with subject <em>Homework 9 submission</em>.</p></li>
+</ul>
+<hr />
+<h2 id="question-1-binary-trees">Question 1: Binary Trees</h2>
+<p>A <em>binary tree</em> is a tree in which every node has at most two children (a left child and a right child). A binary tree may be empty. We consider binary trees in which every node stores a value:</p>
+<center>
+<img src="bintree.png">
+</center>
+
+<p>Here is an OCaml type for binary trees that can store values of type <code>'a</code> at the nodes:</p>
+<pre><code>type &#39;a bintree = 
+   | Empty
+   | Node of &#39;a * &#39;a bintree * &#39;a bintree</code></pre>
+<p>The sample tree above can be constructed using</p>
+<pre><code>let sample = 
+  Node(10, Node(3, Node(7, Empty, Empty),
+                   Node(5, Empty, Empty)),
+           Node(6, Node(99, Empty, 
+                            Node(66, Empty, Empty)),
+                   Empty))</code></pre>
+<p>A function <code>pbt</code> (for <em>print binary tree</em>) has been provided to print an <em>integer</em> binary tree. (If you have other kinds of binary trees, then you're going to have to define your own printing function.)</p>
+<pre><code># pbt sample;;
++--- 6
+|    |    +--- 66
+|    +--- 99
+10
+|    +--- 5
++--- 3
+     +--- 7
+- : unit = ()</code></pre>
+<p>It takes a bit of time to read this output easily, but it's basically the tree rotated counter-clockwise 90 degrees: the root is on the left (10), and the tree grows to the right. Create a few trees, and print them out to see what they look like.</p>
+<p>Function over trees, just like functions over lists, are naturally recursive. That follows directly from the recursive nature of trees.</p>
+<h3 id="a">(A)</h3>
+<p>Code functions <strong><code>size</code></strong> and <strong><code>height</code></strong> of type <strong><code>'a bintree -&gt; int</code></strong> and a function <strong><code>sum</code></strong> of type <strong><code>int bintree -&gt; int</code></strong>, which respectively return the total number of nodes, the height, and the sum of the values of a binary tree.</p>
+<p>(Recall that the height of a tree is the number of nodes in its longest branch.)</p>
+<pre><code># size Empty;;
+- : int = 0
+# size (Node(1,Empty,Empty));;
+- : int = 1
+# size sample;;
+- : int = 7
+# height Empty;;
+- : int = 0
+# height (Node(1,Empty,Empty));;
+- : int = 1
+# height sample;;
+- : int = 4
+# sum Empty;;
+- : int = 0
+# sum (Node(1,Empty,Empty));;
+- : int = 1
+# sum sample;;
+- : int = 196</code></pre>
+<h3 id="b">(B)</h3>
+<p>Code a function <strong><code>leaves</code></strong> of type <strong><code>'a bintree -&gt; 'a list</code></strong> that returns the list of leaves of a tree from left to right, where a leaf is a node with no children.</p>
+<pre><code># leaves Empty;;
+- : &#39;a list = []
+# leaves (Node(1,Empty,Empty));;
+- : int list = [1]
+# leaves (Node(1,Node(2,Empty,Empty),Node(3,Empty,Empty)));;
+- : int list = [2; 3]
+# leaves sample;;
+- : int list = [7; 5; 66]</code></pre>
+<h3 id="c">(C)</h3>
+<p>Trees support higher-order functions similar to those for lists.</p>
+<p>Code a function <strong><code>map</code></strong> of type <strong><code>('a -&gt; 'b) -&gt; 'a bintree -&gt; 'b bintree</code></strong> where <code>map f t</code> returns a new tree with the same shape as <code>t</code> but where the value of every node has been transformed via function <code>f</code>.</p>
+<pre><code># map (fun x -&gt; x * x) Empty;;
+- : int bintree = Empty
+# map (fun x -&gt; x * x) (Node(2,Empty,Empty));;
+- : int bintree = Node(4, Empty, Empty)
+# pbt (map (fun x -&gt; x * x) (Node(2,Node(3,Empty,Empty),Node(4,Empty,Empty))));;
++--- 16
+4
++--- 9
+- : unit = ()
+# pbt (map (fun x -&gt; x * x) sample);;
++--- 36
+|    |    +--- 4356
+|    +--- 9801
+100
+|    +--- 25
++--- 9
+     +--- 49
+- : unit = ()</code></pre>
+<h3 id="d">(D)</h3>
+<p>You can define a fold function for tree structures that generalizes what <code>fold_right</code> does for lists. Intuitively, folding a tree means starting from the lowest nodes and &quot;rolling up&quot; the nodes by applying a function to the value of the nodes and the rolled up children, going up so that you roll up the whole tree into a final value. (In a similar way, you can think of <code>fold_right</code> as &quot;rolling up&quot; a list starting from the end of the list, at every step applying a function to the current element of the list and the rolled up rest of the list, going all the way to the beginning so that you roll up the whole list into a final value.)</p>
+<p>Code a function <strong><code>fold</code></strong> of type <strong><code>('a -&gt; 'b -&gt; 'b -&gt; 'b) -&gt; 'a bintree -&gt; 'b -&gt; 'b</code></strong> that does for binary trees what <code>fold_right</code> does for lists. In particular, <code>fold f t b</code> should apply function <code>f</code> to the root of tree <code>t</code>, being passed the value at the root and the folded left and right subtrees. Folding an empty tree should return base value <code>b</code>.</p>
+<pre><code># fold (fun v l r -&gt; v+l+r) Empty 0;;
+- : int = 0
+# fold (fun v l r -&gt; v+l+r) (Node(1,Empty,Empty)) 0;;
+- : int = 1
+# fold (fun v l r -&gt; v+l+r) (Node(1,Empty,Empty)) 10;;
+- : int = 21
+# fold (fun v l r -&gt; v+l+r) (Node(1,Node(2,Empty,Empty),Node(3,Empty,Empty))) 0;;
+- : int = 6
+# fold (fun v l r -&gt; v+l+r) sample 0;;
+- : int = 196</code></pre>
+<h3 id="e">(E)</h3>
+<p>A <em>traversal</em> for a tree is a listing of the values in the tree in some specific order. A <em>preorder</em> traversal lists the value of a node <em>before</em> the values of the nodes of its subtrees; a <em>postorder</em> traversal lists the values of a node after the values of its subtrees; and an <em>inorder</em> traversal lists the value of a node before the values of its right subtree but after the values of its left subtree.</p>
+<p>Code function <strong><code>preorder</code></strong>, <strong><code>postorder</code></strong>, and <strong><code>inorder</code></strong>, each of type <strong><code>'a bintree -&gt; 'a list</code></strong>, which return the list of values in a binary tree according to the given type of traversal. Try to implement these functions using <code>fold</code>.</p>
+<pre><code># preorder Empty;;
+- : &#39;a list = []
+# preorder (Node(1,Empty,Empty));;
+- : int list = [1]
+# preorder (Node(1,Node(2,Empty,Empty),Node(3,Empty,Empty)));;
+- : int list = [1; 2; 3]
+# preorder sample;;
+- : int list = [10; 3; 7; 5; 6; 99; 66]
+# postorder Empty;;
+- : &#39;a list = []
+# postorder (Node(1,Empty,Empty));;
+- : int list = [1]
+# postorder (Node(1,Node(2,Empty,Empty),Node(3,Empty,Empty)));;
+- : int list = [2; 3; 1]
+# postorder sample;;
+- : int list = [7; 5; 3; 66; 99; 6; 10]
+# inorder Empty;;
+- : &#39;a list = []
+# inorder (Node(1,Empty,Empty));;
+- : int list = [1]
+# inorder (Node(1,Node(2,Empty,Empty),Node(3,Empty,Empty)));;
+- : int list = [2; 1; 3]
+# inorder sample;;
+- : int list = [7; 3; 5; 10; 99; 66; 6]</code></pre>
+<h3 id="f">(F)</h3>
+<p>A <em>binary search tree</em> is a binary tree with the following property: for every node N in the tree, every node in the left subtree of N has value less than the value at N, and every node in the right subtree of N has value greater than the value at N.</p>
+<p>Code a function <strong><code>is_bst</code></strong> of type <strong><code>'a bintree -&gt; bool</code></strong> where <code>is_bst t</code> returns true exactly when <code>t</code> has the binary search tree property.</p>
+<pre><code># is_bst Empty;;
+- : bool = true
+# is_bst (Node (10, Empty, Empty));;
+- : bool = true
+# is_bst (Node (10, Node (5, Empty, Empty), Empty));;
+- : bool = true
+# is_bst (Node (10, Empty, Node (20, Empty, Empty)));;
+- : bool = true
+# is_bst (Node (10, Node (5, Empty, Empty), Node(20, Empty, Empty)));;
+- : bool = true
+# is_bst (Node (10, Node(5, Node (2, Empty, Empty), Node(7, Empty, Empty)), Node (20, Node (15, Empty, Empty), Node (30, Empty, Empty)));;
+- : bool = true
+# is_bst (Node (10, Node(15, Node (2, Empty, Empty), Node(7, Empty, Empty)), Node (20, Node (15, Empty, Empty), Node (30, Empty, Empty))));;
+- : bool = false
+# is_bst (Node (10, Node(5, Node (6, Empty, Empty), Node(7, Empty, Empty)), Node (20, Node (15, Empty, Empty), Node (30, Empty, Empty))));;
+- : bool = false
+# is_bst (Node (10, Node(5, Node (2, Empty, Empty), Node(3, Empty, Empty)), Node (20, Node (15, Empty, Empty), Node (30, Empty, Empty))));;
+- : bool = false
+# is_bst (Node (10, Node(5, Node (2, Empty, Empty), Node(7, Empty, Empty)), Node (0, Node (15, Empty, Empty), Node (30, Empty, Empty))));;
+- : bool = false
+# is_bst (Node (10, Node(5, Node (2, Empty, Empty), Node(7, Empty, Empty)), Node (20, Node (25, Empty, Empty), Node (30, Empty, Empty))));;
+- : bool = false
+# is_bst (Node (10, Node(5, Node (2, Empty, Empty), Node(7, Empty, Empty)), Node (20, Node (5, Empty, Empty), Node (30, Empty, Empty))));;
+- : bool = false
+# is_bst (Node (10, Node(5, Node (2, Empty, Empty), Node(7, Empty, Empty)), Node (20, Node (15, Empty, Empty), Node (1, Empty, Empty))));;
+- : bool = false
+# is_bst (Node (10, Node(5, Node (2, Empty, Empty), Node(7, Empty, Empty)), Node (20, Node (15, Empty, Empty), Node (19, Empty, Empty))));;
+- : bool = false</code></pre>
+<p><strong>Hint</strong>: you're probably going to need helper functions...</p>
+<hr />
+<h2 id="question-2-arithmetic-expressions">Question 2: Arithmetic Expressions</h2>
+<p>Consider the following type for (the parse tree of) arithmetic expressions:</p>
+<pre><code>type exp =
+
+  (* PART A *)
+  | Num of int                
+  | Ident of string
+  | Plus of exp * exp
+  | Times of exp * exp
+
+  (* PART B *)
+  | EQ of exp * exp           
+  | GT of exp * exp
+  | And of exp * exp
+  | Not of exp
+  | If of exp * exp * exp
+
+  (* PART C *)
+  | Letval of string * exp * exp    
+
+  (* PART D *)
+  | Letfun of string * string * exp * exp      
+  | App of string * exp</code></pre>
+<p>We won't be using all constructors at once.</p>
+<p>We will be writing an <em>evaluation function</em> that takes an expression written as a parse tree as above, and evaluates it down to a value. To deal with identifiers (variables) appearing in an expression, we supply an <em>environment</em> to the evaluation function which tells the evaluation which integer each identifier is mapped to. An environment is just a function <code>string -&gt; T</code> where <code>T</code> is the type of values that the environment stores. Mostly, we'll be working with integer environments, where <code>T</code> is <code>int</code>. I've supplied you with two environment-manipulating functions:</p>
+<pre><code>let init : int env = (fun x -&gt; 0)
+
+let update (env:&#39;a env) (x:string) (v:&#39;a):&#39;a env =
+  (fun y -&gt; if (x=y) then v else env y</code></pre>
+<p>Value <code>init</code> is an initial integer environment that maps every identifier to 0. Function <code>update</code> takes an environment <code>env</code>, an identifier <code>x</code> and a value <code>v</code>, and returns a new environment which maps <code>x</code> to <code>v</code> and maps every other identifier to whatever the original environment <code>env</code> maps it to. Thus, <code>update init x 10</code> is an environment that maps <code>x</code> to 10 and every other identifier to 0.</p>
+<h3 id="a-1">(A)</h3>
+<p>Code a function <strong><code>eval</code></strong> of type <strong><code>exp -&gt; int env -&gt; int</code></strong> where <code>eval exp env</code> takes an expression <code>exp</code> using only constructors <code>Num</code>, <code>Ident</code>, <code>Plus</code>, and <code>Times</code> and an environment <code>env</code> and returns the result of evaluating <code>exp</code> with environment <code>env</code> to resolve identifiers. You can use <code>failwith</code> to return an error if you encounter another constructor.</p>
+<p>Intuitively, a <code>Num</code> evaluates to the number itself, an idenfitier <code>Ident</code> evaluates to whatever the environment says it maps to, and <code>Plus</code> and <code>Times</code> evaluate to the result of adding or multiplying the values to which the subexpressions evaluate to.</p>
+<pre><code># eval (Num 10) init;;
+- : int = 10
+# eval (Ident &quot;x&quot;) init;;
+- : int = 0
+# eval (Plus(Num 10, Num 20)) init;;
+- : int = 30
+# eval (Plus(Num 10, Ident &quot;x&quot;)) (update init &quot;x&quot; 2);;
+- : int = 12
+# eval (Times(Num 10, Ident &quot;x&quot;)) (update init &quot;x&quot; 2);;
+- : int = 20
+# eval (Times(Plus(Num 10, Ident &quot;y&quot;), Ident &quot;x&quot;)) (update init &quot;x&quot; 2);;
+- : int = 20
+# eval (Times(Plus(Num 10, Ident &quot;x&quot;), Ident &quot;x&quot;)) (update init &quot;x&quot; 2);;
+- : int = 24
+# eval (Plus (Ident &quot;x&quot;, Ident &quot;y&quot;)) (update (update init &quot;x&quot; 42) &quot;y&quot; 10);;
+- : int = 52</code></pre>
+<h3 id="b-1">(B)</h3>
+<p>If we interpret integer 0 as <em>false</em> and an integer different from 0 as <em>true</em>, we can handle Boolean operations and conditional evaluation in our expressions.</p>
+<p>Intuitively, <code>EQ</code> evaluates to true (that is, any integer different from 0) if its two arguments evaluate to the same value, while <code>GT</code> evaluates to true (that is, any integer different from 0) if its first argument evaluates to a value greater than the second argument. They evaluate to false (0) otherwise.</p>
+<p>Expression <code>And</code> evaluates to true (that is, any integer different from 0) if both its arguments evaluate to true, and evaluates to false (0) otherwise, while expression <code>Not</code> evaluates to true when its argument evaluates to false, and evaluates to false otherwise.</p>
+<p>Expression <code>If</code> is more interesting. It first evaluates its first argument. If it is true, then it evaluates its second argument and uses that as the result of the overall evaluation of <code>If</code>. Otherwise, it evaluates its third argument, and uses that as the result of the overall evaluation of <code>If</code>.</p>
+<p>Extend your function <strong><code>eval</code></strong> from part A so that you can also evaluate expressions using constructors <code>EQ</code>, <code>GT</code>, <code>And</code>, <code>Or</code>, and <code>If</code>.</p>
+<pre><code># eval (EQ (Num 10,Num 10)) init;;                                             
+- : int = 1                                                                    
+# eval (EQ (Num 10,Num 0)) init;;                                              
+- : int = 0                                                                    
+# eval (EQ (Plus (Num 1,Num 2), Num 2)) init;;                                 
+- : int = 0                                                                    
+# eval (GT (Num 10,Num 10)) init;;                                             
+- : int = 0                                                                    
+# eval (GT (Num 10,Num 0)) init;;                                              
+- : int = 1                                                                    
+# eval (GT (Plus (Num 1,Num 2), Num 2)) init;;                                 
+- : int = 1                                                                    
+# eval (And (Num 1,Num 1)) init;;                                              
+- : int = 1                                                                    
+# eval (And (Num 1,Num 0)) init;;                                              
+- : int = 0                                                                    
+# eval (Not (Num 1)) init;;                                                    
+- : int = 0                                                                    
+# eval (Not (Num 0)) init;;                                                    
+- : int = 1                                                                    
+# eval (And (Num 1, Not (Num 1))) init;;                                       
+- : int = 0                                                                    
+# eval (And (Num 0, Not (Num 0))) init;;                                       
+- : int = 0                                                                    
+# eval (If (EQ (Ident &quot;x&quot;, Num 42), Num 100, Num 200)) init;;                  
+- : int = 200                                                                  
+# eval (If (EQ (Ident &quot;x&quot;, Num 42), Num 100, Num 200)) (update init &quot;x&quot; 42);;  
+- : int = 100                                                                  </code></pre>
+<h3 id="c-1">(C)</h3>
+<p>We haven't really manipulated the environment during evaluation. We can easily define names for values during evaluation using constructor <code>Letval</code>.</p>
+<p>Intuitively, expression <code>Letval (x,e1,e2)</code> evaluates <code>e1</code> to an integer <em>n</em>, and then evaluates <code>e2</code> in the environment updated to map identifier <code>x</code> to <em>n</em>.</p>
+<p>Extend your function <strong><code>eval</code></strong> from part A and B so that you can also evaluate expressions using constructor <code>Letval</code>.</p>
+<pre><code># eval (Letval (&quot;x&quot;,Num 42, Plus (Ident &quot;x&quot;,Num 1))) init;;
+- : int = 43
+# eval (Letval (&quot;x&quot;,Num 42, Letval (&quot;y&quot;,Num 10, Plus (Ident &quot;x&quot;,Ident &quot;y&quot;)))) init;;
+- : int = 52
+# eval (Letval (&quot;x&quot;,Num 42, Letval (&quot;y&quot;,Plus(Ident &quot;x&quot;, Num 10),
+                Times (Ident &quot;y&quot;, Num 2)))) init;;
+- : int = 104  
+# eval (Letval (&quot;x&quot;,Letval(&quot;y&quot;,Num 1,Plus(Ident &quot;y&quot;,Num 2)),
+                Times(Ident &quot;x&quot;,Num 4))) init;;
+- : int = 12 </code></pre>
+<h3 id="d-extra-question-for-no-credit-except-bragging-rights">(D) (EXTRA Question for no credit except bragging rights)</h3>
+<p>Using <code>Letval</code> to create names for values is nice enough, but it would be really great if we could write <em>functions</em> in our expressions language that simplify the writing of complex expressions. Constructors <code>Letfun</code> and <code>App</code> let us do just that.</p>
+<p>Intuitively, <code>Letfun (f, x, e1, e2)</code> defines a (nonrecursive) function called <code>f</code> that takes a single parameter <code>x</code> and has body <code>e1</code>. Calling <code>f</code> with an integer <em>n</em> amounts to evaluating <code>e1</code> in an environment extended so that parameter <code>x</code> maps to <em>n</em>. The function definition is available during the evaluation of <code>e2</code>, whose result is the result of the overall evaluation of <code>Letfun</code>. Expression <code>App</code> is used to <em>apply</em> a function. It takes a function name (a string) and an expression, evaluates the expression to a value, and calls the function with that value to get the final result.</p>
+<p>We can't store functions in the environment, because the environment can only store values of type <code>int</code>. So we are going to use a second environment, a function environment, to store values of type <code>int -&gt; int</code>, and pass that function environment around along with the normal environment.</p>
+<p>I have provided you with an initial function environment <code>initF</code> that assigns an undefined function to every function name.</p>
+<p>Code a function <strong><code>evalF</code></strong> of type <strong><code>exp -&gt; int env -&gt; (int -&gt; int) env -&gt; int</code></strong> where <code>evalF exp env fenv</code> takes an expression <code>exp</code> using all the constructors in <code>exp</code>, an environment <code>env</code>, a function environment <code>fenv</code>, and returns the result of evaluating <code>exp</code> with environment <code>env</code> to resolve identifiers and function environment <code>fenv</code> to resolve function names. (No, you won't get to reuse <code>eval</code>. You'll need to rewrite the whole evaluation function from scratch.)</p>
+<pre><code># evalF (Letfun (&quot;square&quot;, &quot;x&quot;, Times(Ident &quot;x&quot;, Ident &quot;x&quot;),
+                 App(&quot;square&quot;, Num 10))) init initF;;
+- : int = 100
+# evalF (Letfun (&quot;square&quot;, &quot;x&quot;, Times(Ident &quot;x&quot;, Ident &quot;x&quot;),
+                 Letfun (&quot;double&quot;, &quot;y&quot;, Times(Num 2, Ident &quot;y&quot;),
+                         App (&quot;double&quot;, App (&quot;square&quot;, Num 42))))) init initF;;
+- : int = 3528</code></pre>
+<p>Oh, and congratulations! You're halfway through writing an interpreter for OCaml.</p>
+
+</body>
+
+</html>
