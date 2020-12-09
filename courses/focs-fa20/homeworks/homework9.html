@@ -201,7 +201,7 @@
 <p><strong>Hint</strong>: you're probably going to need helper functions...</p>
 <hr />
 <h2 id="question-2-arithmetic-expressions">Question 2: Arithmetic Expressions</h2>
-<p>Consider the following type for (the parse tree of) arithmetic expressions:</p>
+<p>Consider the following type for (the abstract syntax tree of) arithmetic expressions:</p>
 <pre><code>type exp =
 
   (* PART A *)
@@ -224,7 +224,7 @@
   | Letfun of string * string * exp * exp      
   | App of string * exp</code></pre>
 <p>We won't be using all constructors at once.</p>
-<p>We will be writing an <em>evaluation function</em> that takes an expression written as a parse tree as above, and evaluates it down to a value. To deal with identifiers (variables) appearing in an expression, we supply an <em>environment</em> to the evaluation function which tells the evaluation which integer each identifier is mapped to. An environment is just a function <code>string -&gt; T</code> where <code>T</code> is the type of values that the environment stores. Mostly, we'll be working with integer environments, where <code>T</code> is <code>int</code>. I've supplied you with two environment-manipulating functions:</p>
+<p>We will be writing an <em>evaluation function</em> that takes an expression written as an abstract syntax tree as above, and evaluates it down to a value. To deal with identifiers (variables) appearing in an expression, we supply an <em>environment</em> to the evaluation function which tells the evaluation which integer each identifier is mapped to. An environment is just a function <code>string -&gt; T</code> where <code>T</code> is the type of values that the environment stores. Mostly, we'll be working with integer environments, where <code>T</code> is <code>int</code>. I've supplied you with two environment-manipulating functions:</p>
 <pre><code>let init : int env = (fun x -&gt; 0)
 
 let update (env:&#39;a env) (x:string) (v:&#39;a):&#39;a env =

@@ -289,7 +289,7 @@ property.
 
 ## Question 2: Arithmetic Expressions
 
-Consider the following type for (the parse tree of) arithmetic expressions:
+Consider the following type for (the abstract syntax tree of) arithmetic expressions:
 
     type exp =
     
@@ -316,7 +316,7 @@ Consider the following type for (the parse tree of) arithmetic expressions:
 We won't be using all constructors at once.
 
 We will be writing an _evaluation function_ that takes
-an expression written as a parse tree as above, and
+an expression written as an abstract syntax tree as above, and
 evaluates it down to a value.  To deal with identifiers
 (variables) appearing in an expression, we supply
 an _environment_ to the evaluation function which tells
