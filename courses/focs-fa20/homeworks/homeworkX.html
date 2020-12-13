@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 20px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     pre { 
+        margin-left: 30px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="homework-x">Homework X</h1>
+<h2 id="question-1-higher-order-functions">Question 1: Higher-Order Functions</h2>
+<p>In this quesion, you will be working with <a href="../notes-functional.html">higher order functions</a>.</p>
+<p>For each function I ask you to code, full points will be awarded if the function and its helpers do not use explicit recursion. In other words, the function and its helpers should not use the <code>rec</code> keyword for function definitions.</p>
+<p>This means that you will have to use <code>List.map</code>, <code>List.filter</code>, <code>List.fold_right</code>, or some other higher-order functions in the <a href="https://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html"><code>List</code> module</a>. One additional function you may find useful is <code>List.map2</code>, which acts like <code>List.map</code> but maps over two lists, passing elements of both lists to the mapping function and producing a single list as result.</p>
+<p>To illustrate, here is the <code>squares</code> function defined using explicit recursion:</p>
+<pre><code>let rec squares (xs: int list): int list =
+  match xs with
+  | [] -&gt; []
+  | x::xs&#39; -&gt; (x * x) :: (squares xs&#39;)</code></pre>
+<p>Here is the <code>squares</code> function defined without using explicit recursion:</p>
+<pre><code>let squares (xs: int list): int list =
+  List.map (fun x -&gt; x * x) xs</code></pre>
+<p>For another illustration, here is the <code>length</code> function defined using explicit recursion:</p>
+<pre><code>let rec length (xs: &#39;a list): int =
+  match xs with
+  | [] -&gt; 0
+  | x::xs&#39; -&gt; 1 + length xs</code></pre>
+<p>Here is the length function defined without using explicit recursion:</p>
+<pre><code>let length (xs: &#39;a list): int =
+  List.fold_right (fun x r -&gt; 1 + r) xs 0</code></pre>
+<p>If you can't get a function to work without explicit recursion, please go ahead and implement a version with explicit recursion.</p>
+<h3 id="a">(A)</h3>
+<p>Code a function <strong><code>long</code></strong> of type <strong><code>string list -&gt; string list</code></strong> where <code>long xs</code> returns the list obtained by removing all strings of length strictly less than 2 from <code>xs</code>.</p>
+<p>Sample output:</p>
+<pre><code># long [];;
+- : string list = []
+# long [&quot;&quot;];;
+- : string list = []
+# long [&quot;&quot;; &quot;a&quot;];;
+- : string list = []
+# long [&quot;&quot;; &quot;a&quot;; &quot;ab&quot;];;
+- : string list = [&quot;ab&quot;]
+# long [&quot;&quot;; &quot;a&quot;; &quot;ab&quot;; &quot;abc&quot;];;
+- : string list = [&quot;ab&quot;; &quot;abc&quot;]
+# long [&quot;&quot;; &quot;a&quot;; &quot;ab&quot;; &quot;abc&quot;; &quot;abcd&quot;];;
+- : string list = [&quot;ab&quot;; &quot;abc&quot;; &quot;abcd&quot;]
+# long [&quot;&quot;; &quot;a&quot;; &quot;ab&quot;; &quot;abc&quot;; &quot;abcd&quot;; &quot;abc&quot;; &quot;ab&quot;; &quot;b&quot;; &quot;&quot;];;
+- : string list = [&quot;ab&quot;; &quot;abc&quot;; &quot;abcd&quot;; &quot;abc&quot;; &quot;ab&quot;]</code></pre>
+<h3 id="b">(B)</h3>
+<p>Code a function <strong><code>words1</code></strong> of type <strong><code>int list -&gt; string list</code></strong> where <code>words1 xs</code> returns the list obtained by transforming every 1 in <code>xs</code> into the string <code>one</code>, every 2 in <code>xs</code> into the string <code>two</code>, every 3 in <code>xs</code> into the string <code>three</code>, and every other integer into the string <code>other</code>.</p>
+<p>Sample output:</p>
+<pre><code># words1 [];;
+- : string list = []
+# words1 [1];;
+- : string list = [&quot;one&quot;]
+# words1 [2];;
+- : string list = [&quot;two&quot;]
+# words1 [3];;
+- : string list = [&quot;three&quot;]
+# words1 [99];;
+- : string list = [&quot;other&quot;]
+# words1 [1; 2; 3; 2; 1; 2; 3];;
+- : string list = [&quot;one&quot;; &quot;two&quot;; &quot;three&quot;; &quot;two&quot;; &quot;one&quot;; &quot;two&quot;; &quot;three&quot;]
+# words1 [1; 99; 2; 99; 3; 99; 2; 99; 1; 99; 2; 99; 3];;
+- : string list =
+[&quot;one&quot;; &quot;other&quot;; &quot;two&quot;; &quot;other&quot;; &quot;three&quot;; &quot;other&quot;; &quot;two&quot;; &quot;other&quot;; &quot;one&quot;; &quot;other&quot;; &quot;two&quot;; &quot;other&quot;; &quot;three&quot;]</code></pre>
+<h3 id="c">(C)</h3>
+<p>Code a function <strong><code>words2</code></strong> of type <strong><code>int list -&gt; string</code></strong> where <code>words2 xs</code> returns the string obtained by concatenating a &quot;zero-&quot; for every 0 in <code>xs</code> and a &quot;one-&quot; for every <code>in</code>xs`, ignoring every other integer.</p>
+<p>Sample output:</p>
+<pre><code># words2 [];;
+- : string = &quot;&quot;
+# words2 [0];;
+- : string = &quot;zero-&quot;
+# words2 [1];;
+- : string = &quot;one-&quot;
+# words2 [99];;
+- : string = &quot;&quot;
+# words2 [0; 1];;
+- : string = &quot;zero-one-&quot;
+# words2 [0; 1; 0; 1; 0];;
+- : string = &quot;zero-one-zero-one-zero-&quot;
+# words2 [0; 99; 1; 99; 0; 99; 1; 99; 0];;
+- : string = &quot;zero-one-zero-one-zero-&quot;</code></pre>
+<h3 id="d">(D)</h3>
+<p>Code a function <strong><code>unique</code></strong> of type <strong><code>string list -&gt; string list</code></strong> where <code>unique xs</code> returns the list of unique strings in <code>xs</code>.</p>
+<p>Sample output:</p>
+<pre><code># unique [];;
+- : string list = []
+# unique [&quot;&quot;];;
+- : string list = [&quot;&quot;]
+# unique [&quot;a&quot;];;
+- : string list = [&quot;a&quot;]
+# unique [&quot;b&quot;];;
+- : string list = [&quot;b&quot;]
+# unique [&quot;&quot;; &quot;a&quot;; &quot;b&quot;];;
+- : string list = [&quot;&quot;; &quot;a&quot;; &quot;b&quot;]
+# unique [&quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;&quot;; &quot;a&quot;; &quot;b&quot;];;
+- : string list = [&quot;&quot;; &quot;a&quot;; &quot;b&quot;]
+# unique [&quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;ab&quot;];;
+- : string list = [&quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;ab&quot;]
+# unique [&quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;ab&quot;; &quot;ab&quot;];;
+- : string list = [&quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;ab&quot;]
+# unique [&quot;ab&quot;; &quot;ba&quot;; &quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;ab&quot;; &quot;ab&quot;];;
+- : string list = [&quot;ba&quot;; &quot;&quot;; &quot;a&quot;; &quot;b&quot;; &quot;ab&quot;]</code></pre>
+<h3 id="e">(E)</h3>
+<p>Code a function <strong><code>mix</code></strong> of type <strong><code>'a list -&gt; 'a list -&gt; 'a list</code></strong> where <code>mix xs ys</code> return the list obtained by taking every element of <code>xs</code> and following each such element by the elements from <code>ys</code>.</p>
+<p>Sample output:</p>
+<pre><code># mix [] [];;
+- : &#39;a list = []
+# mix [] [1; 2; 3];;
+- : int list = []
+# mix [100; 200; 300] [1; 2; 3];;
+- : int list = [100; 1; 2; 3; 200; 1; 2; 3; 300; 1; 2; 3]
+# mix [100; 200; 300] [];;
+- : int list = [100; 200; 300]
+# mix [100; 200; 300] [1];;
+- : int list = [100; 1; 200; 1; 300; 1]
+# mix [100; 200; 300] [1; 2];;
+- : int list = [100; 1; 2; 200; 1; 2; 300; 1; 2]</code></pre>
+<hr />
+<h2 id="question-2-turing-machines">Question 2: Turing Machines</h2>
+<p>For questions 2 and 3, use the implementation of Turing machines provided (and taken from Homework 4).</p>
+<h3 id="a-1">(A)</h3>
+<p>Code a Turing machine <strong><code>same</code></strong> which accepts all strings over {0, 1} that contain the same number of 0s and 1s.</p>
+<p>Thus, the machine should accept the empty string as well as the following strings:</p>
+<pre><code>01
+10
+0011
+0101
+1001
+10001011</code></pre>
+<p>and reject the following strings:</p>
+<pre><code>0
+1
+001
+101
+1000111</code></pre>
+<h3 id="b-1">(B)</h3>
+<p>Code a Turing machine <strong><code>count</code></strong> which accepts all strings of the form <code>0</code><sup>n</sup><code>#</code>w where w is the binary representation of n, and rejects every other string. (Notation <code>0</code><sup>n</sup> represents the sequence of n <code>0</code>s, with <code>0</code><sup>0</sup> being the empty string.)</p>
+<p>The machine should accept the following strings:</p>
+<pre><code>#0
+0#1
+00#10
+000#11
+0000#100
+00000#101
+000000#110
+0000000#111
+00000000#1000</code></pre>
+<p>and reject the following strings:</p>
+<pre><code>#
+0#
+00
+01
+#1
+0#10
+0#11
+0#111
+00#1
+00#11</code></pre>
+<p><strong>Hint</strong>: modify <code>plus1</code> from homework 4.</p>
+<hr />
+<h2 id="question-3-generating-turing-machines">Question 3: Generating Turing Machines</h2>
+<p>Code a function <strong><code>copies</code></strong> of type <strong><code>int -&gt; tm</code></strong> where <code>copies n</code> (for n &gt; 0) creates a Turing machine that accepts all strings of the form w<code>#</code>w<code>#</code>w<code>#</code>...<code>#</code>w whith n copies of w, for any w over {0, 1}.</p>
+<p>Thus, <code>copies 1</code> should create a Turing machine which accepts only and all strings over {0, 1}, <code>copies 2</code> should create a Turing machine which accepts only and all strings of the form w<code>#</code>w (for any w over {0, 1}), <code>copies 3</code> should create a Turing machine which accepts only and all strings of the form w<code>#</code>w<code>#</code>w (for any w over {0, 1}), and so on.</p>
+<p><strong>Hint</strong>: figure out the TMs that <code>copies 1</code>, <code>copies 2</code>, <code>copies 3</code>, etc should create, then spot the pattern, then implement the pattern.</p>
+
+</body>
+
+</html>
