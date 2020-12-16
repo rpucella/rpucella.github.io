@@ -254,7 +254,7 @@ let update (env:&#39;a env) (x:string) (v:&#39;a):&#39;a env =
 <p>Intuitively, <code>EQ</code> evaluates to true (that is, any integer different from 0) if its two arguments evaluate to the same value, while <code>GT</code> evaluates to true (that is, any integer different from 0) if its first argument evaluates to a value greater than the second argument. They evaluate to false (0) otherwise.</p>
 <p>Expression <code>And</code> evaluates to true (that is, any integer different from 0) if both its arguments evaluate to true, and evaluates to false (0) otherwise, while expression <code>Not</code> evaluates to true when its argument evaluates to false, and evaluates to false otherwise.</p>
 <p>Expression <code>If</code> is more interesting. It first evaluates its first argument. If it is true, then it evaluates its second argument and uses that as the result of the overall evaluation of <code>If</code>. Otherwise, it evaluates its third argument, and uses that as the result of the overall evaluation of <code>If</code>.</p>
-<p>Extend your function <strong><code>eval</code></strong> from part A so that you can also evaluate expressions using constructors <code>EQ</code>, <code>GT</code>, <code>And</code>, <code>Or</code>, and <code>If</code>.</p>
+<p>Extend your function <strong><code>eval</code></strong> from part A so that you can also evaluate expressions using constructors <code>EQ</code>, <code>GT</code>, <code>And</code>, <code>Not</code>, and <code>If</code>.</p>
 <pre><code># eval (EQ (Num 10,Num 10)) init;;                                             
 - : int = 1                                                                    
 # eval (EQ (Num 10,Num 0)) init;;                                              

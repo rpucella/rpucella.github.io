@@ -412,7 +412,7 @@ evaluation of `If`.
       
 Extend your function **`eval`** from
 part A so that you can also evaluate expressions using
-constructors `EQ`, `GT`, `And`, `Or`,
+constructors `EQ`, `GT`, `And`, `Not`,
 and `If`. 
 
     # eval (EQ (Num 10,Num 10)) init;;                                             
