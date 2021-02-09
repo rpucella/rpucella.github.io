@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+        margin-left: 32px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="homework-1-html-and-css">Homework 1: HTML and CSS</h1>
+<hr />
+<h2 id="due-date-monday-february-15-2020-23h59">Due Date: Monday, February 15, 2020 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done in teams of two. You're welcome to discuss with other students, but all submitted work must be original and your own. If you use a solution from another source you must cite it — this includes when that source is someone else helping you.</p></li>
+<li><p>Link to a <a href="./homework1.zip">homework1.zip</a> file containing an HTML document and associated images used as a starting point.</p></li>
+</ul>
+<h2 id="electronic-submission-instructions">Electronic Submission Instructions</h2>
+<ul>
+<li>TBA</li>
+</ul>
+<hr />
+<h2 id="question-1-basic-styling">Question 1: Basic Styling</h2>
+<p>The file <code>molasses.html</code> in the .zip file is a very basic HTML documenet holding a simplified version of the Wikipedia page on the Great Molasses Flood of Boston. (Not a joke.)</p>
+<p>Your task: make it pretty, in a way that replicates roughly the formatting of Wikipedia proper. You do not have to make it pixel perfect.</p>
+<ul>
+<li><p>Add a margin of 48px around the whole document</p></li>
+<li><p>Make the font size for the whole document larger than the browser default. (Make it bigger by 30% or something close.)</p></li>
+<li><p>All text should be sans-serif, except for headers at level 1 and 2.</p></li>
+<li><p>All text should be spaced so that there is half a line's height between each line. (Hint: look up the <code>line-height</code> property.)</p></li>
+<li><p>Make all quotations in italic.</p></li>
+<li><p>Headers should be separated by 48px from the text above it.</p></li>
+<li><p>The list in the <em>See also</em> section should use square bullets. (Hint: lookup the <code>list-style</code> property.)</p></li>
+<li><p>Headers at level 1 and level 2 should have a line underneath them that goes all the way to the right of the screen.</p></li>
+</ul>
+<p>I clearly can't give you a link to a page that shows you what I want. Instead, here's a <a href="./molasses.pdf">PDF</a> printout of way I want the page to look.</p>
+<p>The PDF also contains the result of questions 2, 3, 4, and 5 below.</p>
+<hr />
+<h2 id="question-2-links">Question 2: Links</h2>
+<p>Read up on the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">anchor element</a>.</p>
+<ul>
+<li><p>Add links to the three list items in the <em>See also</em> section of the document. Make them links to the corresponding Wikipedia page.</p></li>
+<li><p>Make the items in the <em>Table of contents</em> list that's after the first paragraphs internal links to the various sections of the document. (Hint: see <em>Linking to an element on the same page</em> on the Anchor element documentation.)</p></li>
+<li><p>Style the table of content so that it has no bullets on each list item, and so that the entire table of content has a border and such that the background has color <code>f8f9fa</code>. (See the <a href="./molasses.pdf">PDF</a>.)</p></li>
+<li><p>Style all links so that they do not have an underline, except when you're hovering over them. (Hint: See the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes"><code>:hover</code> pseudo-class</a>.)</p></li>
+</ul>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="toc.png">
+</center>
+
+
+<hr />
+<h2 id="question-3-tables">Question 3: Tables</h2>
+<p>Read up on <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Tables/Basics">HTML tables</a>.</p>
+<ul>
+<li><p>Replace the preformatted section in the document containing the table of fatalities by a <em>bona fide</em> HTML table.</p></li>
+<li><p>Style the table with an overall border and each cell itself bordered. Put a background color to the table, with color <code>eaecf0</code> as the background color for the header, and <code>f8f9fa</code> as the background color for the rest of the table.</p></li>
+<li><p>Make sure the header names are left aligned. (Some browsers will center them.)</p></li>
+</ul>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="table.png">
+</center>
+
+
+<hr />
+<h2 id="question-4-floating-images">Question 4: Floating Images</h2>
+<p>Read up on the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/float"><code>float</code> property</a>.</p>
+<ul>
+<li><p>Float all four images in the text to the right of the document, and make sure they're all a reasonable consistent size.</p></li>
+<li><p>Put a centered caption under each image. The caption to use is in a comment underneath each image in the source of the document. (Hint: see the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure">figure element</a> for one way to do that.)</p></li>
+<li><p>Style the image so that there is a border at 4px distance from the image and caption.</p></li>
+</ul>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="image.png">
+</center>
+
+
+<hr />
+<h2 id="question-5-svg">Question 5: SVG</h2>
+<p>Read up on <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial">SVG</a> -- up to and including the <em>Fills and Strokes</em> section at least.</p>
+<ul>
+<li><p>Create an SVG image manually <em>within the HTML document</em> that vaguely relates to the topic at hand (or not). Make sure it contains a few different shapes.</p></li>
+<li><p>Float that SVG at the top and on the right of the <em>Cultural influences</em> section, add a caption, and style it just like all the other images on the the page after you've done question 4.</p></li>
+</ul>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="svg.png">
+</center>
+
+
+
+
+<hr />
+<h2 id="question-6-flexbox">Question 6: Flexbox</h2>
+<p>Read up on <a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox">Flexbox</a>. I keep the following handy <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">Flexbox cheatsheet</a> bookmarked on my work laptop. Flexbox is your best friend in modern frontend development.</p>
+<ul>
+<li><p>Use flexbox to put your document in two columns - see this <a href="./molasses-2.pdf">PDF</a> for what I mean. Note that the level 1 header is not part of the two columns, and that images are floated within their columns.</p></li>
+<li><p>Make sure there is some gutter space between the two columns. Use your judgment to make it look pleasant.</p></li>
+</ul>
+<p>To use flexbox effectively, you need the ability to create an element whose sole purpose is to &quot;group&quot; other elements so that those elements are considered a single element. (Each column in a flexbox columnar layout needs to be its own element.) The best way to do that is to use a <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div"><code>div</code> element</a>. Divs are flexbox's drinking buddies.</p>
+<hr />
+<h2 id="additional-question-for-teams-of-3-grid">Additional Question for Teams of 3: Grid</h2>
+<p><em>Coming soon</em></p>
+
+</body>
+
+</html>

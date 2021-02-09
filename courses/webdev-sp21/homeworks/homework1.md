@@ -1,0 +1,139 @@
+# Homework 1: HTML and CSS
+
+* * * 
+
+
+
+## Due Date: Monday, February 15, 2020 (23h59)
+
+
+- This homework is to be done in teams of two. You're welcome to
+discuss with other students, but all submitted work must be original
+and your own. If you use a solution from another source you must cite
+it &mdash; this includes when that source is someone else helping you.
+
+- Link to a [homework1.zip](./homework1.zip) file containing an HTML document and associated images used as a starting point.
+
+
+## Electronic Submission Instructions
+
+- TBA
+
+
+* * * 
+
+
+## Question 1: Basic Styling
+
+The file `molasses.html` in the .zip file is a very basic HTML documenet holding a simplified version of the Wikipedia page on the Great Molasses Flood of Boston. (Not a joke.)
+
+Your task: make it pretty, in a way that replicates roughly the formatting of Wikipedia proper. You do not have to make it pixel perfect. 
+
+- Add a margin of 48px around the whole document
+
+- Make the font size for the whole document larger than the browser default. (Make it bigger by 30% or something close.)
+
+- All text should be sans-serif, except for headers at level 1 and 2.
+
+- All text should be spaced so that there is half a line's height between each line. (Hint: look up the `line-height` property.)
+
+- Make all quotations in italic.
+
+- Headers should be separated by 48px from the text above it.
+
+- The list in the _See also_ section should use square bullets. (Hint: lookup the `list-style` property.)
+
+- Headers at level 1 and level 2 should have a line underneath them that goes all the way to the right of the screen.
+
+I clearly can't give you a link to a page that shows you what I want. Instead, here's a [PDF](./molasses.pdf) printout of way I want the page to look. 
+
+The PDF also contains the result of questions 2, 3, 4, and 5 below.
+
+
+* * * 
+
+
+## Question 2: Links
+
+Read up on the [anchor element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a).
+
+- Add links to the three list items in the _See also_ section of the document. Make them links to the corresponding Wikipedia page.
+
+- Make the items in the _Table of contents_ list that's after the first paragraphs internal links to the various sections of the document. (Hint: see _Linking to an element on the same page_ on the Anchor element documentation.)
+
+- Style the table of content so that it has no bullets on each list item, and so that the entire table of content has a border and such that the background has color `f8f9fa`. (See the [PDF](./molasses.pdf).)
+
+- Style all links so that they do not have an underline, except when you're hovering over them. (Hint: See the [`:hover` pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes).)
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="toc.png"></center>
+
+
+* * * 
+
+
+## Question 3: Tables
+
+Read up on [HTML tables](https://developer.mozilla.org/en-US/docs/Learn/HTML/Tables/Basics).
+
+- Replace the preformatted section in the document containing the table of fatalities by a _bona fide_ HTML table.
+
+- Style the table with an overall border and each cell itself bordered. Put a background color to the table, with color `eaecf0` as the background color  for the header, and `f8f9fa` as the background color for the rest of the table.
+
+- Make sure the header names are left aligned. (Some browsers will center them.)
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="table.png"></center>
+
+
+* * * 
+
+
+## Question 4: Floating Images
+
+Read up on the [`float` property](https://developer.mozilla.org/en-US/docs/Web/CSS/float).
+
+- Float all four images in the text to the right of the document, and make sure they're all a reasonable consistent size.
+
+- Put a centered caption under each image. The caption to use is in a comment underneath each image in the source of the document. (Hint: see the [figure element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure) for one way to do that.)
+
+- Style the image so that there is a border at 4px distance from the image and caption. 
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="image.png"></center>
+
+
+* * * 
+
+
+## Question 5: SVG
+
+Read up on [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial) -- up to and including the _Fills and Strokes_ section at least.
+
+- Create an SVG image manually _within the HTML document_ that vaguely relates to the topic at hand (or not). Make sure it contains a few different shapes.
+
+- Float that SVG at the top and on the right of the _Cultural influences_ section, add a caption, and style it just like all the other images on the the page after you've done question 4.
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="svg.png"></center>
+
+
+
+
+* * * 
+
+
+## Question 6: Flexbox
+
+Read up on [Flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox). I keep the following handy <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">Flexbox cheatsheet</a> bookmarked on my work laptop. Flexbox is your best friend in modern frontend development.
+    
+- Use flexbox to put your document in two columns - see this [PDF](./molasses-2.pdf) for what I mean. Note that the level 1 header is not part of the two columns, and that images are floated within their columns.
+
+- Make sure there is some gutter space between the two columns. Use your judgment to make it look pleasant.
+
+To use flexbox effectively, you need the ability to create an element whose sole purpose is to "group" other elements so that those elements are considered a single element. (Each column in a flexbox columnar layout needs to be its own element.) The best way to do that is to use a [`div` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div). Divs are flexbox's drinking buddies.
+
+
+
+* * * 
+
+
+## Additional Question for Teams of 3: Grid
+
+_Coming soon_
