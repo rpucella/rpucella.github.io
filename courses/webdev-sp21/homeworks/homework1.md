@@ -37,7 +37,7 @@ Your task: make it pretty, in a way that replicates roughly the formatting of Wi
 
 - All text should be spaced so that there is half a line's height between each line. (Hint: look up the `line-height` property.)
 
-- Make all quotations in italic.
+- Make all block quotations in italic.
 
 - Headers should be separated by 48px from the text above it.
 
