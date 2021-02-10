@@ -121,7 +121,7 @@ Read up on [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial) -- u
 
 ## Question 6: Flexbox
 
-Read up on [Flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox). I keep the following handy <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">Flexbox cheatsheet</a> bookmarked on my work laptop. Flexbox is your best friend in modern frontend development.
+Read up on [Flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox). I keep the following handy [Flexbox cheatsheet](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) bookmarked on my work laptop. Flexbox is your best friend in modern frontend development.
     
 - Use flexbox to put your document in two columns - see this [PDF](./molasses-2.pdf) for what I mean. Note that the level 1 header is not part of the two columns, and that images are floated within their columns.
 
@@ -136,4 +136,34 @@ To use flexbox effectively, you need the ability to create an element whose sole
 
 ## Additional Question for Teams of 3: Grid
 
-_Coming soon_
+Read up on [Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/grid). Here's a handy [Grid cheatsheet](https://css-tricks.com/snippets/css/complete-guide-grid/).
+
+- Find six molasses-disaster related pictures online. 
+
+- Create a new section at the end of the document entitled _Additional pictures_, and make sure that you add the section to the table of contents.
+
+- In that section, create a grid of three pictures over two rows (using `display: grid`) where each picture takes a third of the screen's width, and is centered within its grid cell both horizontally and vertically. 
+
+- Put a border around each picture at some distance (I used 16px) from the picture proper.
+
+- Separate the pictures from each other in a reasonable way (I used 72px distance).
+
+Here's a partial snapshot of what I have:
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="grid1.png"></center>
+
+- Make it so that when you hover over one of the picture, it blows up to twice its size.
+
+- Moreover, and this is the slightly challenging bit: I want the blown-up picture to remain within the screen frame. Thus, the pictures in the left column should blow up more towards the right, the pictures in the middle should blow up in a centered way, and the pcitures on the right should blow up towards the left. (Hint: look at the `position` property.)
+
+No JavaScript. Here's what I have, when I hover from left to right on the first row:
+
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="grid2.png"></center>
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="grid3.png"></center>
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="grid4.png"></center>
+
+
+

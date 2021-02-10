@@ -123,7 +123,35 @@
 <p>To use flexbox effectively, you need the ability to create an element whose sole purpose is to &quot;group&quot; other elements so that those elements are considered a single element. (Each column in a flexbox columnar layout needs to be its own element.) The best way to do that is to use a <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div"><code>div</code> element</a>. Divs are flexbox's drinking buddies.</p>
 <hr />
 <h2 id="additional-question-for-teams-of-3-grid">Additional Question for Teams of 3: Grid</h2>
-<p><em>Coming soon</em></p>
+<p>Read up on <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/grid">Grid</a>. Here's a handy <a href="https://css-tricks.com/snippets/css/complete-guide-grid/">Grid cheatsheet</a>.</p>
+<ul>
+<li><p>Find six molasses-disaster related pictures online.</p></li>
+<li><p>Create a new section at the end of the document entitled <em>Additional pictures</em>, and make sure that you add the section to the table of contents.</p></li>
+<li><p>In that section, create a grid of three pictures over two rows (using <code>display: grid</code>) where each picture takes a third of the screen's width, and is centered within its grid cell both horizontally and vertically.</p></li>
+<li><p>Put a border around each picture at some distance (I used 16px) from the picture proper.</p></li>
+<li><p>Separate the pictures from each other in a reasonable way (I used 72px distance).</p></li>
+</ul>
+<p>Here's a partial snapshot of what I have:</p>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="grid1.png">
+</center>
+
+<ul>
+<li><p>Make it so that when you hover over one of the picture, it blows up to twice its size.</p></li>
+<li><p>Moreover, and this is the slightly challenging bit: I want the blown-up picture to remain within the screen frame. Thus, the pictures in the left column should blow up more towards the right, the pictures in the middle should blow up in a centered way, and the pcitures on the right should blow up towards the left. (Hint: look at the <code>position</code> property.)</p></li>
+</ul>
+<p>No JavaScript. Here's what I have, when I hover from left to right on the first row:</p>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="grid2.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="grid3.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px; border: 1px solid #cccccc;" src="grid4.png">
+</center>
 
 </body>
 
