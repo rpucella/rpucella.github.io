@@ -17,7 +17,11 @@ it &mdash; this includes when that source is someone else helping you.
 
 ## Electronic Submission Instructions
 
-- TBA
+- Zip all required files into a file `homework1.zip`.
+
+- Make sure one of the files is a `README` text file listing the members of your team, as well as any remarks you want to make about your code.
+
+- Send an email with your file `homework1.zip` as an attachment to `olin.submissions@gmail.com` with subject _Homework 1 submission_.
 
 
 * * * 
