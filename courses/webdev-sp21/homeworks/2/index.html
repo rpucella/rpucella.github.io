@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+        margin-left: 32px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="homework-2-javascript">Homework 2: JavaScript</h1>
+<hr />
+<h2 id="due-date-monday-february-22-2021-23h59">Due Date: Monday, February 22, 2021 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done in teams of two. You're welcome to discuss with other students, but all submitted work must be original and your own. If you use a solution from another source you must cite it — this includes when that source is someone else helping you.</p></li>
+<li><p>Link to a <a href="./homework2.zip">homework1.zip</a> file containing support files to use as a starting point.</p></li>
+</ul>
+<h2 id="electronic-submission-instructions">Electronic Submission Instructions</h2>
+<ul>
+<li><p>Zip all required files into a file <code>homework2.zip</code>.</p></li>
+<li><p>Make sure one of the files is a <code>README</code> text file listing the members of your team, as well as any remarks you want to make about your code.</p></li>
+<li><p>Send an email with your file <code>homework2.zip</code> as an attachment to <code>olin.submissions@gmail.com</code> with subject <em>Homework 2 submission</em>.</p></li>
+</ul>
+<hr />
+<h2 id="question-1-basic-functions">Question 1: Basic Functions</h2>
+<h3 id="a">(A)</h3>
+<p>Code a function <code>roundN(n, i)</code> which takes a number <code>n</code> and a non-zero integer <code>i</code> and returns n rounded to the nearest 10<sup><code>i</code></sup>.</p>
+<h3 id="b">(B)</h3>
+<p>Code a function <code>range(n, m)</code> which takes a number <code>n</code> and a number <code>m</code> and returns the array of all numbers between <code>n</code> (inclusive) and <code>m</code> (exclusive). The array should be empty if <code>n</code> ≥ <code>m</code>.</p>
+<h3 id="c">(C)</h3>
+<p>Code a function <code>positive(lst)</code> which takes an array of numbers <code>lst</code> and returns the array of numbers in <code>lst</code> that are positive (≥ 0).</p>
+<h3 id="d">(D)</h3>
+<p>Code a function <code>positiveStr(s)</code> which takes a string <code>s</code> made up of integers separated by <code>;</code> and returns a string made up of all integers in <code>s</code> that are positive (≥ 0) separated by <code>;</code>.</p>
+<h3 id="e">(E)</h3>
+<p>Code a function <code>mapStr(s, sep, f)</code> which takes a string <code>s</code> made up of integers separated by a separating character <code>sep</code>, and a function <code>f</code>, and returns the string made up of the result of applying function <code>f</code> to every integer in <code>s</code>, all separated by <code>sep</code>.</p>
+<hr />
+<h2 id="question-2-objects-as-dictionaries">Question 2: Objects as Dictionaries</h2>
+<h3 id="a-1">(A)</h3>
+<p>Code a function <code>distinct(objs, fld)</code> which takes an array <code>objs</code> of objects and a string <code>fld</code> and returns the array of all <em>distinct</em> values assigned to field <code>fld</code> in obejcts in <code>objs</code>.</p>
+<h3 id="b-1">(B)</h3>
+<p>Code a function <code>sort(objs, fld)</code> which takes an array <code>objs</code> of objects and a string <code>fld</code> and returns the sorted array of all objects in <code>objs</code>, sorted by increasing value of their field <code>fld</code>.</p>
+<p>The resulting array of objects should not share any object with the original array (that is, modifying the value associated with a top-level key in any object in the original array should not affect the resulting array).</p>
+<h3 id="c-1">(C)</h3>
+<p>Code a function <code>sum(objs, fld1, fld2)</code> which takes an array <code>objs</code> of objects and two strings <code>fld1</code> and <code>fld2</code> and returns an array of objects in which each object is an object of <code>objs</code> with an additional field <code>sum</code> whose value is the sum of the values of field <code>fld1</code> and <code>fld2</code> of the original object.</p>
+<p>The resulting array of objects should not share any object with the original array (that is, modifying the value associated with a top-level key in any object in the original array should not affect the resulting array).</p>
+<h3 id="d-1">(D)</h3>
+<p>Code a function <code>group(objs, fld)</code> which takes an array <code>objs</code> of objects and a string <code>fld</code> and returns a single object in which the keys are the distinct values associated to field <code>fld</code> in the objects in <code>objs</code>, and associated to each key <code>v</code> is the array of all objects in <code>objs</code> which have <code>v</code> as a value associated with field <code>fld</code>.</p>
+<p>It is fine if the resulting object shares objects with the original array.</p>
+<h3 id="e-1">(E)</h3>
+<p>Code a function <code>expand(obj, fld)</code> which takes an object <code>obj</code> and a string <code>fld</code> and returns an array of objects. You can assume that the value associated with field <code>fld</code> in <code>obj</code> is an array (call it <code>arr</code>). Each object of the resulting array is a copy of the original object, but with one of the values in <code>arr</code> associated with field <code>fld</code>.</p>
+<p>The resulting array of objects should not share any top-level key value with the original object (that is, modifying the value associated with a top-level key in the original object should not affect the resulting array).</p>
+<hr />
+<h2 id="question-3-classes">Question 3: Classes</h2>
+<p>Consider the following two classes <code>Empty</code> and <code>Node</code> used to implement binary trees with a value stored at each node. You can think of them as subclasses of an abstract <code>BinTree</code> class, which I didn't bother writing down.</p>
+<pre><code>class Empty {
+    
+    isEmpty() {
+        return true
+    }
+
+    size() {
+        return 0
+    }
+}
+
+
+class Node {
+    
+    constructor(value, left, right) {
+        this.value = value
+        this.left = left
+        this.right = right
+    }
+
+    isEmpty() {
+        return false
+    }
+    
+    size() {
+        return 1 + this.left.size() + this.right.size()
+    }
+}</code></pre>
+<p>Naturally enough, <code>new Empty()</code> creates an empty tree, while <code>new Node(v, lft, rgt)</code> creates a tree with value <code>v</code> at the root and with left and right subtrees <code>lft</code> and <code>rgt</code> respectively.</p>
+<p>Two methods are provided: <code>isEmpty()</code> checks if a tree is empty, while <code>size()</code> returns the total number of nodes in a tree.</p>
+<p><strong>Hint</strong>: for pretty much all of these questions, the answer will use recursion. Why? Because trees are recursive structures. (A tree is either empty or a node with two trees hanging off of it.) If you're looking for a challenge, try to implement the methods below without using recursion.</p>
+<h3 id="a-2">(A)</h3>
+<p>Code a method <code>height()</code> in binary trees which returns the number of nodes in the longest path in the tree.</p>
+<h3 id="b-2">(B)</h3>
+<p>Code a method <code>fringe()</code> in binary trees which returns the list of values at the leaf nodes in the tree. A node is a leaf node if its left and right subtrees are both empty. The order of the resulting list is not important, but repetitions should be allowed.</p>
+<h3 id="c-2">(C)</h3>
+<p>A preorder traversal of a tree is a way to touch every value in a tree in such a way that you touch the value at a node before you traverse the left subtree and then the right subtree of the node. What &quot;touching&quot; the value means depends on the context.</p>
+<p>Code a method <code>preorder(f)</code> in binary trees which does a preorder traversal of the tree, and calls function <code>f</code> on the value at a node whenever the traversal touches the value.</p>
+<h3 id="d-2">(D)</h3>
+<p>Code a method <code>map(f)</code> in binary trees which returns a new tree with the exact same shape as the original tree, but where the value at each node is the result of applying <code>f</code> to the value in the corresponding node in the original tree.</p>
+<h3 id="e-2">(E)</h3>
+<p>Code a method <code>trim()</code> in binary trees which return a new tree in which every leaf of the original tree has been removed. For the sake of simplicity, trimming an empty tree should return an empty tree.</p>
+<hr />
+<h2 id="question-4-additional-question-for-teams-of-3">Question 4: Additional question for teams of 3</h2>
+<p><em>Coming soon</em></p>
+
+</body>
+
+</html>
