@@ -31,7 +31,7 @@ it &mdash; this includes when that source is someone else helping you.
 
 ### (A)
 
-Code a function `roundN(n, i)` which takes a number `n` and a non-zero integer `i` and returns n rounded to the nearest 10<sup><code>i</code></sup>.
+Code a function `roundN(n, i)` which takes a number `n` and an integer `i` &ge; 0 and returns `n` rounded to the nearest 10<sup><code>i</code></sup>.
 
 ### (B)
 
