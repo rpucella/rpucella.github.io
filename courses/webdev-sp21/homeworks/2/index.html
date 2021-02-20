@@ -393,7 +393,168 @@ Node {
 }</code></pre>
 <hr />
 <h2 id="question-4-additional-question-for-teams-of-3">Question 4: Additional question for teams of 3</h2>
-<p><em>Coming soon</em></p>
+<h3 id="a-3">(A)</h3>
+<p>Another representation for a tree is as a JSON object.</p>
+<p>A JSON object representation of a tree is as a node</p>
+<pre><code>{
+   value: ...,
+   left: ...,
+   right: ...
+}</code></pre>
+<p>where <code>value</code> holds the value at the node, <code>left</code> (if present) holds the left subtree (as a JSON object), and <code>right</code> (if present) holds the right subtree (as a JSON object). Note that <code>left</code> or <code>right</code> is only present if there is a corresponding subtree. A leaf therefore would be represented as:</p>
+<pre><code>{
+   value: ...
+}</code></pre>
+<p>while a tree with only a right subtree would be represented as:</p>
+<pre><code>{
+   value: ...,
+   right: ...
+}</code></pre>
+<p>and so on.</p>
+<p>Code a method <code>toJSON()</code> in the <code>Empty</code> and <code>Subtree</code> class that returns the tree in the JSON representation above. The JSON representation of the empty tree should be <code>{}</code>.</p>
+<pre><code>&gt; new Empty().toJSON()
+{}
+&gt; new Node(10, new Empty(), new Empty()).toJSON()
+{ value: 10 }
+&gt; sample_tree.toJSON()
+{
+  value: 10,
+  left: {
+    value: 20,
+    left: { value: 40, left: [Object], right: [Object] },
+    right: { value: 50, left: [Object], right: [Object] }
+  },
+  right: { value: 30, left: { value: 60 }, right: { value: 70 } }
+}
+&gt; console.log(JSON.stringify(sample_tree.toJSON(), null, 2))
+{
+  &quot;value&quot;: 10,
+  &quot;left&quot;: {
+    &quot;value&quot;: 20,
+    &quot;left&quot;: {
+      &quot;value&quot;: 40,
+      &quot;left&quot;: {
+        &quot;value&quot;: 80
+      },
+      &quot;right&quot;: {
+        &quot;value&quot;: 90
+      }
+    },
+    &quot;right&quot;: {
+      &quot;value&quot;: 50,
+      &quot;left&quot;: {
+        &quot;value&quot;: 100
+      },
+      &quot;right&quot;: {
+        &quot;value&quot;: 110
+      }
+    }
+  },
+  &quot;right&quot;: {
+    &quot;value&quot;: 30,
+    &quot;left&quot;: {
+      &quot;value&quot;: 60
+    },
+    &quot;right&quot;: {
+      &quot;value&quot;: 70
+    }
+  }
+}
+undefined</code></pre>
+<h3 id="b-3">(B)</h3>
+<p>Code a function <code>fromJSON(j)</code> taking a JSON object <code>j</code> in the JSON format described in question (A) and constructs the corresponding tree using <code>Empty</code> and <code>Node</code> classes.</p>
+<pre><code>&gt; fromJSON({value: 1})
+Node { value: 1, left: Empty {}, right: Empty {} }
+&gt; fromJSON({value: 1, left: {value: 2, left: { value: 3}}, right: {value: 4, right: { value: 5}}})
+Node {
+  value: 1,
+  left: Node {
+    value: 2,
+    left: Node { value: 3, left: Empty {}, right: Empty {} },
+    right: Empty {}
+  },
+  right: Node {
+    value: 4,
+    left: Empty {},
+    right: Node { value: 5, left: Empty {}, right: Empty {} }
+  }
+}</code></pre>
+<h3 id="c-3">(C)</h3>
+<p>Another representation for a tree is as an array of nodes, where each node is described by an object:</p>
+<pre><code>{ 
+   id: ...,
+   value: ...,
+   left: ...,
+   right: ...
+}</code></pre>
+<p>where <code>id</code> is the name of the node, <code>value</code> is the value at the node, <code>left</code> (if present) is the name of the node making up the left child, and <code>right</code> (if present) is the name of the node making up the right child. The root is whichever node does not appear as the child of any other node in the array.</p>
+<p>For instance, here is the array representation for a tree with 10 at the root, 20 in the left child, and 30 in the right child:</p>
+<pre><code>[
+   {
+      id: &#39;root&#39;,
+      value: 10,
+      left: &#39;left-child&#39;,
+      right: &#39;right-child&#39;
+   },
+   {
+      id: &#39;left-child&#39;,
+      value: 20
+   },
+   {
+      id: &#39;right-child&#39;,
+      value: 30
+   }
+]</code></pre>
+<p>Note that names don't have to be meaninful, and the root need not be the first element of the array.</p>
+<p>Code a function <code>fromArray(arr)</code> taking an array in the above representation and constructs the corresponding tree using <code>Empty</code> and <code>Node</code> classes.</p>
+<p>Using the sample arrays:</p>
+<pre><code>const sample_arr_1 = [
+    {id: &#39;a&#39;, value: 1, left: &#39;b&#39;, right: &#39;c&#39;},
+    {id: &#39;b&#39;, value: 2, left: &#39;d&#39;, right: &#39;e&#39;},
+    {id: &#39;c&#39;, value: 3, left: &#39;f&#39;, right: &#39;g&#39;},
+    {id: &#39;d&#39;, value: 4, left: &#39;h&#39;},
+    {id: &#39;e&#39;, value: 5, right: &#39;i&#39;},
+    {id: &#39;f&#39;, value: 6},
+    {id: &#39;g&#39;, value: 7},
+    {id: &#39;h&#39;, value: 8},
+    {id: &#39;i&#39;, value: 9}
+]
+
+const sample_arr_2 = [
+    {id: &#39;john&#39;, value: &#39;L&#39;},
+    {id: &#39;paul&#39;, value: &#39;M&#39;},
+    {id: &#39;george&#39;, value: &#39;H&#39;, left: &#39;john&#39;, right: &#39;paul&#39;},
+    {id: &#39;ringo&#39;, value: &#39;S&#39;, left: &#39;george&#39;, right: &#39;george&#39;},
+]</code></pre>
+<p>here are some sample outputs:</p>
+<pre><code>&gt; fromArray(sample_arr_1)
+Node {
+  value: 1,
+  left: Node {
+    value: 2,
+    left: Node { value: 4, left: [Node], right: Empty {} },
+    right: Node { value: 5, left: Empty {}, right: [Node] }
+  },
+  right: Node {
+    value: 3,
+    left: Node { value: 6, left: Empty {}, right: Empty {} },
+    right: Node { value: 7, left: Empty {}, right: Empty {} }
+  }
+}
+&gt; fromArray(sample_arr_2)
+Node {
+  value: &#39;S&#39;,
+  left: Node {
+    value: &#39;H&#39;,
+    left: Node { value: &#39;L&#39;, left: Empty {}, right: Empty {} },
+    right: Node { value: &#39;M&#39;, left: Empty {}, right: Empty {} }
+  },
+  right: Node {
+    value: &#39;H&#39;,
+    left: Node { value: &#39;L&#39;, left: Empty {}, right: Empty {} },
+    right: Node { value: &#39;M&#39;, left: Empty {}, right: Empty {} }
+  }
+}</code></pre>
 
 </body>
 

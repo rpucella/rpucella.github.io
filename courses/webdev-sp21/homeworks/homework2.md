@@ -468,4 +468,196 @@ Code a method `trim()` in binary trees which return a new tree in which every le
 
 ## Question 4: Additional question for teams of 3
 
-_Coming soon_
+### (A)
+
+Another representation for a tree is as a JSON object. 
+
+A JSON object representation of a tree is as a node
+
+    {
+       value: ...,
+       left: ...,
+       right: ...
+    }
+
+where `value` holds the value at the node, `left` (if present) holds the left subtree (as a JSON object), and `right` (if present) holds the right subtree (as a JSON object). Note that `left` or `right` is only present if there is a corresponding subtree. A leaf therefore would be represented as:
+
+    {
+       value: ...
+    }
+    
+while a tree with only a right subtree would be represented as:
+
+    {
+       value: ...,
+       right: ...
+    }
+    
+and so on.
+
+Code a method `toJSON()` in the `Empty` and `Subtree` class that returns the tree in the JSON representation above. The JSON representation of the empty tree should be `{}`.
+
+    > new Empty().toJSON()
+    {}
+    > new Node(10, new Empty(), new Empty()).toJSON()
+    { value: 10 }
+    > sample_tree.toJSON()
+    {
+      value: 10,
+      left: {
+        value: 20,
+        left: { value: 40, left: [Object], right: [Object] },
+        right: { value: 50, left: [Object], right: [Object] }
+      },
+      right: { value: 30, left: { value: 60 }, right: { value: 70 } }
+    }
+    > console.log(JSON.stringify(sample_tree.toJSON(), null, 2))
+    {
+      "value": 10,
+      "left": {
+        "value": 20,
+        "left": {
+          "value": 40,
+          "left": {
+            "value": 80
+          },
+          "right": {
+            "value": 90
+          }
+        },
+        "right": {
+          "value": 50,
+          "left": {
+            "value": 100
+          },
+          "right": {
+            "value": 110
+          }
+        }
+      },
+      "right": {
+        "value": 30,
+        "left": {
+          "value": 60
+        },
+        "right": {
+          "value": 70
+        }
+      }
+    }
+    undefined
+
+
+### (B)
+
+Code a function `fromJSON(j)` taking a JSON object `j` in the JSON format described in question (A) and constructs the corresponding tree using `Empty` and `Node` classes.
+
+    > fromJSON({value: 1})
+    Node { value: 1, left: Empty {}, right: Empty {} }
+    > fromJSON({value: 1, left: {value: 2, left: { value: 3}}, right: {value: 4, right: { value: 5}}})
+    Node {
+      value: 1,
+      left: Node {
+        value: 2,
+        left: Node { value: 3, left: Empty {}, right: Empty {} },
+        right: Empty {}
+      },
+      right: Node {
+        value: 4,
+        left: Empty {},
+        right: Node { value: 5, left: Empty {}, right: Empty {} }
+      }
+    }
+
+
+### (C)
+
+Another representation for a tree is as an array of nodes, where each node is described by an object:
+
+    { 
+       id: ...,
+       value: ...,
+       left: ...,
+       right: ...
+    }
+    
+where `id` is the name of the node, `value` is the value at the node, `left` (if present) is the name of the node making up the left child, and `right` (if present) is the name of the node making up the right child. The root is whichever node does not appear as the child of any other node in the array.
+
+For instance, here is the array representation for a tree with 10 at the root, 20 in the left child, and 30 in the right child:
+
+    [
+       {
+          id: 'root',
+          value: 10,
+          left: 'left-child',
+          right: 'right-child'
+       },
+       {
+          id: 'left-child',
+          value: 20
+       },
+       {
+          id: 'right-child',
+          value: 30
+       }
+    ]
+    
+Names don't have to be meaninful, and the root need not be the first element of the array.
+
+Code a function `fromArray(arr)` taking an array in the above representation and constructs the corresponding tree using `Empty` and `Node` classes.
+
+Using the sample arrays:
+
+    const sample_arr_1 = [
+        {id: 'a', value: 1, left: 'b', right: 'c'},
+        {id: 'b', value: 2, left: 'd', right: 'e'},
+        {id: 'c', value: 3, left: 'f', right: 'g'},
+        {id: 'd', value: 4, left: 'h'},
+        {id: 'e', value: 5, right: 'i'},
+        {id: 'f', value: 6},
+        {id: 'g', value: 7},
+        {id: 'h', value: 8},
+        {id: 'i', value: 9}
+    ]
+    
+    const sample_arr_2 = [
+        {id: 'john', value: 'L'},
+        {id: 'paul', value: 'M'},
+        {id: 'george', value: 'H', left: 'john', right: 'paul'},
+        {id: 'ringo', value: 'S', left: 'george', right: 'george'},
+    ]
+
+here are some sample outputs:
+
+    > fromArray(sample_arr_1)
+    Node {
+      value: 1,
+      left: Node {
+        value: 2,
+        left: Node { value: 4, left: [Node], right: Empty {} },
+        right: Node { value: 5, left: Empty {}, right: [Node] }
+      },
+      right: Node {
+        value: 3,
+        left: Node { value: 6, left: Empty {}, right: Empty {} },
+        right: Node { value: 7, left: Empty {}, right: Empty {} }
+      }
+    }
+    > fromArray(sample_arr_2)
+    Node {
+      value: 'S',
+      left: Node {
+        value: 'H',
+        left: Node { value: 'L', left: Empty {}, right: Empty {} },
+        right: Node { value: 'M', left: Empty {}, right: Empty {} }
+      },
+      right: Node {
+        value: 'H',
+        left: Node { value: 'L', left: Empty {}, right: Empty {} },
+        right: Node { value: 'M', left: Empty {}, right: Empty {} }
+      }
+    }
+
+          
+
+
