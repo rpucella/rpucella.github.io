@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    
+    <title>Events Demo</title>
+
+    <style>
+      p {
+          padding: 8px;
+          font-size: 16px;
+      }
+
+      image {
+          width: 320px;
+      }
+
+      select {
+          width: 200px;
+      }
+
+      .spaced {
+          margin-left: 32px;
+      }
+    </style>
+
+  </head>
+
+  
+  <body>
+    
+    <h1> Events Demo </h1>
+
+    <p>
+      Choose a picture from the list, or add a new picture to the list
+    </p>
+
+    <select id="picture-select">
+      <option value="0">Cat</option>
+      <option value="1">Dog</option>
+    </select>
+
+    <label class="spaced" for="new-name">Name:</label>
+    <input type="text" id="new-name">
+
+    <label class="spaced" for="new-url">URL:</label>
+    <input type="text" id="new-url">
+
+    <button class="spaced" id="create-button">Add picture</button>
+
+    <h2 id="name">Cat</h2>
+
+    <div id="added">Added: built-in</div>
+
+    <img id="url" src="cat.png">
+        
+    
+    <script>
+      
+      function elt(id) {
+	  // useful shortcut
+          return document.getElementById(id)
+      }
+
+      const pictures = [
+          {
+              name: 'Cat',
+              url: 'cat.png',
+	      added: 'built-in'
+          },
+	  {
+	      name: 'Dog',
+	      url: 'dog.jpg',
+	      added: 'built-in'
+	  }
+      ]
+
+      elt('picture-select').addEventListener('change', () => {
+	  const value = elt('picture-select').value
+	  showPicture(pictures[+value])
+      })
+
+      function showPicture(pict) {
+	  elt('name').innerText = pict.name
+	  elt('url').setAttribute('src', pict.url)
+	  elt('added').innerText = 'Added: ' + pict.added
+      }
+      
+      function grabPicture() {
+	  const name = elt('new-name').value
+	  const url = elt('new-url').value
+	  if (!name || !url) {
+	      return false
+	  }
+	  return { name: name, url: url, added: Date() }
+      }
+
+      function clearInputs() {
+	  elt('new-name').value = ''
+	  elt('new-url').value = ''
+      }    
+
+      elt('create-button').addEventListener('click', () => {
+          const pict = grabPicture()
+          if (pict) {
+	      console.log(pict)
+              pictures.push(pict)
+	      const newOption = document.createElement('option')
+	      const newValue = pictures.length - 1
+	      newOption.setAttribute('value', newValue)
+	      newOption.innerText = pict.name
+	      elt('picture-select').appendChild(newOption)
+	      clearInputs()
+	      elt('picture-select').value = newValue
+	      showPicture(pict)
+          }
+      })
+
+      function changeColorAdded(color) {
+	  elt('added').style.color = color
+      }
+
+      elt('url').addEventListener('mouseover', () => {
+	  changeColorAdded('black')
+      })
+
+      elt('url').addEventListener('mouseout', () => {
+	  changeColorAdded('white')
+      })
+
+      changeColorAdded('white')
+      
+    </script>
+    
+  </body>
+  
+</html>
+

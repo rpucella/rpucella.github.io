@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    
+    <title>DOM Manipulations Demo</title>
+
+    <style>
+      p {
+          padding: 8px;
+          font-size: 16px;
+      }
+      
+      button {
+          padding: 8px;
+          font-size: 16px;
+      }
+    </style>
+
+  </head>
+
+  
+  <body>
+    
+    <h1> DOM Manipulations Demo </h1>
+
+    <p id="first-para">
+      In augue mi, faucibus nec imperdiet at, congue non leo. Aliquam
+      erat volutpat. Integer consectetur enim posuere, eleifend nisl
+      et, volutpat massa. Integer enim leo, pellentesque eget metus
+      ultrices, maximus consectetur mauris. Aliquam suscipit nec lacus
+      nec malesuada. Integer tempor gravida augue at ornare. Morbi at
+      condimentum neque, a semper nulla. Maecenas quis vestibulum
+      orci, facilisis facilisis urna. Suspendisse vitae iaculis
+      ipsum. Praesent nisi magna, consequat in nisi eget, elementum
+      posuere lacus. Vestibulum tortor dolor, porta vitae viverra ac,
+      sodales at orci. Quisque a tellus augue. Vivamus euismod blandit
+      quam, vel dapibus elit lacinia nec. Aenean et risus non lacus
+      aliquam sagittis et a sapien. Nulla hendrerit erat sapien, in
+      vulputate eros eleifend quis. In facilisis eros nibh, eget
+      rutrum tellus vulputate ut.
+    </p>
+
+    <button onclick="randomizeFirstPara()">Randomize style above</button>
+
+    <button onclick="toggleDisplay()">Hide/show above</button>
+
+    <button id="create-button" onclick="createNewPara()">Create paragraph</button>
+
+    <script>
+
+      function pickRandom (arr) {
+          // helper function to extract a random element out of an array
+          return arr[Math.floor(Math.random() * arr.length)]
+      }
+
+      const sizes = ['16px', '20px', '24px', '28px']
+      const colors = ['blue', 'red', 'green', 'purple', 'black']
+      const widths = ['1px', '2px', '3px', '4px']
+      const styles = ['none', 'solid', 'dashed']
+      
+      function randomizeStyle(elt) {
+          // try : font-size, color, font-style, font-weight, border-width, border-style, border-color
+	  elt.style.fontSize = pickRandom(sizes)
+	  elt.style.color = pickRandom(colors)
+	  elt.style.fontStyle = pickRandom(['normal', 'italic'])
+	  elt.style.fontWeight = pickRandom(['normal', 'bold'])
+	  elt.style.borderWidth = pickRandom(widths)
+	  elt.style.borderStyle = pickRandom(styles)
+	  elt.style.borderColor = pickRandom(colors)
+      }
+
+      function randomizeFirstPara() {
+	  const para = document.getElementById('first-para')
+	  randomizeStyle(para)
+      }
+
+      let showing = true
+      
+      function toggleDisplay () {
+	  const para = document.getElementById('first-para')
+	  if (showing) {
+	      para.style.display = 'none'
+	      showing = false
+	  } else {
+	      para.style.display = 'block'
+	      showing = true
+	  }
+      }
+
+      let count = 0
+
+      function createNewPara () {
+	  // create element and give it a random style
+	  const newPara = document.createElement('p')
+	  randomizeStyle(newPara)
+	  // assign a "unique" id
+	  count += 1
+	  newPara.setAttribute('id', 'new-para-' + count)
+	  // set paragraph text
+	  newPara.innerText = document.getElementById('first-para').innerText
+	  // attach the paragraph before the "create paragraph" button
+	  const button = document.getElementById('create-button')
+	  document.body.insertBefore(newPara, button)
+
+      }
+
+    </script>
+    
+  </body>
+  
+</html>
+

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    
+    <title>Events Demo</title>
+
+    <style>
+      body {
+          font-family: sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #333333;
+      }
+      
+      p {
+          padding: 8px;
+          font-size: 16px;
+      }
+
+      .two-columns {
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: space-between;
+      }
+
+      .night {
+          background-color: #333333;
+          color: #eeeeee;
+      }
+
+      .column {
+          padding: 16px;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          min-height: 97vh;
+      }
+
+      .label-input {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+      }
+
+      .label-input > * {
+          width: 100%;
+      }
+
+      .label-input > label {
+          margin-bottom: 8px;
+      }
+
+      .column > * {
+          width: 100%;
+          margin: 16px 0;
+      }
+
+      .white {
+          background-color: white;
+      }
+
+      #name {
+          font-size: 48px;
+          text-align: center;
+      }
+
+      input {
+          box-sizing: border-box;
+          font-size: 20px;
+          line-height: 32px;
+          background-color: #eeeeee;
+          padding: 0 8px;
+      }
+
+      select {
+          font-size: 20px;
+          line-height: 32px;
+          background-color: #eeeeee;
+          padding: 0 8px;
+      }
+      
+      .column > button {
+          margin-top: 100px;
+          height: 48px;
+          font-size: 20px;
+      }
+      
+
+    </style>
+
+  </head>
+
+  
+  <body>
+    
+    <div class="two-columns">
+
+      <div class="column night">
+        
+        <h1> Events Demo </h1>
+
+        <p>
+          Choose a picture from the list, or add a new picture to the list
+        </p>
+
+        <select id="picture-select">
+          <option value="0">Cat</option>
+          <option value="1">Dog</option>
+        </select>
+
+        <div class="label-input">
+          <label for="new-name">Name:</label>
+          <input id="new-name" type="text"></input>
+        </div>
+
+        <div class="label-input">
+          <label for="new-url">URL:</label>
+          <input id="new-url" type="text"></input>
+        </div>
+    
+        <button id="new-create">Add new picture</button>
+
+      </div>
+
+      <div class="column white"> 
+        
+        <div id="name">Cat</div>
+
+        <div style="color: white;" id="added">Added: built-in</div>
+        
+        <img id="url" src="cat.png">
+        
+      </div>
+      
+    </div>
+    
+    <script>
+
+      function elt(id) {
+	  // useful shortcut
+          return document.getElementById(id)
+      }
+
+      const pictures = [
+          {
+              name: 'Cat',
+              url: 'cat.png',
+	      added: 'built-in'
+          },
+	  {
+	      name: 'Dog',
+	      url: 'dog.jpg',
+	      added: 'built-in'
+	  }
+      ]
+
+      elt('picture-select').addEventListener('change', () => {
+	  const value = elt('picture-select').value
+	  showPicture(pictures[+value])
+      })
+
+      function showPicture(pict) {
+	  elt('name').innerText = pict.name
+	  elt('url').setAttribute('src', pict.url)
+	  elt('added').innerText = 'Added: ' + pict.added
+      }
+      
+      function grabPicture() {
+	  const name = elt('new-name').value
+	  const url = elt('new-url').value
+	  if (!name || !url) {
+	      return false
+	  }
+	  return { name: name, url: url, added: Date() }
+      }
+
+      function clearInputs() {
+	  elt('new-name').value = ''
+	  elt('new-url').value = ''
+      }    
+
+      elt('new-create').addEventListener('click', () => {
+          const pict = grabPicture()
+          if (pict) {
+	      console.log(pict)
+              pictures.push(pict)
+	      const newOption = document.createElement('option')
+	      const newValue = pictures.length - 1
+	      newOption.setAttribute('value', newValue)
+	      newOption.innerText = pict.name
+	      elt('picture-select').appendChild(newOption)
+	      clearInputs()
+	      elt('picture-select').value = newValue
+	      showPicture(pict)
+          }
+      })
+
+      function changeColorAdded(color) {
+	  elt('added').style.color = color
+      }
+
+      elt('url').addEventListener('mouseover', () => {
+	  changeColorAdded('black')
+      })
+
+      elt('url').addEventListener('mouseout', () => {
+	  changeColorAdded('white')
+      })
+
+      changeColorAdded('white')
+      
+    </script>
+    
+  </body>
+  
+</html>
+
