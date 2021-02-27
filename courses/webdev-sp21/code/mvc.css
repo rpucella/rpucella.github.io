@@ -1,0 +1,22 @@
+p {
+    padding: 8px;
+    font-size: 16px;
+}
+
+img {
+    width: 320px;
+}
+
+select {
+    width: 200px;
+}
+
+.spaced {
+    margin-left: 32px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    margin: 16px 0;
+}
