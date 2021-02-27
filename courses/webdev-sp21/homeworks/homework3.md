@@ -115,11 +115,11 @@ should produce the following sequence, if you start typing `first ix`:
 
 Put your responses to Questions 1 &ndash; 3 together into a single document that mimics a "tabbed" page: there should be three tabs labeled Question 1, Question 2, Question 3 (styled however you want) such that when you click on one of the tabs, your answer to Question 1, Question 2, or Question 3 (respectively) shows on the page. The tabs should give an indication of which tab is the "active" one. 
 
-I've given you a super-bare bones shell `homework3.html` that you can use. It loads a file `homework3.js` that has a few globals that you will need: `sampleTableHeaders`, `sampleTableRows`, and `sampleItems`.
+I've given you a super-bare bones shell `homework3.html` that you can use. It loads a file `homework3.js` that has a few globals that you will need: `sampleTableHeaders`, `sampleTableData`, and `sampleItems`.
 
-The tab for Question 1 should show a table constructed with your `makeTable` function on inputs `sampleTableHeaders` and `sampleTableRows`.
+The tab for Question 1 should show a table constructed with your `makeTable` function on inputs `sampleTableHeaders` and `sampleTableData`.
 
-The tab for Question 2 should show a sortable table constructed with your `makeSortableTable` function on inputs `sampleTableHeaders` and `sampleTableRows`.
+The tab for Question 2 should show a sortable table constructed with your `makeSortableTable` function on inputs `sampleTableHeaders` and `sampleTableData`.
 
 The tab for Question 3 should show a filterable list constructed with your `makeFilterableList` function on input `sampleItems`.
 
