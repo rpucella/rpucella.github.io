@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+        margin-left: 32px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="homework-3-dom-and-events">Homework 3: DOM and Events</h1>
+<hr />
+<h2 id="due-date-monday-march-8-2021-23h59">Due Date: Monday March 8, 2021 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done in teams of two. You're welcome to discuss with other students, but all submitted work must be original and your own. If you use a solution from another source you must cite it — this includes when that source is someone else helping you.</p></li>
+<li><p>Link to a <a href="./homework3.zip">homework3.zip</a> file containing support files to use as a starting point.</p></li>
+</ul>
+<h2 id="electronic-submission-instructions">Electronic Submission Instructions</h2>
+<ul>
+<li><p>Zip all the files needed to show your work in a file <code>homework3.zip</code>.</p></li>
+<li><p>Make sure one of the files is a <code>README</code> text file listing the members of your team, as well as any remarks you want to make about your code.</p></li>
+<li><p><em>Last step TBA</em></p></li>
+</ul>
+<hr />
+<p>In this homework, you'll practice working with JavaScript to modify the DOM, and working with events.</p>
+<p>When developing code for your question, feel free to do whatever you want in terms of HTML document. But for final submission, note that in question 4 I ask you to basically put all of your code in one single document that showcases all the things you've implemented.</p>
+<p>This homework is much laxer in terms of specifications for what I'm asking you to build. You have a lot of freedom. At the end of the day, I will care about whether or not you provide the functionality that I ask, and also whether things look good.</p>
+<p>Please only use pure JavaScript — no frameworks or libraries. If in doubt, ask.</p>
+<hr />
+<h2 id="question-1-warm-up-tables">Question 1: Warm Up — Tables</h2>
+<p>Code a function <code>makeTable(id, headers, rows)</code> that creates an HTML table from the data provided.</p>
+Argument <code>id</code> should be the ID of an empty
+<table> 
+<p>element in the document that you will fill with rows programmatically. Argument <code>headers</code> should be an array of strings giving the name of each column header of the created table. Argument <code>rows</code> should be an array of rows, where each row is itself an array of values.</p>
+<p>For example, if your document has an element:</p>
+<pre><code>&lt;table id=&quot;test-table&quot;&gt;&lt;/table&gt;</code></pre>
+<p>then running</p>
+<pre><code>makeTable(&#39;test-table&#39;, [&#39;Name&#39;, &#39;Age&#39;, &#39;Profession&#39;], [[&#39;Alice&#39;, 25, &#39;Software Engineer&#39;], [&#39;Bob&#39;, 30, &#39;Builder&#39;], [&#39;Charlie&#39;, 21, &#39;Painter&#39;], [&#39;Darlene&#39;, 32, &#39;Singer&#39;]])</code></pre>
+<p>should produce the table:</p>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="table.png">
+</center>
+    
+
+
+<h2 id="question-2-sortable-tables">Question 2: Sortable Tables</h2>
+<p>Code a function <code>makeSortableTable(id, headers, rows)</code> that creates an HTML table from the data provided, just like in Question 1. Same arguments, same meanings.</p>
+<p>The difference is that when you click on any of the column headers of the created table, the rows of the table should sort themselves by the value of that column, in ascending order.</p>
+<p>There should be a visual indication of which column is being used as the sorting column.</p>
+<p>As in Question 1, if your document has an element:</p>
+<pre><code>&lt;table id=&quot;test-table&quot;&gt;&lt;/table&gt;</code></pre>
+<p>then running</p>
+<pre><code>makeSortableTable(&#39;test-table&#39;, [&#39;Name&#39;, &#39;Age&#39;, &#39;Profession&#39;], [[&#39;Alice&#39;, 25, &#39;Software Engineer&#39;], [&#39;Bob&#39;, 30, &#39;Builder&#39;], [&#39;Charlie&#39;, 21, &#39;Painter&#39;], [&#39;Darlene&#39;, 32, &#39;Singer&#39;]])</code></pre>
+<p>should produce the following table if you click on column header <strong>Profession</strong>:</p>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="sortable-table-1.png">
+</center>
+
+<p>If you can, add an additional functionality to the sortable table: when you click on the column header that is currently being used for sorting, the sorting order should flip from ascending to descending, or from descending to ascending. Again, there should be a visual indication of the sorting order. (HTML entities <code>&amp;uparr;</code> and <code>&amp;downarr;</code> are good candidates.)</p>
+<p>In the above example, if you click on column header <strong>Name</strong> twice to get descending order, you should produce a table such as:</p>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="sortable-table-2.png">
+</center>
+
+
+<h2 id="question-3-filterable-lists">Question 3: Filterable Lists</h2>
+<p>Code a function <code>makeFilterableList(filterId, listId, items)</code> that creates a filterable list of items, that is, a list associated with an input element such that when you start typing into the input element, the list keeps only the items whose content has text that matches what the input element contains. (When the input element is empty, this should correspond to &quot;no filtering&quot;.) Filtering should happen on every keystroke.</p>
+<p>Argument <code>filterId</code> should be the ID of an input element in the HTML document to be used to enter the filtering text. Argument <code>listId</code> should be the ID of an element that will hold the list of items. (It can be an actual list, it can be a div, it can be anything you want. The items in the list can also be anything you want. Either way, you should be able to use styling to make it look roughly however you want.) Argument <code>items</code> should be an array of strings representing the content of the items in the list, the content into which you'll search for the text in the input box.</p>
+<p>For example, if your document has an element:</p>
+<pre><code>&lt;label for=&quot;filter-input&quot;&gt;Filter:&lt;/label&gt;
+&lt;input id=&quot;filter-input&quot; type=&quot;text&quot;&gt;
+&lt;div id=&quot;filter-list&quot;&gt;&lt;/div&gt;</code></pre>
+<p>then running</p>
+<pre><code>makeFilterableList(&#39;filter-input&#39;, &#39;filter-list&#39;, [&#39;This is the first item&#39;, &#39;This is the second item&#39;, &#39;This is the third item&#39;, &#39;This is the fourth item but also not the first, right?&#39;])</code></pre>
+<p>should produce the following sequence, if you start typing <code>first ix</code>:</p>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="filterable-list-1.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="filterable-list-2.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="filterable-list-3.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="filterable-list-4.png">
+</center>
+
+
+<h2 id="question-4-tabs">Question 4: Tabs</h2>
+<p>Put your responses to Questions 1 – 3 together into a single document that mimics a &quot;tabbed&quot; page: there should be three tabs labeled Question 1, Question 2, Question 3 (styled however you want) such that when you click on one of the tabs, your answer to Question 1, Question 2, or Question 3 (respectively) shows on the page. The tabs should give an indication of which tab is the &quot;active&quot; one.</p>
+<p>I've given you a super-bare bones shell <code>homework3.html</code> that you can use. It loads a file <code>homework3.js</code> that has a few globals that you will need: <code>sampleTableHeaders</code>, <code>sampleTableRows</code>, and <code>sampleItems</code>.</p>
+<p>The tab for Question 1 should show a table constructed with your <code>makeTable</code> function on inputs <code>sampleTableHeaders</code> and <code>sampleTableRows</code>.</p>
+<p>The tab for Question 2 should show a sortable table constructed with your <code>makeSortableTable</code> function on inputs <code>sampleTableHeaders</code> and <code>sampleTableRows</code>.</p>
+<p>The tab for Question 3 should show a filterable list constructed with your <code>makeFilterableList</code> function on input <code>sampleItems</code>.</p>
+<p>Try to make it look reasonably good by styling elements appropriately.</p>
+<p>Here are snapshots of my three tabs. Yours don't have to look like this. Moreover, for obvious reasons, I can't link you to the page:</p>
+<center style="padding:20px;">
+<img style="width: 80%; padding: 10px;" src="full-1.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 80%; padding: 10px;" src="full-2.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 80%; padding: 10px;" src="full-3.png">
+</center>
+
+
+
+
+<hr />
+<h2 id="additional-question-for-teams-of-3">Additional Question for Teams of 3</h2>
+<p>(Coming Saturday night)</p>
+
+</body>
+
+</html>
