@@ -53,9 +53,7 @@
 <hr />
 <h2 id="question-1-warm-up-tables">Question 1: Warm Up — Tables</h2>
 <p>Code a function <code>makeTable(id, headers, rows)</code> that creates an HTML table from the data provided.</p>
-Argument <code>id</code> should be the ID of an empty
-<table> 
-<p>element in the document that you will fill with rows programmatically. Argument <code>headers</code> should be an array of strings giving the name of each column header of the created table. Argument <code>rows</code> should be an array of rows, where each row is itself an array of values.</p>
+<p>Argument <code>id</code> should be the ID of an empty <code>&lt;table&gt;</code> element in the document that you will fill with rows programmatically. Argument <code>headers</code> should be an array of strings giving the name of each column header of the created table. Argument <code>rows</code> should be an array of rows, where each row is itself an array of values.</p>
 <p>For example, if your document has an element:</p>
 <pre><code>&lt;table id=&quot;test-table&quot;&gt;&lt;/table&gt;</code></pre>
 <p>then running</p>
@@ -138,8 +136,66 @@ Argument <code>id</code> should be the ID of an empty
 
 
 <hr />
-<h2 id="additional-question-for-teams-of-3">Additional Question for Teams of 3</h2>
-<p>(Coming Saturday night)</p>
+<h2 id="additional-question-for-teams-of-3-question-5-editable-tables">(Additional Question for Teams of 3) Question 5: Editable Tables</h2>
+<p>Code a function <code>makeEditableTable(id)</code> that allows you to edit the cell content an existing HTML table.</p>
+<p>Argument <code>id</code> should be the ID of an existing <code>&lt;table&gt;</code> element in the document with some content.</p>
+<p>The result of running this function should be to setup the table indicated by the supplied ID so that if you click on any of the cells of the table (don't worry about header cells, just the <code>&lt;td&gt;</code> cells of the body of the table), you get a way to edit the content of the cell, and then replace the original content of the cell with what you've entered. I don't particularly care how you get input from the user, as long as it's somewhat natural. In my example below, I create and overlay an input box over the cell that you click on using the <code>position</code> CSS property, but you don't have to do it that way.</p>
+<p>Do <strong>not</strong> use property <code>contenteditable</code>. It actually does a lot more, and is more difficult to control. I want you to figure out a way in which you can achieve editability without relying on browser-based editability.</p>
+<p>For example, if your document has an element:</p>
+<pre><code>&lt;table id=&quot;test-table&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Name&lt;/th&gt;
+      &lt;th&gt;Age&lt;/th&gt;
+      &lt;th&gt;Profession&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Alice&lt;/td&gt;
+      &lt;td&gt;25&lt;/td&gt;
+      &lt;td&gt;Software Engineer&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Bob&lt;/td&gt;
+      &lt;td&gt;30&lt;/td&gt;
+      &lt;td&gt;Builder&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Charlie&lt;/td&gt;
+      &lt;td&gt;21&lt;/td&gt;
+      &lt;td&gt;Painter&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Darlene&lt;/td&gt;
+      &lt;td&gt;32&lt;/td&gt;
+      &lt;td&gt;Singer&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<p>then running</p>
+<pre><code>makeEditableTable(&#39;test-table&#39;)</code></pre>
+<p>should produce a table that you can edit to change, say, Singer to Teacher:</p>
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="editable-table-1.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="editable-table-2.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="editable-table-3.png">
+</center>
+
+<center style="padding:20px;">
+<img style="width: 50%; padding: 10px;" src="editable-table-4.png">
+</center>
+
+<p>Add your Editable Table example to the document you created for Question 4 above, adding a new tab &quot;Question 5&quot;:</p>
+<center style="padding:20px;">
+<img style="width: 80%; padding: 10px;" src="full-4.png">
+</center>
 
 </body>
 

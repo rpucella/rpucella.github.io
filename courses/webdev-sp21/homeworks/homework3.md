@@ -41,7 +41,7 @@ Please only use pure JavaScript &mdash; no frameworks or libraries. If in doubt,
 
 Code a function `makeTable(id, headers, rows)` that creates an HTML table from the data provided. 
 
-Argument `id` should be the ID of an empty <table> element in the document that you will fill with rows programmatically. Argument `headers` should be an array of strings giving the name of each column header of the created table. Argument `rows` should be an array of rows, where each row is itself an array of values.
+Argument `id` should be the ID of an empty `<table>` element in the document that you will fill with rows programmatically. Argument `headers` should be an array of strings giving the name of each column header of the created table. Argument `rows` should be an array of rows, where each row is itself an array of values.
 
 For example, if your document has an element:
 
@@ -139,6 +139,65 @@ Here are snapshots of my three tabs. Yours don't have to look like this. Moreove
 
 * * * 
 
-## Additional Question for Teams of 3
+## (Additional Question for Teams of 3) Question 5: Editable Tables
 
-(Coming Saturday night)
+Code a function `makeEditableTable(id)` that allows you to edit the cell content an existing HTML table.
+
+Argument `id` should be the ID of an existing `<table>` element in the document with some content.
+
+The result of running this function should be to setup the table indicated by the supplied ID so that if you click on any of the cells of the table (don't worry about header cells, just the `<td>` cells of the body of the table), you get a way to edit the content of the cell, and then replace the original content of the cell with what you've entered. I don't particularly care how you get input from the user, as long as it's somewhat natural. In my example below, I create and overlay an input box over the cell that you click on using the `position` CSS property, but you don't have to do it that way.
+
+Do **not** use property `contenteditable`. It actually does a lot more, and is more difficult to control. I want you to figure out a way in which you can achieve editability without relying on browser-based editability.
+
+For example, if your document has an element:
+
+    <table id="test-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Profession</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Alice</td>
+          <td>25</td>
+          <td>Software Engineer</td>
+        </tr>
+        <tr>
+          <td>Bob</td>
+          <td>30</td>
+          <td>Builder</td>
+        </tr>
+        <tr>
+          <td>Charlie</td>
+          <td>21</td>
+          <td>Painter</td>
+        </tr>
+        <tr>
+          <td>Darlene</td>
+          <td>32</td>
+          <td>Singer</td>
+        </tr>
+      </tbody>
+    </table>
+    
+then running
+
+    makeEditableTable('test-table')
+    
+should produce a table that you can edit to change, say, Singer to Teacher:
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px;" src="editable-table-1.png"></center>
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px;" src="editable-table-2.png"></center>
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px;" src="editable-table-3.png"></center>
+
+<center style="padding:20px;"><img style="width: 50%; padding: 10px;" src="editable-table-4.png"></center>
+
+Add your Editable Table example to the document you created for Question 4 above, adding a new tab "Question 5":
+
+<center style="padding:20px;"><img style="width: 80%; padding: 10px;" src="full-4.png"></center>
+
