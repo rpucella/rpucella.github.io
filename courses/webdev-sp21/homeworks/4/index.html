@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+        margin-left: 32px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="homework-4-part-1-backend">Homework 4 (Part 1): Backend</h1>
+<hr />
+<h2 id="due-date-monday-march-22-2021-23h59">Due Date: Monday March 22, 2021 (23h59)</h2>
+<ul>
+<li><p>This homework is to be done in teams of two. You're welcome to discuss with other students, but all submitted work must be original and your own. If you use a solution from another source you must cite it — this includes when that source is someone else helping you.</p></li>
+<li><p>Link to a <a href="./homework4-1.zip">homework4-1.zip</a> file containing support files to use as a starting point.</p></li>
+<li><p>Part 2 will come out in a week. Submission will be done with Part 2.</p></li>
+</ul>
+<hr />
+<p>In Homework 4, we will create the skeleton of what may be an Instagram-like web app: a way to upload and store images with associated comments.</p>
+<p>In this first part of the Homework 4, we're going to build the web application server backend, with all the required routes. In Part 2, we will build out a frontend.</p>
+<p>I've given you a starting <code>server.py</code> Flask file in the <code>homework4-1.zip</code> bundle. It doesn't do much except start the web application server on port 8080. There are no routes defined.</p>
+<p>The basic idea is pretty simple: the backend will store a list of pictures (JPEG, to nail down a format), and for each picture a list of comments that have been entered for that image.</p>
+<p>Each picture should be assigned a unique identifier when it is added to the system, and that identifier is what's used to refer to the picture throughout the system. I'm going to refer to that identifier as a Picture ID. (I like to use <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUIDs</a> as unique identifiers, which are supported by Python's <a href="https://docs.python.org/3/library/uuid.html"><code>uuid</code></a> library.)</p>
+<p>The frontend will need ways to:</p>
+<ul>
+<li>get the list of available picture IDs</li>
+<li>get the picture corresponding to a Picture ID</li>
+<li>get all the comments associated with a Picture ID</li>
+</ul>
+<p>and ways to:</p>
+<ul>
+<li>add a new picture</li>
+<li>add a new comment to the list of comments of a given picture ID.</li>
+</ul>
+<p>Each of these operations will have a corresponding endpoint (sometime parameterized by a Picture ID).</p>
+<p>You will have to decide how to store all of that data. You have full freedom for what data structure to use, but I'm going to ask you to do it purely in Python with its standard library without relying on external tools or databases.</p>
+<p>The pictures themselves should probably be stored to disk, but that's not strictly required until you get to question 6, at least.</p>
+<p>For testing the backend, you can use any tool that can send GET and POST requests. I suggest you learn how to use <a href="https://www.postman.com">Postman</a>, or <a href="https://curl.se">curl</a> if you prefer command-line tools. You may already have curl installed on your linux or Mac OS X distribution.</p>
+<hr />
+<h2 id="question-1-get-pictures">Question 1: Get pictures</h2>
+<p>Add a <code>GET</code> route <code>/pictures</code> to the web application server that responds with a JSON containing a single field <code>pictures</code>:</p>
+<pre><code>{
+  &quot;pictures&quot;: &lt;ARRAY of picture objects&gt;
+}</code></pre>
+<p>whose value is an array of picture objects, each picture object of the form:</p>
+<pre><code>{ 
+  &quot;id&quot;: &lt;Picture ID&gt;,
+  &quot;timestamp&quot;: &lt;Date downloaded&gt;,
+  &quot;comments&quot;: &lt;Number of comments&gt;
+}</code></pre>
+<p>Note that we only return the number of comments from this endpoint, and not the comments themselves. The timestamp should be in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format.</p>
+<h2 id="question-2-get-picture">Question 2: Get picture</h2>
+<p>Add a <code>GET</code> route <code>/picture/ID</code> to the web application server that responds with the JPEG picture corresponding to Picture ID <code>ID</code> as specified by the route. Easiest is to use the <code>send_from_directory</code> Flask function that can send a JPEG from the file system and takes care of setting up the response format apporpirately.</p>
+<h2 id="question-3-add-picture">Question 3: Add picture</h2>
+<p>Add a <code>POST</code> route <code>/new-picture-url</code> to the web application server that takes a body containing a JSON object with field:</p>
+<pre><code>{
+   &quot;url&quot;: &lt;URL to picture&gt;
+}</code></pre>
+<p>downloads the JPEG picture that the URL is pointing to, assigns it a fresh Picture ID, stores it in whatever data structure you have selected along with the timestamp recording when the picture was downloaded and added to the system. The POST should return a JSON object with one field <code>id</code> containing the Picture ID of the created picture and the timestamp:</p>
+<pre><code>{
+  &quot;id&quot;: &lt;Picture ID&gt;,
+  &quot;timestamp&quot;: &lt;Date downloaded&gt;
+}</code></pre>
+<p>The picture should have no comments associated with it initially.</p>
+<p>Python's <a href="https://docs.python.org/3.0/library/urllib.request.html"><code>urllib.request</code></a> library might be useful for this.</p>
+<h2 id="question-4-get-comments">Question 4: Get comments</h2>
+<p>Add a <code>GET</code> route <code>/comments/ID</code> to the web application server that responds with a JSON containing the comments associated with Picture ID <code>ID</code> as specified by the route. The result should be a JSON with a single field <code>comments</code>:</p>
+<pre><code>{
+  &quot;comments&quot;: &lt;ARRAY of comment objects&gt;
+}</code></pre>
+<p>whose value is an array of comment objects, each comment object being a JSON with fields <code>comment</code> and <code>timestamp</code> holding the text of the comment and the date when the comment was created:</p>
+<pre><code>{
+  &quot;comment&quot;: &lt;Text of comment&gt;,
+  &quot;timestamp&quot;: &lt;Date created&gt;
+}</code></pre>
+<p>Again, the timestamp should be in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8691</a> format.</p>
+<h2 id="question-5-add-comment">Question 5: Add comment</h2>
+<p>Add a <code>POST</code> route <code>/new-comment/ID</code> to the web application server that takes a body containing a JSON object with field:</p>
+<pre><code>{
+   &quot;comment&quot;: &lt;Text of comment&gt;
+}</code></pre>
+<p>and adds that comment to the comments associated with picture with Picture ID <code>ID</code> (as specified in the route) along with the timestamp recording when the comment was added. The POST should return a JSON object with one field <code>timestamp</code> containing the timestamp of the newly created comment:</p>
+<pre><code>{
+  &quot;timestamp&quot;: &lt;Date created&gt;
+}</code></pre>
+<h2 id="question-6-persistence">Question 6: Persistence</h2>
+<p>Set things up so that your data survives stopping the server and restarting it. That means that not only should the pictures themselves be stored to disk, but also the Picture IDs and the comments.</p>
+<p>Easiest is probably to keep things in dictionaries in memory and dump those dictionaries as JSON files whenever you add to them.</p>
+<p>When the server starts, you can then see if those JSON files exists and if they do load them up so that all the data is back in the server's memory.</p>
+<h2 id="additional-question-for-teams-of-3-upload-picture">Additional Question for Teams of 3: Upload picture</h2>
+<p>Coming tomorrow night.</p>
+
+</body>
+
+</html>
