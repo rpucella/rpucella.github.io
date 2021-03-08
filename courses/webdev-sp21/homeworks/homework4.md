@@ -90,7 +90,7 @@ Note that we only return the number of comments from this endpoint, and not the 
 
 ## Question 2: Get picture
 
-Add a `GET` route `/picture/ID` to the web application server that responds with the JPEG picture corresponding to Picture ID `ID` as specified by the route. Easiest is to use the `send_from_directory` Flask function that can send a JPEG from the file system and takes care of setting up the response format apporpirately.
+Add a `GET` route `/picture/<ID>` to the web application server that responds with the JPEG picture corresponding to Picture ID `ID` as specified by the route. Easiest is to use the `send_from_directory` Flask function that can send a JPEG from the file system and takes care of setting up the response format appropriately.
 
 
 ## Question 3: Add picture
@@ -115,7 +115,7 @@ Python's [`urllib.request`](https://docs.python.org/3.0/library/urllib.request.h
 
 ## Question 4: Get comments
 
-Add a `GET` route `/comments/ID` to the web application server that responds with a JSON containing the comments associated with Picture ID `ID` as specified by the route. The result should be a JSON with a single field `comments`:
+Add a `GET` route `/comments/<ID>` to the web application server that responds with a JSON containing the comments associated with Picture ID `ID` as specified by the route. The result should be a JSON with a single field `comments`:
 
     {
       "comments": <ARRAY of comment objects>
@@ -133,7 +133,7 @@ Again, the timestamp should be in [ISO 8691](https://en.wikipedia.org/wiki/ISO_8
 
 ## Question 5: Add comment
 
-Add a `POST` route `/new-comment/ID` to the web application server that takes a body containing a JSON object with field:
+Add a `POST` route `/new-comment/<ID>` to the web application server that takes a body containing a JSON object with field:
 
     {
        "comment": <Text of comment>
@@ -153,14 +153,16 @@ restarting it. That means that not only should the pictures themselves
 be stored to disk, but also the Picture IDs and the comments. 
 
 Easiest is probably to keep things in dictionaries in memory and dump
-those dictionaries as JSON files whenever you add to them.
+those dictionaries as JSON files whenever you add to them. The Python [`json`](https://docs.python.org/3/library/json.html) library is your friend.
 
 When the server starts, you can then see if those JSON files exists
 and if they do load them up so that all the data is back in the server's
 memory.
 
+(Yeah, I know, it's not a great way to achieve persistence - we'll see better ways soon.)
 
 
-## Additional Question for Teams of 3: Upload picture
+
+## Additional Question for Teams of 3: Upload pictures
 
 Coming tomorrow night.
