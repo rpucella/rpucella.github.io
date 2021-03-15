@@ -75,7 +75,7 @@
 }</code></pre>
 <p>Note that we only return the number of comments from this endpoint, and not the comments themselves. The timestamp should be in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format.</p>
 <h2 id="question-2-get-picture">Question 2: Get picture</h2>
-<p>Add a <code>GET</code> route <code>/picture/ID</code> to the web application server that responds with the JPEG picture corresponding to Picture ID <code>ID</code> as specified by the route. Easiest is to use the <code>send_from_directory</code> Flask function that can send a JPEG from the file system and takes care of setting up the response format apporpirately.</p>
+<p>Add a <code>GET</code> route <code>/picture/&lt;ID&gt;</code> to the web application server that responds with the JPEG picture corresponding to Picture ID <code>ID</code> as specified by the route. Easiest is to use the <code>send_from_directory</code> Flask function that can send a JPEG from the file system and takes care of setting up the response format appropriately.</p>
 <h2 id="question-3-add-picture">Question 3: Add picture</h2>
 <p>Add a <code>POST</code> route <code>/new-picture-url</code> to the web application server that takes a body containing a JSON object with field:</p>
 <pre><code>{
@@ -89,7 +89,7 @@
 <p>The picture should have no comments associated with it initially.</p>
 <p>Python's <a href="https://docs.python.org/3.0/library/urllib.request.html"><code>urllib.request</code></a> library might be useful for this.</p>
 <h2 id="question-4-get-comments">Question 4: Get comments</h2>
-<p>Add a <code>GET</code> route <code>/comments/ID</code> to the web application server that responds with a JSON containing the comments associated with Picture ID <code>ID</code> as specified by the route. The result should be a JSON with a single field <code>comments</code>:</p>
+<p>Add a <code>GET</code> route <code>/comments/&lt;ID&gt;</code> to the web application server that responds with a JSON containing the comments associated with Picture ID <code>ID</code> as specified by the route. The result should be a JSON with a single field <code>comments</code>:</p>
 <pre><code>{
   &quot;comments&quot;: &lt;ARRAY of comment objects&gt;
 }</code></pre>
@@ -100,7 +100,7 @@
 }</code></pre>
 <p>Again, the timestamp should be in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8691</a> format.</p>
 <h2 id="question-5-add-comment">Question 5: Add comment</h2>
-<p>Add a <code>POST</code> route <code>/new-comment/ID</code> to the web application server that takes a body containing a JSON object with field:</p>
+<p>Add a <code>POST</code> route <code>/new-comment/&lt;ID&gt;</code> to the web application server that takes a body containing a JSON object with field:</p>
 <pre><code>{
    &quot;comment&quot;: &lt;Text of comment&gt;
 }</code></pre>
@@ -110,9 +110,10 @@
 }</code></pre>
 <h2 id="question-6-persistence">Question 6: Persistence</h2>
 <p>Set things up so that your data survives stopping the server and restarting it. That means that not only should the pictures themselves be stored to disk, but also the Picture IDs and the comments.</p>
-<p>Easiest is probably to keep things in dictionaries in memory and dump those dictionaries as JSON files whenever you add to them.</p>
+<p>Easiest is probably to keep things in dictionaries in memory and dump those dictionaries as JSON files whenever you add to them. The Python <a href="https://docs.python.org/3/library/json.html"><code>json</code></a> library is your friend.</p>
 <p>When the server starts, you can then see if those JSON files exists and if they do load them up so that all the data is back in the server's memory.</p>
-<h2 id="additional-question-for-teams-of-3-upload-picture">Additional Question for Teams of 3: Upload picture</h2>
+<p>(Yeah, I know, it's not a great way to achieve persistence - we'll see better ways soon.)</p>
+<h2 id="additional-question-for-teams-of-3-upload-pictures">Additional Question for Teams of 3: Upload pictures</h2>
 <p>Coming tomorrow night.</p>
 
 </body>
