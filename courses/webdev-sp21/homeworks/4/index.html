@@ -74,6 +74,15 @@
   &quot;comments&quot;: &lt;Number of comments&gt;
 }</code></pre>
 <p>Note that we only return the number of comments from this endpoint, and not the comments themselves. The timestamp should be in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format.</p>
+<p>For example (using <code>curl</code>):</p>
+<pre><code>$ curl -X GET localhost:8080/pictures
+
+{&quot;pictures&quot;:[{&quot;comments&quot;:2,&quot;id&quot;:&quot;e93eb954-3e6a-4493-83ff-01516ec8399b&quot;,&quot;timestam
+p&quot;:&quot;2021-03-01T09:00:00&quot;},{&quot;comments&quot;:0,&quot;id&quot;:&quot;c4c0de04-a523-4128-a0c5-c917b08332
+e0&quot;,&quot;timestamp&quot;:&quot;2021-03-01T10:00:00&quot;},{&quot;comments&quot;:0,&quot;id&quot;:&quot;8ce846ff-3b47-4ca1-84
+7f-5eabe18c56fe&quot;,&quot;timestamp&quot;:&quot;2021-03-02T15:00:00&quot;},{&quot;comments&quot;:0,&quot;id&quot;:&quot;f888a52f
+-25c7-4818-b41d-7c3a14583652&quot;,&quot;timestamp&quot;:&quot;2021-03-02T16:00:00&quot;},{&quot;comments&quot;:0,&quot;
+id&quot;:&quot;86f752d5-a657-4a68-984c-bd0c80655b2e&quot;,&quot;timestamp&quot;:&quot;2021-03-02T17:00:00&quot;}]}</code></pre>
 <h2 id="question-2-get-picture">Question 2: Get picture</h2>
 <p>Add a <code>GET</code> route <code>/picture/&lt;ID&gt;</code> to the web application server that responds with the JPEG picture corresponding to Picture ID <code>ID</code> as specified by the route. Easiest is to use the <code>send_from_directory</code> Flask function that can send a JPEG from the file system and takes care of setting up the response format appropriately.</p>
 <h2 id="question-3-add-picture">Question 3: Add picture</h2>
@@ -88,6 +97,24 @@
 }</code></pre>
 <p>The picture should have no comments associated with it initially.</p>
 <p>Python's <a href="https://docs.python.org/3.0/library/urllib.request.html"><code>urllib.request</code></a> library might be useful for this.</p>
+<p>For example (using <code>curl</code>):</p>
+<pre><code>$ curl -X POST --data &#39;{&quot;url&quot;: &quot;https://cdn.britannica.com/11/196711-050-FA58D50
+D/Julius-Caesar-marble-sculpture-Andrea-di-Pietro.jpg&quot;}&#39; --header &#39;Content-Type:
+application/json&#39; localhost:8080/new-picture-url
+
+{&quot;id&quot;:&quot;cbb11ec4-8039-4015-9291-d9d379458592&quot;,&quot;timestamp&quot;:&quot;2021-03-15T01:19:08.59
+7106&quot;}</code></pre>
+<p>and after the pictures has been added, it shows up when you do a GET on <code>pictures</code>:</p>
+<pre><code>$ curl -X GET localhost:8080/pictures
+
+{&quot;pictures&quot;:[{&quot;comments&quot;:2,&quot;id&quot;:&quot;e93eb954-3e6a-4493-83ff-01516ec8399b&quot;,&quot;timestam
+p&quot;:&quot;2021-03-01T09:00:00&quot;},{&quot;comments&quot;:0,&quot;id&quot;:&quot;c4c0de04-a523-4128-a0c5-c917b08332
+e0&quot;,&quot;timestamp&quot;:&quot;2021-03-01T10:00:00&quot;},{&quot;comments&quot;:0,&quot;id&quot;:&quot;8ce846ff-3b47-4ca1-84
+7f-5eabe18c56fe&quot;,&quot;timestamp&quot;:&quot;2021-03-02T15:00:00&quot;},{&quot;comments&quot;:0,&quot;id&quot;:&quot;f888a52f
+-25c7-4818-b41d-7c3a14583652&quot;,&quot;timestamp&quot;:&quot;2021-03-02T16:00:00&quot;},{&quot;comments&quot;:0,&quot;
+id&quot;:&quot;86f752d5-a657-4a68-984c-bd0c80655b2e&quot;,&quot;timestamp&quot;:&quot;2021-03-02T17:00:00&quot;},{&quot;
+comments&quot;:0,&quot;id&quot;:&quot;cbb11ec4-8039-4015-9291-d9d379458592&quot;,&quot;timestamp&quot;:&quot;2021-03-15T
+01:19:08.597106&quot;}]}</code></pre>
 <h2 id="question-4-get-comments">Question 4: Get comments</h2>
 <p>Add a <code>GET</code> route <code>/comments/&lt;ID&gt;</code> to the web application server that responds with a JSON containing the comments associated with Picture ID <code>ID</code> as specified by the route. The result should be a JSON with a single field <code>comments</code>:</p>
 <pre><code>{
@@ -98,7 +125,12 @@
   &quot;comment&quot;: &lt;Text of comment&gt;,
   &quot;timestamp&quot;: &lt;Date created&gt;
 }</code></pre>
-<p>Again, the timestamp should be in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8691</a> format.</p>
+<p>Again, the timestamp should be in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format.</p>
+<p>For example (using <code>curl</code>):</p>
+<pre><code>$ curl -X GET localhost:8080/comments/e93eb954-3e6a-4493-83ff-01516ec8399b
+
+{&quot;comments&quot;:[{&quot;comment&quot;:&quot;first&quot;,&quot;timestamp&quot;:&quot;2021-03-08T18:00:00&quot;},{&quot;comment&quot;:&quot;s
+econd&quot;,&quot;timestamp&quot;:&quot;2021-03-08T19:00:00&quot;}]}</code></pre>
 <h2 id="question-5-add-comment">Question 5: Add comment</h2>
 <p>Add a <code>POST</code> route <code>/new-comment/&lt;ID&gt;</code> to the web application server that takes a body containing a JSON object with field:</p>
 <pre><code>{
@@ -108,6 +140,29 @@
 <pre><code>{
   &quot;timestamp&quot;: &lt;Date created&gt;
 }</code></pre>
+<p>For example (using <code>curl</code>):</p>
+<pre><code>$ curl -X POST --data &#39;{&quot;comment&quot;: &quot;this is a test of the emergency broadcast sy
+stem&quot;}&#39; --header &#39;Content-Type: application/json&#39; localhost:8080/new-comment/e93
+eb954-3e6a-4493-83ff-01516ec8399b
+
+{&quot;timestamp&quot;:&quot;2021-03-15T01:22:04.594422&quot;}</code></pre>
+<p>and after the comment has been added, it shows up when you do a GET on <code>comments</code> for that picture:</p>
+<pre><code>$ curl -X GET localhost:8080/comments/e93eb954-3e6a-4493-83ff-01516ec8399b
+
+{&quot;comments&quot;:[{&quot;comment&quot;:&quot;first&quot;,&quot;timestamp&quot;:&quot;2021-03-08T18:00:00&quot;},{&quot;comment&quot;:&quot;s
+econd&quot;,&quot;timestamp&quot;:&quot;2021-03-08T19:00:00&quot;},{&quot;comment&quot;:&quot;this is a test of the emer
+gency broadcast system&quot;,&quot;timestamp&quot;:&quot;2021-03-15T01:22:04.594422&quot;}]}</code></pre>
+<p>and of course the comments count returned by the GET on pictures is also affected:</p>
+<pre><code>$ curl -X GET localhost:8080/pictures
+
+{&quot;pictures&quot;:[{&quot;comments&quot;:3,&quot;id&quot;:&quot;e93eb954-3e6a-4493-83ff-01516ec8399b&quot;,&quot;timestam
+p&quot;:&quot;2021-03-01T09:00:00&quot;},{&quot;comments&quot;:0,&quot;id&quot;:&quot;c4c0de04-a523-4128-a0c5-c917b08332
+e0&quot;,&quot;timestamp&quot;:&quot;2021-03-01T10:00:00&quot;},{&quot;comments&quot;:0,&quot;id&quot;:&quot;8ce846ff-3b47-4ca1-84
+7f-5eabe18c56fe&quot;,&quot;timestamp&quot;:&quot;2021-03-02T15:00:00&quot;},{&quot;comments&quot;:0,&quot;id&quot;:&quot;f888a52f
+-25c7-4818-b41d-7c3a14583652&quot;,&quot;timestamp&quot;:&quot;2021-03-02T16:00:00&quot;},{&quot;comments&quot;:0,&quot;
+id&quot;:&quot;86f752d5-a657-4a68-984c-bd0c80655b2e&quot;,&quot;timestamp&quot;:&quot;2021-03-02T17:00:00&quot;},{&quot;
+comments&quot;:0,&quot;id&quot;:&quot;cbb11ec4-8039-4015-9291-d9d379458592&quot;,&quot;timestamp&quot;:&quot;2021-03-15T
+01:19:08.597106&quot;}]}</code></pre>
 <h2 id="question-6-persistence">Question 6: Persistence</h2>
 <p>Set things up so that your data survives stopping the server and restarting it. That means that not only should the pictures themselves be stored to disk, but also the Picture IDs and the comments.</p>
 <p>Easiest is probably to keep things in dictionaries in memory and dump those dictionaries as JSON files whenever you add to them. The Python <a href="https://docs.python.org/3/library/json.html"><code>json</code></a> library is your friend.</p>

@@ -87,6 +87,18 @@ whose value is an array of picture objects, each picture object of the form:
 
 Note that we only return the number of comments from this endpoint, and not the comments themselves. The timestamp should be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
 
+For example (using `curl`):
+
+    $ curl -X GET localhost:8080/pictures
+
+    {"pictures":[{"comments":2,"id":"e93eb954-3e6a-4493-83ff-01516ec8399b","timestam
+    p":"2021-03-01T09:00:00"},{"comments":0,"id":"c4c0de04-a523-4128-a0c5-c917b08332
+    e0","timestamp":"2021-03-01T10:00:00"},{"comments":0,"id":"8ce846ff-3b47-4ca1-84
+    7f-5eabe18c56fe","timestamp":"2021-03-02T15:00:00"},{"comments":0,"id":"f888a52f
+    -25c7-4818-b41d-7c3a14583652","timestamp":"2021-03-02T16:00:00"},{"comments":0,"
+    id":"86f752d5-a657-4a68-984c-bd0c80655b2e","timestamp":"2021-03-02T17:00:00"}]}
+
+
 
 ## Question 2: Get picture
 
@@ -112,6 +124,28 @@ The picture should have no comments associated with it initially.
 
 Python's [`urllib.request`](https://docs.python.org/3.0/library/urllib.request.html) library might be useful for this.
 
+For example (using `curl`):
+
+    $ curl -X POST --data '{"url": "https://cdn.britannica.com/11/196711-050-FA58D50
+    D/Julius-Caesar-marble-sculpture-Andrea-di-Pietro.jpg"}' --header 'Content-Type:
+    application/json' localhost:8080/new-picture-url
+
+    {"id":"cbb11ec4-8039-4015-9291-d9d379458592","timestamp":"2021-03-15T01:19:08.59
+    7106"}
+
+and after the pictures has been added, it shows up when you do a GET on `pictures`:
+
+    $ curl -X GET localhost:8080/pictures
+
+    {"pictures":[{"comments":2,"id":"e93eb954-3e6a-4493-83ff-01516ec8399b","timestam
+    p":"2021-03-01T09:00:00"},{"comments":0,"id":"c4c0de04-a523-4128-a0c5-c917b08332
+    e0","timestamp":"2021-03-01T10:00:00"},{"comments":0,"id":"8ce846ff-3b47-4ca1-84
+    7f-5eabe18c56fe","timestamp":"2021-03-02T15:00:00"},{"comments":0,"id":"f888a52f
+    -25c7-4818-b41d-7c3a14583652","timestamp":"2021-03-02T16:00:00"},{"comments":0,"
+    id":"86f752d5-a657-4a68-984c-bd0c80655b2e","timestamp":"2021-03-02T17:00:00"},{"
+    comments":0,"id":"cbb11ec4-8039-4015-9291-d9d379458592","timestamp":"2021-03-15T
+    01:19:08.597106"}]}
+
 
 ## Question 4: Get comments
 
@@ -128,7 +162,15 @@ whose value is an array of comment objects, each comment object being a JSON wit
       "timestamp": <Date created>
     }
     
-Again, the timestamp should be in [ISO 8691](https://en.wikipedia.org/wiki/ISO_8601) format.
+Again, the timestamp should be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+
+For example (using `curl`):
+
+    $ curl -X GET localhost:8080/comments/e93eb954-3e6a-4493-83ff-01516ec8399b
+
+    {"comments":[{"comment":"first","timestamp":"2021-03-08T18:00:00"},{"comment":"s
+    econd","timestamp":"2021-03-08T19:00:00"}]}
+
 
 
 ## Question 5: Add comment
@@ -144,6 +186,35 @@ and adds that comment to the comments associated with picture with Picture ID `I
     {
       "timestamp": <Date created>
     }
+
+For example (using `curl`):
+
+    $ curl -X POST --data '{"comment": "this is a test of the emergency broadcast sy
+    stem"}' --header 'Content-Type: application/json' localhost:8080/new-comment/e93
+    eb954-3e6a-4493-83ff-01516ec8399b
+
+    {"timestamp":"2021-03-15T01:22:04.594422"}
+
+and after the comment has been added, it shows up when you do a GET on `comments` for that picture:
+
+    $ curl -X GET localhost:8080/comments/e93eb954-3e6a-4493-83ff-01516ec8399b
+
+    {"comments":[{"comment":"first","timestamp":"2021-03-08T18:00:00"},{"comment":"s
+    econd","timestamp":"2021-03-08T19:00:00"},{"comment":"this is a test of the emer
+    gency broadcast system","timestamp":"2021-03-15T01:22:04.594422"}]}
+
+and of course the comments count returned by the GET on pictures is also affected:
+
+    $ curl -X GET localhost:8080/pictures
+
+    {"pictures":[{"comments":3,"id":"e93eb954-3e6a-4493-83ff-01516ec8399b","timestam
+    p":"2021-03-01T09:00:00"},{"comments":0,"id":"c4c0de04-a523-4128-a0c5-c917b08332
+    e0","timestamp":"2021-03-01T10:00:00"},{"comments":0,"id":"8ce846ff-3b47-4ca1-84
+    7f-5eabe18c56fe","timestamp":"2021-03-02T15:00:00"},{"comments":0,"id":"f888a52f
+    -25c7-4818-b41d-7c3a14583652","timestamp":"2021-03-02T16:00:00"},{"comments":0,"
+    id":"86f752d5-a657-4a68-984c-bd0c80655b2e","timestamp":"2021-03-02T17:00:00"},{"
+    comments":0,"id":"cbb11ec4-8039-4015-9291-d9d379458592","timestamp":"2021-03-15T
+    01:19:08.597106"}]}
 
 
 ## Question 6: Persistence

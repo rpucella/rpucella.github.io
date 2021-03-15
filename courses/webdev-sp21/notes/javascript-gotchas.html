@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+        margin-left: 32px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="notes-on-javascript-gotchas">Notes on Javascript Gotchas</h1>
+<p>Some things to be on the lookout for when working with Javascript.</p>
+<h2 id="for-loops">For Loops</h2>
+<p>Javascript has two forms of for loop that are reminiscent of the Python for loop. Unfortunately, neither of which behaves exactly like the Python for loop.</p>
+<p>The differences come from the fact that an array</p>
+<pre><code>[&#39;first&#39;, &#39;second&#39;, &#39;third&#39;]</code></pre>
+<p>in Javascript is (roughly) a shorthand notation for an object</p>
+<pre><code>{1: &#39;first&#39;, 2: &#39;second&#39;, 3: &#39;third&#39;}</code></pre>
+<p>The <code>for ... in</code> form lets you loop over the keys of an object:</p>
+<pre><code>&gt; for (const item in {&#39;a&#39;: 10, &#39;b&#39;: 20, &#39;c&#39;: 30}) { console.log(item) }
+a
+b
+c</code></pre>
+<p>Makes sense. But of course, if you do that with an array, you get the indices, because of the fact that an array is basically an object with indices as keys:</p>
+<pre><code>&gt; for (const item in [&#39;first&#39;, &#39;second&#39;, &#39;third&#39;]) { console.log(item) }
+0
+1
+2</code></pre>
+<p>That's a very common source of bugs: doing a for loop over an array with <code>for ... in</code> and not getting what one expects.</p>
+<p>The right way to iterate over the items in an array is to use <code>for ... of</code>:</p>
+<pre><code>&gt; for (const item of [&#39;first&#39;, &#39;second&#39;, &#39;third&#39;]) { console.log(item) }
+first
+second
+third</code></pre>
+<p>Note that <code>for ... of</code> does not with objects (unlike the corresponding for loop in Python):</p>
+<pre><code>&gt; for (const item of {&#39;a&#39;: 10, &#39;b&#39;: 20, &#39;c&#39;: 30}) { console.log(item) }
+Uncaught:
+TypeError: {(intermediate value)(intermediate value)(intermediate value)} is not iterable</code></pre>
+
+</body>
+
+</html>
