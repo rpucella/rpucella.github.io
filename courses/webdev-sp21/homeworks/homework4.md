@@ -13,6 +13,8 @@ it &mdash; this includes when that source is someone else helping you.
 
 - <a href="./part2.html">Part 2 can be found here</a>.
 
+- Submit Part 1 and Part 2 together (see Part 2 instructions).
+
 
 * * * 
 

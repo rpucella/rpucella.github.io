@@ -40,7 +40,7 @@
 <li><p>Submit part 1 and Part 2 together. Zip all your files for your backend (part 1) and your frontend (part 2) and include in your README file not only your team members, but also how to start your server and the route to load your frontend.</p></li>
 </ul>
 <hr />
-<p>In Homework 4, we create the skeleton of what may be an Instagram-like web app: a way to upload and store images with associated comments.</p>
+<p>In Homework 4, we develop the skeleton of what may be an Instagram-like web app: a way to upload and store images with associated comments.</p>
 <p>In the first part of Homework 4, you built the web application server backend, with all the required routes. It stores a list of pictures and for each picture a list of comments that have been entered for that picture. Each picture is assigned a unique identifier when it is added to the backend, and that identifier is what's used to refer to the picture throughout.</p>
 <p>You implemented the following routes:</p>
 <pre><code>GET  /pictures
@@ -50,8 +50,8 @@ GET  /comments/&lt;ID&gt;
 POST /new-comment/&lt;ID&gt;</code></pre>
 <p>In this Part 2, we build out a frontend.</p>
 <p>I'm not going to pin down what the frontend looks like. It's all up to you. I care about functionality, and that's what I'm going to describe here. I'm going to give screenshots of my frontend, but you should not feel like you have to reproduce it. Use it as inspiration.</p>
-<p>Internally, you can structure your code however you want. I suggest you use an MVC setup like I used in my class demos, but you do not have to.</p>
-<p>Please deploy the frontend via the web application server you developed in Part 1. Please use port 8080 for the web application server. That is, it should be possible to access your frontend using a URL like <code>http://localhost:8080/index.html</code>.</p>
+<p>There's no starting files for this one. You can use the demo code we wrote for the front-end lectures as a starting point if you wish. But you do not have to. Internally, you can structure your code however you want. I suggest you use an MVC setup like we used in the class demos, but again, you do not have to.</p>
+<p>Please deploy the frontend via the web application server you developed in Part 1. Please use port 8080. That is, it should be possible to access your frontend using a URL like <code>http://localhost:8080/index.html</code>. If you do anything different (for whatever reason), just document it in your README file so I can figure out how to run and test your code.</p>
 <hr />
 <h2 id="question-1-picture-gallery">Question 1: Picture gallery</h2>
 <p>Create the main page of your frontend that should show all the pictures available in your backend, in a thumbnail gallery form (each picture should be shown in roughly the same size). You get the list of pictures by calling endpoint <code>/pictures</code>, and each picture can be accessed via URL <code>http://localhost:8080/picture/&lt;ID&gt;</code> where <code>&lt;ID&gt;</code> is the unique ID of the picture you want.</p>

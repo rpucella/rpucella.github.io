@@ -14,7 +14,7 @@ it &mdash; this includes when that source is someone else helping you.
 
 * * * 
 
-In Homework 4, we create the skeleton of what may be an
+In Homework 4, we develop the skeleton of what may be an
 Instagram-like web app: a way to upload and store images with
 associated comments.
 
@@ -34,9 +34,9 @@ In this Part 2, we build out a frontend.
 
 I'm not going to pin down what the frontend looks like. It's all up to you. I care about functionality, and that's what I'm going to describe here. I'm going to give screenshots of my frontend, but you should not feel like you have to reproduce it. Use it as inspiration.
 
-Internally, you can structure your code however you want. I suggest you use an MVC setup like I used in my class demos, but you do not have to. 
+There's no starting files for this one. You can use the demo code we wrote for the front-end lectures as a starting point if you wish. But you do not have to. Internally, you can structure your code however you want. I suggest you use an MVC setup like we used in the class demos, but again, you do not have to.
 
-Please deploy the frontend via the web application server you developed in Part 1. Please use port 8080 for the web application server. That is, it should be possible to access your frontend using a URL like `http://localhost:8080/index.html`.
+Please deploy the frontend via the web application server you developed in Part 1. Please use port 8080. That is, it should be possible to access your frontend using a URL like `http://localhost:8080/index.html`. If you do anything different (for whatever reason), just document it in your README file so I can figure out how to run and test your code.
 
 
 * * * 
