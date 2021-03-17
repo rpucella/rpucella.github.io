@@ -18,7 +18,7 @@ In Homework 4, we develop the skeleton of what may be an
 Instagram-like web app: a way to upload and store images with
 associated comments.
 
-In the first part of Homework 4, you built the web application server
+In the [first part of Homework 4](./index.html), you built the web application server
 backend, with all the required routes. It stores a list of pictures
 and for each picture a list of comments that have been entered for that picture. Each picture is assigned a unique identifier when it is added to the backend, and that identifier is what's used to refer to the picture throughout.
 
