@@ -2,7 +2,7 @@
 
 * * * 
 
-## Due Date: Monday March 22, 2021 (23h59)
+## Due Date: <del>Monday March 22, 2021 (23h59)</del> Thursday March 25, 2021 (23h59)
 
 - This homework is to be done in teams of two. You're welcome to
 discuss with other students, but all submitted work must be original
@@ -11,7 +11,7 @@ it &mdash; this includes when that source is someone else helping you.
 
 - Link to a [homework4-1.zip](./homework4-1.zip) file containing support files to use as a starting point.
 
-- Part 2 will come out in a week. Submission will be done with Part 2.
+- <a href="./part2.html">Part 2 can be found here</a>.
 
 
 * * * 
@@ -20,7 +20,7 @@ In Homework 4, we will create the skeleton of what may be an
 Instagram-like web app: a way to upload and store images with
 associated comments.
 
-In this first part of the Homework 4, we're going to build the web
+In this first part of Homework 4, we're going to build the web
 application server backend, with all the required routes. In Part 2,
 we will build out a frontend.
 
@@ -232,8 +232,3 @@ memory.
 
 (Yeah, I know, it's not a great way to achieve persistence - we'll see better ways soon.)
 
-
-
-## Additional Question for Teams of 3: Upload pictures
-
-Coming tomorrow night.
