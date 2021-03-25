@@ -128,9 +128,7 @@ Python's [`urllib.request`](https://docs.python.org/3.0/library/urllib.request.h
 
 For example (using `curl`):
 
-    $ curl -X POST --data '{"url": "https://cdn.britannica.com/11/196711-050-FA58D50
-    D/Julius-Caesar-marble-sculpture-Andrea-di-Pietro.jpg"}' --header 'Content-Type:
-    application/json' localhost:8080/new-picture-url
+    $ curl -X POST --data '{"url": "https://cdn.britannica.com/11/196711-050-FA58D50D/Julius-Caesar-marble-sculpture-Andrea-di-Pietro.jpg"}' --header 'Content-Type: application/json' localhost:8080/new-picture-url
 
     {"id":"cbb11ec4-8039-4015-9291-d9d379458592","timestamp":"2021-03-15T01:19:08.59
     7106"}
@@ -191,13 +189,11 @@ and adds that comment to the comments associated with picture with Picture ID `I
 
 For example (using `curl`):
 
-    $ curl -X POST --data '{"comment": "this is a test of the emergency broadcast sy
-    stem"}' --header 'Content-Type: application/json' localhost:8080/new-comment/e93
-    eb954-3e6a-4493-83ff-01516ec8399b
+    $ curl -X POST --data '{"comment": "this is a test of the emergency broadcast system"}' --header 'Content-Type: application/json' localhost:8080/new-comment/e93eb954-3e6a-4493-83ff-01516ec8399b
 
     {"timestamp":"2021-03-15T01:22:04.594422"}
 
-and after the comment has been added, it shows up when you do a GET on `comments` for that picture:
+(note that this depends on the Picture ID, so your test needs to be different) and after the comment has been added, it shows up when you do a GET on `comments` for that picture:
 
     $ curl -X GET localhost:8080/comments/e93eb954-3e6a-4493-83ff-01516ec8399b
 

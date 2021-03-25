@@ -99,9 +99,7 @@ id&quot;:&quot;86f752d5-a657-4a68-984c-bd0c80655b2e&quot;,&quot;timestamp&quot;:
 <p>The picture should have no comments associated with it initially.</p>
 <p>Python's <a href="https://docs.python.org/3.0/library/urllib.request.html"><code>urllib.request</code></a> library might be useful for this.</p>
 <p>For example (using <code>curl</code>):</p>
-<pre><code>$ curl -X POST --data &#39;{&quot;url&quot;: &quot;https://cdn.britannica.com/11/196711-050-FA58D50
-D/Julius-Caesar-marble-sculpture-Andrea-di-Pietro.jpg&quot;}&#39; --header &#39;Content-Type:
-application/json&#39; localhost:8080/new-picture-url
+<pre><code>$ curl -X POST --data &#39;{&quot;url&quot;: &quot;https://cdn.britannica.com/11/196711-050-FA58D50D/Julius-Caesar-marble-sculpture-Andrea-di-Pietro.jpg&quot;}&#39; --header &#39;Content-Type: application/json&#39; localhost:8080/new-picture-url
 
 {&quot;id&quot;:&quot;cbb11ec4-8039-4015-9291-d9d379458592&quot;,&quot;timestamp&quot;:&quot;2021-03-15T01:19:08.59
 7106&quot;}</code></pre>
@@ -142,12 +140,10 @@ econd&quot;,&quot;timestamp&quot;:&quot;2021-03-08T19:00:00&quot;}]}</code></pre
   &quot;timestamp&quot;: &lt;Date created&gt;
 }</code></pre>
 <p>For example (using <code>curl</code>):</p>
-<pre><code>$ curl -X POST --data &#39;{&quot;comment&quot;: &quot;this is a test of the emergency broadcast sy
-stem&quot;}&#39; --header &#39;Content-Type: application/json&#39; localhost:8080/new-comment/e93
-eb954-3e6a-4493-83ff-01516ec8399b
+<pre><code>$ curl -X POST --data &#39;{&quot;comment&quot;: &quot;this is a test of the emergency broadcast system&quot;}&#39; --header &#39;Content-Type: application/json&#39; localhost:8080/new-comment/e93eb954-3e6a-4493-83ff-01516ec8399b
 
 {&quot;timestamp&quot;:&quot;2021-03-15T01:22:04.594422&quot;}</code></pre>
-<p>and after the comment has been added, it shows up when you do a GET on <code>comments</code> for that picture:</p>
+<p>(note that this depends on the Picture ID, so your test needs to be different) and after the comment has been added, it shows up when you do a GET on <code>comments</code> for that picture:</p>
 <pre><code>$ curl -X GET localhost:8080/comments/e93eb954-3e6a-4493-83ff-01516ec8399b
 
 {&quot;comments&quot;:[{&quot;comment&quot;:&quot;first&quot;,&quot;timestamp&quot;:&quot;2021-03-08T18:00:00&quot;},{&quot;comment&quot;:&quot;s
