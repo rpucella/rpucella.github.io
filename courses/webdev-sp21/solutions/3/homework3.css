@@ -1,0 +1,88 @@
+div.tabs {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 32px;
+}
+
+div.tabs > div.tab {
+    flex: 1 1;
+    text-align: center;
+    font-size: 36px;
+    line-height: 80px;
+    height: 80px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: white;
+    border-bottom-color: #cccccc;
+    cursor: pointer;
+}
+
+div.tabs > div.sep {
+    flex: 0 0 48px;
+    height: 80px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: white;
+    border-bottom-color: #cccccc;
+}
+
+div.tabs > div.selected {
+    border-color: #cccccc;
+    border-bottom-color: white;
+}
+
+div.tab-content {
+    margin-top: 64px;
+}
+
+div.subtitle {
+    width: 100%;
+    text-align: center;
+    font-size: 36px;
+    margin: 64px 0;
+}
+
+th {
+    width: 200px;
+    text-align: left;
+    background-color: #eeeeee;
+}          
+
+table.sortable th { 
+    cursor: pointer;
+}
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 8px;
+}
+
+div.centered {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.narrow {
+    width: 500px;
+}
+
+input {
+    padding: 8px;
+    width: 80%;
+}
