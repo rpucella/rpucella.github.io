@@ -251,7 +251,7 @@ function fromArray(arr) {
   for (let n of arr) {
     if (!children.includes(n.id)) {
       if (root) {
-        throw('Two possible roots: ', root, n.id)
+        throw('Two possible roots: ' + root + ' ' + n.id)
       }
       root = n.id
     }
