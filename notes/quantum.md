@@ -1,0 +1,13 @@
+# Quantum Computing
+
+[Slides from the presentation](./QuantumComputing.pdf)
+
+A [fantastic little text](https://quantum.country/qcvc) that provides the most accessible introduction to quantum computing and that partly served as the basis of my presentation.
+
+Deutsche's 1985 paper, [_Quantum theory, the Church-Turing principle and the universal quantum computer_](http://www.daviddeutsch.org.uk/wp-content/deutsch85.pdf).
+
+Shor's 1995 paper on factoring using quantum computation, [_Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer_](https://arxiv.org/abs/quant-ph/9508027). There is a [succint but illuminating overview](https://www.quantiki.org/wiki/shors-factoring-algorithm).
+
+The bible of quantum computing, Nielsen and Chuang's textbook [_Quantum Computation and Quantum Information_](https://www.amazon.com/Quantum-Computation-Information-10th-Anniversary/dp/1107002176).
+
+Researchers people have been investigating what it might mean to go beyond circuits for quantum computating, and designing programming languages for quantum computing. [Peter Selinger](https://www.mscs.dal.ca/~selinger/) is a good example. His paper [_Towards a Quantum Programming Language_](https://www.mscs.dal.ca/~selinger/papers/qpl.pdf) gets deep fast into programming language theory, but is a fantastic read. He also has a language [Quipper](https://www.mscs.dal.ca/~selinger/quipper/) that looks particularly intriguing.
