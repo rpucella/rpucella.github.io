@@ -508,6 +508,25 @@
 	  
         </li>
 
+	<li><p><span class="hdr">May 4:</span><b>Authentication</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/Authentication.pdf">Slides</a> from the lectures.</p>
+
+            <p><a href="code/authentication-demo.zip">Sample code</a> from the lecture.</p>
+
+            <p>Wikipedia article on <a href="https://en.wikipedia.org/wiki/Cryptographic_hash_function">cryptographic hash functions</a> that you should use instead of passwords inside a database of users, and an interesting thread on security.stackexchange on <a href="https://security.stackexchange.com/questions/211/how-to-securely-hash-passwords">how to securely hash passwords</a>. Turns out it's subtle. By the way, the fact that databases don't store passwords but hash is the reason why you can't ask an app to give you back your password when you've forgotten it, but rather forces you to reset your password: the app doesn't actually have your password so can't give it back to you.</p>
+
+            <p>A security.stackexchange thread on <a href="https://security.stackexchange.com/questions/81756/session-authentication-vs-token-authentication">session authentication versus token authentication</a> with some interesting links.</p>
+
+            <p>If you're interested in token authentication (where authentication is kept on the browser), you'll probably want to use <a href="https://en.wikipedia.org/wiki/JSON_Web_Token">JWT</a> which are supported by libraries on all server-side infrastructures.</p>
+
+            <p>If you're interested in using SSO (single-signon), or allowing a user to log into your web app using their Google credentials (say), then you'll want to read about <a href="https://en.wikipedia.org/wiki/OAuth">OAuth</a>.</p>
+
+	  </div>
+	  
+        </li>
+
         
       </ul>
     </div>
