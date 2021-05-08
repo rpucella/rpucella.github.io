@@ -27,11 +27,11 @@ me before the proposal, feel free to get in touch.
 
 ## Dates
 
-Project Proposals Due Date: **Thursday, April 1, 2021 (23h59)**
+Project Proposals Due Date: **Thursday, April 1, 2021 (11h59pm)**
 
-Final Presentations: During final events period
+Final Presentations: **Tuesday, May 11, 2021, 2-5pm**
 
-Final Artifact Due Date: TBD (depends on final grades due date)
+Final Artifact Due Date: **Tuesday, May 11, 2021 (11h59pm)**
 
 
 * * * 
@@ -78,4 +78,4 @@ As far as the structure of the presentation, I will not hold you to anything, bu
 - "What did I learn?"
 
 
-* * * 
+* * *
