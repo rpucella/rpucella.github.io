@@ -36,6 +36,21 @@ Final Artifact Due Date: TBD (depends on final grades due date)
 
 * * * 
 
+## Presentations (in order):
+
+- Kristin Aoki, Maya Al-Ahmad
+- Ashley Swanson
+- Shirin Kuppusamy, Maia Materman, Colin Snow
+- Sherrie Shen, Anna Griffin
+- Mia Skaggs
+- Adam Novotny
+- Casey May, Julian Stone
+- Chelsea Bailey, Enmo Ren
+- Siddharth Garimella
+
+
+* * * 
+
 ## Instructions
 
 This project is to be done in teams of 2. (Teams of 3 are okay, but
@@ -51,10 +66,11 @@ instructions on how to install and run your source, if applicable.
 
 Projects include a programming component (where you create an
 artifact) and a final presentation in class during the Final Events
-period. Submission of the programming component should be done by
-zipping up your source code and using the **Submit File**
-functionality of our [chat room](https://chat.rpucella.net) by the
-Final Artifact due date. Only one submission per team, please.
+period. Submission of the programming component should be done either
+by emailing me a link to your github repo, or by zipping up your
+source code and using the **Submit File** functionality of our [chat
+room](https://chat.rpucella.net) by the Final Artifact due date. Only
+one submission per team, please.
 
 The final presentation should be about fifteen minutes, and
 describe the problem you're trying to solve and the solution
@@ -77,5 +93,3 @@ As far as the structure of the presentation, I will not hold you to anything, bu
 - Demo
 - "What did I learn?"
 
-
-* * * 
