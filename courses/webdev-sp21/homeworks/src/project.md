@@ -27,11 +27,11 @@ me before the proposal, feel free to get in touch.
 
 ## Dates
 
-Project Proposals Due Date: **Thursday, April 1, 2021 (23h59)**
+Project Proposals Due Date: **Thursday, April 1, 2021 (11h59pm)**
 
-Final Presentations: During final events period
+Final Presentations: **Tuesday, May 11, 2021, 2-5pm**
 
-Final Artifact Due Date: TBD (depends on final grades due date)
+Final Artifact Due Date: **Tuesday, May 11, 2021 (11h59pm)**
 
 
 * * * 
@@ -66,11 +66,12 @@ instructions on how to install and run your source, if applicable.
 
 Projects include a programming component (where you create an
 artifact) and a final presentation in class during the Final Events
-period. Submission of the programming component should be done either
-by emailing me a link to your github repo, or by zipping up your
-source code and using the **Submit File** functionality of our [chat
-room](https://chat.rpucella.net) by the Final Artifact due date. Only
-one submission per team, please.
+period. Submission of the programming component should be done either:
+
+- by emailing me a link to your github repo, or 
+- by zipping up your source code and using the **Submit File** functionality of our [chat room](https://chat.rpucella.net) 
+
+by the Final Artifact due date. Only one submission per team, please.
 
 The final presentation should be about fifteen minutes, and
 describe the problem you're trying to solve and the solution
