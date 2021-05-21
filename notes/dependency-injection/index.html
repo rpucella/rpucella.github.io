@@ -34,7 +34,7 @@
 
 <h1 id="dependency-injection-in-python">Dependency Injection in Python</h1>
 <p><em>May 8, 2021</em></p>
-<p><a href="https://en.wikipedia.org/wiki/Dependency_injection">Dependency injection</a> is an approach that basically amounts to parametrizing every object by the services that, and forcing the instantiator of an object to supply objects representing the services needed by the created object.</p>
+<p><a href="https://en.wikipedia.org/wiki/Dependency_injection">Dependency injection</a> is an approach that basically amounts to parameterizing every object by the services that, and forcing the instantiator of an object to supply objects representing the services needed by the created object.</p>
 <p>I have a love/hate relationship with dependency injection. On the plus side, decoupling an object from the services it uses is pretty much required for any form of sane unit testing, since then you can test an object by attaching it to proxy services that can be controlled by the testing environment. On the minus side, it adds an extra layer of indirection that makes code difficult to read, difficult to maintain, and adds visual noise that distracts from what an object does.</p>
 <p>The ability to easily unit test a class by supplying proxy services tailored for testing as opposed to the services used in production is huge, though.</p>
 <p>So the obvious question arises: can we somehow gain the ability to unit test a class the way we can in a dependency injection framework without buying into the indirection that plagues such frameworks?</p>

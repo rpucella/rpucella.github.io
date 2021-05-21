@@ -2,7 +2,7 @@
 
 _May 8, 2021_
 
-[Dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) is an approach that basically amounts to parametrizing every object by the services that, and forcing the instantiator of an object to supply objects representing the services needed by the created object.
+[Dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) is an approach that basically amounts to parameterizing every object by the services that, and forcing the instantiator of an object to supply objects representing the services needed by the created object.
 
 I have a love/hate relationship with dependency injection. On the plus side, decoupling an object from the services it uses is pretty much required for any form of sane unit testing, since then you can test an object by attaching it to proxy services that can be controlled by the testing environment. On the minus side, it adds an extra layer of indirection that makes code difficult to read, difficult to maintain, and adds visual noise that distracts from what an object does. 
 
