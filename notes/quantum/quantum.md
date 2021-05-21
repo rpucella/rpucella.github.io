@@ -1,5 +1,7 @@
 # Quantum Computing
 
+_April 21, 2021_
+
 [Slides from the presentation](./QuantumComputing.pdf)
 
 A [fantastic little text](https://quantum.country/qcvc) that provides the most accessible introduction to quantum computing and that partly served as the basis of my presentation. Here's a deeper dive from an [introductory course on quantum computation from CMU](https://www.cs.cmu.edu/~odonnell/quantum15/lecture01.pdf) that roughly goes over similar material. And here's an [interesting description for what superposition gives you](https://stackoverflow.blog/2021/04/14/understanding-quantum-computing-through-drunken-walks/) as far as problem solving.
