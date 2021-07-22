@@ -140,7 +140,8 @@ ul.lectures p  {
     margin-bottom: 7px;
 }
 
-h1 { 
+h1 {
+    text-align: center;
     font-style: normal;
     font-weight: normal;
     font-size: 250%;
@@ -180,6 +181,7 @@ p.ind {
 }
 
 h3 {
+    text-align: center;
     font-style: normal;
     font-weight: normal;
     font-size: 150%;
@@ -188,13 +190,14 @@ h3 {
 hr {
     margin-top: 0;
     margin-bottom: 0;
-    height: 1px; 
+/*    height: 1px;  */
 /*    opacity: 0.3; */
     width: 100%;
 }
 
 hr.section {
-    height: 2px; 
+    /* height: 2px;  */
+    display: none;
     opacity: 1;
     margin-top: 20px;
     margin-bottom: 20px;
