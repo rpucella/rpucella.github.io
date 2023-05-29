@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Databases (Spring 2019)</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+        span.underline { text-decoration: underline; }
+
+        a, a:link, a:visited {
+	    color: #003d99;
+          /* font-weight: bold; */
+	}
+
+	a:hover {
+  	  text-decoration: underline;
+	} 
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 3px;
+    	}
+
+    </style>
+
+    <script>
+
+window.addEventListener("load",run);
+
+function run () {
+    // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+    // actually, for anything with "scrollto" class
+    
+    // offset is given by the 'top' div (adjusted for padding)
+    var off = document.getElementById("top").clientHeight;
+    console.log(off);
+    //var elts = document.querySelectorAll("div.navbar a");
+    var elts = document.querySelectorAll("a.scrollto");
+    for (var i=0; i<elts.length; i++) {
+        var href=elts[i].getAttribute("href").slice(1);
+        elts[i].setAttribute("onclick","return false;");
+        elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+    }
+    
+    // SETUP SEND EMAIL LINK
+    document.getElementById("send_email").addEventListener("click",function(){
+        window.open("mailto:riccardo.pucella@olin.edu");
+    });
+}
+
+      </script>
+  </head>
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="scrollto" href="#top"><b>Databases SP19</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Databases (Spring 2019)</h1>
+
+    <p class="subtitle">ENGR 3599 / Thu 1:30-4pm / AC <del>428</del> <ins>304</ins></p>
+    
+    <p>This is an introduction to database systems. Topics covered
+include: the relational model, SQL-based querying, transactions, data
+structures, as well non-relational database models. The approach will
+be hands-on: rather than write code to interface to existing
+databases, we will write code to implement simplified versions of the
+various database models and their query systems.
+    </p>
+
+
+    
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <ul class="simple annoucements">
+
+	<li><p><span>May 6:</span> Final project presentations this coming Thursday, 12-3pm, in AC304. <a href="homeworks/projects.html">Here's the schedule</a>.</p></li>
+	
+        <li><p><span>Apr 17:</span> <a href="#">Homework 4</a> is out. Due Sunday March 28.
+	</li>
+	
+        <li><p><span>Mar 28:</span> Posted a <a href="homeworks/final-project.html">short writeup about the final project</a>. Proposals are due next Tuesday, April 2. I've put in a few suggestions, and will be adding to them on Friday and Saturday.</li>
+            
+        <li><p><span>Mar 8:</span> First part of <a href="#">Homework 3</a> is out. Due Sunday March 17. I need to add one more question over the weekend, on indexing.
+	</li>
+
+        <li><p><span>Feb 22:</span> Last part of <a href="#">Homework 2</a> is out. One additional question on aggregation, and one question on aggregation by groups for teams of 3. Enjoy :)
+	</li>
+
+        <li><p><span>Feb 21:</span> First part of <a href="#">Homework 2</a> is out. Due Sunday March 3rd. Teams of 2 or 3, like last one. I need to add one more question by the weekend, on aggregation. (There will also be an additional question for teams of 3, like the last homework.)
+	</li>
+
+	<li><p><span>Feb 13:</span> A few updates to <a href="#">Homework 1</a>. Mostly some clarifications, but also an additional Question 3 specifically for teams of 3. (Teams of 2 do not have to answer that question.)</p></li>
+
+        <li><p><span>Feb 10:</span> <a href="#">Homework 1</a> is out. Due next Sunday. Teams of 2, this time, as threatened. Cutting to a single week since it's going out so late. (I'm basically cutting out constraints, and will shift the Relational Model stuff to next homework.) 
+	</li>
+	
+	<li><p><span>Feb 2:</span> Some links and notes from the first two lectures in the schedule below.</p></li>
+
+        <li><p><span>Jan 27:</span> <a href="#">Homework 0</a> is out. Due next Sunday. It's mostly a calibration homework, and meant to be done individually.</p>
+	</li>
+
+         <li><p><span>Jan 21:</span>
+	    It's alive!</p>
+	</li>
+	
+      </ul>
+      
+    </div>
+
+
+    
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Information</h3>
+
+      <p><b>Prerequisites:</b> Software Design</p>
+
+      <p><b>Instructor:</b> <a href="http://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</p>
+
+      <p><b>Office hours:</b> Thu 4-6pm / Milas Hall 353 (Also available online &mdash; send email to coordinate.)</p>
+
+      <p><b>Textbooks:</b> There is no required textbook for the
+      course. We will be working off notes and online references. If
+      you crave the purchase of reading material, the following
+      recommended textbooks cover most of what we will see in way more detail:
+      <ul>
+	<li>Ramakrishnan, Gehrke,
+	  <i><a href="https://www.amazon.com/Database-Management-Systems-Raghu-Ramakrishnan/dp/0072465638">Database
+	      Management Systems</a></i>, 3rd edition, McGraw-Hill, 2002</li> 
+	<li>Garcia-Molina, Ullman,
+	  Widom, <i><a href="https://www.amazon.com/Database-Systems-Complete-Book-2nd/dp/0131873253">Database
+	      Systems: The Complete Book</a></i>, 2nd edition, Pearson, 2008</li>
+      </ul>
+      The library either has or will soon have the first book on reserve. Feel free to go and consult it.
+      </p>
+
+      <p><b>Programming:</b> All programming in the course will be done in
+      <a href="https://www.python.org/downloads/">Python (version 3)</a>. I will assume working knowledge of the
+	language. We will largely follow
+	the <a href="http://legacy.python.org/dev/peps/pep-0008/">PEP8
+	style guide</a>, and you
+        may also want to read through <a href="https://www.memonic.com/user/pneff/folder/python/id/1bufp">this</a> as well.
+
+
+      <p><b>Grading:</b> The final grade is based on biweekly homeworks (60%)
+      and a final project (40%). All homeworks except the first is to
+      be done in teams of two. Late homeworks will be penalized (10%
+      per 24 hours) and no homework will be accepted after its
+	solution has been discussed in class. <b>Please do not post your homework code on a publicly available
+	  repository like GitHub.</b> I hate to do this kind of policing,
+	but we've had some issues in the past, and I'd like to avoid a
+	repeat if possible. It is okay to post your final project on
+	  a publicly available repo.</p>
+					
+      <p><b>Ninjas:</b> Taylor Sheneman (taylor.sheneman@students.olin.edu). Office hours: Sunday, 6-8pm, Wednesday, 7-9pm.</p>
+
+      <p>I expect all of us to follow the <b><a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a></b>.</p>
+
+
+     </div>
+
+
+    <hr class="section">
+    <div class="section" id="lectures">
+
+      <h3>Lectures and Readings</h3>
+
+      <ul class="lectures">
+	
+	<li><p><span class="hdr">Jan 24:</span><b>Introduction</b></p>
+	  <div class="lect">
+	    <p>The <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> operations (create, read, update, delete), the four basic operations of persistent storage.</p>
+	    <p><i><a href="http://avant.org/project/history-of-databases/">A Brief History of Databases</a></i>.</p>
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Jan 31:</span><b>The Entity-Relationship Model</b></p>
+	  <div class="lect">
+	    <p><a href="./lect2-er-model.pdf">Notes</a> from the lecture. Fairly sketchy, basically a straight dump of my own notes.</p>
+
+	    <p>The <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.526.369&rep=rep1&type=pdf">original article</a> by P. Chen on the Entity-Relationship model. </p>
+
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Feb 7:</span><b>The Relational Model</b></p>
+	  <div class="lect">
+
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Feb 14:</span><b>Relational Algebra and Querying</b></p>
+	  <div class="lect">
+	    <p><a href="./lect4-relational-algebra.pdf">Notes</a> from the lecture. Fairly sketchy, basically a straight dump of my own notes.</p>
+	    
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Feb 21:</span><b>Structured Query Language</b></p>
+	  <div class="lect">
+	    <p><a href="./lect5-sql.pdf">Notes</a> from the lecture. Fairly sketchy, basically a straight dump of my own notes.</p>
+	    <p>Wikipedia page on <a href="https://en.wikipedia.org/wiki/SQL">SQL</a>.</p>
+	    <p>A draft of the <a href="http://www.contrib.andrew.cmu.edu/~shadow/sql/sql1992.txt">1992 standard</a>, if you like reading those sort of documents.</p>
+	    <p>There are tons of tutorials on SQL online, usually tied to a particular database implementation, since you can't use SQL <i>in the abstract</i>. One I've used in the past is <a href="http://www.postgresqltutorial.com">Postgres's SQL tutorial</a>. It's very much broken down Crayola style, as somebody once described it to me, but it has good coverage. Start with Section 2.</p>
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Feb 28:</span><b>Storage and Indexing</b></p>
+	  <div class="lect">
+	    <p><a href="./lect6-indexing.pdf">Notes</a> from the lecture. Fairly sketchy, basically a straight dump of my own notes.</p>
+	    
+	    <p>Wikipedia pages on <a href="https://en.wikipedia.org/wiki/B-tree">B trees</a> and <a href="https://en.wikipedia.org/wiki/B%2B_tree">B+ trees</a>, data structures for managing indexes on block-based storage systems (like disks). </p>
+	    
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Mar 14:</span><b>Other Query Languages</b></p>
+	  <div class="lect">
+	    <p><a href="./lect7-datalog.pdf">Notes</a> from the lecture. Fairly sketchy, basically a straight dump of my own notes.</p>
+
+	    <p><a href="http://infolab.stanford.edu/~ullman/fcdb/aut07/slides/dlog.pdf">Ullman's slides</a> for Datalog.<p>
+
+	    <p>Abiteboul, Hull, and Vianu's <a href="http://webdam.inria.fr/Alice/">Foundations of Databases</a> has several chapters on Datalog: <a href="http://webdam.inria.fr/Alice/pdfs/Chapter-12.pdf">Chapter 12</a> is a good overview; <a href="http://webdam.inria.fr/Alice/pdfs/Chapter-13.pdf">Chapter 13</a> gives you a sense of how you can evaluate Datalog queries efficiently; Chapters <a href="http://webdam.inria.fr/Alice/pdfs/Chapter-14.pdf">14</a> and <a href="http://webdam.inria.fr/Alice/pdfs/Chapter-15.pdf">15</a> go into more detail than you ever wanted to know about negation in Datalog. Warning: these chapters are pretty tough going.</p>
+	    
+	  </div>
+	</li>	  
+
+
+	<li><p><span class="hdr">Mar 28:</span><b>Schema Normalization</b></p>
+	  <div class="lect">
+
+        <p>A reasonable set of slides on <a href="http://www.cs.cornell.edu/courses/cs4320/2008fa/slides/20081114_fds.pdf">normalizations and functional dependencies</a> that roughly follows how I showed things in class. It goes into a bit more details about decomposition, including the notion of lossless-ness.</p>
+
+        <p>Relevant Wikipedia links: <a href="https://en.wikipedia.org/wiki/Functional_dependency">Functional dependencies</a>; <a href="https://en.wikipedia.org/wiki/Boyce%E2%80%93Codd_normal_form">BCNF</a> including an example of a table that cannot be converted to BCNF without losing a functional dependency and that has a similar structure to the example I showed in class (not accidentally -- the structure that leads to this situation is well understood); <a href="https://en.wikipedia.org/wiki/Third_normal_form">3NF (third normal form)</a>.
+          
+	    
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Apr 4:</span><b>Transactions</b></p>
+	  <div class="lect">
+
+	    <p>Relevant Wikipedia entries: <a href="https://en.wikipedia.org/wiki/Database_transaction">Transactions</a>, <a href="https://en.wikipedia.org/wiki/Serializability">Serializability</a>, <a href="https://en.wikipedia.org/wiki/Two-phase_locking">Two-phase locking</a>, <a href="https://en.wikipedia.org/wiki/ACID_(computer_science)">ACID properties</a>.</p>
+
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Apr 11:</span><b>Distributed Databases</b></p>
+	  <div class="lect">
+
+	    <p>Distributed databases are distributed into nodes either by <a href="https://en.wikipedia.org/wiki/Replication_(computing)">replication</a> or by <a href="https://en.wikipedia.org/wiki/Partition_(database)">partitioning</a> (or both).</p>
+	    
+	    <p>The <a href="https://en.wikipedia.org/wiki/Two-phase_commit_protocol">two-phase commit protocol</a>, which ensures that database nodes agree on whether a distributed transaction should commit or abort.</p>
+
+	    <p>The <a href="https://en.wikipedia.org/wiki/CAP_theorem">CAP Theorem</a>.</p>
+
+	    <p>Lamport's <a href="https://en.wikipedia.org/wiki/Paxos_(computer_science)">Paxos protocol</a> (well, protocol family) is one of the most common ways to achieve consensus on what the data stored in a distributed system is when some of the nodes disagree due to update messages not getting to them. It is worth understanding. Here is a two-parter that does a reasonable job explaining the details: <a href="https://distributedthoughts.com/2013/09/22/understanding-paxos-part-1/">Part 1</a>, <a href="https://distributedthoughts.com/2013/09/30/understanding-paxos-part-2/">Part 2</a>.
+	    
+	  </div>
+	</li>	  
+    
+	<li><p><span class="hdr">Apr 18:</span><b>NoSQL Databases</b></p>
+	  <div class="lect">
+	    
+	    <p>An old (2011) survey of <a href="https://www.christof-strauch.de/nosqldbs.pdf">NoSQL Databases</a> by Strauch. It gives a good overview of the field. </p>
+
+	    <p><a href="https://queue.acm.org/detail.cfm?id=1394128">BASE: An ACID Alternative</a> by Pritchett.</p>
+	    
+	    <p>Amazon's <a href="https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf">Dynamo paper</a> which describes one of the first high-availability key-value store. There is a nicer <a href="https://www.dynamodbguide.com/the-dynamo-paper/">primer</a> for it as well.</p>
+
+	    <p>Wikipedia entries on <a href="https://en.wikipedia.org/wiki/Consistent_hashing">consistent hashing</a> and <a href="https://en.wikipedia.org/wiki/Distributed_hash_table">distributed hash tables</a>, the main technique for sharding in NoSQL systems.</p>
+
+	    
+	    
+	  </div>
+	</li>	  
+
+
+	<li><p><span class="hdr">Apr 25:</span><b>Graph Databases</b></p>
+	  <div class="lect">
+
+        <p>Two excerpts from Eifrem, Webber, and Robinson's <a href="https://www.oreilly.com/library/view/graph-databases-2nd/9781491930885/">Graph Databases</a>, which mostly discusses <a href="https://neo4j.com/">Neo4j</a>, a popular graph database: <a href="./data-modeling-with-graphs.pdf">the query language</a>, and the <a href="graph-database-internals.pdf">internal representation</a>.</p> 
+
+        <p><a href="https://hasura.io/">Hasura</a> is an example of a graph-query language grafted atop a standard relational backend.</p>
+
+        <p>Lecture slides describing typical <a href="https://web.stanford.edu/class/cs97si/06-basic-graph-algorithms.pdf">graph representations and algorithms</a>.</p>
+        
+	    
+	  </div>
+	</li>	  
+
+    
+	<li><p><span class="hdr">May 2:</span><b>Databases and Programming Languages</b></p>
+	  <div class="lect">
+
+	    <p><a href="https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html">JDBC</a> is the Java API for connecting to databases. Most databases have JDBC drivers that support that API. It has become a de facto standard, and many other languages use that same API to provide database connectivity.</p>
+	  
+	    <p><a href="https://en.wikipedia.org/wiki/Object-relational_mapping">ORMs</a> (Object-Relational Mappings) are a more abstract  way to provide an interface to a database through a programming language: ORMs reify database tables as data structures in the language, so that modifying the structures will automatically update the underlying tables, and changes to the underlying tables will be visible through the structures.</p>
+
+	    <p><a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/">LINQ</a> is one approach to integrate SQL-style querying within a programming language (here, C#).</p>
+
+	    <p>Object persistence is the idea that we can create objects in a programming language and have those objects automatically be made persistent by transparently storing them in a database. Java does not do this automatically, but <a href="https://www.baeldung.com/java-serialization">serialization</a> is the main mechanism to achieve persistence. <a href="https://en.wikipedia.org/wiki/JADE_(programming_language)">JADE</a> is an example of a programming language that supports object persistence natively and transparently.</p>
+
+	    <p><a href="https://en.wikipedia.org/wiki/Transactional_memory">Transactional memory</a> is an approach to programming concurrent systems in a way that does not require locks, by essentially moving the notion of transactions to the world of reading and writing memory within a single machine.</p>
+	    
+	  </div>
+	</li>	  
+
+
+	<li><p><span class="hdr">May 9:</span><b>Final Project Presentations</b></p>
+	  <div class="lect">
+	    <p>Senthilkumar, Dhulipalla, Airing: <a href="projects/Exploring_the_use_of_B+_trees_in_DBMSs.pdf">Exploring the use of B+ trees in Database Management Systems</a></p>
+	    <p>Lyu, Kang: <a href="projects/DB_with_roles.pdf">DB with Roles</a></p>
+	    <p>Lee, Yeh: <a href="projects/Data_streams.pdf">Data Streams</a></p>
+	    <p>Keil, Pfenninger: <a href="projects/Joins.pdf">Joins</a></p>
+	    <p>Yee: <a href="projects/On_disk_B+_trees.pdf">On Disk B+ Trees</a></p>
+	    <p>Lam, Yang: <a href="projects/SQL_queries.pdf">SQL Queries</a></p>
+	    <p>Chen: <a href="projects/Simulatable_auditing.pdf">Simulatable Auditing</a></p>
+	    <p>Zuniga: <a href="projects/SQL_execution_plan_data_retrieval_operators.pdf">SQL Execution Plan Data Retrieval Operators</a></p>
+	    <p>Gulland: <a href="projects/Pandas_and_postgreSQL.pdf">Pandas and PostgreSQL</a></p>
+	    <p>Crawford, Briskman: <a href="projects/Columnar_databases.pdf">Columnar Databases</a></p>
+	    <p>Behrakis, Lepert: <a href="projects/SQL_Injection.pdf">SQL Injection</a></p>
+	    <p>Shuster, Lu: <a href="projects/Hadoop_and_Yelp.pdf">Hadoop and Yelp</a></p>
+	    <p>Garcia, Park, Thorbecke:  <a href="projects/HBase_baseics_for_baes.pdf">HBase Baseics for Baes</a></p>
+	    <p>Xue, Sampo: <a href="projects/Using_joins_for_everyday_life_problems.pdf">Using Joins for Everyday Life Problems</a></p>
+	  </div>
+	</li>	  
+
+	
+      </ul>
+
+    </div>
+
+
+    <hr class="section">
+    <div class="section" id="homeworks">
+      <h3>Homeworks</h3>
+      <ul class="simple">
+	<li><a href="#">Homework 0</a> &mdash; Due Sunday Feb 3 (23h59)</li>
+	<li><a href="#">Homework 1</a> &mdash; Due Sunday Feb 17 (23h59)</li>
+	<li><a href="#">Homework 2</a> &mdash; Due Sunday Mar 3 (23h59)</li>
+	<li><a href="#">Homework 3</a> &mdash; Due Sunday Mar 17 (23h59)</li>
+	<li><a href="#">Homework 4</a> &mdash; Due Sunday Apr 28 (23h59)</li>
+      </ul>
+    </div>
+
+  </body>
+</html>

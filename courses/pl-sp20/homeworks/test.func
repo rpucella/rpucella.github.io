@@ -1,0 +1,9 @@
+(let ((length (fun length (v)
+                 (if (empty? v) 0 (+ 1 (length (rest v))))))
+      (sum (fun sum (v)
+              (if (empty? v) 0 (+ (first v) (sum (rest v))))))
+      (test-list (cons 33 (cons 66 (cons 99 empty)))))
+  (do (print (length test-list))
+      (print (sum test-list))))
+      
+      

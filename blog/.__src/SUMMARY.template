@@ -1,0 +1,21 @@
+<script>
+    document.title = 'Blog — Riccardo Pucella'
+    document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+
+  <h1>Close Encounters of the Logical Kind</h1>
+  
+  <p>Infrequent riffs about software development, computer science, and mathematics.</p>
+
+  {{ range .Posts }}
+
+    <article class="summary">
+      <div class="title"><a href="/blog/post/{{ .Key }}">{{ .Title }}</a></div>
+      <div class="date">{{ .FormattedDate }}</div>
+    </article>
+
+  {{ end }}
+  
+</main>

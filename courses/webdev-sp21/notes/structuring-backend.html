@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+        margin-left: 32px;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="notes-on-structuring-web-application-server-code">Notes on Structuring Web Application Server Code</h1>
+<p>Programming a web application server consists of attaching functions to routes in order to process HTTP requests to those routes and return a response.</p>
+<p>It doesn't take too too long before the code becomes a mess of unmaintainable code. And testing can become challenging.</p>
+<p>So what helps?</p>
+<p>[The examples below are in Flask, but the ideas apply to other frameworks.]</p>
+<h2 id="separate-core-processing-from-http-handling">Separate Core Processing from HTTP Handling</h2>
+<p>A typical route in Flask is implemented by applying a decorator to a function to handle a request on that route. For example, the following function can handle a POST request to a route <code>/add-picture</code>:</p>
+<pre><code>@app.route(&#39;/add-picture&#39;, methods=[&#39;POST&#39;])
+def add_picture_route():
+    pictDesc = request.get_json()
+    print(&#39;Received {} / {}&#39;.format(pictDesc[&#39;name&#39;], pictDesc[&#39;url&#39;]))
+    PICTURES.append({&#39;name&#39;: pictDesc[&#39;name&#39;], &#39;url&#39;: pictDesc[&#39;url&#39;]})
+    return jsonify({&#39;status&#39;: &#39;ok&#39;})</code></pre>
+<p>The function does three things: it pulls the &quot;arguments&quot; of the request out of the request object (here, the body of the request, which should be a JSON object), it processes the request, and then it creates the response to send back to the requester.</p>
+<p>A common approach to structuring routes is to factor out the processing into their own functions. Those functions take as arguments whatever needs to be pulled out of the request (either the body of the request or query parameters), and return the result that should be returned to the requester. But those functions do not actually pull the data out of the requests, or create the actual response. They expect their arguments as Python values and return Python values. It's the route function's job to get the arguments out of the request and create the response out of the returned value. For instance:</p>
+<pre><code>from core import add_picture
+
+@app.route(&#39;/add-picture&#39;, methods=[&#39;POST&#39;])
+def add_picture_route():
+    pictDesc = request.get_json()
+    result = core.add_picture(pictDesc)
+    return jsonify(result)</code></pre>
+<p>where module <code>core</code> contains:</p>
+<pre><code>def add_picture(desc):
+    print(&#39;Received {} / {}&#39;.format(desc[&#39;name&#39;], sesc[&#39;url&#39;]))
+    PICTURES.append({&#39;name&#39;: desc[&#39;name&#39;], &#39;url&#39;: desc[&#39;url&#39;]})
+    return {&#39;status&#39;: &#39;ok&#39;}
+    </code></pre>
+<p>Ultimately, <code>core</code> can contain all the core processing functions (as well as the list of pictures in the above example), and the routes simply pull arguments out of requests, invoke core functions, and create the responses. You can now test the core processing functions using unit tests without having to worry about figuring out how to fake HTTP requests and responses in your unit tests. (Of course, you should also test that the actual endpoints work over HTTP, but that can be done with a dedicated test script.)</p>
+
+</body>
+
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = 'Courses — Riccardo Pucella'
+  document.querySelector("#teaching").classList.add("active")
+</script>
+
+<style>
+   div.course {
+     margin-bottom: 24px;
+   }
+   
+   div.course > div:nth-child(2) {
+     display: none;
+   }
+
+   @media only screen and (min-width: 1024px) {
+     div.course {
+       display: flex;
+       flex-direction: row;
+       justify-content: space-between;
+       margin-bottom: 16px;
+       padding: 8px 0;
+       border-top: 1px solid #cccccc;
+     }
+
+     div.course > div:nth-child(2) {
+       display: flex;
+       flex-direction: column;
+       align-items: flex-end;
+     }
+
+     div.course > div:nth-child(1) {
+       display: flex;
+       flex-direction: column;
+       align-items: flex-start;
+     }
+
+     div.course > div:nth-child(1) > div:nth-child(2) {
+         display: none;
+      }
+   }
+</style>
+
+    <main>
+      
+      <section>
+      
+        <h1>Recent Courses</h1>
+
+	<div class="course">
+	   <div>
+	     <div><a href="/courses/focs-sp23">Foundations of Computer Science</a></div>
+	     <div>Olin College | ENGR 3520</div>
+	     <div>Spring 2023</div>
+	   </div>
+	   <div>
+	     <div>Olin College</div>
+	     <div>ENGR 3520</div>
+	   </div>
+	</div>
+
+	<div class="course">
+	  <div>
+	    <div><a href="/courses/db-fa21">Databases</a></div>
+            <div>Olin College | ENGR 3599</div>
+	    <div>Fall 2021</div>
+	  </div>
+	   <div>
+            <div>Olin College</div>
+            <div>ENGR 3599</div>
+	   </div>
+        </div>
+
+	<div class="course">
+	  <div>
+	    <div><a href="/courses/webdev-sp21/">Web Development</a></div>
+            <div>Olin College | ENGR 3599</div>
+	    <div>Spring 2021</div>
+	  </div>
+	   <div>
+            <div>Olin College</div>
+            <div>ENGR 3599</div>
+	   </div>
+        </div>
+
+	<div class="course">
+	  <div>
+	    <div><a href="/courses/pl-sp20/">Programming Languages</a></div>
+            <div>Olin College | ENGR 3599</div>
+	    <div>Spring 2020</div>
+	  </div>
+	   <div>
+            <div>Olin College</div>
+            <div>ENGR 3599</div>
+	   </div>
+        </div>
+
+	<div class="course">
+	  <div>
+	    <div><a href="/courses/pl-sp17/">Programming Languages</a></div>
+            <div>Harvard University | CS 152</div>
+	    <div>Spring 2017</div>
+	  </div>
+	   <div>
+            <div>Harvard University</div>
+            <div>CS 152</div>
+	   </div>
+        </div>
+
+	<div class="course">
+	  <div>
+	    <div><a href="/courses/dataviz-fa15/">Visualizing Data</a></div>
+            <div>Olin College | ENGR 3599</div>
+	    <div>Fall 2015</div>
+	  </div>
+	   <div>
+            <div>Olin College</div>
+            <div>ENGR 3599</div>
+	   </div>
+        </div>
+
+     </section>
+
+      <section>
+      
+        <h2>Older Courses</h2>
+        
+	<div class="course">
+          <div>
+	    <div><a href="/courses/game-fa14/home.html">Game Programming</a></div>
+            <div>Olin College | ENGR 3599</div>
+            <div>Fall 2014</div>
+	  </div>
+	  <div>
+            <div>Olin College</div>
+            <div>ENGR 3599</div>
+          </div>
+	</div>
+	
+	<div class="course">
+          <div>
+	    <div><a href="/courses/pl-sp14/home.html">Programming Language Design and Implementation</a></div>
+            <div>Olin College | ENGR 3599</div>
+            <div>Spring 2014</div>
+	  </div>
+	  <div>
+            <div>Olin College</div>
+            <div>ENGR 3599</div>
+          </div>
+	</div>
+
+	<div class="course">
+          <div>
+	    <div><a href="http://www.ccs.neu.edu/home/riccardo/courses/cs3500-sp11/">Object-Oriented Design</a></div>
+            <div>Northeastern University | CS 3500</div>
+            <div>Spring 2011</div>
+	  </div>
+	  <div>
+            <div>Northeastern University</div>
+            <div>CS 3500</div>
+          </div>
+	</div>
+	
+	<div class="course">
+          <div>
+	    <div><a href="http://www.ccs.neu.edu/home/riccardo/courses/cs6750-fa09/">Cryptography and Communication Security</a></div>
+            <div>Northeastern University | CS 6750</div>
+            <div>Fall 2009</div>
+	  </div>
+	  <div>
+            <div>Northeastern University</div>
+            <div>CS 6750</div>
+          </div>
+	</div>
+	
+	<div class="course">
+          <div>
+	    <div><a href="http://www.ccs.neu.edu/home/riccardo/courses/csu290-sp09/">Logic and Computation</a></div>
+            <div>Northeastern University | CSU 290</div>
+            <div>Spring 2009</div>
+	  </div>
+	  <div>
+            <div>Northeastern University</div>
+            <div>CSU 290</div>
+          </div>
+	</div>
+	
+	<div class="course">
+          <div>
+	    <div><a href="http://www.ccs.neu.edu/home/riccardo/courses/csg714-sp07/">Theory of Computation</a></div>
+            <div>Northeastern University | CSG 714</div>
+            <div>Spring 2007</div>
+	  </div>
+	  <div>
+            <div>Northeastern University</div>
+            <div>CSG 714</div>
+          </div>
+	</div>
+	
+	<div class="course">
+          <div>
+	    <div><a href="http://www.ccs.neu.edu/home/riccardo/courses/csg399-sp06/">Reasoning about Security</a></div>
+            <div>Northeastern University | CSG 399</div>
+            <div>Spring 2006</div>
+	  </div>
+	  <div>
+            <div>Northeastern University</div>
+            <div>CSG 399</div>
+          </div>
+	</div>
+	
+	<div class="course">
+          <div>
+	    <div><a href="http://www.cs.cornell.edu/Courses/cs486/2005sp">Applied Logic</a></div>
+            <div>Cornell University | CS 486</div>
+            <div>Spring 2005</div>
+	  </div>
+	  <div>
+            <div>Cornell University</div>
+            <div>CS 486</div>
+          </div>
+	</div>
+	
+	<div class="course">
+          <div>
+	    <div><a href="http://www.cs.cornell.edu/Courses/cs214/2004sp">Advanced Unix Tools</a></div>
+            <div>Cornell University | CS 214</div>
+            <div>Spring 2004</div>
+	  </div>
+	  <div>
+            <div>Cornell University</div>
+            <div>CS 214</div>
+          </div>
+	</div>
+	
+	<div class="course">
+          <div>
+	    <div><a href="http://www.cs.cornell.edu/Courses/cs114/2003fa">Unix Tools</a></div>
+            <div>Cornell University | CS 114</div>
+            <div>Fall 2003</div>
+	  </div>
+	  <div>
+            <div>Cornell University</div>
+            <div>CS 114</div>
+          </div>
+	</div>
+
+      </section>
+      
+    </main>
+
+    
+  </body>
+  
+</html>

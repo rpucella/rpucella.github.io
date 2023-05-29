@@ -1,0 +1,8 @@
+(let ((start 10)
+      (end 50))
+  (loop make ((curr end)
+             (result empty))
+    (if (= curr start)
+      (cons start result)
+      (make (+ curr -1) (cons curr result)))))
+  

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Databases (Fall 2021)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link rel="stylesheet" href="/courses/course.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="/static/smooth-scroll.js"></script>
+
+  </head>
+
+  <body>
+
+    <nav>
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="smooth-scroll" href="#main"><b>Databases FA21</b></a></li> 
+	<li><a class="smooth-scroll" href="#info">Course Info</a></li>
+	<li><a class="smooth-scroll" href="#lectures">Lectures</a></li>
+	<li><a class="smooth-scroll" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </nav>
+
+
+    <main id="main">
+      
+      <h1>Databases (Fall 2021)</h1>
+
+      <p>This is an introduction to database systems. Topics covered
+        include: the relational model, SQL-based querying,
+        transactions, data structures, as well non-relational database
+        models. The approach will be hands-on: while we will practice
+        on existing database systems, we will also write code to
+        implement simplified versions of the various database models
+        and their query systems.
+      </p>
+
+
+      <section id="info">
+        <h2>Course Information</h2>
+
+        <ul class="plain">
+          <li><b>Course number:</b> ENGR 3599</li>
+
+          <li><b>Prerequisites:</b> Software Design</li>
+
+          <li><b>Location and Time:</b>
+            AC 326 / Mon 4:00-6:30pm
+          </li>
+
+          <li><b>Instructor:</b> <a href="https://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</li>
+
+          <li><b>Office hours:</b>
+            After class in MH-353, until 7h30pm or so, or by request over Zoom.
+          </li>
+
+          <li><b>Textbooks:</b>
+
+            The textbook for the course is
+            <ul>
+              <li>
+                Lemahieu, Baesens, Broucke, <i><a href="https://www.pdbmbook.com/">Principles of Database Management</a></i>, Cambridge University Press, 2018.
+                </li>
+            </ul>
+
+            If you want other reference material, the following are also good references:
+            <ul>
+	      <li>Ramakrishnan, Gehrke,
+	        <i><a href="https://www.amazon.com/Database-Management-Systems-Raghu-Ramakrishnan/dp/0072465638">Database
+	            Management Systems</a></i>, 3rd edition, McGraw-Hill, 2002</li> 
+	      <li>Garcia-Molina, Ullman,
+	        Widom, <i><a href="https://www.amazon.com/Database-Systems-Complete-Book-2nd/dp/0131873253">Database
+	            Systems: The Complete Book</a></i>, 2nd edition, Pearson, 2008</li>
+            </ul>
+            The library has the textbook as well as Ramkrishnan &amp; Gehrke on reserve. Feel free to go and consult it.
+          </li>
+
+          
+          <li><b>Programming:</b> All programming in the course will be done in
+            <a href="https://www.python.org/downloads/">Python 3</a>. I will assume working knowledge of the
+	    language. We will largely follow
+	    the <a href="http://legacy.python.org/dev/peps/pep-0008/">PEP8
+	      style guide</a>, and you
+            may also want to read through <a href="https://www.memonic.com/user/pneff/folder/python/id/1bufp">this</a> as well.</li>
+
+          <li><b>Grading:</b> The final grade is based on biweekly homeworks (60%)
+            and a final project (40%). All homeworks except the first is to
+            be done in teams of two. Late homeworks will be penalized (10%
+            per 24 hours) and no homework will be accepted after its
+	    solution has been discussed in class. <b>Please do not post your homework code on a publicly available
+	      repository like GitHub.</b> I hate to do this kind of policing,
+	    but we've had some issues in the past, and I'd like to avoid a
+	    repeat if possible. It is okay to post your final project on
+	    a publicly available repo.</li>
+
+          <li>I expect all of us to follow the <b><a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a></b>.</li>
+
+          <li>Announcements and discussions take place on the course <a href="https://chat.rpucella.net/databases-fa21">chat server</a>. You should have received account information by email. If not, please reach out.</li>
+
+      </section>
+
+      <section id="lectures">
+
+        <h2>
+          Lectures and Readings
+        </h2>
+
+        <p>
+          Schedule and topics subject to change.
+        </p>
+
+        <ul class="lectures">
+	  <li><p><span class="hdr">Sep 13:</span> <b>Introduction</b></p>
+	    <div class="lect">
+              <p>
+                <a href="./introduction.pdf">Slides</a> from the lecture.
+              </p>
+              <p>
+                Some sample code highlighting the book collection example using various Python data structures I talked about in class: book collection using <a href="./intro-code/array.py">arrays</a>, using <a href="./intro-code/sorted.py">sorted arrays</a>, and using <a href="./intro-code/dict.py">dictionaries</a>.
+            </div>
+          </li>
+
+	  <li><p><span class="hdr">Sep 20:</span> <b>The Entity-Relationship Model</b></p>
+	    <div class="lect">
+
+              <p>Readings: Textbook, Chapter 3.</p>
+
+              <p>A <a href="https://vertabelo.com/blog/chen-erd-notation/">good summary of the ER diagrams</a> we saw in class.</p>
+
+              <p>The original paper by Chen, <a href="https://dspace.mit.edu/bitstream/1721.1/47432/1/entityrelationshx00chen.pdf"><i>The Entity-Relationship Model: Towards a unified view of Data</i></a>, published in ACM Transactions on Database Systems, 1976.</p>
+              
+            </div>
+          </li>
+          
+	  <li><p><span class="hdr">Sep 27:</span> <b>The Relational Model</b></p>
+	    <div class="lect">
+
+              <p>Reading: Textbook, Chapter 6.</p>
+
+              <p>Wikipedia on <a href="https://en.wikipedia.org/wiki/Relational_model">The Relational Model</a>.</p>
+
+              <p>The <a href="https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf">original paper</a> of Codd on the relational model, which is of historic interest. Also interesting is Codd's <a href="https://dl.acm.org/doi/pdf/10.1145/358396.358400">1981 Turing Award lecture</a>.</p>
+
+              <p><a href="https://www.sqlite.org/index.html">SQLite</a> is a small relational database engine that stores data in a single file and can be accessed programmatically from many programming languages. It's useful in its own right, but it's great for learning about the basics of relational data. It is also generally installed by default on Linux and Mac OS X installations. Try typing <tt>sqlite3</tt> from a Terminal.</p>
+              
+            </div>
+          </li>
+
+	  <li><p><span class="hdr">Oct 4:</span> <b>Relational Databases and SQL</b></p>
+	    <div class="lect">
+            
+              <p>Reading: Textbook, Chapter 7.</p>
+              
+	      <p>Wikipedia page on <a href="https://en.wikipedia.org/wiki/SQL">SQL</a>.</p>
+              
+	      <p>A draft of the <a href="http://www.contrib.andrew.cmu.edu/~shadow/sql/sql1992.txt">1992 standard</a>, if you like reading those sort of documents.</p>
+
+	      <p>There are tons of tutorials on SQL online, usually tied to a particular database implementation, since you can't use SQL "in the abstract". I've used <a href="http://www.postgresqltutorial.com">Postgres's SQL tutorial</a> in the past to introduce SQL to colleagues (start with Section 2). An interactive tutorial that I greatly enjoy is <a href="https://sqlbolt.com/">SQLBolt</a>.</p>
+
+              <p>The sample <a href="./sqlite.txt">SQLite</a> interactions I demoed in class.</p>
+
+              <p>Two SQL features we did not cover in class but you may run into are <a href="https://www.sqltutorial.org/sql-views/">views</a> (which are a form of live query that looks like a table in the database) and <a href="https://en.wikipedia.org/wiki/Stored_procedure">stored procedures</a> (which are a form of functions that can be written directly into the database). Views tend to look the same across relational databases, while stored procedures are much more vendor dependent.</p>
+              
+            </div>
+            
+          </li>
+
+	  <li><p><span class="hdr">Oct 18:</span> <b>Normalization and Indexing</b></p>
+
+            <div class="lect">
+              
+              <p>Reading: Textbook, Chapter 6.2 (normalization) and Chapter 12 (physical storage and indexing)</p>
+	      
+              <p>A reasonable set of slides on <a href="http://www.cs.cornell.edu/courses/cs4320/2008fa/slides/20081114_fds.pdf">normalizations and functional dependencies</a>. It goes into a bit more details about decomposition, including the notion of lossless-ness.</p>
+
+              <p>Overviews of physical storage and indexing tend to be hefty because there are many axes across which to compare the various approaches. A reasonable writeup (which provides a compatible alternative to the textbook) is this <a href="https://ieda.ust.hk/dfaculty/ajay/courses/ielm230/lecs/lec6_indexes.pdf">set of lecture notes</a>.</p>
+
+	      <p>Wikipedia pages on <a href="https://en.wikipedia.org/wiki/B-tree">B trees</a> and <a href="https://en.wikipedia.org/wiki/B%2B_tree">B+ trees</a>, data structures for managing indexes on block-based storage systems (like disks). </p>
+	      
+            </div>
+
+          </li>
+
+	  <li><p><span class="hdr">Oct 25:</span> <b>Transactions</b></p>
+
+            <div class="lect">
+              
+              <p>Reading: Textbook, Chapter 14.</p>
+
+	      <p>Relevant Wikipedia entries: <a href="https://en.wikipedia.org/wiki/Database_transaction">Transactions</a>, 
+		<a href="https://en.wikipedia.org/wiki/Serializability">Serializability</a>, 
+		<a href="https://en.wikipedia.org/wiki/Two-phase_locking">Two-phase locking</a>, 
+		<a href="https://en.wikipedia.org/wiki/ACID_(computer_science)">ACID properties</a>.</p>
+
+            </div>
+          </li>
+
+	  <li><p><span class="hdr">Nov 1:</span> <b>Programming APIs and ORMs</b></p>
+	    
+            <div class="lect">
+	      
+	      <p>Reading: Textbook, Chapter 15.</p>
+	      
+	      <p><a href="https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html">JDBC</a> is the Java API for connecting to databases. Most databases have JDBC drivers that support that API. It has become a de facto standard, and many other languages use that same API to provide database connectivity.</p>
+	      
+	      <p><a href="https://en.wikipedia.org/wiki/Object-relational_mapping">ORMs</a> (Object-Relational Mappings) are a more abstract  way to provide an interface to a database through a programming language: ORMs reify database tables as data structures in the language, so that modifying the structures will automatically update the underlying tables, and changes to the underlying tables will be visible through the structures.</p>
+
+	      <p><a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/">LINQ</a> is one approach to integrate SQL-style querying within a programming language (here, C#).</p>
+
+	      <p>Object persistence is the idea that we can create objects in a programming language and have those objects automatically be made persistent by transparently storing them in a database. Java does not do this automatically, but <a href="https://www.baeldung.com/java-serialization">serialization</a> is the main mechanism to achieve persistence. <a href="https://en.wikipedia.org/wiki/JADE_(programming_language)">JADE</a> is an example of a programming language that supports object persistence natively and transparently.</p>
+
+	      <p><a href="https://en.wikipedia.org/wiki/Transactional_memory">Transactional memory</a> is an approach to programming concurrent systems in a way that does not require locks, by essentially moving the notion of transactions to the world of reading and writing memory within a single machine.</p>
+	      
+	    </div>
+	    
+          </li>
+
+	  <li><p><span class="hdr">Nov 8:</span> <b>Distribution and Replication</b></p>
+	    
+	    <div class="lect">
+	      
+	      <p>Reading: Textbook, Chapter 16.</p>
+              
+	      <p>Distributed databases are distributed into nodes either by <a href="https://en.wikipedia.org/wiki/Replication_(computing)">replication</a> or by <a href="https://en.wikipedia.org/wiki/Partition_(database)">partitioning</a> (or a combination of both).</p>
+	      
+	      <p>The <a href="https://en.wikipedia.org/wiki/Two-phase_commit_protocol">two-phase commit protocol</a>, which ensures that database nodes agree on whether a distributed transaction should commit or abort.</p>
+
+	      <p>The <a href="https://en.wikipedia.org/wiki/CAP_theorem">CAP Theorem</a>.</p>
+
+	      <p>Lamport's <a href="https://en.wikipedia.org/wiki/Paxos_(computer_science)">Paxos protocol</a> (well, protocol family) is one of the most common ways to achieve consensus on what the data stored in a distributed system is when some of the nodes disagree due to update messages not getting to them. It is worth understanding. Here is a two-parter that does a reasonable job explaining the details: <a href="https://distributedthoughts.com/2013/09/22/understanding-paxos-part-1/">Part 1</a>, <a href="https://distributedthoughts.com/2013/09/30/understanding-paxos-part-2/">Part 2</a>.
+
+              <p>A research survey on <a href="https://www.alexdelis.eu/MDE519.DOCS/QP-Survey.pdf"><i>The State of the Art in Distributed Query Processing</i></a>. Reasonably readable if you're willing to spend some time on it.</p>
+
+              <p>A <a href="https://www.freecodecamp.org/news/a-thorough-introduction-to-distributed-systems-3b91562c9b3c/">good introduction to distributed systems</a> with an emphasis on databases, and which covers not only what I talked about for this lecture, but also hints at some of the things we'll cover when talking about NoSQL databases.</p>
+                
+	    </div>
+	    
+          </li>
+
+          
+	  <li><p><span class="hdr">Nov 15:</span> <b>NoSQL Databases</b></p>
+            <div class="lect">
+              
+              <p>Reading: Textbook, Chapter 11.</p>
+
+              <p>An old (2011) survey of <a href="https://www.christof-strauch.de/nosqldbs.pdf">NoSQL Databases</a> by Strauch. It gives a good overview of the field. </p>
+
+	      <p><a href="https://queue.acm.org/detail.cfm?id=1394128">BASE: An ACID Alternative</a> by Pritchett.</p>
+
+              <p><a href="https://redis.io/">Redis</a> is one of the most common key-value stores. Amazon's <a href="https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf">Dynamo paper</a> which describes one of the first high-availability key-value store. There is a nicer <a href="https://www.dynamodbguide.com/the-dynamo-paper/">primer</a> for it as well.</p>
+
+	      <p>Wikipedia entries on <a href="https://en.wikipedia.org/wiki/Consistent_hashing">consistent hashing</a> and <a href="https://en.wikipedia.org/wiki/Distributed_hash_table">distributed hash tables</a>, the main technique for sharding in NoSQL systems.</p>
+
+              <p>A good overview of <a href="https://ravendb.net/articles/nosql-document-oriented-databases-detailed-overview">document-oriented data stores</a> and their advantages. <a href="https://www.mongodb.com/">MongoDB</a> is a popular document-oriented data store. It supports <a href="https://docs.mongodb.com/manual/core/transactions/">transactions</a> and <a href="https://docs.mongodb.com/manual/sharding/">sharding</a>.</p>
+
+              <p>Google's <a href="https://en.wikipedia.org/wiki/Spanner_(database)">Spanner</a> database is an interesting example of a system that started out as a key-value store and that evolved into a distributed relational database system. A great technical overview is an <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46103.pdf">OSDI 2012</a> paper.</p>
+              
+            </div>
+          </li>
+
+          
+	  <li><p><span class="hdr">Nov 29:</span> <b>Graph Databases</b></p>
+
+            <div class="lect">
+
+              <p>Old lecture slides from Stanford describing typical <a href="https://web.stanford.edu/class/cs97si/06-basic-graph-algorithms.pdf">graph representations and algorithms</a>.</p>
+
+              <p><a href="https://neo4j.com/">Neo4j</a> is the prototypical graph database. Here are two excerpts from the book <a href="https://www.oreilly.com/library/view/graph-databases-2nd/9781491930885/"><i>Graph Databases</i></a>, which is mostly about Neo4j: <a href="references/data-modeling-with-graphs.pdf">the query language</a>, and the <a href="references/graph-database-internals.pdf">internal representation</a>. You might be able to <a href="https://neo4j.com/graph-databases-book/">download the book</a> for free.</p> 
+
+              <p><a href="https://neo4j.com/developer/cypher/">Cypher</a> is Neo4j's query language. The docs have an interesting complete example of using Cypher to drive a simple <a href="https://neo4j.com/developer/cypher/guide-build-a-recommendation-engine/">recommendation engine</a>. There's also a useful <a href="https://neo4j.com/developer/cypher/guide-sql-to-cypher/">comparison with SQL</a>.</p>
+
+              <p><a href="https://blog.twitter.com/engineering/en_us/a/2010/introducing-flockdb">FlockDB</a> was Twitter's graph database engine for storing user relational data such as followings and favorites. Its source code is <a href="https://github.com/twitter-archive/flockdb">available</a>. (Interestingly, it is written in <a href="https://www.scala-lang.org/">Scala</a>.)</p>
+
+              <p>TAO is used at Facebook (at least as of a few years ago) to store and serve the social graph. A <a href="https://www.usenix.org/system/files/conference/atc13/atc13-bronson.pdf">technical paper</a> describing TAO appears in the Usenix 2013 Technical Conference.</p>
+
+              <p>Although the name suggests it is a graph-based query language, <a href="https://graphql.org/">GraphQL</a> is not related to graph databases. It is, quoting from the working draft of the specification, <i>"a query language and execution engine originally created at Facebook in 2012 for describing the capabilities and requirements of data models for client-server applications"</i>. Still worth knowing though, since it's becoming increasing popular as an API query language.</p>
+
+            </div>
+          </li>
+
+	  <li><p><span class="hdr">Dec 6:</span> <b>TBD</b></p>
+          </li>
+          
+	  <li><p><span class="hdr">Dec 15 (Final Events):</span> <b>Final Presentations</b></p>
+            <div class="lect">
+              <p>Date and time: 4-7pm in AC326, as usual.</p>
+              
+            </div>
+          </li>
+          
+        </ul>
+        
+      </section>
+
+
+      <section id="homeworks">
+        
+        <h2>Homeworks</h2>
+        
+        <ul class="plain">
+          
+	  <li><a href="./homeworks/1">Homework 1</a> &mdash; Due Friday Sep 24 (23h59)</li>
+	  <li><a href="./homeworks/2">Homework 2</a> &mdash; Due Sunday Oct 3 (23h59)</li>
+	  <li><a href="./homeworks/3">Homework 3</a> &mdash; Due <del>Sunday Oct 10</del> Tuesday Oct 12 (23h59)</li>
+	  <li><a href="./homeworks/4">Homework 4</a> &mdash; Due Sunday Oct 31</li>
+	  <li><a href="./homeworks/5">Homework 5</a> &mdash; Due Sunday Nov 28</li>
+          <li><a href="./homeworks/project">Final Project</a></li>
+          
+        </ul>
+        
+      </section>
+
+    </main>
+
+  </body>
+</html>

@@ -1,0 +1,138 @@
+<script>
+  document.title = "Simple Dependency Injection in Python" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Simple Dependency Injection in Python</h3>
+    
+    <div class="date">May 8, 2021</div>
+    
+    <div class="body">
+      <p><a href="https://en.wikipedia.org/wiki/Dependency_injection">Dependency injection</a> is an software design pattern that basically amounts to parameterizing every
+object by the services that it uses, and forcing the instantiator of an object to supply objects
+representing the services needed by the created object.</p>
+
+<p>I'm somewhat torn on dependency injection. On the positive side, decoupling an object from the services
+it uses is almost a requirement for any form of sane unit testing, since then you can test an object
+by supplying proxy services that can be controlled by the testing environment. On the negative side, it
+adds an extra layer of indirection that makes code difficult to read, difficult to maintain, and often
+adds visual noise that distracts from what an object does. (Dependency injection often comes with an
+attendant architectural infrastructure, of the kind best examplified by the Java <a href="https://spring.io/projects/spring-framework">Spring Framework</a>.)</p>
+
+<p>Is it possible to get some of the advantages of dependency injection for unit testing without straying too much from how you would normally code?</p>
+
+<p>Here's a positive answer to the question in the context of Python. It is far from an ideal solution,
+but it does provide a lightweight form of dependency injection that should suffice for unit testing.</p>
+
+<p>Consider the following simple <code>Example</code> class that depends on a simple <code>Service</code> class:</p>
+
+<pre><code>class Example:
+    def __init__(self, arg):
+        self._arg = arg
+
+    def run(self):
+        obj = Service(self._arg)
+        obj.print()
+
+
+class Service:
+    def __init__(self, arg):
+        self._arg = arg + 1
+
+    def print(self):
+        print(f'In default service = {self._arg}')
+</code></pre>
+
+<p>We want the ability to instantiate <code>Example</code> with an alternate service <code>Service2</code> in place of <code>Service</code> in
+some situations (such as testing):</p>
+
+<pre><code>class Service2:
+
+    def __init__(self, arg):
+        self._arg = arg + 100
+
+    def print(self):
+        print(f'In service 2 = {self._arg}')
+</code></pre>
+
+<p>To do that, we introduce a class decorator <code>injectable</code> that takes as arguments all the services used
+in the class that we want to be &quot;injectable&quot; at instantiation time. That decorator intuitively adds
+an instance variable for every service listed and initialized with the given service. The
+initialization can be overridden using a keyword argument on the class constructor with the same
+name as the service being injected.. To take advantage of this injection, we simply need to adjust
+every reference to an &quot;injectable&quot; service within the class so that it uses the instance variable
+named after the service. For example:</p>
+
+<pre><code>@injectable(Service)
+class Example:
+    def __init__(self, arg):
+        self._arg = arg
+
+    def run(self):
+        obj = self.Service(self._arg)
+        obj.print()
+</code></pre>
+
+<p>Instantiating the class with the default service does not require any extra work:</p>
+
+<pre><code>&gt;&gt;&gt; e1 = Example(10)
+&gt;&gt;&gt; e1.run()
+In default service = 11
+</code></pre>
+
+<p>And instantiating the class with an alternative service simply requires passing the alternative
+service during instantiation as a keyword argument for the keyword corresponding to the service to
+be injected:</p>
+
+<pre><code>&gt;&gt;&gt; e2 = Example(10, Service=Service2)
+&gt;&gt;&gt; e2.run()
+In service 2 = 110
+</code></pre>
+
+<p>The main downside of this approach is the need to qualify every &quot;injectable&quot; service reference with
+the <code>self</code> argument within the class. adding visual noise and a potential failure point if one such
+reference is not qualified while others are.</p>
+
+<p>For completeness, here's a reference implementation of the <code>injectable</code> decorator:</p>
+
+<pre><code>def injectable(*services):
+
+    def inject(cls):
+        original_init = cls.__init__
+
+        names = [ service.__name__ for service in services ]
+
+        def new_init (self, *args, **kwargs):
+            kwargs_ = { k: kwargs[k] for k in kwargs if k not in names }
+            self._services =  { service.__name__: service for service in services}
+            for n in names:
+                if n in kwargs:
+                    self._services[n] = kwargs[n]
+            original_init(self, *args, **kwargs_)
+
+        def get_attribute(self, attr):
+            if attr in self._services:
+                return self._services[attr]
+            else:
+                raise Exception('no such attribute')
+
+        cls.__init__ = new_init
+        cls.__getattr__ = get_attribute
+        return cls
+
+    return inject
+</code></pre>
+
+<p>You can download the <a href="./injectable.py">full code</a>.</p>
+
+    </div>
+
+    
+
+  </article>
+  
+</main>

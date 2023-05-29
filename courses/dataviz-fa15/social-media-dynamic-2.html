@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Social Media Viz Demo</title>
+
+    <!-- load D3 library -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+    <style>
+
+text {
+    font-family: sans-serif;
+}
+
+ .bar { 
+     stroke: white;
+     stroke-width: 2px;
+     fill: blue;
+ }
+
+ .value {
+     font-weight: bold;
+     font-size: 16px;
+     fill: blue;
+ }
+
+ .label {
+     font-size: 20px;
+ }
+
+ .title {
+     font-weight: bold;
+     font-size: 20px;
+     fill: black;
+ }
+
+div.center {
+     position: absolute;
+     width: 800px;
+     height: 500px;
+     top: 50%;
+     left: 50%;
+     margin-top: -250px;
+     margin-left: -400px;
+}
+
+span.top-align {
+  vertical-align: top;
+}
+
+    </style>
+
+  </head>
+  
+  <body>
+
+
+    <div>
+      <span>
+	<span class="top-align">Gender:</span>
+	<select class="filter" id="select-gender" multiple></select>
+	<span class="top-align">Age group:</span>
+	<select class="filter" id="select-age" multiple></select>
+	<span  class="top-align">Race:</span>
+	<select class="filter" id="select-race" multiple></select>
+	<span class="top-align">Base:</span>
+	<span class="top-align" id="span-base"></span>
+      </span>
+    </div>
+    <div>
+    <svg id="viz" height="500" width="800" style="border: 1px solid grey;">
+    </svg>
+    </div>
+
+    <script>
+
+
+/*
+ * Demo: social media 2014 (fake data)
+ * 
+ */
+
+
+// call run when the page finishes loading
+      
+window.addEventListener("load",run);
+      
+function run () {
+    initializeView();
+    // get data, call f when done
+    getDataRows(function(data) {
+        populateSelectors(data);
+	setupEventListeners();
+	DATA.all = data;
+	updateData() });
+}
+
+
+function setupEventListeners () { 
+    d3.selectAll("select.filter")
+	.on("change",updateData)
+}
+
+
+var DATA = { all: []};
+
+var SOCIAL_MEDIA = ["Facebook",
+		    "Pinterest",
+		    "Instagram",
+		    "LinkedIn",
+		    "Twitter"];
+
+function populateSelectors (data) { 
+    var genders = d3.set();
+    var ages = d3.set();
+    var races = d3.set();
+
+    data.forEach(function(r) {
+	genders.add(r.gender);
+	ages.add(r.age);
+	races.add(r.race);
+    });
+    d3.select("#select-gender")
+	.selectAll("option")
+	.data(genders.values().sort())
+	.enter()
+	.append("option")
+	.attr("value",function(d) { return d; })
+        .property("selected",true)
+	.text(function(d) { return d;});
+
+    d3.select("#select-age")
+	.selectAll("option")
+	.data(ages.values().sort())
+	.enter()
+	.append("option")
+	.attr("value",function(d) { return d; })
+        .property("selected",true)
+	.text(function(d) { return d;});
+
+    d3.select("#select-race")
+	.selectAll("option")
+	.data(races.values().sort())
+	.enter()
+	.append("option")
+	.attr("value",function(d) { return d; })
+        .property("selected",true)
+	.text(function(d) { return d;});
+   
+}
+
+function isSelected (selectorId,val) {
+    return d3.select("#"+selectorId+" > option[value='"+val+"']")
+	.property("selected");
+}
+
+function initializeView () { 
+
+    var svg = d3.select("#viz");
+
+    // get the size of the SVG element
+    var height = svg.attr("height");
+    var width = svg.attr("width");
+
+    // the chart lives in the svg surrounded by a margin of 100px
+    var margin = 100;
+    var chartHeight = height - 2*margin;
+    var chartWidth = width - 2*margin;
+
+    // figure out the width of the bars so that all bars fit and 
+    //   there is one bar width between them
+    // note that every data point now has _2_ bars associated with 
+    //   it
+    var barWidth = chartWidth/(2*SOCIAL_MEDIA.length-1);
+
+    svg.append("text")
+	.attr("class","title")
+	.attr("x",width/2)
+ 	.attr("y",margin/2)
+	.attr("dy","0.3em")
+	.style("text-anchor","middle");
+
+    sel = svg.selectAll("g")
+	.data(SOCIAL_MEDIA)
+	.enter().append("g")
+
+    sel.append("rect")
+	.attr("class","bar")
+	.attr("x",function(d,i) { return margin+(i*2)*barWidth; })
+	.attr("y",height-margin)
+	.attr("width",barWidth)
+	.attr("height",0);
+
+    sel.append("text")
+	.attr("class","value")
+	.attr("x",function(d,i) { return margin+(i*2)*barWidth+barWidth/2; })
+ 	.attr("y",height-margin-20)
+	.attr("dy","0.3em")
+	.style("text-anchor","middle");
+
+    sel.append("text")
+	.attr("class","label")
+	.attr("x",function(d,i) { return margin+(i*2)*barWidth+barWidth/2; })
+	.attr("y",margin+chartHeight+50)
+	.attr("dy","0.3em")
+	.style("text-anchor","middle")
+	.text(function(d) { return d; });
+}
+
+
+
+function updateData () { 
+
+    console.log("UPDATING DATA");
+
+    var svg = d3.select("#viz");
+
+    var height = svg.attr("height");
+    var margin = 100;
+    var chartHeight = height - 2*margin;
+
+
+    ///svg.select(".title")
+	///.text("Year: "+year);
+
+    // crunch data
+    // tabulate totals for each company
+    // tabulate # of Yeses
+    var COLUMN = 
+	{"Facebook": "facebook",
+	 "Pinterest": "pinterest",
+	 "Instagram": "instagram",
+	 "LinkedIn": "linkedin",
+	 "Twitter": "twitter"}
+    var counts = [0,0,0,0,0];
+    var total_count = 0;
+    DATA.all.forEach(function(r) { 
+	if (isSelected("select-gender",r.gender) &&
+	    isSelected("select-age",r.age) &&
+	    isSelected("select-race",r.race)) {
+	    total_count += 1;
+	    SOCIAL_MEDIA.forEach(function(m,i) {
+		if (r[COLUMN[m]]==="Yes") { 
+		    counts[i] += 1;
+		}
+	    });
+	}
+    });
+
+    d3.select("#span-base")
+	.text(total_count);
+    
+    var yPos = d3.scale.linear()
+	.domain([0,total_count])
+	.range([height-margin,margin]);
+
+    var height = d3.scale.linear()
+	.domain([0,total_count])
+	.range([0,chartHeight]);
+
+    sel = svg.selectAll("g")
+	.data(counts);
+
+    sel.select(".bar")
+	.transition(2000)
+	.attr("y",function(d) { return yPos(d); })
+	.attr("height",function(d) { return height(d); });
+
+    sel.select(".value")
+	.transition(2000)
+	.attr("y",function(d) { return yPos(d) - 20; })
+//	.text(function(d) { return (Math.round(100*d/total_count))+"%"; });
+	.text(function(d) { return d; });
+
+}		 
+
+
+/* depending on your browser and your local configuration,
+   you may need to have a web server deliver the file data.csv
+   just use the default python web server */
+
+function getDataRows (f) {
+    d3.csv("data.csv",
+	   function(error,data) {
+               console.log(data);
+	       f(data);
+	   });
+}
+      
+    </script>
+    
+  </body>
+  
+</html>

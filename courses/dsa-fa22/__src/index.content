@@ -1,0 +1,265 @@
+
+<main id="main">
+  
+  <h1>Data Structures and Algorithms (Fall 2022)</h1>
+
+  <p><b>Catalog description:</b> In this course, you will be introduced to the common data structures and algorithms that will enable you to grow as a programmer and problem solver. You will learn how to do mathematical analysis of data structures and algorithms, including run time analysis and proof of correctness. But you will also be practicing how to implement these concepts and evaluating performance in practice. By the end, you should feel comfortable approaching a computational problem from start to finish: writing pseudocode, choosing appropriate data structures, designing algorithms, and analyzing your program.</p>
+
+  
+  <section id="info">
+    <h2>Course Information</h2>
+
+    <ul class="plain">
+      <li><b>Course number:</b> ENGR 3515</li>
+
+      <li><b>Prerequisites:</b> ENGR 2510 — Discrete Mathematics is a plus, but not strictly required. </li>
+
+      <li><b>Location and Time:</b>
+        <del>MAC 113</del> MAC 417 / Tue 2:50–5:30pm
+      </li>
+
+      <li><b>Instructor:</b> <a href="https://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</li>
+
+      <li><b>Office hours:</b> MH 353 / Tue 1–2pm, or by request (over Zoom)
+      </li>
+
+      <li><b>Textbook:</b> The textbook from which our readings will be taken is:
+        
+        <ul>
+          <li>Cormen, Leiserson, Rivest, Stein, <i><a href="https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/" target="_blank">Introduction to Algorithms</a></i>
+        </ul>
+
+        <p>The latest edition is the 4th, published in April 2022. I'm using the 3rd edition myself, and the library has the 3rd edition on reserve. Either edition works for us. (The biggest differences are mostly for the more advanced topics.)</p>
+
+        <p>A book I also recommend (but not require) is:</p>
+
+        <ul>
+          <li>Kleinberg, Tardos, <i><a href="https://www.pearson.com/en-us/subject-catalog/p/algorithm-design/P200000003259/9780137546350" target="_blank">Algorithm Design</a></i></li>
+        </ul>
+
+        <p>It focuses slightly more on algorithms than on data structures.</p>
+        
+      </li>
+
+      
+      <li><b>Programming:</b> All programming in this course will be done using the programming
+        language <a href="https://go.dev/" target="_blank">Go</a>. It's a somewhat low-level, statically-typed, compiled language available on all platforms. Straightforward to <a href="https://go.dev/doc/install">install</a>. You will need a text editor. <a href="https://code.visualstudio.com/" target="_blank">VSCode</a> seems to have <a href="https://code.visualstudio.com/docs/languages/go" target="_blank">reasonable integration with Go</a>.
+
+        <p>Most of the Go resources are online. (When googling, use "Golang" since "Go" has terrible SEO.) A book I've enjoyed if you prefer learning from books is:</p>
+        
+        <ul>
+          <li>Donovan, Kernighan, <i><a href="https://www.gopl.io/" target="_blank">The Go Programming Language</a></i></li>
+        </ul>
+
+        <p>Note that the book covers a slightly older version of the language, pre-dating the new version of the module system. This won't matter for us since we're not going to build large software, but it's good to keep in mind.</p>
+        
+        <!-- Online resources -->
+        
+      <li><b>Grading:</b> The final grade is based on weekly homework (80%) and <del>in-classes
+        quizzes</del> <ins>a small final project</ins> (20%). All work will be done
+        individually. Late homeworks will be penalized (10% per 24 hours) and no homework will be
+        accepted after its solution has been discussed in class. <b>Please do not post your homework
+        code on a publicly available repository like GitHub.</b> I hate to do this kind of policing,
+        but we've had some issues in the past, and I'd like to avoid a repeat if possible.  </li>
+
+      <li><b>Course Assistants:</b> We have three course assistants: Zoe McGinnis, Miles Mezaki, and Ari Porad. Office hours: Mon 7-8pm [Miles / WH2]; Wed 1-3pm [Miles, Zoe / WH2]; Wed 8:15-9:30pm [Ari / Library]; Sat 10:30-12pm [Ari / Library]; Sun 3-6pm [Zoe / Zoom]
+      </li>
+      
+      
+      <li><b>Honor Code:</b> I expect all of us to follow the <b><a href="https://www.olin.edu/student-life/student-rights-responsibilities" target="_blank">Olin Honor Code</a></b>.</li>
+
+      <li><b>Chat server:</b> Announcements and discussions take place on the course <a href="https://chat.rpucella.net" target="_blank">chat server</a>. You should have received account information by email. If not, please reach out.</li>
+
+  </section>
+
+  <section id="lectures">
+
+    <h2>
+      Lectures and Readings
+    </h2>
+
+    <p>Subject to changes.</p>
+    
+    <ul class="lectures">
+
+      <li><p><span class="hdr">Sep 6: </span><b>Introduction</b></p>
+        <div class="lect">
+          
+          <p>A <a href="https://visualgo.net/en/sorting">nice visualizer</a> that shows the behavior of Bubble Sort during execution. (Click on the <i>BUBBLE SORT</i> option in the toolbar, then on <i>Sort</i> in the yellow box in the lower left corner.) Note that the algorithm this uses is slightly different than what I showed in class. It's both simpler and more complicated. First, it doesn't use a separate pass to determine if the array is sorted, instead keeping track of whether the array is sorted by recording whether there were any swaps during a left-to-right pass over the array. Second, since every left-to-right pass over the array has the effect of making the end of the array sorted, we can keep track of where the "sorted" end of the array starts, and restrict left-to-right passes to go up to that point only.
+            As we'll see, it doesn't impact the asymptotic behavior of the algorithm.</p>
+          
+          <p>The Go <a href="./source/demo.go">demo code</a> I showed in class, annotated. Please have a read-through. To run the code, you can use <pre>    go run demo.go</pre> from the command-line in the directory in which you stored <tt>demo.go</tt>. Alternative, you can also compile the code with <pre>    go build demo.go</pre> which should create an executable <tt>demo</tt> in the directory and which you can run in the usual way, <tt>./demo</tt>.</p>
+        </div>
+      </li>
+
+      
+      <li><p><span class="hdr">Sep 20: </span><b>Analysis of Algorithms (1)</b></p>
+        <div class="lect">
+          
+	  <p>Reading: CLRS Chapter 2 ("Getting Started") and Chapter 3.1 ("Growth of Functions / Asymptotic Notation").</p>
+	  
+          <p><a href="notes/analysis1.html">Notes</a> from the lecture.</p>
+          
+          <p>More details than you care for about the <a href="https://en.m.wikipedia.org/wiki/Random-access_machine">RAM model</a>.</p>
+          
+        </div>
+      </li>
+
+      
+      <li><p><span class="hdr">Sep 27: </span><b>Analysis of Algorithms (2)</b></p>
+        <div class="lect">
+          
+          <p><a href="notes/analysis2.html">Notes</a> from the lecture.</p>
+          
+          <p>More details about <a href="https://en.m.wikipedia.org/wiki/Divide-and-conquer_algorithm">divide-and-conquer algorithms</a>.</p>
+          
+          <p>I mentioned in class that &Theta;(n log<sub>2</sub> n) is the best running time we can get for sorting using comparisons. You can find succinct version of the argument in Avrim Blum's lecture notes, as <a href="https://www.cs.cmu.edu/~avrim/451f11/lectures/lect0913.pdf">Theorem 5.1</a>.</p>
+
+          <p>More details about <a href="https://en.m.wikipedia.org/wiki/Loop_invariant">loop invariants</a>.</p>
+
+          <p>There is a huge amount of work on correctness, and no hope of giving even a cursory account. So I'll pick interesting points in the spectrum. First, The above refers to <a href="https://en.m.wikipedia.org/wiki/Hoare_logic">Hoare logic</a>, an early formal framework for reasoning about correctness of algorithms and programs. It is meant to be used "by hand", though mechanized versions seem to exist. By contrast, <a href="https://en.m.wikipedia.org/wiki/TLA%2B">Lamport's TLA+</a> is a specification language for algorithms and programs that supports automated verification.</p>
+
+          <p>A modern approach to correctness is to use <a href="https://en.wikipedia.org/wiki/Dependent_type">dependently-typed programming languages</a> which let you define correctness properties within their expressive type system. Exampless include <a href="https://coq.inria.fr/">Coq</a>, <a href="https://wiki.portal.chalmers.se/agda/pmwiki.php">Agda</a>, and <a href="https://www.idris-lang.org/">Idris</a>. If you're interested, start reading the first few volumes of UPenn's <a href="https://softwarefoundations.cis.upenn.edu/"><i>Software Foundations</i></a> series.</p>
+          
+        </div>
+      </li>
+      
+      <li><p><span class="hdr">Oct 4: </span><b>Abstract Data Types (1)</b></p>
+        <div class="lect">
+
+          <p><a href="notes/data-structures-and-adts.pdf">Slides</a> from the lecture.</p>
+
+          <p>A reference for <a href="https://go.dev/blog/slices-intro">slices</a> in Go.</p>
+
+          <p>A handy reference for <a href="https://go.dev/tour/moretypes/1">pointers and structs</a> in Go — pages 1 through 5. A short reference for <a href="https://golangdocs.com/pointer-to-a-struct-golang">pointers to structs</a>.</p>
+
+          <p>A <a href="https://zetcode.com/golang/struct/">reasonable description of structs in Go</a>. Pay special attention to the "Go struct is a value type" section, describing why I used pointers to stacks and queues as arguments to functions in my examples. In short, when you call a function passing it a struct, the function creates a <a href="https://www.educative.io/answers/deep-copying-vs-shallow-copying">shallow copy</a> of the struct to work on. If you want to modify the struct and have the change reflected in the caller, then you need to pass a pointer to the struct as opposed to the struct itself.</p>
+
+          <p>Note that in many languages (Python, Java, Javascript, etc) structs are always represented as pointers to structs, so you don't have to specify that you're passing a pointer to a struct — it is done automatically for you.</p>
+
+          <p>The sample code I showed in class: <a href="source/stack1.go">Stack ADT with array implementation</a>, <a href="source/stack4.go">Stack ADT with linked-list implementation</a>, <a href="source/queue.go">Queue ADT with linked-list implementation</a>.</p>
+          
+        </div>
+      </li>
+      
+      <li><p><span class="hdr">Oct 12 (Olin Tuesday): </span><b>Abstract Data Types (2)</b></p>
+        <div class="lect">
+          
+          <p><a href="notes/dynamic-sets.pdf">Slides</a> from the lecture.</p>
+          
+          <p>Some sample code I showed in class: <a href="source/set-linked-list.go">Set ADT with linked-list implementation</a>, <a href="source/set-bst.go">Set ADT with binary search tree implementation (partial)</a>.</p>
+          
+          <p>Wikipedia links for <a href="https://en.wikipedia.org/wiki/Binary_search_algorithm">binary search</a> and for <a href="https://en.wikipedia.org/wiki/Binary_search_tree">binary search trees</a>.</p>
+          
+          </div>
+      </li>
+      
+      <li><p><span class="hdr">Oct 18: </span><b>Abstract Data Types (3)</b></p>
+        <div class="lect">
+
+        <p><a href="notes/balanced-binary-search-trees.pdf">Slides</a> from the lecture.</p>
+
+        <p>Wikipedia link for <a href="https://en.wikipedia.org/wiki/AVL_tree">AVL trees</a>. Here's the original paper: <a href="references/avl.pdf"><i>An Algorithm for the Organization of Information</i></a> by Adelson-Valski and Landis.</p>
+
+	    <p>A <a href="https://www.cs.usfca.edu/~galles/visualization/AVLtree.html">cute visualization</a> of what happens when you insert
+	    into an AVL tree. Try starting with the empty tree, and
+	    inserting 1, 2, 3, 4, 5, 6, 7, 8... You'll see the tree
+	      grow "to the right" and then rebalance itself repeatedly.</p>
+
+	    <p>A <a href="notes/proof-height-avl-trees.pdf">proof</a> that an AVL tree with N nodes has height O(log<sub>2</sub> N).</p>
+
+<!--	    <p>An <a href="https://cs.nyu.edu/courses/fall02/V22.0310-002/lectures/lecture-16.html">analysis
+		of the height of AVL trees</a>, showing that it is
+	      always logarithmic in the number of nodes.</p> -->
+
+        <p>Wikipedia link for <a href="https://en.wikipedia.org/wiki/Red%E2%80%93black_tree">Red-black trees</a>. Here's the original paper: <a href="references/redblack.pdf"><i>A Dichromatic framework for Balanced Trees</i></a> by Gulbas and Sedgewick.</p>
+
+        <p>An interesting alternative to the above is <a href="https://en.wikipedia.org/wiki/Splay_tree">splay trees</a>, which emphasize optimizing access to elements that have already been accessed. Roughly speaking, when you search for an element, it gets pulled to the top of the tree so that it's faster to access the next time, while keeping the tree balanced using techniques similar to AVL and red-black trees. The original paper is quite readable: <a href="references/splay.pdf"><i>Self-Adjusting Binary Search Trees</i></a> by Sleator and Tarjan.</p>
+
+        </div>
+      </li>
+      
+      <li><p><span class="hdr">Oct 25: </span><b>Abstract Data Types (4)</b></p>
+        <div class="lect">
+	  <p>Reading: CLRS Chapter 11 ("Hashing").</p>
+
+          <p><a href="notes/hash-tables.pdf">Slides</a> from the lecture.</p>
+
+          <p>Wikipedia article on <a href="https://en.wikipedia.org/wiki/Hash_function">hash functions</a>, which
+            provides a good overview of various kind of hash functions. Note that the hash function I mentioned
+            in class using the mod operation is an instance of division hashing.</p>
+
+          <p>Hash functions are also used in the context of security. There,
+            <a href="https://en.wikipedia.org/wiki/Cryptographic_hash_function">hash functions are required to have
+              more properties</a> that just simple uniform hashing. They are also required to, for instance,
+            provide as little information as possible as to the original element that hashes into a given hash
+            value. For instance, for a given hash value V, it should be computationally difficult to find an
+            element that hashes to V. In contrast, it is very easy to find an element that hashes to, say, 5,
+            with a hash function such as E mod N.</p>
+          
+        </div>
+      </li>
+      
+      <li><p><span class="hdr">Nov 8: </span><b>General Trees</b></p>
+        <div class="lect">
+
+          <p><a href="notes/general-trees.pdf">Notes</a> from the lecture.</p>
+
+          <p>Sample code from lecture: <tt><a href="source/trees.go">trees.go</a></tt>.</p>
+
+          <p>A description of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model">Document Object Model</a>, a tree-based representation of HTML documents for web browsers. You can see the tree representation explicitly <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_object_model/Using_the_W3C_DOM_Level_1_Core">here</a>.</p>
+
+          <p>Wikipedia link to <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Trees</a>, which I called parse trees in class, and while the latter is often used as a synonym, AST is the more classical terminology.</p>
+          <p>Wikipedia link to <a href="https://en.wikipedia.org/wiki/Game_tree">Game Trees</a>, which represent the states of a game and their evolution through moves from the players.</p>
+
+          <p>Probably the most detailed description I've seen of <a href="https://www.cs.odu.edu/~zeil/cs361/latest/Public/recursionConversion/index.html">synthetizing a non-recursive algorithm from a recursive one</a>.</p>
+
+        </div>
+      </li>
+      
+      <li><p><span class="hdr">Nov 15: </span><b>Graph Algorithms</b></p>
+        <div class="lect">
+
+          <p><a href="notes/graph-algorithms.pdf">Slides</a> from the lecture. I refactored and cleaned up the discussion of the DFS-based topological sort algorithms</p>
+
+        </div>
+      </li>
+      
+      <li><p><span class="hdr">Nov 29: </span><b>Weighted Graph Algorithms</b></p>
+        <div class="lect">
+        
+          <p><a href="notes/weighted-graphs.pdf">Slides</a> from the lecture. I refined the example run-through for Prim's algorithm to show the key associated with each vertex in the priority queue (it's the value inside the vertex in the drawing). That should make things a bit clearer.</p>
+        
+        </div>
+      </li>
+      
+      <li><p><span class="hdr">Dec 6: </span><b>P, NP, and NP-completeness</b></p>
+        <div class="lect">
+          <p><a href="./notes/p-np-completeness.pdf">Notes</a> from the lecture. It includes the pages at the end about reductions that I skipped because it was the last lecture of the semester after all.</p>
+        </div>
+      </li>
+      
+      
+    </ul>
+
+  </section>
+
+
+  <section id="homeworks">
+    
+    <h2>Homeworks</h2>
+    
+    <ul class="plain">
+      <li><a href="./homeworks/1">Homework 1</a> &mdash; Due Thursday Sep 22 (23h59)</li>
+      <li><a href="./homeworks/2">Homework 2</a> &mdash; Due Thursday Oct 6 (23h59)</li>
+      <li><a href="./homeworks/3">Homework 3</a> &mdash; Due Sunday Oct 16 (23h59)</li>
+      <li><a href="./homeworks/4">Homework 4</a> &mdash; Due Sunday Oct 23 (23h59)</li>
+      <li><a href="./homeworks/5">Homework 5</a> &mdash; Due Sunday Oct 30 (23h59)</li>
+      <li><a href="./homeworks/6">Homework 6</a> &mdash; Due Sunday Nov 6 (23h59)</li>
+      <li><a href="./homeworks/7">Homework 7</a> &mdash; Due Sunday Dec 4 (23h59)</li>
+      <li><a href="./homeworks/final">Homework Final</a> &mdash; Due Sunday Dec 18 (23h59)</li>
+    </ul>
+    
+  </section>
+  
+</main>

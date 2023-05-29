@@ -1,0 +1,432 @@
+
+<main id="main">
+  
+      <h1>Foundations of Computer Science (Spring 2023)</h1>
+    
+      <p>This course explores the notion of computation. We're going to
+        develop formal tools for defining what we mean by computation
+        through various models, including automata and the lambda
+        calculus. We will examine how some of these alternative models
+        of computations correspond to different programming paradigms.
+      </p>
+      
+      <section id="info">
+        <h2>Course Information</h2>
+
+        <ul class="plain">
+          <li><b>Course number:</b> ENGR 3520</li>
+
+          <li><b>Prerequisites:</b> Prior experience programming is required (Software Design or something equivalent) since I will not teach programming. Discrete Mathematics is no longer a formal prerequisite for FoCS. </li>
+
+          <li><b>Location and Time:</b>
+            MAC 126 / Mon 6-8:40pm
+          </li>
+
+          <li><b>Instructor:</b> <a href="https://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</li>
+
+          <li><b>Office hours:</b> MH 353 / Mon 4-5pm (before class), or over Zoom by request
+          </li>
+
+          <li><b>Textbook:</b> There is no required textbook for the course. We will be working off
+            notes and online references. In particular, I will share the first two chapters of Hubie
+            Chen's upcoming <i>Computability and Complexity</i>, courtesy of MIT Press. This will be
+            the source of our readings.
+
+          </li>
+
+          <li><b>Recommended Books:</b> There are several excellent books covering the first part of
+            the course (aka, Theory of Computation), but they are a bit expensive considering that
+            we will be covering only a small part of their content. If you need extra assistance,
+            though, any of these books would be useful, and they are on reserve in the Olin library:
+            
+            <ul>
+              <li>Sisper, <i><a href="https://www.amazon.com/Introduction-Theory-Computation-Michael-Sipser/dp/1133187811">Introduction to the Theory of Computation</a></i></li>
+	      <li>Hopcroft, Motwani, Ullman, <i><a href="https://www.amazon.com/Introduction-Automata-Theory-Languages-Computation/dp/0321455363">Automata Theory, Languages, and Computation</a></i></li>
+            </ul>
+            
+            An inexpensive and reasonable book is the following, although it uses Ruby instead of OCaml:
+            <ul>
+	      <li>Stuart, <i><a href="http://computationbook.com">Understanding Computation</a></i></li>
+            </ul>
+            It very much follows the spirit of this iteration of FoCS. Again, not required. But if you enjoy the course, you may enjoy the book.
+            
+          </li>
+
+          
+          <li><b>Programming:</b> All programming in this course will be done using the programming
+            language <a href="https://ocaml.org/">OCaml</a>. The OCaml compiler can be downloaded
+            from the web site, and supports installations on most common systems. You can find the installation instructions <a href="https://ocaml.org/learn/tutorials/up_and_running.html">here</a>. (You only need to install up to and including <b>Configuring Your Editor</b>. We are not going to use the <b>Dune</b> build system.)
+
+            Here are a couple of reasonable books on OCaml that you might want to get your hands on
+            if you prefer learning your programming language from a book instead of the web:
+            
+            <ul>
+              <li>Hickey, <i><a href="http://courses.cms.caltech.edu/cs134/cs134b/book.pdf">Introduction
+	            to Objective Caml</a></i> (PDF)</li>
+              <li>Downey, Monje, <i><a href="http://greenteapress.com/thinkocaml/">Think
+	            OCaml</a></i></li>
+	      <li>Minsky, Madhavapeddy, Hickey, <i><a href="https://realworldocaml.org/">Real World
+	            OCaml</a></i></li>
+            </ul>
+
+            Some online resources:
+            <ul>
+              
+	      <li>The OCaml website has a few
+	      good <a href="https://ocaml.org/learn/tutorials/">tutorials</a>. At the very least,
+	      read
+	      through <a href="https://ocaml.org/learn/tutorials/a_first_hour_with_ocaml.html">A
+	      First Hour with OCaml</a> which gives you the basics of interacting with OCaml.</li>
+              
+	      <li>The <a href="http://caml.inria.fr/pub/docs/manual-ocaml/index.html">official OCaml
+	          manual</a></li>
+              
+	      <li>Some information on
+	        the <a href="http://caml.inria.fr/pub/docs/manual-ocaml/toplevel.html#sec256">commands
+	        you can use in the OCaml shell</a>, which can be useful</li>
+              
+	      <li>There are no official IDEs for OCaml, but many people swear
+	        by <a href="https://github.com/diml/utop"><i>utop</i></a>, which is an OCaml shell
+	        replacement. There's also
+	        <a href="http://camelia.sourceforge.net/"><i>Camelia</i></a>,
+	        but I've never used it. There is
+	        an <a href="http://www.algo-prog.info/ocaide/">Eclipse
+	          plug-in</a> for OCaml.
+	      </li>
+            </ul>
+          </li>
+          
+          <li><b>Grading:</b> The final grade is based on weekly
+            homework (60%), in-class quizzes (20%), and a final exam
+            (20%). All work will be done individually. Late homeworks
+            will be penalized (10% per 24 hours) and no homework will
+            be accepted after its solution has been discussed in
+            class. <b>Please do not post your homework code on a
+            publicly available repository like GitHub.</b> I hate to
+            do this kind of policing, but we've had some issues in the
+            past, and I'd like to avoid a repeat if possible.  </li>
+
+          <li><b>Course Assistants:</b> Hazel Smith (<tt>hsmith1</tt> at the
+            usual olin dot edu domain) Office hours: TBD
+          </li>
+
+          <li>I expect all of us to follow the <b><a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a></b>.</li>
+
+      <li><b>Chat server:</b> Announcements and discussions take place on <a href="https://chat.rpucella.net" target="_blank">our chat server</a>, which double as our homework submission server. You should have received account information by email. If not, please reach out.</li>
+
+  </section>
+
+  <section id="lectures">
+
+    <h2>
+      Lectures and Readings
+    </h2>
+
+    <p>Subject to changes.</p>
+
+    <ul class="lectures">
+
+      <li><p><span class="hdr">Jan 23: </span><b>Introduction</b></p>
+        <div class="lect">
+	<p>Snow day!</p>
+	<p>Here's a <a href="notes-ocaml.html">small annotated
+                     interactive interaction with Ocaml</a>. It is not meant
+              to replace the links I provided above. This is just to
+              give a flavor of the language.</p>
+        </div>
+      </li>
+
+      <li><p><b>MACHINE MODELS</b></p></li>
+
+      <li><p><span class="hdr">Jan 30: </span><b>Formal languages</b></p>
+        
+         <div class="lect">
+            
+           <p>Reading: Chen, pages 8 - 10.</p>
+           
+           <p>The mathematical notions we'll be using are in Chen above. Here's <a href="languages.pdf">additional notes</a> on what I presented in class (included things I did not cover on regular expressions.)</p>
+           
+           <p>A reasonably straightforward mathematical account or why it's impossible
+           to <a href="http://www.warwickmaths.com/wp-content/uploads/2020/07/81_-Squaring-the-Circle_-Ancient-Problems-and-Modern-Solutions.pdf">square the circle</a>
+           using only straight edge and compass. The argument amounts to showing that &pi;
+           is transcendental, that is, is not the root of any polynomial equation.</p>
+           
+           <p>Some interesting history about
+             the <a href="http://www-history.mcs.st-and.ac.uk/history/HistTopics/Quadratic_etc_equations.html">quadratic,
+             cubic, and quartic equations</a>, including the <i>solve-offs</i> that mathematicians
+             held in the 1500s. They are rather naturally bound to the discovery of complex
+             numbers. Some details
+             on <a href="http://www.sosmath.com/algebra/factor/fac11/fac11.html">how to solve a
+             cubic equation</a>, if you're curious.</p>
+	   
+	   <p><a href="https://en.wikipedia.org/wiki/Hilbert's_problems">Hilbert's problems</a>, ten of
+	     which were presented at the ICM in Paris in
+	     1900. His <a href="https://en.wikipedia.org/wiki/Hilbert's_tenth_problem">tenth
+	       problem</a>, on the solvability of Diphantine equations, spoke directly to the notion of
+	     computation.</p>
+           
+	   <p>When talking about set comprehension, I mentioned that there usually needs to be some
+	     restrictions on the properties allowed in order to ensure that the sets can be constructed
+	     by comprehension. <a href="https://plato.stanford.edu/entries/russell-paradox/">Russell's
+	       Paradox</a> is why we need such restrictions.</p>
+           
+	   <p>You may have noticed that union, intersection, and complementation of sets were defined
+	     using set comprehensions that uses conjunction, disjunction, and negation,
+	respectively. This close connection between set operations and logic is a reflection of the
+	     fact that sets form a <a href="https://en.wikipedia.org/wiki/Boolean_algebra">Boolean
+	       algebra</a>.</p>
+           
+         </div>
+         
+      </li>
+
+      <li><p><span class="hdr">Feb 6: </span><b>Finite state machines</b></p>
+
+         <div class="lect">
+            
+           <p>Reading: Chen, Sections 1.1 - 1.4.</p>
+
+           <p>Some <a href="automata.pdf">additional notes</a> on what I presented in class. (This presentation assumes we have regular expressions for the proof that finite state machines accept regular languages.)</p>
+           
+           <p>One reason we study nondeterministic forms of finite
+              automata is that they can be easier to describe than
+              deterministic finite automata. More specifically, there
+              exists languages that can be accepted by
+              nondeterministic finite automata with N states whose
+              smallest deterministic finite automata that accept those
+              same languages have at least 2<sup>N</sup> states. One
+              example is the language over {<tt>a</tt>,<tt>b</tt>}
+              consisting of all strings whose Nth from last symbol
+              is <tt>a</tt>. <a href="https://commons.wikimedia.org/wiki/File:NFA_with_exponential_blown-up_DFA.gif">Here
+              is an illustration</a> of the subset construction for
+              that language, over alphabet {0,1}, and N=4.</p>
+
+         </div>
+ 
+      </li>
+
+      <li><p><span class="hdr">Feb 13: </span><b>Higher-order programming in OCaml</b></p>
+	<div class="lect">
+
+	  <p>My personal notes on <a href="regular.pdf">regular and non-regular languages</a> that cover the first half of the lecture. These notes include a discussion of regular expressions, which I did not talk about but you should feel free to read. Regular expressions are just a convenient notation for regular languages, and are used to search for patterns in text. <a href="http://www.cs.columbia.edu/~tal/3261/fall07/handout/egrep_mini-tutorial.htm">Here is an example of how they are used in egrep</a>. Note that the equivalence between regular expressions and regular languages only holds for <i>pure</i> regular expressions. Most regular expression packages used in practice extend regular expressions in ways that let you express non-regular languages.</p>
+	  
+          <p>An <a href="https://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html">interesting article by Brian Kernighan</a> on elegant code for regular expression matching. Note that Kernighan's definition of regular expressions is more restricted than ours. (The point of the article is not regular expressions, but elegant code.)</p>
+	    
+          <p>The script for <a href="notes-functional.html">higher-order programming</a> that I mostly followed. Worth reading, as it talks about details that I skipped in places.</p>
+
+	  
+	</div>
+      </li>
+
+      <li><p><span class="hdr">Feb 23: </span><b>Turing machines</b></p>
+        <div class="lect">
+          <p>Reading: Chen, Section 2.1</p>
+          
+          <p>A <a href="./tm-anbn.png">diagram</a> of the Turing machine I showed in class to accept the langage {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup> | n &ge; 0}. If you want to practice, you can try to modify the machine to accept the languages {<tt>a</tt><sup>m</sup><tt>b</tt><sup>n</sup> | n &ge; m &ge; 0} and {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup><tt>c</tt><sup>n</sup> | n &ge; 0}.</p>
+            
+	  <p><a href="https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf"><i>On Computable
+	        Numbers, with an Application to the Entscheidungsproblem</i></a>, the original paper by
+	    Turing that describes his machines. (Though it's not the most accessible
+	    description.)</p>
+	  
+	  <p>As I mentioned, we can create a variant of finite automata that do not use a tape but that
+	    can count. The resulting model is called
+	    a <a href="https://en.wikipedia.org/wiki/Counter_automaton">counter automata</a>. When
+	    equipped with a single counter, it can accept languages such as
+	    {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup> | n &ge; 0}, but cannot accept all
+	    computable languages. When equipped with two counters, the resulting machines can accept
+	    all computable languages, and are equivalent to Turing machines.</p>
+	  
+	  </div>
+	</li>
+      
+      </li>
+
+      <li><p><span class="hdr">Feb 27: </span><b>Church-Turing thesis</b></p>
+        <div class="lect">
+          <p>Reading: Chen, Sections 2.6 &ndash; 2.7</p>
+
+	  <p>The <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis">Church-Turing
+	      thesis</a>.</p>
+
+          <p>Pithy mathematical description
+            of <a href="https://en.wikipedia.org/wiki/Multitape_Turing_machine">multi-tape Turing
+              machines</a>. I showed a two-tapes Turing machine in class, but clearly you can
+            generalize to <i>k</i>-tapes Turing machines for any <i>k</i>.</p>
+
+          <p>A <a href="sample-2tape.html">sample run</a> of the translation of a 2-tapes Turing machine for accepting palindromes over the alphabet {a, b}.</p>
+          
+          <p><a href="simple-cpu.pdf">Slides</a> describing the simple CPU I introduced.</p>
+
+	  <p>The abstract CPU I introduced in class is roughly based on the abacus model of Lambek, which is described in the first chapter of <a href="http://www.math.mcgill.ca/~barr/papers/pga.pdf"><i>Programs, Grammars, Arguments</i></a>. </p>
+
+        </div>
+      </li>
+
+      <li><p><span class="hdr">Mar 6: </span><b>Non-computable languages</b></p>
+          <div class="lect">
+            <p>(Quiz: finite state machines)</p>
+            
+            <p>Reading: Chen, Sections 2.2 &ndash; 2.4</p>
+
+            <p><a href="non-computability.pdf">Slides</a> from lecture.</p>
+
+            <p>I made remarks in class about the fact that the non-computability (also known as <i>undecidability</i>) of the halting problem for Turing machines impacts, via the Church-Turing thesis, any kind of reasoning that we wish to make about programs in modern programming languages. Matthew Might has an accessible account that <a href="https://matt.might.net/articles/intro-static-analysis/">describes how the non-computability of the halting problem impacts static analysis of programs</a>.
+
+            <p>From Wikipedia: the <a href="https://en.wikipedia.org/wiki/Halting_problem">Halting Problem</a>; <a href="https://en.wikipedia.org/wiki/Reduction_(complexity)">Reducibility</a>; <a href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice's Theorem</a>.</p>
+
+            <p>Here's a problem that is non-computable but doesn't involve Turing machines or interpreters for programming languages, showing that there are reasonable problems that are non-computable: the <a href="https://en.wikipedia.org/wiki/Post_correspondence_problem">Post Correspondence Problem</a>. Here's a <a href="pcp-proof.pdf">proof of non-computability</a> from Sipser, basically showing that you can reduce the Halting Problem for Turing machines to PCP.</p>
+          </div>
+      
+      </li>
+
+      <li><p><b>ALTERNATIVE MODELS</b></p></li>
+
+      <li><p><span class="hdr">Mar 20: </span><b>Production grammars</b></p>
+	  <div class="lect">
+
+            <p>Succinct <a href="./grammars.pdf">notes</a> from the lecture. It includes the
+            construction of the unrestricted grammar that can simulate a given Turing machine. (The
+            notes are using a <i>slightly</i> different definition of a Turing machine with a marker
+            at the beginning of the tape. It is completely equivalent to our definition of Turing
+            machines, by a straightforward application of the Church-Turing thesis.)</p>
+
+            <p>R&eacute;v&eacute;sz's book <a href="https://store.doverpublications.com/0486169375.html">Introduction to Formal Languages</a> is nice little book that covers everything we've done until now (finite automata, Turing machines, computability), but starting from the perspective of grammars. It's worth looking at if you like this material. Dover publications in general are a wonderful source of cheap mathematical material.</p>
+
+	    <p>Grammars are used in linguistics (introduced by <a href="https://en.wikipedia.org/wiki/Syntactic_Structures">Chomsky to study the structure of natural languages</a>) and in computer science to implement parsers, that is, turning a string of symbols into a structured artifact like an Abstract Syntax Tree to represent a program in a form that it more amenable to execution and/or compilation. <a href="http://homepages.cwi.nl/~storm/teaching/sc1112/intro-parsing.pdf">Here's
+	        a reasonable high-level presentation</a> of the basics of parsing, to give you a flavor.</p>
+
+	    <p>A beautiful application of grammars
+	      is <a href="https://en.wikipedia.org/wiki/L-system">L-systems</a>,
+	      a class of grammars that model the growth processes of plant
+	      development.</p>
+
+	    <p><a href="https://en.wikipedia.org/wiki/Pushdown_automaton">Pushdown automata</a> are machine models that exactly capture context-free languages:
+              a language A is context-free if and only if you can find a pushdown automaton that accepts A.</p>
+	  </div>
+      </li>
+
+      <li><p><span class="hdr">Mar 27: </span><b>Lambda calculus (1)</b></p>
+          <div class="lect">
+            <p>(Quiz: Turing machines)</p>
+            <p><a href="notes/lambda1.html">Notes from the lecture</a>.</p>
+	    <p>The fact that the order in which you perform simplifications in the lambda calculus doesn't matter (aside from the possibility of never reaching a normal form) is the <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Rosser_theorem">Church-Rosser property</a>.</p>
+	    <p>Some additional introductory references on the lambda calculus: <a href="http://palmstroem.blogspot.com/2012/05/lambda-calculus-for-absolute-dummies.html">The Lambda Calculus for Absolute Dummies (Like Myself)</a> and Rojas's <a href="http://www.inf.fu-berlin.de/lehre/WS03/alpi/lambda.pdf">A Tutorial Introduction to the Lambda Calculus</a>. Note that these references use the standard presentation of the calculus, with <i>&lambda;x.M</i> instead of <i>( x &rarr; M)</i>. These also cover some of the material I will talk about next time.</p>
+          </div>
+      </li>
+
+      <li><p><span class="hdr">Apr 3: </span><b>Lambda calculus (2)</b></p>
+          <div class="lect">
+            <p>(Quiz: simple CPU)</p>    
+            <p><a href="notes/lambda2.html">Notes from the lecture</a>.</p>
+
+	    <p>A general discussion of <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">fixed-point combinators</a>, of which &Theta; is an example.</p>
+
+            <p>Not strictly about the lambda calculus, but many of the ideas from the lambda calculus are embodied in the Lisp programming language, and I would get my CS membership card revoked if I didn't point you to <a href="https://web.mit.edu/6.001/6.037/sicp.pdf">Structure and Interpretation of Computer Programs</a>, which uses a Lisp-like language to explore all sorts of ideas for how to approach the art of programming.</p>
+
+	  </div>
+      </li>
+
+      <li><p><span class="hdr">Apr 10: </span><b>Dataflow Models</b></p>
+        <div class="lect">
+          <p>(Quiz: production grammars)</p>
+          
+          <p><a href="./dataflow.pdf">Notes</a> from the lecture.</p>
+          
+	  <p>There are two main sources for the dataflow
+	    computational model, neither of which is exactly what I
+	    presented: Gilles Kahn's work
+	    on <a href="https://en.wikipedia.org/wiki/Kahn_process_networks">Kahn
+	      Process Networks</a>, and Jack Dennis's work on
+	    <a href="http://www.capsl.udel.edu/courses/cpeg852/2014/slides/Topic-A-Dataflow-part1.pdf">dataflow
+	      architectures</a>.</p>
+
+          <p>You can also representing dataflow models programmatically via languages that provide support for infinite streams of values. This is sometimes called <i>stream programming</i>.</p>
+
+          <p><a href="https://en.wikipedia.org/wiki/Haskell_(programming_language)">Haskell</a> is a functional programming language with lazy evaluation, in which lists can be infinite, and therefore can be used to represent infinite streams of values, as an alternative  The most interesting language coming out of the Haskell tradition is <a href="https://en.wikipedia.org/wiki/Agda_(programming_language)">Agda</a>, which pushes a static type system to its limits, turning type checking into theorem proving. It's definitely worth digging into if you have the time.</p>
+
+              <p><a href="https://wiki.python.org/moin/Generators">Generators</a> such as found in Python and other languages can also be used to implement infinite streams of values.</p>
+
+	  <p>The programming language <a href="https://en.wikipedia.org/wiki/Lucid_(programming_language)">Lucid</a> embodies some of the ideas of stream programming in an interesting way.</p>
+          
+        </div>
+        
+      </li>
+      
+      <li><p><span class="hdr">Apr 24: </span><b>Type Systems </b></p>
+        <div class="lect">
+          <p>(Quiz: lambda calculus)</p>
+
+          <p><a href="./type-systems.pdf">Notes</a> from the lecture.</p>
+          
+          <p>Wikipedia entry on the <a href="https://en.wikipedia.org/wiki/Simply_typed_lambda_calculus">simply-typed lambda calculus</a>, which the theory underlying what I described in class. (We covered only the first two sections, if that, but we added primitive integer and Boolean types.). The page includes a link to Church's original paper <i><a href="https://pdfs.semanticscholar.org/28bf/123690205ae5bbd9f8c84b1330025e8476e4.pdf">A Formulation of the Simple Theory of Types</a></i>. The "simple theory of types" is a simplification of the <a href="https://plato.stanford.edu/entries/type-theory/">theory that Russell devised</a> to try to get around the paradoxes that he discovered in set theory. Yes, all of this is interrelated.</p>
+
+          <p>(There is actually a relationship between the simply-typed lambda calculus and a form of propositional logic called <a href="https://plato.stanford.edu/entries/logic-intuitionistic/">intuitionistic propositional logic</a>. That relationship is known as the Curry-Howard isomorphism, and is beautifully laid out in <a href="https://homepages.inf.ed.ac.uk/wadler/papers/propositions-as-types/propositions-as-types.pdf">Philip Wadler's <i>Propositions as Types</i></a>. In short, type checking is proving theorems in a simple logic. This can be pushed incredibly far, where the type system because a full-fledged theorem prover for a powerful logic. If that's intriguing to you, go and explore <a href="https://softwarefoundations.cis.upenn.edu/"><i>Software Foundations</i></a>.)</p>
+
+          <p><a href="https://en.wikipedia.org/wiki/Type_inference">Type inference</a> is the process of having the compiler infer the types of expressions automatically, before or while doing type checking. OCaml uses a form of the Hindley-Milner type system which admits a complete inference algorithm (linked to from the page above).</p>
+
+          <p>If you like type systems, you can dig into <a href="https://profs.sci.univr.it/~merro/files/harper.pdf">Bob Harper's <i>Practical Foundations for Programming Languages</i></a> which covers type systems and <i>so</i> much more.</p>
+
+          <p>Rust is a language whose type system goes beyond enforcing the kind of safety that OCaml (Java, Scala, etc) type systems enforce — it can be used to enforce <a href="https://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/book/first-edition/ownership.html">memory ownership</a>.</p>
+
+          <p>Oh, and if you make it this far: I lied in class. When talking about fixed point combinators, I said that OCaml doesn't let you write them because they do not type check, and that you would need a form of "recursive" types to type them. I really meant strict Hindley-Milner type systems. OCaml is a bit more general and does in fact have recursive types, mediated via the algebraic datatypes that I mentioned when talking about option types on one of the homeworks, and those enable you to write a fixed point combinator. To wit:
+
+            <pre>
+    type 'a recur =
+      | R of ('a recur -> 'a)
+    
+    let fix f =
+      let g x =
+        match x with
+        | R x -> f (fun v -> x (R x) v) in
+      g (R g)
+    
+    let ffact f n =
+      if n = 0 then 1 else n * f (n - 1)
+    
+    let fact = fix ffact </pre>
+            Note the utter lack of <tt>rec</tt> keyword. Yet trying it out shows that <tt>fact</tt> does in fact implement a recursive factorial:
+            <pre>
+    # #use "fix.ml";;
+    type 'a recur = R of ('a recur -> 'a)
+    val fix : (('a -> 'b) -> 'a -> 'b) -> 'a -> 'b = &lt;fun>
+    val ffact : (int -> int) -> int -> int = &lt;fun>
+    val fact : int -> int = &lt;fun>
+    # fact 3;;
+    - : int = 6
+    # fact 4;;
+    - : int = 24
+    # fact 10;;
+    - : int = 3628800
+    # fact 20;;
+    - : int = 2432902008176640000 </pre>
+
+        </div>
+      </li>
+
+      <li><p><span class="hdr">May 1: </span><b>TBD</b></p>
+      </li>
+
+    </ul>
+
+  </section>
+
+
+  <section id="homeworks">
+    
+    <h2>Homeworks</h2>
+    
+    <ul class="plain">
+      <li><a href="./homeworks/1">Homework 1</a> &mdash; due Sunday Feb 12 (23h59)</li>
+      <li><a href="./homeworks/2">Homework 2</a> &mdash; due <del>Sunday Feb 19</del> Tuesday Feb 21 (23h59)</li>
+      <li><a href="./homeworks/3">Homework 3</a> &mdash; due Tuesday Feb 28 (23h59)</li>
+      <li><a href="./homeworks/4">Homework 4</a> &mdash; due Tuesday Mar 7 (23h59)</li>
+      <li><a href="./homeworks/5">Homework 5</a> &mdash; due Tuesday Mar 28 (23h59)</li>
+      <li><a href="./homeworks/6">Homework 6</a> &mdash; due Tuesday Apr 4 (23h59)</li>
+      <li><a href="./homeworks/7">Homework 7</a> &mdash; due <del>Tuesday Apr 18</del> Friday Apr 21 (23h59)</li>
+      <li><a href="./homeworks/8">Homework 8</a> &mdash; due <del>Tuesday Apr 25</del> Friday Apr 28 (23h59)</li>
+    </ul>
+    
+  </section>
+  
+</main>

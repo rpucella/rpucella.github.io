@@ -1,0 +1,15 @@
+(let ((stop 10))
+  (loop L1 ((n 0)
+            (result empty))
+    (if (= n stop)
+      result
+      (let ((r (loop L2 ((m 0)
+                         (subresult empty))
+                 (if (= m n)
+                   subresult
+                   (do (print n m)
+                       (L2 (+ m 1) (cons n subresult)))))))
+        (L1 (+ n 1) (cons r result))))))
+                
+
+      

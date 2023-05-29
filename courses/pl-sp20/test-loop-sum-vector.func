@@ -1,0 +1,8 @@
+(let ((vec (cons 10 (cons 20 (cons 30 (cons 40 (cons 50 empty)))))))
+  (loop sum-vec ((curr vec)
+                 (sum 0))
+    (if (empty? curr)
+      sum
+      (do (print curr sum)
+          (sum-vec (rest curr) (+ sum (first curr)))))))
+          

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="stylesheet" href="../alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <style>
+      table.courses td {
+      padding-right: 20px;
+      }
+
+      ul.papers {
+      list-style: none;
+      padding-left: 0;
+      }
+
+      ul.papers li { 
+      padding: 5px 0;
+      }
+    </style>
+  </head>
+
+
+  <body>
+
+    <h1 class="clear">Bookmarklets</h1>
+
+    <p>
+      A <a href="https://en.wikipedia.org/wiki/Bookmarklet">bookmarklet</a> is a bookmark stored in a web browser that contains JavaScript commands that add new features to the browser. 
+    </p>
+    
+    <hr class="section">
+    <div class="section">
+      <h3>Convert Class List to Pictures</h3>
+      
+    <p>A bookmarklet that might be of interest to Olin faculty &mdash; it generates a grid of student pictures from the course class list. Drag this bookmarklet to your bookmarks toolbar and click on it when on the <b>Class List</b> page of your course on <a href="my.olin.edu">my.olin.edu</a> after the student pictures have all loaded:</p>
+    <p><center>
+	<a style="border:1px solid blue;padding:10px;" href="javascript:var num=6;var width=150;var height=200;var t=document.getElementById('pg0_V_ggClassList');var pics=t.querySelectorAll('tr td:nth-child(3)');var div=document.createElement('div');div.style.display='flex';div.style.flexDirection='row';div.style.flexWrap='wrap';div.style.width=(num*width+width/2)+'px';pics.forEach(function(elt){var subdiv=document.createElement('span');subdiv.style.display='flex';subdiv.style.flexDirection='column';subdiv.style.alignItems='center';subdiv.style.width=width+'px';subdiv.style.height=height+'px';var p=elt.querySelector('img');p.style.width='100px';subdiv.appendChild(p);var t=document.createTextNode(elt.innerText);subdiv.appendChild(t);div.appendChild(subdiv);});document.body.querySelectorAll('*').forEach(function(elt){elt.style.display='none';});document.body.style.background='none';document.body.appendChild(div);void(0);">Convert Class List to Pictures</a></center></p>
+    
+    <p>Here is the code, if you're curious: </p>
+
+    <pre>
+    var num = 6;      // number of tiles per row
+    var width = 150;  // width of tile
+    var height = 200; // height of tile
+
+    // grab all the pictures in the table in a NodeList
+    var t = document.getElementById("pg0_V_ggClassList");
+    var pics = t.querySelectorAll("tr td:nth-child(3)");
+
+    // create the tile container where we'll dump all the pictures
+    // it's a flexbox that wraps, whose width ensure that we have
+    // enough room for 'num' tiles but no more
+    var div = document.createElement("div");
+    div.style.display = "flex";
+    div.style.flexDirection = "row";
+    div.style.flexWrap = "wrap";
+    div.style.width = (num*width+width/2)+"px";
+
+    // iterate through all the table cells containing
+    // the picture and carry them over to the container above
+    pics.forEach(function(elt) {
+        // create a destination tile
+        var subdiv = document.createElement("span");
+        subdiv.style.display = "flex";
+        subdiv.style.flexDirection = "column";
+        subdiv.style.alignItems = "center";
+        subdiv.style.width = width+"px";
+        subdiv.style.height = height+"px";
+        // grab the picture and move it to the tile
+        var p = elt.querySelector("img");
+        p.style.width="100px";
+        subdiv.appendChild(p);
+        // grab the student name and copy it to the tile
+        var t = document.createTextNode(elt.innerText);
+        subdiv.appendChild(t);
+        div.appendChild(subdiv);
+    });
+    
+    // hide everything on the page which is not our container 
+    document.body.querySelectorAll("*").forEach(function(elt) { 
+        elt.style.display = "none";
+    });
+    document.body.style.background = "none";
+
+    // append our container to the page
+    document.body.appendChild(div);
+    </pre>
+
+    </div>
+    
+  </body>
+  

@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+</head>
+
+<body>
+
+<h1 id="notes-on-datalog">Notes on Datalog</h1>
+<p>SQL is declarative layer on top of relational algebra. But it is not the only way to query relational data.</p>
+<p>Datalog comes from deductive databases. It's an alternative to SQL that lets you write recursive queries. It is especially useful for recursive (hierarchical) data.</p>
+<p>Consider the following Sample employee hierarchy, as a table <code>Employee</code>.</p>
+<pre><code>| name    | manager | daysWorked |
++---------+---------+------------+
+| bob     | alice   | 100        |
+| xena    | bob     | 150        |
+| yuri    | bob     | 200        |
+| charlie | alice   | 250        |
+| dana    | charlie | 300        |
+| ulric   | dana    | 350        |
+| val     | dana    | 400        |</code></pre>
+<p>Note that datalog relies on accessing attributes of a query by position, and not by name.</p>
+<p>A datalog query is expressed as asking for all tuples of a relation that match a certain template. For example, asking for all the tuples in <code>Employee</code> where <code>bob</code> is the manager:</p>
+<pre><code>Employee(X, bob, D).</code></pre>
+<p>Capital letters are placeholder variables. This asks for all tuples where <code>b</code> is in the second (manager) position. The result is usually expressed as:</p>
+<pre><code>X = xena , D = 150
+X = yuri , D = 200</code></pre>
+<p>To write more elaborate queries, datalog lets us express intermediate relations that you can query. These intermediate relations are expressed using <em>deductive rules</em>. For instance, you can express a relation capturing an employee's manager's manager's as:</p>
+<pre><code>EmployeeManagerManager(X, Y) :- Employee(X, Z, _), Employee(Z, Y, _)</code></pre>
+<p>Read this from right to left: if <code>X</code> is an employee with manager <code>Z</code>, and <code>Z</code> is an employee with manager <code>Y</code>, then <code>Y</code> is <code>X</code>'s manager's manager. (Another reading is from left to right: <code>Y</code> is <code>X</code>'s manager's manager when <code>X</code> is an employee with manager <code>Z</code> (for some <code>Z</code>) and <code>Z</code> is an employee with manager <code>Y</code>. Pick whichever works best for you.) An <code>_</code> means that you don't care about the value being matched.</p>
+<p>You can then query for a manager's direct reports' direct reports with:</p>
+<pre><code>EmployeeManagerManager(X, charlie)</code></pre>
+<p>which should return:</p>
+<pre><code>X = ulric
+X = val</code></pre>
+<p>We require rules to be <em>range restricted</em>: every variable appearing in the head of a rule (before the <code>:-</code>) must also appear in the body of the rule (after the <code>:-</code>).</p>
+<p>Rules can be recursive, which lets you express a relation capturing whether an employee is a report of another, meaning that there is a chain of manager linking both employees:</p>
+<pre><code>Reports(X, Y) :- Employee(X, Y, _)
+Reports(X, Y) :- Employee(X, Z, _), Reports(Z, Y)</code></pre>
+<p>You can read this from left to right as <code>X</code> reports to <code>Y</code> if <code>Y</code> is <code>X</code>'s manager, or when <code>Z</code> is <code>X</code>'s manager (for some <code>Z</code>) and <code>Z</code> reports to <code>Y</code>.</p>
+<p>If you were to explicitly construct relation <code>Reports</code>, it would look like:</p>
+<pre><code>+---------+---------+
+| bob     | alice   |
+| xena    | alice   |
+| yuri    | alice   |
+| charlie | alice   |
+| dana    | alice   |
+| ulric   | alice   |
+| val     | alice   |
+| xena    | bob     |
+| yuri    | bob     |
+| dana    | charlie |
+| ulric   | charlie |
+| val     | charlie |
+| ulric   | dana    |
+| val     | dana    |
++---------+---------+</code></pre>
+<p>Another example: determining the difference in levels between two employees:</p>
+<pre><code>Difference(X, Y, 1) :- Employee(X, Y, _)
+Difference(X, Y, N) :- Employee(X, Z, _), Difference(Z, Y, M), N = M + 1</code></pre>
+<p>Querying for <code>Difference(u, b, D)</code> should yield the difference in levels between <code>u</code> and <code>b</code>, which is <code>D = 21</code>.</p>
+<p>Example: two employees are teammates if they have the same manager:</p>
+<pre><code>Teammates(X, Y) :- Employee(X, Z), Employee(Y, Z)</code></pre>
+<p>How do we think about the relations constructed by datalog rules? One way to think about it is in terms of something like the tuple relational calculus. If you consider the rules of relation <code>Reports</code> above:</p>
+<pre><code>Reports(X, Y) :- Employee(X, Y, _)
+Reports(X, Y) :- Employee(X, Z, _), Reports(Z, Y)</code></pre>
+<p>and you reflect about the &quot;meaning&quot; that we gave them, you can think of them as defining a relation <code>Reports</code> defined by the following property (*):</p>
+<pre><code>Reports = { t : ∃s ∈ Employee with t[0] = s[0] and t[1] = s[1], 
+                or ∃s ∈ Employee, u ∈ Reports with t[0] = s[0], t[1] = u[1], and s[1] = t[0] }</code></pre>
+<p>Note that this is not a proper definition -- you cannot define a set in terms of itself. The above is an equation, and a solution to the equation is a set <code>Reports</code> that satisfies the equation.</p>
+<p>How do you solve such an equation? It's usually tricky business. But in this case, the properties corresponding to the datalog rules we've seen all have a monotonicity property: adding more tuples to base relations only lead to more tuples added to any potential solution to the equation, and never fewer. This means that we can use a simple least-fixed-point computation to get a solution:</p>
+<ul>
+<li>Let <em>S</em> be the empty set -- this is our target solution</li>
+<li>Compute <em>S'</em> to be the result obtained from property (*) above, replacing <code>Reports</code> in the property by <em>S</em></li>
+<li>Take the new <em>S</em> to be <em>S</em> unioned with <em>S'</em></li>
+<li>Repeat until nothing gets added to <em>S</em></li>
+<li>Take <code>Reports</code> to be the final set of tuples <em>S</em>.</li>
+</ul>
+<p>Negation is a feature that is useful in a query language, but is also tricky. For instance, you could write a query that says that there is no reporting relation between two employees:</p>
+<pre><code>NotReports(X, Y) :- Employee(X, _, _), Employee(Y, _, _), not Reports(X, Y).</code></pre>
+<p>One restriction on negation is that a variable can only appear in a negated atom (a component of the body of a rule) when it also appears in a non-negated atom. Such a rule is said to be safe.</p>
+<p>Another restriction on negation is that the rules must be <em>stratified</em>. This is to ensure that the process we described earlier to find a solution to equations obtained from datalog rules still applies. Negation destroys monotonicity, and stratification basically ensure enough monotonicity for the least-fixed-point computation to proceed.</p>
+<p>Intuitively, statification means partitioning the relations defined by a set of rules into different strata, where the rules defining relations in one strata can only use negated atoms involving rules in a lower stratum.</p>
+<p>More formally, say that a relation <code>R</code> depends positively on a relation <code>S</code> if every rule for <code>R</code> that refers to <code>S</code> only uses <code>S</code> without negating it. Say that a relation <code>R</code> depends negatively on a relation <code>S</code> if some rule for <code>R</code> refers to <code>S</code> under a negation.</p>
+<p>A stratification for a set of relations defined by rules is a partition of the relations into strata 1, ..., N such that whenever <code>R</code> depends positively on <code>S</code>, then the stratum of <code>R</code> is greater than or equal to the stratum of <code>S</code>, and whenever <code>R</code> depends negatively on <code>S</code>, then the stratum of <code>R</code> is strictly greater than the stratum of <code>S</code>.</p>
+<p>This means that we can determine the tuples in all the relations in statum 1 first. Then use that to determine the tuples in the relations in stratum 2, and so on. If we ever need to determine that a tuple is <em>not</em> in a given relation <code>S</code> when defining relation <code>R</code>, then since <code>S</code> is required to live in a previous stratum, we already know the content of <code>S</code>, and therefore can safely determine whether the tuple is not in <code>S</code> without worrying that the construction will later add the tuple to <code>S</code> and contradict our results.</p>
+<p>Stratification is also useful when considering aggregated Datalog, which is an extension of Datalog that allows aggregation. It can be written as follows:</p>
+<pre><code>AvgDaysWorkedDirectReports(X, AVG(&lt;D&gt;)) :- Employee(Y, X, D)</code></pre>
+<p>This is roughly equivalent to the SQL query</p>
+<pre><code>SELECT manager, AVG(daysWorked) AS avgDaysWorked
+FROM Employee
+GROUP BY manager</code></pre>
+<p>minus the naming of the attributes in the resulting relation.</p>
+<p>Again, this can only be made sense of if the relation being aggregated over is fully known when computing the aggregation. Therefore, the rules must again be stratified, with a variant definition of stratification with the additional clause: whenever <code>R</code> depends aggregatively on <code>S</code>, then the stratum of <code>R</code> is strictly greater than the stratum of <code>S</code>. A relation <code>R</code> depends aggregatively on relation <code>S</code> if some rule defining <code>R</code> with an aggregation operator over some variable <code>X</code> refers to <code>S</code> in the body of the rule using variable <code>X</code>.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+  </head>
+
+  <body>
+    <pre>
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+func Clamp(min float32, max float32, v float32) float32 {
+    if v > max {
+        return max
+    }
+    if v < min {
+        return min
+    }
+    return v
+}
+
+func Interpolate(min float32, max float32, v float32) float32 {
+    if min == max {
+        return min
+    }
+    // [0, 1] <-> [min, max]
+    //   v    <->     v'
+    //   v             min + v * (max - min)
+    delta := max - min
+    return min + v * delta
+}
+
+func Roots(a float64, b float64, c float64) (float64, float64) {
+    d := (b * b) - (4.0 * a * c)
+    if a == 0 {
+        panic("equation is not quadratic")
+    }
+    if d < 0 {
+        panic("equation doesn't have real roots")
+    }
+    return (-b + math.Sqrt(d)) / (2.0 * a), (-b - math.Sqrt(d)) / (2.0 * a)
+}
+
+func PadLeft(s string, n int) string {
+    if n < 0 {
+        return ""
+    }
+    if n <= len(s) {
+        return s
+    }
+    result := s
+    for i := 0; i < n; i++ {
+        result = " " + result
+    }
+    return result[len(result) - n :]
+}
+
+func PadRight(s string, n int) string {
+    if n < 0 {
+        return ""
+    }
+    if n <= len(s) {
+        return s
+    }
+    result := s
+    for i := 0; i < n; i++ {
+        result = result + " "
+    }
+    return result[: n]
+}
+
+func PadBoth(s string, n int) string {
+    if n < 0 {
+        return ""
+    }
+    if n <= len(s) {
+        return s
+    }
+    result := s
+    if len(s) % 2 == 1 && n % 2 == 0 {
+        result += " "
+    }
+    for i := 0; i < n; i++ {
+        result = " " + result + " "
+    }
+    return result[len(result) / 2 - n / 2 : len(result) / 2 + n / 2]
+}
+
+func Squares(n int) []int {
+    // Return an array filled with the first N square numbers starting at 1 = 1 * 1.
+    if n < 0 {
+        return nil
+    }
+    arr := make([]int, n)
+    for i, _ := range arr {
+        arr[i] = (i + 1) * (i + 1)
+    }
+    return arr
+}
+
+func Range(n int, m int) []int {
+    dir := 1
+    if n > m {
+        dir = -1
+    }
+    diff := dir * (m - n)
+    arr := make([]int, diff)
+    for i, _ := range arr {
+        arr[i] = n + (dir * i)
+    }
+    return arr
+}
+
+func collatzNext(n int) int {
+        if n % 2 == 0 {
+            return n / 2
+        } else {
+            return (3 * n) + 1
+        }
+}
+
+func CollatzCount(n int) int {
+    // Helper function for next two functions.
+    if n <= 0 {
+        panic("collatz with non-positive input")
+    }
+    curr := n
+    count := 0
+    for curr != 1 {
+        curr = collatzNext(curr)
+        count++
+    }
+    return count
+}
+
+func CollatzSequence(n int) []int {
+    if n <= 0 {
+        panic("collatz with non-positive input")
+    }
+    count := CollatzCount(n)
+    result := make([]int, count + 1)
+    curr := n
+    for i := 0; i < count; i++ {
+        result[i] = curr
+        curr = collatzNext(curr)
+    }
+    result[count] = 1
+    return result
+}
+
+
+func NewVector(n int, mk func(int)float32) []float32 {
+    if n < 1 {
+        panic("vector with non-positive size")
+    }
+    result := make([]float32, n)
+    for i, _ := range result {
+        result[i] = mk(i)
+    }
+    return result
+}
+
+func ScaleVector(sc float32, v1 []float32) []float32 {
+    result := make([]float32, len(v1))
+    for i, _ := range result {
+        result[i] = sc * v1[i]
+    }
+    return result
+}
+
+func AddVector(v1 []float32, v2 []float32) []float32 {
+    if len(v1) != len(v2) {
+        panic("vectors not of the same length")
+    }
+    result := make([]float32, len(v1))
+    for i, _ := range result {
+        result[i] = v1[i] + v2[i]
+    }
+    return result
+}
+
+func InnerProduct(v1 []float32, v2 []float32) float32 {
+    if len(v1) != len(v2) {
+        panic("vectors not of the same length")
+    }
+    result := float32(0)
+    for i, val := range v1 {
+        result += val * v2[i]
+    }
+    return result 
+}
+
+func NewMatrix(rows int, cols int, mk func(int, int) float32) [][]float32 {
+    if rows < 1 {
+        panic("rows is non-positive")
+    }
+    if cols < 1 {
+        panic("cols is non-positive")
+    }
+    result := make([][]float32, rows)
+    for i := 0; i < rows; i++ {
+        result[i] = make([]float32, cols)
+        for j := 0; j < cols; j++ {
+            result[i][j] = mk(i, j)
+        }
+    }
+    return result
+}
+
+func SizeMatrix(m [][]float32) (int, int) {
+    rows := len(m)
+    if rows < 1 {
+        panic("empty matrix")
+    }
+    cols := len(m[0])
+    for _, row := range m {
+        if len(row) != cols {
+            panic("malformed matrix")
+        }
+    }
+    return rows, cols
+}
+
+func ScaleMatrix(sc float32, m [][]float32) [][]float32 {
+    rows, cols := SizeMatrix(m)
+    result := make([][]float32, rows)
+    for i, _ := range result {
+        result[i] = make([]float32, cols)
+        for j, _ := range result[i] {
+            result[i][j] = sc * m[i][j]
+        }
+    }
+    return result
+}
+
+func AddMatrix(m1 [][]float32, m2 [][]float32) [][]float32 {
+    rows1, cols1 := SizeMatrix(m1)
+    rows2, cols2 := SizeMatrix(m2)
+    if rows1 != rows2 || cols1 != cols2 {
+        panic("m1 and m2 have different sizes")
+    }
+    result := make([][]float32, rows1)
+    for i, _ := range result {
+        result[i] = make([]float32, cols1)
+        for j, _ := range result[i] {
+            result[i][j] = m1[i][j] + m2[i][j]
+        }
+    }
+    return result
+}
+
+func TransposeMatrix(m [][]float32) [][]float32 {
+    rows, cols := SizeMatrix(m)
+    result := make([][]float32, cols)
+    for i, _ := range result {
+        result[i] = make([]float32, rows)
+        for j, _ := range result[i] {
+            result[i][j] = m[j][i]
+        }
+    }
+    return result
+}
+
+func MultMatrix(m1 [][]float32, m2 [][]float32) [][]float32 {
+    rows1, cols1 := SizeMatrix(m1)
+    rows2, cols2 := SizeMatrix(m2)
+    if cols1 != rows2 {
+        panic("m1 and m2 are incompatible")
+    }
+    result := make([][]float32, rows1)
+    for i := range result {
+        result[i] = make([]float32, cols2)
+        for j, _ := range result[i] {
+            for k, _ := range m1[i] {
+                result[i][j] += (m1[i][k] * m2[k][j])
+            }
+        }
+    }
+    return result
+}
+
+
+func multiplyRow(m [][]float32, row int, mult float32) {
+    // Helper function for InvertMatrix.
+    // Multiply a matrix row by a scalar.
+    for j := range m[row] {
+        m[row][j] = m[row][j] * mult
+    }
+}
+
+func subtractRow(m [][]float32, src int, tgt int, v float32) {
+    // Helper function for InvertMatrix.
+    // Subtract a multiple of a row from another row.
+    for j := range m[tgt] {
+        m[tgt][j] = m[tgt][j] - v * m[src][j]
+    }
+}
+    
+func InvertMatrix(m [][]float32) [][]float32 {
+    rows, cols := SizeMatrix(m)
+    if rows != cols {
+        panic("not a square matrix")
+    }
+    initial := make([][]float32, rows)
+    for i := range m {
+        initial[i] = make([]float32, cols)
+        for j := range m[i] {
+            initial[i][j] = m[i][j]
+        }
+    }
+    result := make([][]float32, rows)
+    for i := range m {
+        result[i] = make([]float32, cols)
+        result[i][i] = 1
+    }
+    for i := range initial {
+        if initial[i][i] == 0 {
+            panic("matrix not invertible")
+        }
+        mult := 1.0 / initial[i][i]
+        multiplyRow(initial, i, mult)
+        multiplyRow(result, i, mult)
+        for j := range initial {
+            // Zero out every other column entry in column i.
+            if j != i {
+                v := initial[j][i]
+                subtractRow(initial, i, j, v)
+                subtractRow(result, i, j, v)
+            }
+        }
+    }
+    fmt.Println(initial)
+    return result
+}
+
+func main() {
+    fmt.Println("You can write some sample tests for yourself here.")
+    fmt.Println("****************************************")
+    fmt.Println(Clamp(10.0, 20.0, 5.0))
+    fmt.Println(Clamp(10.0, 20.0, 25.0))
+    fmt.Println(Clamp(10.0, 20.0, 15.0))
+    fmt.Println("****************************************")
+    fmt.Println(Interpolate(10.0, 20.0, 0))
+    fmt.Println(Interpolate(10.0, 20.0, 1))
+    fmt.Println(Interpolate(10.0, 20.0, 0.5))
+    fmt.Println(Interpolate(10.0, 20.0, 0.25))
+    fmt.Println(Interpolate(10.0, 20.0, 1.5))
+    fmt.Println(Interpolate(20.0, 10.0, 1.5))
+    fmt.Println("****************************************")
+    fmt.Println(Roots(1.0, 2.0, -3.0))
+    fmt.Println(Roots(2.0, 1.0, -5.0))
+    fmt.Println(Roots(2.0, 10.0, 2.0))
+    fmt.Println("****************************************")
+    fmt.Println(PadLeft("test", 10))
+    fmt.Println(PadLeft("this is a longer test", 10))
+    fmt.Println("****************************************")
+    fmt.Println(PadRight("test", 10))
+    fmt.Println(PadRight("this is a longer test", 10))
+    fmt.Println("****************************************")
+    fmt.Println(PadBoth("test", 10))
+    fmt.Println(PadBoth("this is a longer test", 10))
+    fmt.Println(PadBoth("a", 3))
+    fmt.Println(PadBoth("a", 4))
+    fmt.Println(PadBoth("ab", 3))
+    fmt.Println(PadBoth("ab", 4))
+    fmt.Println("****************************************")
+    fmt.Println(Squares(0))
+    fmt.Println(Squares(5))
+    fmt.Println(Squares(10))
+    fmt.Println("****************************************")
+    fmt.Println(Range(0, 10))
+    fmt.Println(Range(10, 10))
+    fmt.Println(Range(10, 11))
+    fmt.Println(Range(10, 20))
+    fmt.Println(Range(20, 10))
+    fmt.Println(Range(11, 10))
+    fmt.Println("****************************************")
+    fmt.Println(CollatzCount(1))
+    fmt.Println(CollatzCount(10))
+    fmt.Println(CollatzCount(20))
+    fmt.Println(CollatzCount(23))
+    fmt.Println("****************************************")
+    fmt.Println(CollatzSequence(1))
+    fmt.Println(CollatzSequence(10))
+    fmt.Println(CollatzSequence(20))
+    fmt.Println(CollatzSequence(23))
+    fmt.Println("****************************************")
+    fmt.Println(NewVector(3, func(i int) float32 { return 42.0 }))
+    fmt.Println(NewVector(3, func(i int) float32 { return float32(i) + 10.0 }))
+    fmt.Println("****************************************")
+    v1 := []float32{1.0, 2.0, 3.0}
+    v2 := []float32{-30.0, -20.0, -10.0}
+    fmt.Println(ScaleVector(1.0, v1))
+    fmt.Println(ScaleVector(2.0, v1))
+    fmt.Println(ScaleVector(-2.0, v1))
+    fmt.Println("****************************************")
+    fmt.Println(AddVector(v1, v1))
+    fmt.Println(AddVector(v1, v2))
+    fmt.Println(AddVector(v2, v2))
+    fmt.Println("****************************************")
+    fmt.Println(InnerProduct(v1, v1))
+    fmt.Println(InnerProduct(v1, v2))
+    fmt.Println(InnerProduct(v2, v2))
+    fmt.Println("****************************************")
+    fmt.Println(NewMatrix(3, 3, func(i int, j int) float32 { if i == j { return 1 } else { return 0 } }))
+    fmt.Println(NewMatrix(2, 3, func(i int, j int) float32 { return float32(i) * 3 + float32(j) + 1}))
+    fmt.Println("****************************************")
+    m0 := [][]float32{{1, 0}, {0, 1}}
+    m1 := [][]float32{{1, 2, 3}, {4, 5, 6}}
+    m2 := [][]float32{{-6, 5, -4}, {3, -2, 1}}
+    fmt.Println(SizeMatrix(m0))
+    fmt.Println(SizeMatrix(m1))
+    fmt.Println(SizeMatrix(m2))
+    fmt.Println("****************************************")
+    fmt.Println(ScaleMatrix(1.0, m1))
+    fmt.Println(ScaleMatrix(2.0, m1))
+    fmt.Println(ScaleMatrix(-3.0, m1))
+    fmt.Println("****************************************")
+    fmt.Println(TransposeMatrix(m0))
+    fmt.Println(TransposeMatrix(m1))
+    fmt.Println(TransposeMatrix(m2))
+    fmt.Println("****************************************")
+    fmt.Println(AddMatrix(m1, m1))
+    fmt.Println(AddMatrix(m1, m2))
+    fmt.Println(AddMatrix(m2, m2))
+    fmt.Println("****************************************")
+    m3 := [][]float32{{10}, {20}, {30}}
+    m4 := [][]float32{{10, 20}, {30, 40}, {50, 60}}
+    fmt.Println(MultMatrix(m1, m3))
+    fmt.Println(MultMatrix(m4, m1))
+    fmt.Println("****************************************")
+    m5 := [][]float32{{8, 7, 10}, {11, 9, 12}, {6, 13, 14}}
+    m5inv := InvertMatrix(m5)
+    fmt.Println("m5 =", m5)
+    fmt.Println("inv(m5) =", m5inv)
+    fmt.Println("m5 * inv(m5) =", MultMatrix(m5, m5inv))
+}
+      
+    </pre>
+  </body>
+</html>
+
+  
+  

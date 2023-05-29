@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Older Announcements</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+/*           background: #e6e6e6; */
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+      
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+      ol.question > li {
+      font-weight: bold;
+      }
+
+      ol.question > li > * {
+      font-weight: normal;
+      }
+      
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Programming Languages FA16</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Older Announcements</h1>
+
+      <ul class="simple annoucements">
+
+	<li><p class="ann"><span class="hdr">Nov 9:</span>
+	    <a href="project.html">Some notes on the final
+	      project</a>. <b>Reminder</b>: by November 18th, please send me a
+	    quick description of what you propose to do for your final
+	    project.  I'm happy to discuss anything you have in mind
+	    before then, of course. The link I gave you has some
+	    suggestions, in case you're stumped, but don't feel
+	    constrained by them. The final presentations will be
+	    during our Final Assessment period on December 13 (4-7pm).</p>
+	</li>
+
+	<li><p class="ann"><span class="hdr">Nov 8:</span>
+	    Full lecture notes on compilation, for the last two classes, are available below, along with sample code.
+	</p></li>
+	
+	<li><p class="ann"><span class="hdr">Nov 2:</span>
+	    <a foo="./homework7.html">Homework 7</a> is out. Due Friday Nov 18, right before Thanksgiving Break.
+	</p></li>
+
+	<li><p class="ann"><span class="hdr">Nov 2:</span>
+	    Notes and sample code for our first lecture on compilation available.
+	</p></li>
+
+	<li><p class="ann"><span class="hdr">Oct 31:</span>
+	    Notes and sample code for the lecture on continuations now available below.
+	</p></li>
+
+	<li><p class="ann"><span class="hdr">Oct 27:</span>
+	    Additional instructions for Homework 6 submission: Along with your usual submission of the <tt>homework6.py</tt> file containing your source code, please describe in your submission email (or a subsequent email if you've already submitted <tt>homework6.py</tt>) how you answered the various questions. More specifically:<br><br>
+	    For Question (1), describe the syntax of your for-loop implementation, and show a transcript of running your shell and some example of your for-loop in action.<br><br>
+	    For Question (2), show a transcript of running your shell and running all the required operations on strings.<br><br>
+	    For Question (3), describe briefly how you implemented procedures (so I can navigate your code) and give a transcript of defining and using procedures from your shell.<br><br>
+	    For Question (4), again describe briefly how you implemented arrays (so I can navigate your code) and give a transcript of defining and using arrays from your shell. Give the full code of your quicksort procedure, and give a transcript of running it from your shell.<br><br>
+	    You can also add the above as a long comment at the bottom of your homework6.py file. Just let me know that it's there in your email.<br><br>
+	  The above doesn't have to be long. It just has to tell me what to look for and how to test your code.<br><br>
+	    Because you may not have factored the above into your work time, I'll happily accept submissions for homework 6 until Saturday 5pm.
+	  </p>
+	</li>
+	    
+	<li><p class="ann"><span class="hdr">Oct 27:</span> 
+	    Updated the lecture notes on objects to add a section about inheritance. Also added some <a href="code-lect-06-obj-inheritance.py">sample code for an object system with inheritance</a>.
+	  </p>
+	</li>
+
+	<li><p class="ann"><span class="hdr">Oct 22:</span> 
+	    Question 4 of <a foo="homework6.html">Homework 6</a> is out. 
+	  </p>
+	</li>
+
+	<li><p class="ann"><span class="hdr">Oct 21:</span>
+	    Notes and sample code from the lecture on objects now available.
+	</p></li>
+
+	<li><p class="ann"><span class="hdr">Oct 15:</span>
+	    The first part of <a foo="homework6.html">Homework 6</a> is out. The second part (Question 4) will be added after the next lecture, since it will involve objects.</p>	</li>
+	
+	<li><p class="ann"><span class="hdr">Oct 14:</span>
+	    Added the <a href="code-lect-05-refs.py">sample code</a> from the Mutable State lecture.</p></li>
+
+	<li><p class="ann"><span class="hdr">Oct 11:</span>
+	    Slight modification to the top-level environments in Homework 5 to make answering Question 3 a bit easier. If you already started changing the file, just copy the new <tt>initial_env()</tt> and <tt>initial_env_curry()</tt> functions. (There were weird corner cases that could go wrong in the earlier version. My changes make the hint I gave unnecessary.)</p></li>
+
+	<li><p class="ann"><span class="hdr">Oct 11:</span>
+	    Slides and notes for the lecture on mutable state are available below. Sample code will be available on Friday after homework 5 is due, since it will contain solutions to some of the homework's questions.</p></li>
+
+	<li><p class="ann"><span class="hdr">Oct 6:</span>
+	    <a foo="homework5.html">Homework 5</a> is out. Note the due date.
+	</p></li>
+
+	<li><p class="ann"><span class="hdr">Oct 4:</span>
+	    Slides and code for the lecture on first-class functions are available below.
+	</p></li>
+	
+	<li><p class="ann"><span class="hdr">Sep 29:</span>
+	    Second (last) question of <a foo="homework4.html">Homework 4</a> is out.
+	</p></li>
+
+	<li><p class="ann"><span class="hdr">Sep 28:</span>
+	    First question of <a foo="homework4.html">Homework 4</a> is out.
+	</p></li>
+
+	<li><p class="ann"><span class="hdr">Sep 22:</span>
+	    Slightly modified Question 2(a) on <a foo="homework3.html">Homework 3</a> to specify the result of <tt>parse</tt>.
+	</p></li>
+
+	<li><p class="ann"><span class="hdr">Sep 21:</span>
+	    <a foo="homework3.html">Homework 3</a> is out.
+	</p></li>
+
+	<li><p class="ann"><span class="hdr">Sep 20:</span>
+	    Slides and code for the lecture on surface syntax are available below.
+	    I've simplified and corrected the slides somewhat; the recursive-descent parser pseudocode now correctly tracks the tokens left unparsed. I've also added a bunch of relevant links. Please install <a href="http://pyparsing.wikispaces.com/">Pyparsing</a> and start reading the docs. </p></li>
+
+	<li><p class="ann"><span class="hdr">Sep 15:</span> I just realized that a change that I made to the homework last night didn't actually commit. It's a simplifying change. For <tt>ELetV</tt> and <tt>ELetN</tt> in Question 2, you do not need to support simultaneous bindings. Just have <tt>ELetV</tt> and <tt>ELetN</tt> handle a single binding, the way my original <tt>ELet</tt> worked before you modified it in Question 1.</p>
+</li>
+
+	<li><p class="ann"><span class="hdr">Sep 14:</span>
+	    <a foo="homework2.html">Homework 2</a> fully out.
+	</p></li>
+	    
+	    <li><p class="ann"><span class="hdr">Sep 14:</span>
+	    First question of <a foo="homework2.html">homework 2</a> is out. I'll add the remaining two questions after dinner. Since I'm giving you this a day later than I wanted, I'll drop one of the things I was going to ask you (or just make it an additional extra). Thanks for your patience.</p></li>
+
+	<li><p class="ann"><span class="hdr">Sep 13:</span>
+	    Slides and code for the lecture on identifiers and the
+	    substitution model are available
+	    below. Homework 2 should be out soon.</p></li>
+
+	<li><p class="ann"><span class="hdr">Sep 7:</span>
+	    I've added the sample outputs to homework 1. That should give you something to test. Also, I added the obvious missing question from part (3), namely extending <tt>EPlus</tt>, <tt>EMinus</tt>, and <tt>ETimes</tt> to work with rationals. Sorry about the overlook.</p></li>
+
+	<li><p class="ann"><span class="hdr">Sep 6:</span>
+	    Slides and code for the first lecture are available below. <a foo="homework1.html">Homework 1</a> is out, due next Monday. I will put in some sample outputs tomorrow morning.</p></li>
+
+      	<li><p class="ann"><span class="hdr">Sep 1:</span>
+	    Happy start of the semester!</p></li>
+
+      </ul>
+
+  </body>
+</html>

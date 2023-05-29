@@ -1,0 +1,34 @@
+<script>
+  document.querySelector("#home").classList.add("active")
+</script>
+
+<main>
+
+  <section>
+  
+  <h1>Riccardo Pucella</h1>
+  
+  <p>I lead the Digital Data Experience team in the Product Group at <a href="http://www.forrester.com">Forrester Research</a>.</p>
+
+  <p>These days, I mostly work on architecture and backend infrastructure.</p>
+
+  <p>I still retain a love of programming language design and implementation.</p>
+
+  <p>You can find some code on my <a href="https://github.com/rpucella">GitHub page</a>.</p>
+
+  <p>Once in a while, I teach a course at <a href="http://www.olin.edu/">Olin College of Engineering</a>.</p>
+
+  <p>In a <a href="http://www.ccs.neu.edu/home/riccardo/">previous life</a>, I was on faculty at Northeastern University in the College of Computer and Information Science.</p>
+
+  </section>
+  
+  <section>
+    <h2>What's New?</h2>
+    
+    <ul class="plain">
+      <li>2022-11-01 — I'm teaching <a href="/courses/focs-sp23">Foundations of Computer Science</a> at Olin College in Spring 2023.</li>
+      <li>2022-06-01 — I'm teaching <a href="/courses/dsa-fa22">Data Structures and Algorithms</a> at Olin College in Fall 2022.</li>
+    </ul>
+  </section>
+  
+</main>

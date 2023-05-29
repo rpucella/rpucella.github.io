@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = "Static Web Site Generation (Part 1)" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Static Web Site Generation (Part 1)</h3>
+    
+    <div class="date">Mar 23, 2023</div>
+    
+    <div class="body">
+      <p>Creating a static web site generator seems to have become a rite of passage. Perhaps it always has been?</p>
+
+<p>A static web site generator is a tool for taking some representation of the content of a website,
+and generating from it a set of static web pages in a way that can be served by an off-the-shelf web
+server, generally using simple file-based routing.</p>
+
+<p>There is no shortage of static web site generators out there.  <a href="https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/about-github-pages-and-jekyll">GitHub supports Jekyll</a> out of the
+box. Friends have successfully used <a href="https://gohugo.io/">Hugo</a>. I've used <a href="https://www.gatsbyjs.com/">Gatsby</a> myself for a work project before
+switching to <a href="https://nextjs.org/docs/advanced-features/static-html-export">Next.js</a>. There's a lot of great technology out there for static web site generation.</p>
+
+<p>Yet, here I am, maintaining my website using a DIY static web site generator. It's the age-old
+story. My website has always been a set of static pages hosted on GitHub pages, because I wanted it
+to be low maintenance. But eventually I wanted a consistent navigation bar atop my site across these
+static pages.  Using Javascript for that felt like overkill.  So I cooked up a small script to add
+the navigation bar to every page.</p>
+
+<p>The next natural step was to generalize the script to control where the banner went on a page. From
+there, it was a small step to use a page layout as a template that would get filled by the content
+specific to any given page of the site. Once you have the notion of a page layout, it is another
+small step to support different page layouts for different part of the site. And once you have the
+page content separated from the layout of the page, well, that page content can easily be written in
+some other format and converted to HTML.  Which is the first step in supporting content written as
+posts for a blog hosted on the site, doesn't it? The kind of blog post like the one you're currently reading.</p>
+
+<p>Yes, I know. I simply recreated the exact reasoning that went into the creation of these static web
+site generators I just mentioned.  I am not claiming originality here. But it's been a fun and
+natural process, and I ended up with something that feels perfectly adapted to my current workflow.
+My dependencies are minimal and I spend no time maintaining the tool.</p>
+
+<p>I am of course <a href="http://jonashietala.se/blog/2022/08/29/rewriting_my_blog_in_rust_for_fun_and_profit/">not alone in this approach</a>.  It's an easy way to experiment with site generation.
+Designers seem to <a href="https://ethanmarcotte.com/wrote/let-a-website-be-a-worry-stone/">feel the same</a> about their own website.</p>
+
+<p>This post (and upcoming ones) will dig into the details of my tool, in case you're curious.</p>
+
+<h1>The <code>webgen</code> tool</h1>
+
+<p>The tool, called <code>webgen</code>, is built around two ideas:</p>
+
+<ul>
+<li>templates living at multiple levels of the folder hierarchy;</li>
+<li>dependency-based content generation.</li>
+</ul>
+
+<p>These are obviously not new ideas, but finding a balance between simplicity and usefulness has been
+entertaining.</p>
+
+<p>The tool is implemented in <a href="https://go.dev/">Go</a>, my preferred programming language for personal projects for the last
+year. It is statically typed, completely procedural, and the closest to programming in C that I've
+felt in a long while — but without the memory management headaches.  That Go compiles to a single
+statically-linked executable is a bonus.  The code for the tool is part of the <a href="https://github.com/rpucella/rpucella.github.io">Git repository of this
+website</a>, which I recognize is not great for sharing.  (I will likely move it to its own git repository at
+some future date, or if there's a need to it. <strong>UPDATE</strong>: <a href="https://github.com/rpucella/webgen">done</a>) This website as a whole in fact serves as an example
+of using <code>webgen</code> to create a static web site.</p>
+
+<p>The idea of templates living at multiple levels of the folder hierarchy is simple. You create your
+static website as usual, with possibly nested folders of HTML, CSS, and Javascript files laid out
+however you want them. Any folder can have a <em>source folder</em> <code>__src</code> that includes content that
+<code>webgen</code> can use to generate HTML files in addition to those HTML files that are already
+present. The folder containing a <code>__src</code> folder is called the <em>anchor folder</em> of that <code>__src</code>
+folder.  Any file <code>xyz.content</code> (containing an HTML fragment) in a <code>__src</code> folder is converted to an
+HTML file <code>xyz.html</code> in the anchor folder by inserting it into a template. That template is a file
+<code>CONTENT.template</code> which is found either in the same <code>__src</code> folder as the <code>xyz.content</code> file or in
+a <code>__src</code> folder hanging off a parent of the anchor folder. The first template found in a <code>__src</code>
+folder moving up from the anchor folder is the one that gets used. Thus, a template put in a <code>__src</code>
+folder at the root of the website folder hierarchy can serve as a generic template used for all
+pages, except when overridden by a template in a sub-folder.</p>
+
+<p>Templates are implemented using Go's <a href="https://pkg.go.dev/html/template"><code>html/template</code></a> package. They are simply HTML documents with a
+placeholder of the form <code>{{.Body}}</code> that gets replaced by some the content from a <code>xyz.content</code> file to
+create a file <code>xyz.html</code> in the anchor folder of the <code>__src</code> folder containing <code>xyz.content</code>.</p>
+
+<p>For example, the structure</p>
+
+<pre><code>root/
+    __src/
+        CONTENT.template
+        index.content
+    A/
+        __src/
+            page-A.content
+    B/
+        __src/
+            CONTENT.template
+            page-B.content
+</code></pre>
+
+<p>will generate the following files:</p>
+
+<pre><code>root/
+    index.html
+    A/
+        page-A.html
+    B/
+        page-B.html
+</code></pre>
+
+<p>where <code>root/index.html</code> and <code>root/A/page-A.html</code> are generated by plugging
+<code>root/__src/index.content</code> and <code>root/A/__src/page-A1.content</code> into template
+<code>root/__src/CONTENT.template</code> (respectively), while <code>root/B/page-B.html</code> is generated by plugging
+<code>root/B/__src/page-B.content</code> into template <code>root/B/__src/CONTENT.template</code>.</p>
+
+<p>The structure of the HTML generation code is straightforward:</p>
+
+<pre><code>for every folder F:
+   if F/__src/ exists:
+      find nearest enclosing template T
+      for all files F/__src/C.content:
+          insert C.content into T and create F/C.html 
+</code></pre>
+
+<p>In the tool, the above algorithm is contained in function <code>WalkAndProcessContents()</code>, and relies on
+package function <a href="https://pkg.go.dev/path/filepath#WalkDir"><code>filepath.WalkDir()</code></a> to walk the folder hierarchy from a given root path:</p>
+
+<pre><code>func WalkAndProcessContents(root string) {
+    cwd, err := os.Getwd()
+    if err != nil {
+        rep.Fatal(&quot;ERROR: %s\n&quot;, err)
+    }
+    walk := func(path string, d fs.DirEntry, err error) error {
+        if err != nil {
+            // Error in processing the path - skip.
+            return nil
+        }
+        if !d.IsDir() {
+            // Skip over files.
+            return nil
+        }
+        if filepath.Base(path) == &quot;.git&quot; {
+            return fs.SkipDir
+        }
+        if isGenDir(path) {
+            // Skip GENDIR.
+            return fs.SkipDir
+        }
+        ProcessFilesContent(cwd, path)
+        return nil
+    }
+    if err := filepath.WalkDir(root, walk); err != nil {
+        rep.Fatal(&quot;ERROR: %s\n&quot;, err)
+    }
+}
+</code></pre>
+
+<p>(Variable <code>GENDIR</code> holds the name of source folder <code>__src</code>.)</p>
+
+<p>The above code finds every anchor folder (skipping files) and calls <code>ProcessFilesContent()</code> on any
+folder <code>F</code> to handle HTML file generation in <code>F</code> from a content file appearing in <code>F/__src</code>. Note
+the special cases for <code>.git</code> and for <code>__src</code> to avoid generating files in <code>.git/</code> and in
+<code>__src/</code>. Clearly, this could and should be generalized into a generic list of folders to skip.</p>
+
+<p>Function <code>ProcessFilesContent()</code> does the bulk of the work:</p>
+
+<pre><code>func ProcessFilesContent(cwd string, path string) {
+    genDir, err := identifyGenDir(path)
+    if err != nil {
+        return
+    }
+    entries, err := os.ReadDir(filepath.Join(path, genDir))
+    if err != nil {
+        // if we can't read GENDIR, skip.
+        return
+    }
+    for _, d := range entries {
+        if !d.IsDir() &amp;&amp; isContent(d.Name()) {
+            relPath, err := filepath.Rel(cwd, path)
+            if err != nil {
+                relPath = path
+            }
+            target := filepath.Join(relPath, targetFilename(d.Name(), &quot;content&quot;, &quot;html&quot;))
+            w, err := os.Create(target)
+            if err != nil {
+                w.Close()
+                rep.Printf(&quot;ERROR: %s\n&quot;, err)
+                continue
+            }
+            if err := ProcessFileContent(w, filepath.Join(relPath, genDir, d.Name())); err != nil {
+                w.Close()
+                rep.Printf(&quot;ERROR: %s\n&quot;, err)
+                continue
+            }
+            rep.Printf(&quot;  wrote %s&quot;, target)
+            w.Close()
+        }
+    }
+}
+
+func ProcessFileContent(w io.Writer, fname string) error {
+    rep.Printf(&quot;%s\n&quot;, fname)
+    tmpl, err := FindTemplate(fname)
+    if err != nil {
+        return err
+    }
+    main, err := ioutil.ReadFile(fname)
+    if err != nil {
+        return err
+    }
+    current := template.HTML(main)
+    rep.Printf(&quot;  using template %s\n&quot;, tmpl.name)
+    c := Content{&quot;&quot;, time.Time{}, &quot;&quot;, &quot;&quot;, current}
+    filledTmpl, err := ProcessTemplate(tmpl.template, c)
+    if err != nil {
+        return err
+    }
+    bytes := []byte(filledTmpl)
+    if _, err := w.Write(bytes); err != nil {
+        return err
+    }
+    return nil
+}
+</code></pre>
+
+<p>Finding templates is handled by function <code>FindTemplate()</code> and inserting content into a template by function <code>ProcessTemplate()</code>:</p>
+
+<pre><code>type template_info struct {
+    template *template.Template
+    name     string
+}
+
+func FindTemplate(path string) (template_info, error) {
+    // Given a path, find the nearest enclosing CONTENT.template file.
+    previous, _ := filepath.Abs(path)
+    current := filepath.Dir(previous)
+    for current != previous {
+        gdPath, err := identifyGenDirPath(current)
+        if err == nil {
+            tname := filepath.Join(gdPath, TEMPLATE)
+            tpl, err := template.ParseFiles(tname)
+            if err == nil {
+                result = template_info{tpl, tname}
+                return result, nil
+            }
+        }
+        previous = current
+        current = filepath.Dir(current)
+    }
+    return template_info{}, fmt.Errorf(&quot;no template found&quot;)
+}
+
+func ProcessTemplate(tpl *template.Template, content Content) (template.HTML, error) {
+    var b strings.Builder
+    if err := tpl.Execute(&amp;b, content); err != nil {
+        return template.HTML(&quot;&quot;), err
+    }
+    result := template.HTML(b.String())
+    return result, nil
+}
+</code></pre>
+
+<p>Nested templates is a straightforward extension of the above. They let an HTML fragment
+<code>file.content</code> be injected into a template to create a larger fragment that itself can be injected
+into a template further up the folder hierarchy.  Details are left as an exercise to the reader.</p>
+
+<p>And that's it, really. I have some glue code to launch the tool from the command line and helper
+functions to simplify the code, but the core is as simple as can be.</p>
+
+<p>The second idea underlying <code>webgen</code>, dependency-based content generation, I will address in Part
+2, which covers Markdown content.</p>
+
+    </div>
+
+    
+      <div class="reading">Daniel Martin (by John Fowles)</div>
+    
+
+  </article>
+  
+</main>
+
+    
+  </body>
+  
+</html>

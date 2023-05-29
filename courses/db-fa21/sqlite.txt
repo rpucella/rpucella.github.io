@@ -1,0 +1,418 @@
+> sqlite3 bank.db
+SQLite version 3.36.0 2021-06-18 18:36:39
+Enter ".help" for usage hints.
+sqlite> create table Clients (
+   ...>   ssn int,
+   ...>   name text
+   ...> );
+
+sqlite> create table Accounts (
+   ...>   accountNo int primary key,
+   ...>   type text,
+   ...>   balance int,
+   ...>   ownerSSN int,
+   ...>   foreign key(ownerSSN) references Clients(ssn)
+   ...> );
+   
+sqlite> insert into Clients values
+   ...>   (0101, 'Alice'),
+   ...>   (0202, 'Bob'),
+   ...>   (0303, 'Cassandra'),
+   ...>   (0404, 'David'),
+   ...>   (0505, 'Erin'),
+   ...>   (0606, 'Frank'),
+   ...>   (0707, 'Gale'),
+   ...>   (0808, 'Henry'),
+   ...>   (0909, 'Isabelle');
+
+sqlite> insert into Accounts values
+   ...>   (10, 'checking', 100, 0101),
+   ...>   (11, 'saving', 200, 0202),
+   ...>   (12, 'checking', 300, 0303),
+   ...>   (13, 'saving', 400, 0404),
+   ...>   (14, 'checking', 500, 0505),
+   ...>   (15, 'saving', 600, 0606),
+   ...>   (16, 'checking', 700, 0707),
+   ...>   (17, 'saving', 800, 0808),
+   ...>   (18, 'cd', 900, 0909),
+   ...>   (19, 'cd', 1000, 0101),
+   ...>   (20, 'cd', 1100, 0505),
+   ...>   (21, 'checking', 1200, 0202),
+   ...>   (22, 'saving', 1300, 0303),
+   ...>   (23, 'checking', 1400, 0404),
+   ...>   (24, 'saving', 1500, 0505),
+   ...>   (25, 'saving', 1600, 0606),
+   ...>   (26, 'saving', 1700, 0707);
+
+sqlite> .tables
+Accounts  Clients
+
+sqlite> select * from Accounts;
+10|checking|100|101
+11|saving|200|202
+12|checking|300|303
+13|saving|400|404
+14|checking|500|505
+15|saving|600|606
+16|checking|700|707
+17|saving|800|808
+18|cd|900|909
+19|cd|1000|101
+20|cd|1100|505
+21|checking|1200|202
+22|saving|1300|303
+23|checking|1400|404
+24|saving|1500|505
+25|saving|1600|606
+26|saving|1700|707
+
+sqlite> select * from Clients;
+101|Alice
+202|Bob
+303|Cassandra
+404|David
+505|Erin
+606|Frank
+707|Gale
+808|Henry
+909|Isabelle
+
+sqlite> select name from Clients;
+Alice
+Bob
+Cassandra
+David
+Erin
+Frank
+Gale
+Henry
+Isabelle
+
+sqlite> select * from Accounts where balance > 1000;
+20|cd|1100|505
+21|checking|1200|202
+22|saving|1300|303
+23|checking|1400|404
+24|saving|1500|505
+25|saving|1600|606
+26|saving|1700|707
+
+sqlite> select * from Clients, Accounts;
+101|Alice|10|checking|100|101
+101|Alice|11|saving|200|202
+101|Alice|12|checking|300|303
+101|Alice|13|saving|400|404
+101|Alice|14|checking|500|505
+101|Alice|15|saving|600|606
+101|Alice|16|checking|700|707
+101|Alice|17|saving|800|808
+101|Alice|18|cd|900|909
+101|Alice|19|cd|1000|101
+101|Alice|20|cd|1100|505
+101|Alice|21|checking|1200|202
+101|Alice|22|saving|1300|303
+101|Alice|23|checking|1400|404
+101|Alice|24|saving|1500|505
+101|Alice|25|saving|1600|606
+101|Alice|26|saving|1700|707
+202|Bob|10|checking|100|101
+202|Bob|11|saving|200|202
+202|Bob|12|checking|300|303
+202|Bob|13|saving|400|404
+202|Bob|14|checking|500|505
+202|Bob|15|saving|600|606
+202|Bob|16|checking|700|707
+202|Bob|17|saving|800|808
+202|Bob|18|cd|900|909
+202|Bob|19|cd|1000|101
+202|Bob|20|cd|1100|505
+202|Bob|21|checking|1200|202
+202|Bob|22|saving|1300|303
+202|Bob|23|checking|1400|404
+202|Bob|24|saving|1500|505
+202|Bob|25|saving|1600|606
+202|Bob|26|saving|1700|707
+303|Cassandra|10|checking|100|101
+303|Cassandra|11|saving|200|202
+303|Cassandra|12|checking|300|303
+303|Cassandra|13|saving|400|404
+303|Cassandra|14|checking|500|505
+303|Cassandra|15|saving|600|606
+303|Cassandra|16|checking|700|707
+303|Cassandra|17|saving|800|808
+303|Cassandra|18|cd|900|909
+303|Cassandra|19|cd|1000|101
+303|Cassandra|20|cd|1100|505
+303|Cassandra|21|checking|1200|202
+303|Cassandra|22|saving|1300|303
+303|Cassandra|23|checking|1400|404
+303|Cassandra|24|saving|1500|505
+303|Cassandra|25|saving|1600|606
+303|Cassandra|26|saving|1700|707
+404|David|10|checking|100|101
+404|David|11|saving|200|202
+404|David|12|checking|300|303
+404|David|13|saving|400|404
+404|David|14|checking|500|505
+404|David|15|saving|600|606
+404|David|16|checking|700|707
+404|David|17|saving|800|808
+404|David|18|cd|900|909
+404|David|19|cd|1000|101
+404|David|20|cd|1100|505
+404|David|21|checking|1200|202
+404|David|22|saving|1300|303
+404|David|23|checking|1400|404
+404|David|24|saving|1500|505
+404|David|25|saving|1600|606
+404|David|26|saving|1700|707
+505|Erin|10|checking|100|101
+505|Erin|11|saving|200|202
+505|Erin|12|checking|300|303
+505|Erin|13|saving|400|404
+505|Erin|14|checking|500|505
+505|Erin|15|saving|600|606
+505|Erin|16|checking|700|707
+505|Erin|17|saving|800|808
+505|Erin|18|cd|900|909
+505|Erin|19|cd|1000|101
+505|Erin|20|cd|1100|505
+505|Erin|21|checking|1200|202
+505|Erin|22|saving|1300|303
+505|Erin|23|checking|1400|404
+505|Erin|24|saving|1500|505
+505|Erin|25|saving|1600|606
+505|Erin|26|saving|1700|707
+606|Frank|10|checking|100|101
+606|Frank|11|saving|200|202
+606|Frank|12|checking|300|303
+606|Frank|13|saving|400|404
+606|Frank|14|checking|500|505
+606|Frank|15|saving|600|606
+606|Frank|16|checking|700|707
+606|Frank|17|saving|800|808
+606|Frank|18|cd|900|909
+606|Frank|19|cd|1000|101
+606|Frank|20|cd|1100|505
+606|Frank|21|checking|1200|202
+606|Frank|22|saving|1300|303
+606|Frank|23|checking|1400|404
+606|Frank|24|saving|1500|505
+606|Frank|25|saving|1600|606
+606|Frank|26|saving|1700|707
+707|Gale|10|checking|100|101
+707|Gale|11|saving|200|202
+707|Gale|12|checking|300|303
+707|Gale|13|saving|400|404
+707|Gale|14|checking|500|505
+707|Gale|15|saving|600|606
+707|Gale|16|checking|700|707
+707|Gale|17|saving|800|808
+707|Gale|18|cd|900|909
+707|Gale|19|cd|1000|101
+707|Gale|20|cd|1100|505
+707|Gale|21|checking|1200|202
+707|Gale|22|saving|1300|303
+707|Gale|23|checking|1400|404
+707|Gale|24|saving|1500|505
+707|Gale|25|saving|1600|606
+707|Gale|26|saving|1700|707
+808|Henry|10|checking|100|101
+808|Henry|11|saving|200|202
+808|Henry|12|checking|300|303
+808|Henry|13|saving|400|404
+808|Henry|14|checking|500|505
+808|Henry|15|saving|600|606
+808|Henry|16|checking|700|707
+808|Henry|17|saving|800|808
+808|Henry|18|cd|900|909
+808|Henry|19|cd|1000|101
+808|Henry|20|cd|1100|505
+808|Henry|21|checking|1200|202
+808|Henry|22|saving|1300|303
+808|Henry|23|checking|1400|404
+808|Henry|24|saving|1500|505
+808|Henry|25|saving|1600|606
+808|Henry|26|saving|1700|707
+909|Isabelle|10|checking|100|101
+909|Isabelle|11|saving|200|202
+909|Isabelle|12|checking|300|303
+909|Isabelle|13|saving|400|404
+909|Isabelle|14|checking|500|505
+909|Isabelle|15|saving|600|606
+909|Isabelle|16|checking|700|707
+909|Isabelle|17|saving|800|808
+909|Isabelle|18|cd|900|909
+909|Isabelle|19|cd|1000|101
+909|Isabelle|20|cd|1100|505
+909|Isabelle|21|checking|1200|202
+909|Isabelle|22|saving|1300|303
+909|Isabelle|23|checking|1400|404
+909|Isabelle|24|saving|1500|505
+909|Isabelle|25|saving|1600|606
+909|Isabelle|26|saving|1700|707
+
+sqlite> select * from Clients, Accounts where ownerSSN = ssn;
+101|Alice|10|checking|100|101
+101|Alice|19|cd|1000|101
+202|Bob|11|saving|200|202
+202|Bob|21|checking|1200|202
+303|Cassandra|12|checking|300|303
+303|Cassandra|22|saving|1300|303
+404|David|13|saving|400|404
+404|David|23|checking|1400|404
+505|Erin|14|checking|500|505
+505|Erin|20|cd|1100|505
+505|Erin|24|saving|1500|505
+606|Frank|15|saving|600|606
+606|Frank|25|saving|1600|606
+707|Gale|16|checking|700|707
+707|Gale|26|saving|1700|707
+808|Henry|17|saving|800|808
+909|Isabelle|18|cd|900|909
+
+sqlite> select * from Accounts, Clients where ownerSSN = ssn;
+10|checking|100|101|101|Alice
+11|saving|200|202|202|Bob
+12|checking|300|303|303|Cassandra
+13|saving|400|404|404|David
+14|checking|500|505|505|Erin
+15|saving|600|606|606|Frank
+16|checking|700|707|707|Gale
+17|saving|800|808|808|Henry
+18|cd|900|909|909|Isabelle
+19|cd|1000|101|101|Alice
+20|cd|1100|505|505|Erin
+21|checking|1200|202|202|Bob
+22|saving|1300|303|303|Cassandra
+23|checking|1400|404|404|David
+24|saving|1500|505|505|Erin
+25|saving|1600|606|606|Frank
+26|saving|1700|707|707|Gale
+
+sqlite> select name, balance from Accounts, Clients where ownerSSN = ssn;
+Alice|100
+Bob|200
+Cassandra|300
+David|400
+Erin|500
+Frank|600
+Gale|700
+Henry|800
+Isabelle|900
+Alice|1000
+Erin|1100
+Bob|1200
+Cassandra|1300
+David|1400
+Erin|1500
+Frank|1600
+Gale|1700
+
+sqlite> select name from Accounts, Clients where ownerSSN = ssn;
+Alice
+Bob
+Cassandra
+David
+Erin
+Frank
+Gale
+Henry
+Isabelle
+Alice
+Erin
+Bob
+Cassandra
+David
+Erin
+Frank
+Gale
+
+sqlite> select name, balance from Accounts, Clients where ownerSSN = ssn;
+Alice|100
+Bob|200
+Cassandra|300
+David|400
+Erin|500
+Frank|600
+Gale|700
+Henry|800
+Isabelle|900
+Alice|1000
+Erin|1100
+Bob|1200
+Cassandra|1300
+David|1400
+Erin|1500
+Frank|1600
+Gale|1700
+
+sqlite> select name, sum(balance) from Accounts, Clients where ownerSSN = ssn group by name;
+Alice|1100
+Bob|1400
+Cassandra|1600
+David|1800
+Erin|3100
+Frank|2200
+Gale|2400
+Henry|800
+Isabelle|900
+
+sqlite> select name, sum(balance) from Accounts, Clients where ownerSSN = ssn and balance > 400 group by name;
+Alice|1000
+Bob|1200
+Cassandra|1300
+David|1400
+Erin|3100
+Frank|2200
+Gale|2400
+Henry|800
+Isabelle|900
+
+sqlite> create table balances as select name, sum(balance) from Accounts, Clients where ownerSSN = ssn group by name;
+
+sqlite> .tables
+Accounts  Clients   balances
+
+sqlite> select * from balances;
+Alice|1100
+Bob|1400
+Cassandra|1600
+David|1800
+Erin|3100
+Frank|2200
+Gale|2400
+Henry|800
+Isabelle|900
+
+sqlite> update Accounts set balance = 1000000 where accountNo = 10;
+
+sqlite> select * from Accounts;
+10|checking|1000000|101
+11|saving|200|202
+12|checking|300|303
+13|saving|400|404
+14|checking|500|505
+15|saving|600|606
+16|checking|700|707
+17|saving|800|808
+18|cd|900|909
+19|cd|1000|101
+20|cd|1100|505
+21|checking|1200|202
+22|saving|1300|303
+23|checking|1400|404
+24|saving|1500|505
+25|saving|1600|606
+26|saving|1700|707
+
+sqlite> select * from balances;
+Alice|1100
+Bob|1400
+Cassandra|1600
+David|1800
+Erin|3100
+Frank|2200
+Gale|2400
+Henry|800
+Isabelle|900

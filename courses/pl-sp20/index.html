@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Programming Languages (Spring 2020)</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      span.underline { text-decoration: underline; }
+
+      span.ann { display: inline-block; width: 70px; }
+      span.hdr { display: inline-block; width: 70px; }
+
+        a, a:link, a:visited {
+	    color: #003d99;
+	}
+
+	a:hover {
+  	  text-decoration: underline;
+	} 
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        ul.annoucements li p {
+    	  padding-left: 3em;
+        }
+
+	ul.annoucements li p:first-child { 
+    	  text-indent: -3em; 
+        }
+
+	ul.annoucements p span {
+   	  padding-right: 1em
+	}
+	
+        div.lect {
+	  padding-top: 0;
+          padding-left: 70px;
+	  margin-top:0;
+        }
+
+    </style>
+
+    <script>
+
+window.addEventListener("load",run);
+
+function run () {
+    // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+    // actually, for anything with "scrollto" class
+    
+    // offset is given by the 'top' div (adjusted for padding)
+    var off = document.getElementById("top").clientHeight;
+    console.log(off);
+    //var elts = document.querySelectorAll("div.navbar a");
+    var elts = document.querySelectorAll("a.scrollto");
+    for (var i=0; i<elts.length; i++) {
+        var href=elts[i].getAttribute("href").slice(1);
+        elts[i].setAttribute("onclick","return false;");
+        elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+    }
+    
+    // SETUP SEND EMAIL LINK
+    document.getElementById("send_email").addEventListener("click",function(){
+        window.open("mailto:riccardo.pucella@olin.edu");
+    });
+}
+
+      </script>
+  </head>
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="scrollto" href="#top"><b>Programming Languages SP20</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Programming Languages (Spring 2020)</h1>
+    
+    <p class="subtitle">ENGR 3599 / Time 1:30-4:00pm / AC 304</p>
+    
+    <p>This course is an introduction to the theory, design, and
+    implementation of programming languages. Topics covered may
+    include: semantics of programming languages, types, higher-order
+    functions and lambda calculus, objects, laziness, continuations,
+    monads, objects, and concurrency. Class work revolves around the
+    implementation of interpreters for a variety of small programming
+    languages.</p> 
+
+    
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <ul class="simple announcements">
+
+        <li><p><span class="ann">Apr 12:</span>
+            Some quick notes on <a href="./continuations.pdf">transforming arbitrary recursive functions</a> into a version that uses only recursive tail calls. The idea is to transform the function into so-called <i>continuation-passing style</i>. Continuation-passing style is mostly used to help implement compilers for functional programming languages, going back to the original <a href="https://dspace.mit.edu/handle/1721.1/6913">RABBIT compiler</a> for Scheme.
+        </p></li>
+        
+        <li><p><span class="ann">Mar 28:</span>
+            Added the final question (Question 5) to <a>Homework 4</a>. It's about adding commands to the FUNC shell.
+        </p></li>
+
+        <li><p><span class="ann">Mar 27:</span>
+            Added a few more <a href="homeworks/project.html">project ideas</a>.
+        </p></li>
+
+        <li><p><span class="ann">Mar 22:</span>
+            Time to start thinking about <a href="homeworks/project.html">final
+            projects</a>. Take a look at the above link,
+            ponder, and send me an email by Sunday, April 5 describing
+            what you'd like to do, and how you are thinking of
+            approaching it. If you have no idea, please get in touch
+            with me well before then and we'll figure something
+            for you to work on. Note that this week we're going to
+            look at object-orientation, and next week we're going to
+            look at type systems.</p></li>
+            
+        </li>
+        
+        <li><p><span class="ann">Mar 21:</span>
+            <a>Homework 4</a> is out. Due Friday night, April 17.</p>
+        </li>
+
+        <li><p><span class="ann">Feb 15:</span>
+            <a>Homework 3</a> is out. Due Tuesday night, February 25.</p>
+        </li>
+
+        <li><p><span class="ann">Feb 4:</span>
+            <a>Homework 2</a> is out. Due next Tuesday night.</p>
+        </li>
+
+        <li><p><span class="ann">Jan 26:</span>
+            <a>Homework 1</a> is out. Due next Sunday night.</p>
+        </li>
+        
+      </ul>
+      
+    </div>
+
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Information</h3>
+
+      <p>Prerequisites: Programming experience (ENGR 2510 for instance).</p>
+
+      <p>Instructor: <a href="http://www.rpucella.net">Riccardo Pucella</a> (<a id="send_email" href="#">send email</a>)</p>
+
+      <p>Office hours: Thu 16:00-18:00 / MH 353, or online by appointment</p>
+
+      <p>Textbook: We don't have a textbook. There is nothing out
+      there that captures quite what I want to do in this course. I
+      will find readings for us to supplement the lectures. 
+
+      If you're looking for reference books that cover some of the
+     topics we'll cover, the following might help:
+      <ul>
+	<li>
+         <i><a href="http://cs.brown.edu/courses/cs173/2012/book/">Programming
+	Languages: Application and Interpretation</a></i> by Shriram Krishnamurthy. This is the
+	closest book in spirit to what I want to cover in the
+	course. It is freely available online. It uses Racket, a
+	dialect of Scheme. Definitely worth a read.</li>
+      </ul>
+
+      <p>Programming: All programming in the course will be done in
+	<a href="https://www.scala-lang.org/">Scala</a> (version 2.13, though that shouldn't matter an awful lot).
+	I will not expect you to know how to program in Scala, but you should have good working knowledge of Python, especially its object model. We'll pick up Scala proper as we go along. A good reference manual is:
+
+      <ul>
+	<li><i><a href="https://booksites.artima.com/programming_in_scala_3ed">Programming in Scala</a> 3rd edition</i> by Martin Odersky, Lex Spoon, and Bill Venners. The first edition is <a href="http://www.artima.com/pins1ed/">available online</a>, if you want to check it out. (The core language hasn't changed that much, but I'm not sure how much the first edition carries over when you get to more advanced topics.)</li>
+      </ul>
+
+      You can get Scala from
+      the <a href="https://www.scala-lang.org/download/">official
+      download page</a>. Note that if you install Scala on Windows,
+      you'll probably want to install the Scala binaries instead of
+      using the Scala build tool <tt>sbt</tt> so that you have easy access to the
+      interactive compiler. (The Scala build tool <tt>sbt</tt> is
+      great, but very much overkill for what we're going to do, at
+      least at first.) Scala can be installed from Homebrew on Mac OS
+      X. The appropriate .tgz is available for Linux. You can certainly install one of the IDEs if you like, but full disclosure: I've never used them so I don't know how they work. I don't know if they use <tt>sbt</tt>, or whether they are only useful for compile Scala to <tt>.class</tt> files, etc.</p>
+
+      <p>Grading: The final grade is based on weekly homeworks for the
+      first five weeks (40%), biweekly homeworks for the following four
+      weeks (30%), and a final project (30%). All work to be done in
+      teams of two. Late homeworks will be penalized (10% per 24 hours)
+      and no homework will be accepted after its solution has been
+	discussed in class.</p>
+
+<!--    <p>Ninja: TBD</p> -->
+
+      <p>I expect all of us to follow the <b><a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a></b>.</p>
+
+     </div>
+
+
+
+    <hr class="section">
+    <div class="section" id="lectures">
+      <h3>Lectures and Readings</h3>
+
+      <p>Schedule and topics subject to changes.</p>
+
+      <ul class="lectures">
+	
+	<li><p><span class="hdr">Jan 23:</span><b>Introduction to Interpretation</b></p>
+	  <div class="lect">
+	    <p><a href="./lect01-interpretation.pdf">Slides from the lecture.</a></p>
+	    <p>Final <a href="./code-lect01-expressions.scala">sample code</a> from the lecture.</p>
+	    <p>Some <a href="http://cs.lmu.edu/~ray/notes/paradigms/">notes about programming paradigms</a> similar to the high-level design trade-offs I was describing in class.</p>
+            
+	    <p>The <a href="http://docs.scala-lang.org/tour/tour-of-scala.html"><i>Tour of Scala</i></a> from the Scala language web page. It's a good overview, but it gets in the weeds quickly. You probably want to focus on <a href="http://docs.scala-lang.org/tour/tour-of-scala.html">Introduction</a>, <a href="http://docs.scala-lang.org/tour/basics.html">Basics</a>, <a href="http://docs.scala-lang.org/tour/unified-types.html">Unified Types</a>, <a href="http://docs.scala-lang.org/tour/classes.html">Classes</a>, <a href="http://docs.scala-lang.org/tour/case-classes.html">Case Classes</a>, and <a href="http://docs.scala-lang.org/tour/pattern-matching.html">Pattern Matching</a>, at first.</p>
+            
+	    <p>If you already know Java, <a href="http://docs.scala-lang.org/tutorials/scala-for-java-programmers.html"><i>A Scala Tutorial for Java Programmers</i></a> might be useful for you.</p>
+            
+	    <p>The class hierarchy we will develop for the abstract representation of our languages uses an abstract base class (in the code above, <tt>Exp</tt>). If you've never worked with abstract base classes, <a href="https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html">you can find a description here</a> for Java &mdash; the discussion applies to Scala in the same way. Abstract classes don't really make sense in Python, so you would not have encountered them there. (Why?)</p>
+
+	  </div>
+	</li>	  
+
+	<li><p><span class="hdr">Jan 30:</span><b>Values and Identifiers</b></p>
+	  <div class="lect">
+	    <p><a href="./lect02-identifiers.pdf">Slides from the lecture.</a></p>
+	    <p>Final <a href="./code-lect02.scala">sample code</a> from the lecture, with both a general <tt>Value</tt> class and let bindings.</p>
+            
+	    <p>We're going to start using lists a lot more. The implementation of environments in the sample code above uses lists. The official Scala documentation on the <a href="https://www.scala-lang.org/api/2.13.1/scala/collection/immutable/List.html">List</a> class is a good reference. The <a href="https://alvinalexander.com/scala/scala-list-class-examples">following tutorial on using lists in Scala</a> is also probably useful. </p>
+          </div>
+	</li>	  
+
+	<li><p><span class="hdr">Feb 6:</span><b>Functions</b></p>
+	  <div class="lect">
+
+	    <p><a href="./lect03-functions.pdf">Slides from the lecture.</a></p>
+
+	    <p>Sample code from the lecture: <a href="./code-lect03-functiondef.scala">functions with global definitions</a>, <a href="./code-lect03-functionval.scala">functions as values</a>, <a href="./code-lect03-function-static.scala">functions with static binding</a>, and <a href="./code-lect03-function-dynamic.scala">functions with dynamic binding</a>,
+
+	    <p>Programming languages that take expressions and functions as their core (if not sole) programs are usually called <i>functional programming languages</i>. A good overview of some advantages of the functional programming approach is given by John Hughes' <a href="http://www.cse.chalmers.se/~rjmh/Papers/whyfp.html"><i>Why Functional Programming Matters.</i></a> The first three sections at least should be pretty accessible.</p>
+	    
+	    <p>A very short description of the <a href="https://courses.cs.washington.edu/courses/cse341/03wi/imperative/scoping.html">difference between static binding and dynamic binding</a> (here, and in many places, called static/lexical scoping and dynamic scoping)</p>
+
+	    <p>Here is the example I used in class that illustrates that Python uses static binding (like all modern languages): 
+	      <pre>
+  def test (x):
+
+    def foo (y) :
+      return x + y
+
+    def bar (x):
+      return foo(x)
+
+    return bar(200)
+</pre>
+              Evaluating <tt>test(10)</tt> yields <tt>210</tt>, which is what static
+              binding tells you should be the answer. If Python used dynamic
+              binding, the result would be <tt>400</tt>, since the binding
+              of <tt>x</tt> to <tt>200</tt> in function <tt>bar</tt> would be used
+              to resolve the <tt>x</tt> in <tt>foo</tt> when
+              evaluating <tt>bar(200)</tt>.</p>
+	    
+	    <p>If you're into it, you can read about the <a href="https://en.wikipedia.org/wiki/Funarg_problem">upward funarg problem</a> that motivated the invention of closures. Be warned, though: it gets deep in the guts of language implementation using a stack <i>&agrave; la</i> C.</p> 
+	    
+	  </div>
+	  
+	</li>	  
+
+	<li><p><span class="hdr">Feb 13:</span><b>Surface Syntax and Parsing</b></p>
+	  <div class="lect">
+	    <p><a href="./lect04-parsing.pdf">Slides from the lecture.</a></p>
+
+	    <p><a href="./code-lect04-parsing.scala">Sample code</a> from the lecture, including a parser for our simple expression language (without functions).</p> Note that this code requires the parser combinators library detailed in the next paragraph.
+
+	    <p>We are going to use the <a href="https://github.com/scala/scala-parser-combinators">Scala Standard Parser Combinator Library</a> as our parsing library in Scala. You should be able to access it by writing <tt>import scala.util.parsing.combinator._</tt> in your scala code. This requires you to have loaded the <tt>jar</tt> file in your shell if you run your code in the shell. The easiest way is probably:
+              <pre>  scala -classpath scala-parser-combinators_2.13-1.1.2.jar</pre>
+              assuming the <tt>jar</tt> file is in the same folder where you start your shell. (If not, you'll need to provide a path to the <tt>jar</tt> file.)
+              Alternatively, you can also use the command
+              <pre>  :require scala-parser-combinators_2.13-1.1.2.jar </pre>
+              from within the shell.
+              You can find the <tt>jar</tt> file at the link above, and <a href="./scala-parser-combinators_2.13-1.1.2.jar">I also posted the version for Scala 2.13 here for convenience</a>.
+            </p>
+
+            <p>A good starting point to understand the parser combinator library is to read the <a href="https://github.com/scala/scala-parser-combinators/blob/1.2.x/docs/Getting_Started.md">Getting Started</a> document, which gives you the core concepts that are needed to understand the code.
+              For an in-depth example that uses parser combinators, have a look at <a href="http://enear.github.io/2016/03/31/parser-combinators/">this</a>, but note that it uses concepts from Scala we have not introduced yet. Mostly, we won't be writing parsers from scratch, but rather modifying and extending existing parsers.</p>
+
+	    <p>If you're interested in some of the theory underlying parser combinators, a good starting point is Graham Hutton's <a href="http://www.cs.nott.ac.uk/~pszgmh/parsing.pdf"><i>Higher-Order Functions for Parsing</i></a> tutorial.</p>
+
+	    <p><a href="https://docs.oracle.com/javase/tutorial/essential/regex/">Regular expressions</a> in Java. (Scala inherits its regular expressions from Java.)</p>
+
+	    <p>For a while at least, the languages we will create will resemble a dialect of <a href="http://www.schemers.org/Documents/Standards/R5RS/HTML/">Scheme</a>, itself a dialect of <a href="https://en.wikipedia.org/wiki/Lisp_(programming_language)">LISP</a>. Until we decide to ditch S-expressions as a surface syntax, that is. You can access an <a href="https://repl.it/languages/scheme">online evaluator for Scheme</a> if you want to try the language out.</p>
+
+	    <p>An overview of <a href="https://en.wikipedia.org/wiki/Recursive_descent_parser">recursive-descent parsing</a>.</p>
+
+	    <p>More than you ever wanted to know about how to handle <a href="http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm">operator precedence in a recursive-descent parser</a>, by Theodore Norvell.</p>
+
+	    <p>Quick overview of <a href="https://en.wikipedia.org/wiki/Left_recursion">how to remove left recursion in a grammar</a>. Warning: it gets more and more complex the more complex the grammar is.</p>
+
+	    <p><a href="https://en.wikipedia.org/wiki/Lex_(software)">Lex</a> and <a href="https://en.wikipedia.org/wiki/Yacc">Yacc</a> are the classical tools for generating efficient lexers and bottom-up parsers. The technology underlying those tools is best described in Aho, Sethi, and Ullman's classic text <a href="https://www.amazon.com/Compilers-Principles-Techniques-Alfred-Aho/dp/0201100886/">Compilers: Principles, Techniques, and Tools</a>. The library has a copy on reserve for this course.</p>
+            
+	  </div>
+	</li>
+
+	<li><p><span class="hdr">Feb 20:</span><b>Parser Transformations</b></p>
+
+	  <div class="lect">
+	    
+	    <p><a href="./code-lect05.scala">Sample code from the lecture</a>.</p>
+	    
+	    <p>The idea that we can keep the abstract representation
+	    simple while still allowing an extensive surface syntax by
+	    using the "trick" of parsing some of the surface syntax
+	    into a complex abstract representation is widespread. For
+	    instance, the surface syntax <tt>(and x y z)</tt> can
+	    parse into
+	    roughly <tt>EIf(x,EIf(y,z,false),false)</tt>. In other
+	    words, we don't need to introduce abstract representation
+	    for everything in the surface
+	    syntax. </p> 
+ 
+	    <p>Some languages actually let users define their own surface syntax
+	      transformations. Macros
+	      in <a href="https://www.cs.cmu.edu/Groups/AI/html/r4rs/r4rs_12.html">Scheme</a>
+	      and
+	      in <a href="https://static.rust-lang.org/doc/master/book/macros.html">Rust</a>
+	      do exactly that: they allow transformations to be
+	      expressed <i>within the language</i>, and their parser
+	      can look up those transformations while parsing, instead
+	      of requiring the transformations to be hard-wired into
+	      the parser. Same process, slightly more flexible
+	      approach. (There's a cost to that approach: the parser
+	      needs to be more complex because it needs to look up
+	      applicable transformations at suitable points. It might
+	      be a very nice project to figure out ways of doing just
+  that.)</p>
+
+   <p>I mentioned that the core of FUNC (our little language with
+  single-argument functions) is essentially the <a href="https://en.wikipedia.org/wiki/Lambda_calculus">Lambda
+  Calculus</a>.</p>
+
+	  </div>
+	  
+	</li>
+
+	<li><p><span class="hdr">Feb 27:</span><b>Mutable State</b></p>
+	  <div class="lect">
+	    <p><a href="./lect06-state.pdf">Slides from the lecture.</a></p>
+
+	    <p><a href="./code-lect06.scala">Sample code from the lecture</a>.</p>
+
+	    <p>I greatly simplified the syntactic transformation for C-style mutable state from the one I presented in class. There is no longer any need to do the fancy involved transformation to the primitive operations in the standard environment.</p>
+	    
+	    <p>I called the first model of mutable state <i>ML-like</i>, after the programming language <a href="https://en.wikipedia.org/wiki/Standard_ML">ML</a>. Here is a <a href="http://www.cs.toronto.edu/~bonner/courses/2016f/csc324/handouts/MLreferences.txt">description of reference cells in ML</a> which served as inspiration for the ones in lecture.</p>
+	    <p>In the C-style model of mutable state, we talk about <a href="http://cseweb.ucsd.edu/~gbournou/CSE131/l-values_and_r-values.html">lvalues and rvalues</a> to distinguish expressions that fundamentally represent reference cells, versus the value contained those cells.</p>
+		</div>
+	</li>	  
+
+	<li><p><span class="hdr">Mar 12:</span><i>No class due to coronavirus</i></p>
+        </li>
+
+        
+	<li><p><span class="hdr">Mar 26:</span><b>Records and Objects</b></p>
+	  <div class="lect">
+	    <p><a href="./lect07-objects.pdf">Slides from the lecture</a>.</p>
+	    <p><a href="./code-lect07.scala">Sample code from the lecture</a>, and sample FUNC files: <a href="./point.func">point.func</a>, <a href="./point-class.func">point-class.func</a>, <a href="./point-class-2.func">point-class-2.func</a>. FUNC files can be evaluated using <tt>evalFile</tt>.</p>
+	    <p>Some notes on the <a href="http://raganwald.com/2014/01/19/prototypes-are-not-classes.html">difference between class-based and prototype-based languages</a>, using JavaScript as an example.</p>
+	    <p>A quick overview of the <a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">difference between inheritance and composition</a> &mdash; in some languages, both are ways to get a subclassing relationship between classes.</p>
+          </div>          
+	</li>	  
+
+        
+	<li><p><span class="hdr">Apr 2:</span><b>Static Typing</b></p>
+	  <div class="lect">
+	    <p><a href="./lect08-types.pdf">Slides from the lecture</a>.</p>
+	    <p><a href="code-lect08.scala">Sample code</a> from the lecture.</p>
+            
+	    <p>Wikipedia's entry on <a href="https://en.wikipedia.org/wiki/Type_system">type systems</a> is reasonable.</p>
+            
+            <p>At the end of lecture, I mentioned the problem of
+	      giving a reasonable type to reference cells. The sample
+	      code types function <tt>ref</tt> as <tt>(:fun (:num)
+	      (:ref :num))</tt> which can only create reference cells
+	      holding numbers. To create reference cells holding
+	      Booleans or any other type of value, you need a distinct
+	      function of the appropriate type. A more general type
+	      for reference cells uses <i>type variables</i> to give
+	      a <a href="https://en.wikipedia.org/wiki/Generic_programming">generic
+	      type</a> to <tt>ref</tt>, such as <tt>(:fun [X] (X)
+	        (:ref X))</tt>. You can create function with such
+	      generic types such as the generic identity
+	      function
+              <pre>
+                (fun [X] ((a X) X) a)</pre> The kicker is
+	      when calling such generic functions, you need to
+	      explicitly supply the types at which you want to
+	      instantiate those type variables. For instance:
+              <pre>
+                (let ((id (fun [X] ((a X) X) a)))
+                  (id [:num] 10))
+
+                (let ((id (fun [X] ((a X) X) a)))
+                  (id [:bool] true))</pre>
+              <a href="code-lect08-generics.scala">Sample code</a>
+              implementing this version of the type system is
+              available. To make sure a type system more palatable
+              (having to specify type instantiation at application
+              time gets old <i>very</i> fast), you can automtically
+              figure out the type instantiations
+              using <a href="https://en.wikipedia.org/wiki/Unification_(computer_science)">unification</a>.
+              Languages with these kind of generic types and inference
+              at application time are said to
+              support <a href="https://en.wikipedia.org/wiki/Parametric_polymorphism">parametric
+              polymorphism</a>
+	    </p>
+            
+	    <p>Even more advanced type systems can be obtained by
+              using <a href="https://en.wikipedia.org/wiki/Dependent_type">dependent
+                types</a>, which allow types to depend on values! Thus, you can
+              write not only the type of vectors over a type A, but you can also
+              write a type <tt>(:vec n A)</tt> for vectors of length <i>n</i> over a
+              type A, where <i>n</i> is a value in the language. Using such a type
+	      system, we can type a concatenate function on vectors with a function type taking arguments
+	      <tt>(:vec n A)</tt> and <tt>(:vec m A)</tt> with a
+	      return type <tt>(:vec (+ m n) A)</tt>. These type
+	      systems have a pretty complex type-checking
+	      algorithm.</p>
+          </div>
+	</li>	  
+
+	<li><p><span class="hdr">Apr 9:</span><b>Looping and Recursion</b></p>
+	  <div class="lect">
+	  <p><a href="./lect09-recursion.pdf">Slides from the lecture</a>.</p>
+	  <p>Sample code from the lecture: implementation of the <a href="./code-lect09-loop.scala">loop expression</a>; implementation of the <a href="./code-lect09-tail-recursion.scala">tail-recursive evaluator</a>. Sample FUNC code: <a href="./test-loop-make-vector.func">make vector</a>; <a href="./test-loop-nested.func">nested loops</a>; <a href="./test-loop-sum-squares.func">sum squares</a>; <a href="./test-loop-sum-vector.func">sum vector</a>.</p>
+	  <p>A description of <a href="http://www.owlnet.rice.edu/~comp210/96spring/Labs/lab09.html">tail recursion</a> from the perspective of Scheme, a language that is pretty close to what we're implementing.</p>
+          <p>Talking about function call stacks in a given language is tightly coupled with that programming language's interpreter or compiler implementation. But to give you flavor of what a function call stack does, <a href="https://cs.gmu.edu/~kauffman/cs222/stack-demo.html">this is an interesting long example from the programming language C</a>, which has the least amount of abstraction on top of its implementation.
+          </div>
+	</li>
+
+	<li><p><span class="hdr">Apr 16:</span><b>Compilation I</b></p>
+          <div class="lect">
+	  <p><a href="./lect10-compiler.pdf">Slides</a> from the lecture.</p>
+	  <p><a href="./code-lect10.scala">Sample code</a> from the lecture. Search for <tt>//COMPILER</tt> for the changes specific to the compiler.</p>
+	  <p>An overview of <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation">just-in-time compilation</a> (JIT).</p>
+	  <p>A description of a real compiler, <a href="https://aosabook.org/en/ghc.html">The Glasgow Haskell Compiler</a>, giving an excellent overview of the steps involved in compilation, couched in a fairly approachable manner without skimping on the technical details.</p>
+          </div>
+	</li>	  
+
+	<li><p><span class="hdr">Apr 23:</span><b>Compilation II</b></p>
+          <div class="lect">
+	  <p><a href="./lect11-compiler-2.pdf">Slides</a> from the lecture.</p>
+	  <p>Sample code from the lecture: <a href="./code-lect11-compiler-ids.scala">compiler with index IDs and tail recursion</a>, and <a href="./code-lect11-new-vm.scala">compiler with the new VM</a>.</p>
+          <p>The source code of the <a href="./fvm.c">virtual machine in C</a>. Instructions on how to compile the virtual machine are in the source file. You can run it on code produced by <tt>compileFile</tt> from the compiler for the new VM in the second sample source.</p>
+          <p>The <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/index.html">specification</a> of the Java Virtual Machine (Java SE 7).</p>
+          <p>The <a href="https://en.wikipedia.org/wiki/Common_Language_Runtime">CLR</a> is the virtual machine underlying Microsoft's .NET framework.</p>
+          <p>An overview of the main approaches to <a href="https://en.wikipedia.org/wiki/Tracing_garbage_collection">garbage collection</a>.</p>
+          <p><a href="http://clang.llvm.org">Clang</a>, a portable compiler for the <a href="https://en.wikipedia.org/wiki/C_(programming_language)">C programming language</a>.</p>
+          </div>
+	</li>	  
+
+	<li><p><span class="hdr">Apr 30:</span><b>Final Presentations</b></p>
+	  <div class="lect">
+	    <p>Chen, Overney, <a href="projects/fanglican.pdf"><i>Probabilistic Programming</i></a></p>
+	    <p>Castillo, Jaworowski, <a href="projects/matrix.pdf"><i>Matrix Processing</i></a></p>
+	    <p>Rivkin, <a href="projects/interfaces.pdf"><i>Structural Typing and Interfaces</i></a></p>
+	  </div>
+	</li>	  
+
+      </ul>
+
+    </div>
+
+
+
+    <hr class="section">
+    <div class="section" id="homeworks">
+      <h3>Homeworks</h3>
+
+
+    </div>
+
+  </body>
+</html>

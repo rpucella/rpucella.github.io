@@ -1,0 +1,176 @@
+<html>
+
+<body>
+<pre>
+(* RECURSIVE AND ITERATIVE PROCESSES
+   DYNAMIC PROGRAMMING
+*)
+
+
+(* The standard definition of length as a recursive process *)
+
+let rec length l =
+  match l with
+  | [] -> 0
+  | _::xs -> 1 + length xs
+
+
+(* A definition of length as an iterative process
+   In OCaml, an iterative process is characterized by the use
+   of tail recursion -- see the recursive function loop *)
+
+let iter_length l =
+  let rec loop l current =
+    match l with
+    | [] -> current 
+    | _::xs -> loop xs (current+1)  in
+  loop l 0
+
+
+
+(* Graph search -- a (directed) graph is given by a set of nodes
+   and a directed edges between nodes. To simplify our life, we
+   can represent a graph by a "next" function 'a -> 'a list that
+   gives the nodes reachable from any given node by following an edge
+   of the graph  *)
+
+(* Here's a sample graph *)
+
+let travel n =
+  match n with
+  | "Boston" -> ["Philadelphia";"New York";"Montreal"]
+  | "Philadelphia" -> ["Pittsburgh"]
+  | "New York" -> ["Boston";"Toronto";"Denver"]
+  | "Montreal" -> ["Toronto"]
+  | "Pittsburgh" -> ["Denver"]
+  | "Denver" -> ["New York"; "Los Angeles"]
+  | "Toronto" -> ["Vancouver"]
+  | "Vancouver" -> ["Montreal"]
+  | "Los Angeles" -> ["Denver"]
+  | _ -> failwith ("Unknown city: "^n)
+
+
+
+(* A straightforward recursive process to search a graph
+   using depth-first search *)
+
+let search_dfs next start goal =
+  let rec dfs current seen = 
+    if current = goal then true
+    else if List.mem current seen then false
+    else List.exists (fun x -> dfs x (current::seen)) (next current)  in
+  dfs start []
+
+
+(* Depth-first search as an iterative process -- note that we
+   have to maintain a _stack_ of nodes that we've visited but
+   have yet to search from. Because it's a stack, the last nodes
+   visited are the first nodes searched from *)
+
+let iter_search_dfs next start goal =
+  let rec dfs stack seen =
+    match stack with
+    | [] -> false
+    | current::rest ->
+        if current = goal then true
+        else if List.mem current seen then dfs rest seen
+        else let _ = print_endline ("Visiting "^current) in
+	     dfs ((next current)@rest) (current::seen)  in
+  dfs [start] []
+
+
+(* A modification of the above iterative search that uses
+   breadth-first search. It's obtained by using a _queue_ of
+   nodes thatwe've visited but have yet to search from. Because
+   it's a queue, the first nodes visited are the first nodes
+   searched from *)
+
+let iter_search_bfs next start goal =
+  let rec bfs stack seen =
+    match stack with
+    | [] -> false
+    | current::rest ->
+        if current = goal then true
+        else if List.mem current seen then bfs rest seen	
+        else let _ = print_endline ("Visiting "^current) in
+	     bfs (rest@(next current)) (current::seen)  in
+  bfs [start] []
+
+
+
+
+(* A version of the above functions that maintain the path from
+   the start node to the current node so that we can print the
+   paths during the search *)
+
+let print_path p current =
+  let rec loop p = 
+    match p with
+    | [] -> ()
+    | x::xs -> let _ = loop xs in
+               print_string (x^" -> ") in
+  let _ = loop p in
+  print_endline current
+  
+
+let iter_search_dfs_path next start goal =
+  let rec dfs stack seen =
+    match stack with
+    | [] -> false
+    | (current,path)::rest ->
+        if current = goal then true
+        else if List.mem current seen then dfs rest seen
+        else let _ = print_path path current in
+	     dfs ((List.map (fun c -> (c,current::path)) (next current))@rest) (current::seen)  in
+  dfs [(start,[])] []
+
+let iter_search_bfs_path next start goal =
+  let rec bfs stack seen =
+    match stack with
+    | [] -> false
+    | (current,path)::rest ->
+        if current = goal then true
+        else if List.mem current seen then bfs rest seen
+        else let _ = print_path path current in
+	     bfs (rest@(List.map (fun c -> (c,current::path)) (next current))) (current::seen)  in
+  bfs [(start,[])] []
+
+
+
+(* The naive recursive process for computing the fibonacci sequence *)
+
+let rec fib1 n =
+  if n < 2 then 1
+  else fib1(n-2) + fib1(n-1)
+
+
+(* A simple interface to a key-value table (a.k.a., a dictionary) *)
+   
+let make_table () = []
+let mem x t = List.exists (fun (y,_) -> x = y) t
+let lookup x t = match List.find (fun (y,_) -> x = y) t with (_,v) -> v
+let insert x v t = (x,v)::t
+
+
+
+(* The memoized version of the above recursive process for fibonacci.
+   Basically, we maintain a table of fibonacci values we've already
+   computed so that when we encounter them again, we can look them up
+   instead of recomputing them from scratch *)
+
+(* This uses OCaml references, which lets you define mutable state *)
+
+let fib2 =
+  let rtable = ref (make_table ()) in
+  let rec fib n =
+    if mem n (!rtable) then lookup n (!rtable) 
+    else if n < 2 then 1
+    else
+      let v = fib(n-2) + fib(n-1) in
+      let _ = rtable := insert n v (!rtable) in
+        v   in
+  fib
+</pre>
+</body>
+
+</html>

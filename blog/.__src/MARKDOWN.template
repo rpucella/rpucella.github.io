@@ -1,0 +1,24 @@
+<script>
+  document.title = {{ .Title }} + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">{{ .Title }}</h3>
+    
+    <div class="date">{{ .FormattedDate }}</div>
+    
+    <div class="body">
+      {{ .Body }}
+    </div>
+
+    {{if .Reading}}
+      <div class="reading">{{ .Reading }}</div>
+    {{end}}
+
+  </article>
+  
+</main>

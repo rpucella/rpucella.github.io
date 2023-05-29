@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = "Static Web Site Generation (Part 2)" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Static Web Site Generation (Part 2)</h3>
+    
+    <div class="date">May 2, 2023</div>
+    
+    <div class="body">
+      <p><em>Previous post in the series: <a href="/blog/post/static-web-site-generation">Static Web Site Generation (Part 1)</a></em>.</p>
+
+<p>In my last post, I talked about <code>webgen</code>, the tool I wrote to maintain this website. It is a
+fairly conventional static web site generator, based on the simplest of all ideas: HTML templates
+that can be filled with HTML content. Writing it from scratch has been a good exercise and gave me a
+tool perfectly suited to my workflow that I can modify however and whenever said workflow changes.</p>
+
+<p>A quick recap: the tool assumes that a web site is structured as a folder hierachy containing the
+HTML files to be served statically through a standard web server. Some of those HTML files are
+pre-written files, while others are generated from content and HTML templates. Site generation is
+done before the web site is deployed, so that only static files are served by the web server.</p>
+
+<p>The tool scans all folder in the hierarchy and for any folder <code>F</code> with a <code>__src</code> subfolder containing a
+file <code>foo.content</code> holding some HTML content it generates a file <code>foo.html</code> in folder <code>F</code> by inserting
+<code>__src/foo.content</code> into an HTML template. That HTML template is found by searching the parent folders
+of <code>F</code> for a template <code>__src/CONTENT.template</code>. Templates can be stored at any levels of the folder
+hiearchy, and the template in the nearest enclosing folder is used.</p>
+
+<p>This means, for example, that you can write a site template capturing the structure of all the
+pages of the final website (header, footer, navigation bar, layout, CSS), that you can write the HTML
+content of the various pages within those various content files, and that you can then generate the
+final website by simply injecting each content file into the site template to obtain the final pages.</p>
+
+<p>Moreover, and this is the point of this post, there is no reason why content used to generate the
+final pages need to be HTML. It is easy enough to generate HTML from markup languages such as <a href="https://daringfireball.net/projects/markdown/">Markdown</a> or
+<a href="https://orgmode.org/">Org files</a>. The approach that <code>webgen</code> takes is to <em>cascade</em> content generation. For Markdown, for
+example, there is a Markdown-to-HTML translator in <code>webgen</code> that knows how to translate Markdown files
+into HTML content files that can be then be processed using the HTML content generation described
+above as though they were original content files. There is no difference between generated content files and original content files. This compositionality was an important design criterion for <code>webgen</code>.</p>
+
+<p>More specifically, every <code>__src/foo.md</code> file gets translated into a <code>__src/foo.content</code> HTML file in the
+same source folder. The implementation uses the library <a href="https://github.com/russross/blackfriday">Blackfriday</a> for parsing Markdown and
+generating the HTML. The translation from Markdown to HTML is completely standard: headers get
+translated into <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, ..., italics into <code>&lt;i&gt;</code>, bold into <code>&lt;b&gt;</code>, lists into <code>&lt;ul&gt;</code>, etc.</p>
+
+<p>A Markdown-specific HTML template can additionally be used to mediate the translation from Markdown
+to HTML. The tool searches for a template <code>__src/MARKDOWN.template</code> by walking up the folder
+hierarchy from the source folder of any Markdown file, in the same way as it searches for a template
+<code>__src/CONTENT.template</code>. If it finds such a Markdown template file, the HTML obtained by
+translating the Markdown file is inserted into the template to create the final content file.</p>
+
+<p>The implementation supporting this process is a simple extension of what's already available. Recall
+from last time that the tool does a recursive walk over the folder hierarchy of the web site to
+generate <code>foo.html</code> from every <code>__src/foo.content</code> it finds.  To handle Markdown translation, the tool
+does a preliminary recursive walk to translate every Markdown file into a content file before. Thus,
+given the following hierarchy:</p>
+
+<pre><code>root/
+    __src/
+        MARKDOWN.template
+    C/
+        __src/
+            page-C.md
+    D/
+        __src/
+            MARKDOWN.template
+            page-D.md
+</code></pre>
+
+<p>the tool will first generate the following files in the Markdown translation pass:</p>
+
+<pre><code>root/
+    C/
+        __src/
+            page-C.content
+    D/
+        __src/
+            page-D.content
+</code></pre>
+
+<p>using template <code>root/__src/MARKDOWN.template</code> for <code>page-C.md</code> and <code>root/D/__src/MARKDOWN.template</code> for
+<code>page-D.md</code>. The subsequent recursive walk will generate <code>page-C.html</code> and <code>page-D.html</code> in the usual way:</p>
+
+<pre><code>root/
+    C/
+        page-C.html
+    D/
+        page-D.html
+</code></pre>
+
+<p>The underlying walk-and-translate algorithm is straightforward:</p>
+
+<pre><code>for every folder F:
+   if F/__src/ exists:
+      for all files F/__src/C.md:
+          transform C.md into some HTML content
+          if there is a nearest MARKDOWN.template file T:
+             insert HTML content into T to update HTML content
+          write HTML content to F/__src/C.content
+</code></pre>
+
+<p>In the tool, the above algorithm is contained in function <code>WalkAndProcessMarkdowns()</code>, invoked before
+<code>WalkAndProcessContents()</code> from last time and working very similarly:</p>
+
+<pre><code>func WalkAndProcessMarkdowns(root string) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		rep.Fatal(&quot;ERROR: %s\n&quot;, err)
+	}
+	walk := func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			// Error in processing the path - skip.
+			return nil
+		}
+		if !d.IsDir() {
+			// Skip over files.
+			return nil
+		}
+		if filepath.Base(path) == &quot;.git&quot; {
+			return fs.SkipDir
+		}
+		if isGenDir(path) {
+			// Skip GENDIR.
+			return fs.SkipDir
+		}
+		if isGenPosts(path) {
+			return fs.SkipDir
+		}
+		ProcessFilesMarkdown(cwd, path)
+		return nil
+	}
+	if err := filepath.WalkDir(root, walk); err != nil {
+		rep.Fatal(&quot;ERROR: %s\n&quot;, err)
+	}
+}
+</code></pre>
+
+<p>(Variable <code>GENDIR</code> abstracts the name of source folder <code>__src</code> in case I want to change it in the future.)</p>
+
+<p>A function <code>ProcessFilesMarkdown()</code> does the bulk of the work of translating all the Markdown files in
+a <code>__src</code> folder in a way similar to <code>ProcessFilesContents()</code> for content files:</p>
+
+<pre><code>func ProcessFilesMarkdown(cwd string, path string) {
+	gdPath, err := identifyGenDirPath(path)
+	if err != nil {
+		return
+	}
+	entries, err := os.ReadDir(gdPath)
+	if err != nil {
+		// if we can't read GENDIR, skip.
+		return
+	}
+	for _, d := range entries {
+		if !d.IsDir() &amp;&amp; isMarkdown(d.Name()) {
+			relPath, err := filepath.Rel(cwd, gdPath)
+			if err != nil {
+				relPath = gdPath
+			}
+			target := filepath.Join(relPath, targetFilename(d.Name(), &quot;md&quot;, &quot;content&quot;))
+			w, err := os.Create(target)
+			if err != nil {
+				w.Close()
+				rep.Printf(&quot;ERROR: %s\n&quot;, err)
+				continue
+			}
+			if err := ProcessFileMarkdown(w, filepath.Join(relPath, d.Name())); err != nil {
+				w.Close()
+				rep.Printf(&quot;ERROR: %s\n&quot;, err)
+				continue
+			}
+			rep.Printf(&quot;  wrote %s&quot;, target)
+			w.Close()
+		}
+	}
+}
+
+func ProcessFileMarkdown(w io.Writer, fname string) error {
+	rep.Printf(&quot;%s\n&quot;, fname)
+	md, err := ioutil.ReadFile(fname)
+	if err != nil {
+		return err
+	}
+	metadata, restmd, err := ExtractMetadata(md)
+	if err != nil {
+		return err
+	}
+	output := blackfriday.Run(restmd, blackfriday.WithNoExtensions())
+	tpl, tname, err := FindMarkdownTemplate(fname)
+	if tpl != nil {
+		rep.Printf(&quot;  using markdown template %s\n&quot;, tname)
+		result, err := ProcessMarkdownTemplate(tpl, metadata, template.HTML(output))
+		if err != nil {
+			return err
+		}
+		output = []byte(result)
+	}
+	if _, err := w.Write(output); err != nil {
+		return err
+	}
+	return nil
+}
+</code></pre>
+
+<p>(Clearly, that both the recursive walk to find Markdown files and the code to process Markdown files
+parallel the structure of generating HTML from content files suggests that there's an abstraction
+here that I can isolate. I'll work on that kind of refactoring the next time I touch this code
+base.)</p>
+
+<p>The actual Markdown-to-HTML translation is achieved with a call to <code>blackfriday.Run()</code> in the
+<a href="https://github.com/russross/blackfriday">Blackfriday</a> library. Functions <code>FindMarkdownTemplate()</code> and <code>ProcessMarkdownTemplate()</code> are used
+to find a <code>__src/MARKDOWN.template</code> and to insert the produced HTML into such a template, respectively.</p>
+
+<p>One additional detail worth mentioning is that I allow Markdown files to have YAML-style metadata at
+the top of the file, such as:</p>
+
+<pre><code>---
+title: Static Web Site Generation (Part 1)
+date: 2023-03-23
+---
+</code></pre>
+
+<p>This metadata can be used in a Markdown template, although the implementation is not yet generic: I
+support only a few fields, such as <code>title</code> and <code>date</code> as above, mostly dedicated to the creation of blog
+posts. I will most likely talk about blog support in <code>webgen</code> in a future post. Markdown metadata is
+read using a function <code>ExtractMetadata()</code>.</p>
+
+<p>And that's about it. Clearly the above generalizes to other markup formats, as long as you can
+define an HTML translator for those formats.</p>
+
+<p>In a precise sense, <code>webgen</code> works bottom-up: it first transforms every Markdown file it finds into a
+content file in a first pass, and then transforms every content file it finds into an HTML file in a
+second pass. It is easy to add more steps to the cascade. For instance, I explored the idea of
+adding LaTeX-style mathematical markup to Markdown documents to help writing mathematical posts. So
+as not to reinvent the Markdown-translation wheel, or hack the underlying Markdown translation
+library, the easiest way to support this kind of extended Markdown is to first translate the
+extended Markdown file into a normal Markdown file in which the mathematical markup has been
+translated to HTML, leaving all standard Markdown untouched. This latter Markdown file can then be
+translated to HTML using the process described above, taking advantage of the fact that the
+Blackfriday library leaves HTML markup in a Markdown file untouched during translation. (You can see the result on this experiment on these <a href="http://localhost:8000/courses/dsa-fa22/notes/analysis1.html">lecture notes on algorithmic analysis</a>. The translation from LaTeX to HTML was done through <a href="https://temml.org/">Temml</a>.)</p>
+
+<p>The current implementation of <code>webgen</code> is not smart about generation. It will regenerate all files
+whenever it is run, whether their source files have been modified or not since the last
+generation. I don't see it as a problem right now because this site is small: generating it from
+scratch every times takes only a few seconds. Of course, a more efficient generation process would
+be to only regenerate files whose source have changed. I'm leaving this optimization for a future
+refactoring over the code.</p>
+
+    </div>
+
+    
+      <div class="reading">Mantissa (by John Fowles)</div>
+    
+
+  </article>
+  
+</main>
+
+    
+  </body>
+  
+</html>

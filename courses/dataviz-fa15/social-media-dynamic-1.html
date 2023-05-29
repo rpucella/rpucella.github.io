@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Social Media Viz Demo</title>
+
+    <!-- load D3 library -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+    <style>
+
+text {
+    font-family: sans-serif;
+}
+
+ .bar { 
+     stroke: white;
+     stroke-width: 2px;
+     fill: blue;
+ }
+
+ .value {
+     font-weight: bold;
+     font-size: 16px;
+     fill: blue;
+ }
+
+ .label {
+     font-size: 20px;
+ }
+
+ .title {
+     font-weight: bold;
+     font-size: 20px;
+     fill: black;
+ }
+
+
+    </style>
+
+  </head>
+  
+  <body>
+
+    <div>
+      <button id="button_gender">Chart gender</button>
+      <button id="button_age">Chart age</button>
+    </div>
+
+    <div>
+      <svg id="viz1" height="500" width="800" style="border: 1px solid grey; margin: 20px;">
+      </svg>
+      <svg id="viz2" height="500" width="800" style="border: 1px solid grey; margin: 20px; display:none;">
+      </svg>
+    </div>
+
+    <div>
+      <button id="button_2013">2013</button>
+      <button id="button_2014">2014</button>
+    </div>
+
+    <script>
+
+
+      
+window.addEventListener("load",run);
+      
+
+/*
+ * Demo: social media 2013-2014 data
+ * 
+ * Version charting two years
+ * Year selection via buttons
+ * Using D3 for DOM manipulation
+ *
+ * Interaction: switching between two demographic segmentations
+ * Chart both segmentations at the same time
+ * Only display one or the other
+ *
+ */
+
+
+function run () {
+
+    var category1 = "gender";
+    var category2 = "age";
+
+    // setup button events
+    // we could have used addEventListener() as well
+
+    d3.select("#button_2013").on("click",
+				 function() { 
+				     updateView("viz1",category1,2013);
+				     updateView("viz2",category2,2013) 
+				 });
+    
+    d3.select("#button_2014").on("click",
+				 function() { 
+				     updateView("viz1",category1,2014);
+				     updateView("viz2",category2,2014); 
+				 });
+    
+    d3.select("#button_gender").on("click",
+				   function() { 
+				       chooseView("viz1");
+				   });
+
+    d3.select("#button_age").on("click",
+				function() { 
+				    chooseView("viz2");
+				});
+
+    initializeView ("viz1",category1);
+    initializeView ("viz2",category2);
+    updateView("viz1",category1,2014);
+    updateView("viz2",category2,2014);
+}
+
+
+function initializeView (id,category) {
+
+    var svg = d3.select("#"+id);
+
+    // get the size of the SVG element
+    var height = svg.attr("height");
+    var width = svg.attr("width");
+
+    // the chart lives in the svg surrounded by a margin of 100px
+    var margin = 100;
+    var chartHeight = height - 2*margin;
+    var chartWidth = width - 2*margin;
+
+    var d = getDataRows(category,2013);
+
+    // figure out the width of the bars so that all bars fit and 
+    //   there is one bar width between them
+    // note that every data point now has _2_ bars associated with 
+    //   it
+    var barWidth = chartWidth/(2*d.length-1);
+
+    svg.append("text")
+	.attr("class","title")
+	.attr("x",width/2)
+ 	.attr("y",margin/2)
+	.attr("dy","0.3em")
+	.style("text-anchor","middle");
+
+    sel = svg.selectAll("g")
+	.data(d)
+	.enter().append("g")
+
+    sel.append("rect")
+	.attr("class","bar")
+	.attr("x",function(d,i) { return margin+(i*2)*barWidth; })
+	.attr("y",height-margin)
+	.attr("width",barWidth)
+	.attr("height",0);
+
+    sel.append("text")
+	.attr("class","value")
+	.attr("x",function(d,i) { return margin+(i*2)*barWidth+barWidth/2; })
+ 	.attr("y",height-margin-20)
+	.attr("dy","0.3em")
+	.style("text-anchor","middle");
+
+    sel.append("text")
+	.attr("class","label")
+	.attr("x",function(d,i) { return margin+(i*2)*barWidth+barWidth/2; })
+	.attr("y",margin+chartHeight+50)
+	.attr("dy","0.3em")
+	.style("text-anchor","middle")
+	.text(function(d) { return d.group; });
+}
+
+
+
+function updateView (id,category,year) {
+
+    var data = getDataRows(category,year);
+
+    var svg = d3.select("#"+id);
+
+    var height = svg.attr("height");
+    var margin = 100;
+    var chartHeight = height - 2*margin;
+
+    var yPos = d3.scale.linear()
+	.domain([0,100])
+	.range([height-margin,margin]);
+
+    var height = d3.scale.linear()
+	.domain([0,100])
+	.range([0,chartHeight]);
+
+    svg.select(".title")
+	.text(year);
+
+    sel = svg.selectAll("g")
+	.data(data);
+
+    sel.select(".bar")
+	.transition(2000)
+	.attr("y",function(d) { return yPos(d.value); })
+	.attr("height",function(d) { return height(d.value); });
+
+    sel.select(".value")
+	.transition(2000)
+	.attr("y",function(d) { return yPos(d.value) - 20; })
+	.text(function(d) { return d.value+"%"; });
+
+}		 
+
+
+function chooseView (id) { 
+    // hide both, reveal one
+    d3.selectAll("svg").style("display","none");
+    d3.select("#"+id).style("display","block");
+}
+
+
+
+/* From 
+   http://www.pewinternet.org/files/2015/01/PI_SocialMediaUpdate20144.pdf
+*/
+
+
+function getDataRows (category,year) {
+    var data = [
+	{ category:"all", group:"all", year:2013, value:71},
+	{ category:"all", group:"all", year:2014, value:71},
+	{ category:"gender", group:"Men", year:2013, value:66},
+	{ category:"gender", group:"Men", year:2014, value:66},
+	{ category:"gender", group:"Women", year:2013, value:76},
+	{ category:"gender", group:"Women", year:2014, value:77},
+	{ category:"race", group:"White, Non-Hispanic", year:2013, value:71},
+	{ category:"race", group:"White, Non-Hispanic", year:2014, value:71},
+	{ category:"race", group:"Black, Non-Hispanic", year:2013, value:76},
+	{ category:"race", group:"Black, Non-Hispanic", year:2014, value:67},
+	{ category:"race", group:"Hispanic", year:2013, value:73},
+	{ category:"race", group:"Hispanic", year:2014, value:73},
+	{ category:"age", group:"18-29", year:2013, value:84},
+	{ category:"age", group:"18-29", year:2014, value:87},
+	{ category:"age", group:"30-49", year:2013, value:79},
+	{ category:"age", group:"30-49", year:2014, value:73},
+	{ category:"age", group:"50-64", year:2013, value:60},
+	{ category:"age", group:"50-64", year:2014, value:63},
+	{ category:"age", group:"65+", year:2013, value:45},
+	{ category:"age", group:"65+", year:2014, value:56}
+    ];
+    
+    return data.filter(function(row) {
+	return (row.category===category && row.year===year) ; });
+}
+      
+    </script>
+    
+  </body>
+  
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Older Announcements</title>
+
+    <link rel="stylesheet" href="alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="autoscroll.js"></script>
+    
+    <style>
+
+      hr { margin-top: 50px; }
+
+        code,tt,pre {
+          font-size: 110%;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	.hidden {
+	  visibility: hidden;
+        }
+
+        tt.code {
+           font-weight: bold;
+/*           background: #e6e6e6; */
+        }
+
+      div.code {
+      border: 1px solid #c6c6c6;
+      border-radius: 5px;
+      padding: 0px;
+      margin-bottom: 20px;
+      }
+      
+      div.code p {
+      margin:0px;
+      padding:5px 10px;
+      background:#eeeeee;
+      font-style: italic;
+      cursor:pointer;
+      }
+
+      div.code p:hover {
+      background:#cccccc;
+      }
+
+      div.code pre { 
+      display:none;
+      padding: 10px;
+      font-size:100%;
+      }
+
+      div.code.visible pre  {
+      display:block;
+      }
+      
+ol.question {
+    padding-top:1em;
+    list-style-type: decimal;
+}
+
+ol.subquestion {
+    list-style-type: upper-alpha;
+}
+
+      ol.question > li {
+      font-weight: bold;
+      }
+
+      ol.question > li > * {
+      font-weight: normal;
+      }
+      
+ol > li {
+    padding:4px 8px; /* Add some spacing around the content */
+}
+
+li ol,
+li ul {margin-top:6px;}
+
+li > p { margin-top:0;}
+
+
+    </style>
+
+    <script>
+      function toggleShowHide (p) { 
+      var div = p.parentNode;
+        if (div.className && div.className.startsWith("visible")) {
+          div.className = "code";
+      } else {
+        div.className = "visible code";
+      }
+      }
+    </script>
+
+  </head>
+
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../index.html"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a href="index.html"><b>Foundations of Computer Science SP16</b></a></li> 
+	<li class="hidden"><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li class="hidden"><a class="scrollto" href="#info">Course Info</a></li>
+	<li class="hidden"><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li class="hidden"><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Older Announcements</h1>
+
+      <ul class="simple annoucements">
+
+
+
+      	<li>
+	  <p class="ann"><span class="hdr">Mar 27:</span>
+	    <a disabled_href="homework7.html">Homework 7</a> is finally out. Sorry it took so long, it was a bit trickier to develop than usual. Due next Saturday at midnight. Email me if you have any questions, or if you find a mistake. File <tt>hw7-checker.ml</tt> will be available in a few days, but type-checking shouldn't be a big deal for this one. Almost everything has type <tt>grammar</tt>...</p>
+	</li>
+
+	<li>
+	  <p class="ann"><span class="hdr">Mar 14:</span>
+	    I'm going to put this here before I forget. The final assessment period for our class is <i>Wednesday May 4, 4-7pm, AC318</i>.
+	</p></li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Mar 8:</span>
+	    The type checker for homework 6 <a href="hw6-checker.ml"><tt>hw6-checker.ml</tt></a> is now available. Reminder: it only checks the type of your functions.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Mar 3:</span>
+	    <a disabled_href="homework6.html">Homework 6</a> is out. Due next Friday at midnight. Email me if you have any questions, or if you find a mistake. File <tt>hw6-checker.ml</tt> will be available after the weekend.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 29:</span>
+	    Notes on Thursday's lecture on undecidability available
+	    below. Please read Chapter 8 of the book.
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 28:</span>
+	    Some notes from last week's Ninjas section
+	    on <a href="nondet-turing.pdf">nondeterministic Turing
+	    machines</a>. 
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 23:</span>
+	    The type checker for homework 5 <a href="hw5-checker.ml"><tt>hw5-checker.ml</tt></a> is now available. Reminder: it only checks the type of your functions.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 20:</span>
+	    <a disabled_href="homework5.html">Homework 5</a> is out. Due next Friday at midnight. Email me if you have any questions, or if you find a mistake. File <tt>hw5-checker.ml</tt> will be available after the weekend.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 20:</span>
+	    Added some notes for the Turing machines lecture. Please
+	    read Chapter 5 in the book, their description of Turing
+	    machines. Slightly different tack, but completely
+	    equivalent. I've also added some notes
+	    about <tt>fold-left</tt> in the functional programming
+	    lecture section.
+	  </p>
+	</li>
+
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 17:</span>
+	    The type checker for homework 4 <a href="hw4-checker.ml"><tt>hw4-checker.ml</tt></a> is now available. Reminder: it only checks the type of your functions.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 12:</span>
+	    <a disabled_href="homework4.html">Homework 4</a> is out. Due next Friday at midnight. Email me if you have any questions, or if you find a mistake. File <tt>hw4-checker.ml</tt> will be available after the weekend.</p>
+	</li>
+
+	<li>
+	  <p class="ann"><span class="hdr">Feb 12:</span> My <a href="03-functional.pdf">notes</a>
+	    from the functional programming lecture. It probably needs a bit more proof-reading than I've given it, so I'll revise it over the next few days fixing the problems that I find. (Last updated at 21h30)</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 9:</span> Some notes
+	    from Monday's Ninjas section, which
+	    describe <a href="dfa-to-regexp.pdf">how to construct a
+	    regular expression whose language is that accepted by a
+	    given finite automaton</a>. This shows that finite
+	    automata can only accept regular languages. (Why?)</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 8:</span>
+	    The homework 3 checker <a href="hw3-checker.ml"><tt>hw3-checker.ml</tt></a> is now available. Reminder: it only checks the type of your functions.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 6:</span>
+	    <a disabled_href="homework3.html">Homework 3</a> is out. Due next Friday at midnight. Email me if you have any questions, or if you find a mistake. File <tt>hw3-checker.ml</tt> will be available after the weekend.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Jan 29:</span>
+	    I posted some summary <a href="02-automata.pdf">lecture notes</a> on finite automata. You should also read Chapter 3 of the book (see notes on the lecture below)
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Feb 3:</span>
+	    The homework 2 checker <a href="hw2-checker.ml"><tt>hw2-checker.ml</tt></a> is now available. Reminder: the only thing it checks are the types. Make sure your code passes those checks.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Jan 29:</span>
+	    <a disabled_href="homework2.html">Homework 2</a> is out. Due next Thursday at midnight. Email me if you have any questions. File <tt>hw2-checker.ml</tt> not available just yet &mdash; should be a few days.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Jan 29:</span>
+	    I posted some summary <a href="01-languages.pdf">lecture notes</a> on yesterday's lecture, basically making sure we have all of our definitions in one place. Let me know if you find errors.
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Jan 26:</span>
+	    Submission instructions have been added to <a disabled_href="homework1.html">Homework
+	      1</a>. Please have a look. Basically: email
+	    your <tt>homework1.ml</tt> file to a submission-specific
+	    email address, <i>after you've checked your file using a
+	    checker that I provide you</i>. That's going to save all
+	    of us much headache. </p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Jan 24:</span>
+	    Ninja office hours posted below. Our ninjas will host a
+	    tutorial section <i>every Monday 17:00-18:00</i> in AC
+	    318. It is not mandatory to attend, but strongly
+	    recommended.</p>
+	</li>
+
+
+      	<li>
+	  <p class="ann"><span class="hdr">Jan 24:</span>
+	    Some links related to the first lecture added in the
+	    <a class="scrollto" href="#lectures">lectures</a> section below.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Jan 23:</span>
+	    <a disabled_href="homework1.html">Homework 1</a> is out. Due next Thursday at midnight. Email me if you have any questions.</p>
+	</li>
+
+      	<li>
+	  <p class="ann"><span class="hdr">Jan 1:</span>
+	    Happy New Year!</p>
+	</li>
+
+
+      </ul>
+  </body>
+</html>

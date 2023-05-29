@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Web Development (Spring 2021)</title>
+
+    <link rel="stylesheet" href="../../static/alt.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+
+    <script src="../../static/autoscroll.js"></script>
+    
+    <style>
+      
+        code,tt,pre {
+          font-size: 110%;
+        }
+
+        ul.annoucements li {
+            margin: 16px 0;
+        }
+	
+        div.lect {
+	  padding-top: 0;
+       	  padding-left: 3em;
+	  margin-top:0;
+        }
+    	p.ann { 
+    	  padding-left: 3em;
+    	  text-indent: -3em; 
+    	}
+	p.ann_ctd{
+	  padding-left: 3em;
+        }
+    	span.hdr {
+   	  padding-right: 1em
+    	}
+
+	table.office-hours td {
+	  padding-left: 30px;
+	}
+
+    </style>
+
+    <script>
+      window.addEventListener("load",run);
+
+      function run () {
+        // CREATE SCROLLING BEHAVIOR FOR NAVIGATION BAR
+        // actually, for anything with "scrollto" class
+
+        // offset is given by the 'top' div (adjusted for padding)
+        var off = document.getElementById("top").clientHeight;
+        console.log(off);
+        //var elts = document.querySelectorAll("div.navbar a");
+        var elts = document.querySelectorAll("a.scrollto");
+        for (var i=0; i<elts.length; i++) {
+          var href=elts[i].getAttribute("href").slice(1);
+          elts[i].setAttribute("onclick","return false;");
+          elts[i].setAttribute("onmousedown","autoScroll.autoScrollTo(\""+href+"\",-"+(off)+");");
+        }
+      }
+      </script>
+  </head>
+
+  <body>
+
+    <div class="navbar">
+
+      <div class="home">
+	<a href="../../"><img src="../../home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="scrollto" href="#top"><b>Web Development SP21</b></a></li> 
+	<li><a class="scrollto" href="#announcements">Announcements</a></li>
+	<li><a class="scrollto" href="#info">Course Info</a></li>
+	<li><a class="scrollto" href="#lectures">Lectures</a></li>
+	<li><a class="scrollto" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </div>
+
+
+    <!-- padding -->
+    <div id="top" style="height: 5em;"></div>
+    
+    <h1 class="clear">Web Development (Spring 2021)</h1>
+    
+    <p class="subtitle">ENGR 3599 / Tue-Thu 2:00 - 3:30pm (EST)  /  Online</p>
+    
+    <p>
+      An intensive introduction to the full stack of modern web
+      development, including HTML and CSS, JavaScript, client-side
+      frameworks (React, Angular, Vue, ...), server-side templates,
+      server-side frameworks (Flask, Express, ...), authentication,
+      persistence, REST APIs, and websockets.
+    </p>
+
+    <!-- 
+    <p>
+      The structure of the course will be a pretty straightforward walk through the standard 3-tier architecture of web applications.
+      We'll start with writing code purely client-side (on the
+      browser). Then we'll introduce servers, and see what role they
+      play and how they support what occurs client-side. Then we'll
+      introduce a persistence layer (database) to maintain information
+      long-term between server runs or even shared between servers.
+    </p>
+    -->
+    
+    
+    <hr class="section">
+    <div class="section" id="announcements">
+      <h3>Announcements</h3>
+
+      <ul class="simple annoucements">
+
+	<li><b>Mar 28</b> <br> Let's talk <a href="homeworks/project">final projects</a>.
+	</li>
+
+        <li><b>Mar 16</b> <br> <a href="homeworks/4/part2.html">Homework 4 (Part 2)</a> is out - due (together with Part 1) on Thursday March 25. 
+        </li>
+
+	<li><b>Mar 14</b> <br> We have a class-wide <a href="https://chat.rpucella.net">chat room</a>! Feel free to ask questions there. It's an example of the kind of thing that we can recreate by the time we're done with the course. It's also how submissions will be done from now on. Your credentials were sent over email.
+	</li>
+        
+        <li><b>Mar 13</b> <br> Some <a href="notes/structuring-backend.html">notes on structuring backends</a> that may be useful. Also, some <a href="notes/javascript-gotchas.html">Javascript gotchas</a> that are good to keep in mind.
+        </li>
+
+        <li><b>Mar 7</b> <br> <a href="homeworks/4">Homework 4</a> (Part 1) is out - it will be due (with Part 2) on <del>Monday March 22</del> Thursday March 25.
+        </li>
+        
+        <li><b>Feb 26</b> <br> <a href="homeworks/3">Homework 3</a> is out - due Monday March 8.
+        </li>
+        
+        <li><b>Feb 16</b> <br> <a href="homeworks/2">Homework 2</a> is out - due next Monday 23h59.
+        </li>
+        
+        <li><b>Feb 13</b> <br> I added submission instructions to homework 1.
+        </li>
+        
+        <li><b>Feb 11</b> <br> I added links to various topics connect to what was said in the first few lectures below.
+        </li>
+        
+        <li><b>Feb 9</b> <br> Added an extra question for teams of 3 to <a href="homeworks/1">Homework 1</a>.
+        </li>
+        
+        <li><b>Feb 8</b> <br> <a href="homeworks/1">Homework 1</a> is out - due next Monday 23h59.
+        </li>
+        
+        <li><b>Jan 27</b> <br> Welcome to webdev!
+        </li>
+
+      </ul>
+      
+    </div>
+
+
+    
+    <hr class="section">
+    <div class="section" id="info">
+      <h3>Course Information</h3>
+
+      <p><b>Prerequisites</b><br>  Software Design. I'm expecting that you know how to program at least in Python.</p>
+
+      <p><b>Instructor</b><br> <a href="http://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</p>
+
+      <p><b>Office hours</b> <br> Wednesdays 4-5pm EST (same Zoom as class), or by appointment.</p>
+
+      <p><b>Textbooks</b> <br> There is no required textbook. We'll mostly be using freely available resources, or documents I will share with you. If you truly want a textbook, the following is a reasonably broad overview of the field as it existed seven years ago, going into a lot of details about the basics:
+
+        <ul>
+          <li>Sebasta, <a href="https://www.pearson.com/us/higher-education/program/Sebesta-Programming-the-World-Wide-Web-8th-Edition/PGM30365.html"><i>Programming the World Wide Web</i></a>, Pearson. 2015</li>
+        </ul>
+
+        The following book is the best book I know about JavaScript, and it's thin to boot. It doesn't contain the latest updates to the syntax (known as ES2020) but if you're serious about doing front-end web development, you need to read this book at least once:
+
+        <ul>
+          <li>Crockford, <a href="https://www.oreilly.com/library/view/javascript-the-good/9780596517748/"><i>JavaScript: The Good Parts</i></a>. O'Reilly, 2008</li>
+        </ul>
+
+        We're going to program our servers using Flask, a Python web framework. Plenty of documentation about Flask online. If you need a narrative, this is reasonable:
+        
+        <ul>
+          <li>Grinberg, <a href="https://www.oreilly.com/library/view/flask-web-development/9781491947586/"><i>Flask Web Development</i></a>. O'Reilly, 2014</li>
+        </ul>
+
+        Generally speaking, the technology evolves way too quickly for any good book to be up-to-date with what's currently available out there. Still, the above generally sticks to foundational topics that remains true.
+      </p>
+    
+      <p><b>Grading</b> <br> Weekly or bi-weekly homeworks (50% of
+        final grade) and a final project and presentation (50% of
+        final grade).  All work done in teams of 2. Teams of 3
+        acceptable, but more will be expected. Late work will be
+        penalized (10% per 24 hours starting after a 24 hours
+        automatic grace period) and no work will be accepted after its
+        solution has been discussed in class.</p>
+
+      <p><b>NINJAs</b> <br> TBD.</p>
+
+      <p>I will expect all of us to follow the <a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a>.</p>
+
+     </div>
+
+
+    <hr class="section">
+    <div class="section" id="lectures">
+
+      <h3>Lectures and Readings</h3>
+
+      <p>Schedule and topics subject to change.</p>
+      
+      <ul class="lectures">
+
+	<li><p><span class="hdr">Jan 28:</span><b>Introduction</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/Introduction.pdf">Slides from the lecture</a>.</p>
+
+            <p>The <a href="https://home.cern/science/computing/birth-web/short-history-web">history of the web</a> from CERN.</p>
+
+            <p>The <a href="http://info.cern.ch/hypertext/WWW/TheProject.html">first web page</a>.</p>
+
+            <p>Before the web, there was <a href="https://developer.mozilla.org/en-US/docs/Web">Gopher</a>.</p>
+
+            <p><a href="https://developer.mozilla.org/en-US/">MDN Web Docs</a>, formerly the Mozilla Developer Network,
+            is the most accurate source of information on web tech
+            that you can find. They have a
+            fantastic <a href="https://developer.mozilla.org/en-US/docs/Web">Web
+            Tech portal page</a>.</p>
+            
+	  </div>
+        </li>
+        
+
+	<li><p><span class="hdr">Feb 2:</span><b>HTML Overview</b></p>
+
+	  <div class="lect">
+            
+	    <p><a href="slides/HTML.pdf">Slides from the lecture</a>.</p>
+
+            <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">MDN HTML</a> pages that describe pretty much everything you need to know.</p>
+
+            <p>What was introduced in <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5">HTML 5</a>? There's also a superb <a href="http://diveintohtml5.info/index.html">overview of HTML 5</a>.</p>
+            
+            <p>
+              An introduction to
+              the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction">Document
+                Object Model</a>.
+            </p>
+
+            <p>
+              I mentioned the basic rendering algorithm implemented
+              by browser. How browsers render various pieces of a web
+              document is called
+              a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Layout_mode">layout</a>. The
+              basic rendering algorithm with block and inline element I
+              alluded to in class is
+              the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flow_Layout/Block_and_Inline_Layout_in_Normal_Flow">flow
+                layout</a>.
+            </p>
+
+            <p>
+              This article describes
+              the <a href="https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/">process
+                of turning a web document into a rendered page</a> in
+              overwhelming detail. Note that it also takes styling into
+              account.
+            </p>
+
+	  </div>
+        </li>
+        
+	
+	<li><p><span class="hdr">Feb 4:</span><b>CSS Overview</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/CSS.pdf">Slides from the lecture</a>.</p>
+
+            <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/CSS">MDN CSS</a> pages that describe pretty much everything you need to know.</p>
+
+            <p><a href="https://css-tricks.com/how-many-css-properties-are-there/">How many CSS properties are there?</a></p>
+
+            <p>The <a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance">cascade</a> part of CCS.</p>
+
+            <p>CSS rules are defined using selectors. There is a pretty involved <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors">language of selectors</a> that you can use in rules.</p>
+
+            <p>Which CSS rule applies when multiple rules affect an element depends on the <a href="https://www.smashingmagazine.com/2007/07/css-specificity-things-you-should-know/">specificity of the rules involved</a>.</p>
+
+            <p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes">Pseudo-classes</a> are a way to define rules to apply to certain elements in certain states.</p>
+
+            <p>Distinctions between <a href="https://www.samanthaming.com/pictorials/css-inline-vs-inlineblock-vs-block/"><code>inline</code>, <code>inline-block</code>, and <code>block</code></a> for the <code>display</code> property.</p>
+            
+	  </div>
+        </li>
+
+
+	
+	<li><p><span class="hdr">Feb 11:</span><b>Introduction to JavaScript</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/JavaScript.pdf">Slides from the lecture</a>.</p>
+
+            <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">MDN JavaScript</a> pages that describe pretty much everything you need to know.</p>
+
+            <p>The <a href="https://262.ecma-international.org/11.0/">current EMCAScript standard (ES2020)</a>, which includes in particular in its <a href="https://262.ecma-international.org/11.0/#sec-intro">introduction</a> a description of what each previous standard introduced. There is a <a href="https://tc39.es/ecma262/">draft of the next standard, ES2021</a>.</p>
+
+            <p>A description of the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class system</a> in JavaScript.</p>
+
+	    <p>A discussion of the various forms of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness">equality</a> in JavaScript.</p>
+	    
+            <p>An interesting <a href="https://auth0.com/blog/a-brief-history-of-javascript/">history of JavaScript</a>.</p>
+            
+	  </div>
+
+	
+	<li><p><span class="hdr">Feb 16-18:</span><b>The Document Object Model and Events</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/DOM.pdf">Slides from the lectures</a>.</p>
+
+            <p>The demo code I played with in lecture: file <a href="code/dom.html"><code>dom.html</code></a>; file <a href="code/events.html"><code>events.html</code></a>; a <a href="code/styled-events.html">styled version</a> of <code>events.html</code>. (If you click on these links, the browser will open them as HTML documents. To download them to your machine, right-click on the link and chose "Save Link As..." or something equivalent.)</p>
+
+            <p>MDN documentation entry point on the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/">Document Object Model</a>.</p>
+
+            <p>Key classes in the DOM: The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a> class; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a> class; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement">HTMLElement</a> class.</p>
+
+            <p>Finding elements in the DOM: a general <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_object_model/Locating_DOM_elements_using_selectors">introduction</a>; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById">getElementById()</a> method; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector">querySelector()</a> method; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll">querySelectorAll()</a> method.</p>
+
+            <p>A <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Traversing_an_HTML_table_with_JavaScript_and_DOM_Interfaces">complete example</a> of how to manipulate an HTML table in JavaScript that illustrates all the features of creating elements and adding them to the DOM tree.</p>
+
+            <p>
+              MDN <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events">introduction to events</a>, as well as a list of all <a href="https://developer.mozilla.org/en-US/docs/Web/Events">events types bucketed by category</a>. The MDN introduction includes a good description of event propagation (where an event triggered on an element will propagate or bubble up through its parent elements).
+            </p>
+            
+	  </div>
+	  
+        </li>
+        
+	
+	<li><p><span class="hdr">Feb 23:</span><b>The Model-View-Controller Design Pattern</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/MVC.pdf">Slides from the lecture</a>.</p>
+
+            <p>The demo code I played with in lecture: <a href="code/mvc.html"><code>mvc.html</code></a>. (Here's the auxiliary <a href="code/mvc.css">mvc.css</a> and <a href="code/mvc.js">mvc.js</a> files that the document loads.)</p>
+
+	    <p>There isn't a concise description of MVC that I can easily point you to. Most articles either go deep into the weeds of the various flavors of MVC, or they argue that so and so that claims to be MVC is not really MVC but this other thing that if you squint you can't actually distinguish from MVC. &lt;scorn&gt;Pedants arguing with pedants&lt;/scorn&gt;. The following article by Fowler, <a href="https://martinfowler.com/eaaDev/uiArchs.html"><i>GUI Architectures</i></a>, is at least tolerable, though it focuses on GUI architectures and not on MVC as we have been applying it to HTML documents and JavaScript. If you have time for it, I'd dig around Fowler's writing a bit. Much of it is interesting and useful, whether you agree with it or not.</p>
+
+	    <p>If you're curious, you can read the original paper describing MVC by Krasner and Pope, <a href="./references/mvc-krasner-pope.pdf"><i>A Description of the MVC User Interface Paradigm in the Smalltalk-80 System</i></a>. Note that it is based on <a href="https://en.wikipedia.org/wiki/Smalltalk">Smalltalk</a>, a delightful old object-oriented language that now lives on mostly as the source of the object-oriented component of Objective-C.</p>
+            
+	  </div>
+	  
+        </li>
+        
+	
+	<li><p><span class="hdr">Feb 25:</span><b>Fetching Data</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/FetchingData.pdf">Slides from the lecture</a>.</p>
+
+            <p>The demo code I played with in lecture: <a href="code/fetch.html"><code>fetch.html</code></a>. (Here's the auxiliary <a href="code/fetch.css">fetch.css</a> and <a href="code/fetch.js">fetch.js</a> files that the document loads.)</p>
+
+	    <p>MDN pages on the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> function, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">promises</a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises">using promises</a>.</p>
+
+	    <p>A useful <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">tutorial on promises</a> that should give you some insight into how to use promises. This tutorial also uses the old <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest">XMLHttpRequest</a> method to fetch data in JavaScript.</p>
+            
+	  </div>
+	  
+        </li>
+        
+	
+	<li><p><span class="hdr">Mar 2-4:</span><b>Web Application Servers</b></p>
+	  <div class="lect">
+            
+	    <p>Slides from the <a href="slides/SupplyingData.pdf">first</a> and <a href="slides/WebAppServers.pdf">second</a> lectures.</p>
+
+            <p>The code for the flask web application server I demoed in lecture: <a href="code/flask-demo-2.zip"><code>flask-demo-2.zip</code></a>. Unzip and look at the README file in <code>flask-demo-2/web-app-server</code>.</p>
+
+	    <p>An introduction to <a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Introduction">web application servers</a>, and an overview of <a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Web_frameworks">web frameworks</a> for programming said web application servers, focusing on Flask.</p>
+
+	    <p>The official <a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a> documentation.</p>
+
+	    <p>An overview of <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview">HTTP</a>, and a deeper-dive into the specific format of <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages">HTTP requests</a>.</p>
+
+	  </div>
+	  
+        </li>
+
+        
+	<li><p><span class="hdr">Mar 16:</span><b>Forms and Distractions</b></p>
+	  <div class="lect">
+            
+	    <p>Slides from the <a href="slides/FormsAndDistractions.pdf">lecture</a>.</p>
+
+            <p>MDN tutorials on using <a href="https://developer.mozilla.org/en-US/docs/Learn/Forms">forms</a> and on the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form">&lt;form&gt;</a> element proper.</p>
+
+            <p>How do deal with <a href="https://pythonise.com/series/learning-flask/flask-working-with-forms">form data in Flask</a>.</p>
+
+            <p>Wikipedia entry on <a href="https://en.wikipedia.org/wiki/Query_string">query parameters (aka query string)</a>.</p>
+              
+	  </div>
+	  
+        </li>
+
+                
+	<li><p><span class="hdr">Mar 18-23:</span><b>Persistence</b></p>
+	  <div class="lect">
+            
+	    <p>Slides from the <a href="slides/Persistence.pdf">lecture</a>.</p>
+
+            <p><a href="code/persistence-demo.zip">Sample code</a> from lecture, illustrating a server with no persistence, and a server with file-system persistence (via a JSON file, and via an appendable text file). Some more <a href="code/persistence-db-demo.zip">sample code</a> that illustrates a server with database persistence (via direct SQL connection to SQLlite, via Active Records, and via a Data Mapper to SQLlite and MongoDB).</p>
+
+            <p>Wikipedia articles on <a href="https://en.wikipedia.org/wiki/Relational_database">relational databases</a> and <a href="https://en.wikipedia.org/wiki/NoSQL">nonrelational databases</a>.</p>
+
+            <p>A lucid blog post on <a href="https://www.jamesserra.com/archive/2015/08/relational-databases-vs-non-relational-databases/">relational and nonrelational databases</a>. Bottom line: they address different problems.</p>
+
+            <p>Wikipedia page on the <a href="https://en.wikipedia.org/wiki/Active_record_pattern">Active Records design pattern</a>, and the <a href="https://rubyonrails.org/">Ruby on Rails</a> <a href="https://guides.rubyonrails.org/active_record_basics.html">tutorial on active records</a>. (Ruby on Rails is one of the most widely used server-side framework based on the active records pattern.</p>
+
+            <p>Wikipedia page on the <a href="https://en.wikipedia.org/wiki/Data_mapper_pattern">Data Mapper design pattern</a>. Most existing <a href="https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping">ORM</a> systems implement the data mapper pattern, including <a href="https://www.sqlalchemy.org/">SQLAlchemy</a> for Python.</p>
+
+            <p>A thoughtful <a href="https://www.thoughtfulcode.com/orm-active-record-vs-data-mapper/">comparison between active records and data mapper</a> ORM approaches.</p>
+
+	  </div>
+	  
+        </li>
+
+        
+	<li><p><span class="hdr">Mar 25:</span><b>RESTful APIs</b></p>
+	  <div class="lect">
+            
+	    <p>Slides from the <a href="slides/RESTfulAPIs.pdf">lecture</a>.</p>
+
+            <p><a href="code/restful-demo.zip">Sample code</a> from lecture, illustrating a trello-like service with a single board. The code include a sample server implementing a RESTful service, and a client that can communicate with that RESTful service.</p>
+
+            <p>Fielding's dissertation that introduced the notion of <a href="https://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">REST</a>.</p>
+
+            <p>Wikipedia page on <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD operations</a>.</p>
+
+            <p>A reasonably lucid site for delving into the <a href="https://restfulapi.net/">RESTful API methodology</a>.</p>
+
+            <p>MDN description of the various <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods">HTTP methods</a>.</p>
+
+            <p>A RESTful API in the wild: the <a href="https://docs.github.com/en/rest">GitHub REST API</a>.</p>
+              
+	  </div>
+	  
+        </li>
+
+        
+	<li><p><span class="hdr">Mar 30 - Apr 15:</span><b>ReactJS</b></p>
+	  <div class="lect">
+            
+	    <p>Slides from the lectures: <a href="slides/ReactJSIntroduction.pdf">Introduction</a>, <a href="slides/ReactJSComponents.pdf">Components</a>, <a href="slides/ReactJSPractical.pdf">ReactJS in Practice</a>, and <a href="slides/ReactJSStateManagement.pdf">State Management</a>.</p>
+
+            <p>Combined <a href="code/react-demo.zip">sample code</a> from the introductory lecture. You <i>may</i> need to run a local web server to run this code. Try it directly in the browser first, and if it gives you a CORS error (or some other security failure), start a local web server and load the code through that.</p>
+
+            <p>The <a href="https://reactjs.org/docs/getting-started.html">ReactJS documentation</a> is actually pretty reasonable. You also may want to check out the <a href="https://reactjs.org/tutorial/tutorial.html">tutorial</a>.</p>
+
+            <p>Overview of <a href="https://reactjs.org/docs/introducing-jsx.html">JSX</a>.</p>
+
+            <p> <a href="code/react-practical.zip">Sample code</a> for subsequent lectures, using <a href="https://reactjs.org/docs/create-a-new-react-app.html">Create React App</a>.</p>
+
+            <p> All about <a href="https://hacks.mozilla.org/2015/08/es6-in-depth-modules/">ES6 modules</a> which is what Create React App uses. </p>
+
+            <p>I did not touch functional components. Basically, if a component has no state, you can simply use a Javascript function that takes a single `props` argument and returns a JSX value. See <a href="https://reactjs.org/docs/components-and-props.html">this page</a> for some examples. I also did not touch hooks, which basically provide a way to add state to functional components. ReactJS seems to be moving in the hooks direction, though best practices haven't quite jelled yet.</p>
+
+            <p>The <a href="https://styled-components.com/">styled components</a> library I used in our last demo.</p>
+
+            <p><a href="https://redux.js.org/">Redux</a> is a popular state management library for ReactJS.</p>
+            
+	  </div>
+	  
+        </li>
+        
+	<li><p><span class="hdr">Apr 22:</span><b>Server-Side Templates</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/ServerSideTemplates.pdf">Slides</a> from the lectures.</p>
+
+            <p><a href="code/templating-demo.zip">Sample code</a> from the lecture.</p>
+
+	    <p>The <a href="https://en.wikipedia.org/wiki/Web_template_system">Web Template System</a> entry from Wikipedia contains links to server-side template engine (among other sort of templating engines, including template engines that are filled in the frontend.)</p>
+
+	    <p>Both <a href="https://en.wikipedia.org/wiki/Jakarta_Server_Pages">JSP</a>, <a href="https://en.wikipedia.org/wiki/Active_Server_Pages">ASP</a>, and <a href="https://rubyonrails.org/">Ruby on Rails</a> are web application server frameworks geared at providing dynamic HTML documents via templates.</p>
+
+            <p><a href="https://www.php.net/">PHP</a> is a popular template-based framework that unlike the frameworks above does not come with its own web application server infrastructure, but rather is meant to be connected to a standard web server such as Apache or nginx, which comes with modules to enable connection to the PHP template engine.</p>
+	    
+	  </div>
+	  
+        </li>
+
+	<li><p><span class="hdr">Apr 29:</span><b>Sessions and Cookies</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/SessionsAndCookies.pdf">Slides</a> from the lectures.</p>
+
+            <p><a href="code/cookies-demo.zip">Sample code</a> from the lecture.</p>
+
+	    <p>A short overview of statelessness and some <a href="https://restfulapi.net/statelessness/">advantages of statelessness</a>.</p>
+
+	    <p>A short <a href="https://medium.com/@t0ri/being-stateful-in-a-stateless-web-8185ed777048">introduction</a> to adding statefulness on top of the stateless HTTP protocol via cookies.</p>
+
+	    <p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">MDN tutorial</a> on cookies.</p>
+
+	    <p><a href="https://tools.ietf.org/html/rfc6265">RFC 6265</a>, the precise IETF standard on state management via cookies, a surprisingly readable document once you get to Section 3.</p>
+
+	    <p>An entertaining and illuminating writeup by David Kristol, <a href="https://arxiv.org/abs/cs/0105018"><i>HTTP Cookies: Standards, Privacy, and Politics</i></a>, where he discusses work on RFC 2965, the previous Cookie standard before the current RFC 6265.</p>
+	    
+	  </div>
+	  
+        </li>
+
+	<li><p><span class="hdr">May 4:</span><b>Authentication</b></p>
+	  <div class="lect">
+            
+	    <p><a href="slides/Authentication.pdf">Slides</a> from the lectures.</p>
+
+            <p><a href="code/authentication-demo.zip">Sample code</a> from the lecture.</p>
+
+            <p>Wikipedia article on <a href="https://en.wikipedia.org/wiki/Cryptographic_hash_function">cryptographic hash functions</a> that you should use instead of passwords inside a database of users, and an interesting thread on security.stackexchange on <a href="https://security.stackexchange.com/questions/211/how-to-securely-hash-passwords">how to securely hash passwords</a>. Turns out it's subtle. By the way, the fact that databases don't store passwords but hash is the reason why you can't ask an app to give you back your password when you've forgotten it, but rather forces you to reset your password: the app doesn't actually have your password so can't give it back to you.</p>
+
+            <p>A security.stackexchange thread on <a href="https://security.stackexchange.com/questions/81756/session-authentication-vs-token-authentication">session authentication versus token authentication</a> with some interesting links.</p>
+
+            <p>If you're interested in token authentication (where authentication is kept on the browser), you'll probably want to use <a href="https://en.wikipedia.org/wiki/JSON_Web_Token">JWT</a> which are supported by libraries on all server-side infrastructures.</p>
+
+            <p>If you're interested in using SSO (single-signon), or allowing a user to log into your web app using their Google credentials (say), then you'll want to read about <a href="https://en.wikipedia.org/wiki/OAuth">OAuth</a>.</p>
+
+	  </div>
+        </li>
+        
+	<li><p><span class="hdr">May 11:</span><b>Final Project Presentations</b></p>
+	  <div class="lect">
+
+            <p>(Presentations for which I have slides)</p>
+            
+            <p>Aoki, Al-Ahmad. <i><a href="presentations/AlAhmadAoki.pdf">Trivia Game</a></i></p>
+            
+            <!-- <p>Swanson: </p> -->
+            
+            <p>Kuppusamy, Materman, Snow. <i><a href="presentations/KuppusamyMatermanSnow.pdf">Chit Chat</a></i></p>
+            
+            <p>Shen, Griffin. <i><a href="presentations/ShenGriffin.pdf">Collaborative Spotify Player</a></i></p>
+            
+            <p>Skaggs. <i><a href="presentations/Skaggs.pdf">Engineering/Math Outreach Workshop Display</a></i></p>
+            
+            <p>Novotny. <i><a href="presentations/Novotny.pdf">Notify Events</a></i></p>
+            
+            <p>May, Stone. <i><a href="presentations/StoneMay.pdf">Web-Based Multiplayer Tic-Tac-Toe</a></i></p>
+            
+            <p>Bailey, Ren. <i><a href="presentations/BaileyRen.pdf">Ruina Report Viewer</a></i></p>
+            
+            <p>Garimella. <i><a href="presentations/Garimella.pdf">Computer Automation</a></i></p>
+            
+            <p>Bang. <i><a href="presentations/Bang.pdf">Note Note Note</a></i></p>
+            
+            <p>Wu. <i><a href="presentations/Wu.pdf">Course BOWser</a></i></p>
+            
+          </div>
+        </li>
+        
+      </ul>
+    </div>
+
+
+    <hr class="section">
+    <div class="section" id="homeworks">
+      <h3>Homeworks</h3>
+      <ul class="simple">
+        <li><a href="homeworks/1">Homework 1</a> &mdash; Due Monday Feb 15 (23h59)</li>
+        <li><a href="homeworks/2">Homework 2</a> &mdash; Due Monday Feb 22 (23h59)</li>
+        <li><a href="homeworks/3">Homework 3</a> &mdash; Due Monday Mar 8 (23h59)</li>
+        <li><a href="homeworks/4">Homework 4</a> &mdash; Due Thursday Mar 25 (23h59)</li>
+      </ul>
+    </div>
+
+    
+  </body>
+</html>
+  

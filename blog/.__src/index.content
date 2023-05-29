@@ -1,0 +1,56 @@
+<script>
+    document.title = 'Blog — Riccardo Pucella'
+    document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+
+  <h1>Close Encounters of the Logical Kind</h1>
+  
+  <p>Infrequent riffs about software development, computer science, and mathematics.</p>
+
+  
+
+    <article class="summary">
+      <div class="title"><a href="/blog/post/static-web-site-generation-3">Static Web Site Generation (Part 3)</a></div>
+      <div class="date">May 20, 2023</div>
+    </article>
+
+  
+
+    <article class="summary">
+      <div class="title"><a href="/blog/post/emacs-save-file-document-title">Saving a File Under the Document Title Name in Emacs</a></div>
+      <div class="date">May 14, 2023</div>
+    </article>
+
+  
+
+    <article class="summary">
+      <div class="title"><a href="/blog/post/static-web-site-generation-2">Static Web Site Generation (Part 2)</a></div>
+      <div class="date">May 2, 2023</div>
+    </article>
+
+  
+
+    <article class="summary">
+      <div class="title"><a href="/blog/post/static-web-site-generation">Static Web Site Generation (Part 1)</a></div>
+      <div class="date">Mar 23, 2023</div>
+    </article>
+
+  
+
+    <article class="summary">
+      <div class="title"><a href="/blog/post/simple-dependency-injection-python">Simple Dependency Injection in Python</a></div>
+      <div class="date">May 8, 2021</div>
+    </article>
+
+  
+
+    <article class="summary">
+      <div class="title"><a href="/blog/post/invited-lecture-quantum-computing">Invited Lecture on Quantum Computing</a></div>
+      <div class="date">Apr 21, 2021</div>
+    </article>
+
+  
+  
+</main>
