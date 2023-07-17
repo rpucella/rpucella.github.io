@@ -167,6 +167,15 @@ article.post tt, code {
     line-height: 1em;
 }
 
+article.post blockquote {
+    margin: 0;
+    border-left: 4px solid #333333;
+    border-right: 4px solid #333333;
+    padding: 8px 32px;
+    font-style: italic;
+    background-color: #eeeeee;
+}
+
 /* By default, mobile */
 
 article.summary {
