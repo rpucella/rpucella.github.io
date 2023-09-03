@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Foundations of Computer Science (Spring 2023)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link rel="stylesheet" href="/courses/course.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="/static/smooth-scroll.js"></script>
+
+    <style>
+      body {
+          font-size: 120%;
+      }
+
+      section {
+          border-top: 1px solid rgb(90, 0, 0);
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <nav>
+
+      <div class="home">
+	<a href="/"><img src="/home.png" style="height: 1.6em;"></a>
+      </div>
+
+      <ul>
+	<li><a class="smooth-scroll" href="#main"><b>Foundations of Computer Science SP23</b></a></li> 
+	<li><a class="smooth-scroll" href="#info">Course Info</a></li>
+	<li><a class="smooth-scroll" href="#lectures">Lectures</a></li>
+	<li><a class="smooth-scroll" href="#homeworks">Homeworks</a></li>
+      </ul>
+    </nav>
+
+
+    
+<main id="main">
+  
+      <h1>Foundations of Computer Science (Fall 2023)</h1>
+    
+      <p>This course explores the notion of computation. We're going to
+        develop formal tools for defining what we mean by computation
+        through various models, including automata and the lambda
+        calculus. We will examine how some of these alternative models
+        of computations correspond to different programming paradigms.
+      </p>
+      
+      <section id="info">
+        <h2>Course Information</h2>
+
+        <ul class="plain">
+          <li><b>Course number:</b> ENGR 3520</li>
+
+          <li><b>Prerequisites:</b> Prior experience programming is required (Software Design or something equivalent) since I will not teach programming. Discrete Mathematics is no longer a formal prerequisite for FoCS, but it may make your life easier.</li>
+
+          <li><b>Location and Time:</b>
+            MAC 328 / Mon 6-8:40pm
+          </li>
+
+          <li><b>Instructor:</b> <a href="https://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</li>
+
+          <li><b>Office hours:</b> MH 353 / Mon 4-5pm (before class), or over Zoom by request
+          </li>
+
+          <li><b>Textbook:</b> There is no required textbook for the course. We will be working off
+            notes and online references. In particular, I will share the first two chapters of Hubie
+            Chen's upcoming <i>Computability and Complexity</i>, courtesy of MIT Press. This will be
+            the source of our readings.
+
+          </li>
+
+          <li><b>Recommended Books:</b> There are several excellent books covering the first part of
+            the course (aka, theory of computation), but they are a bit expensive considering that
+            we will be covering only a small part of their content. If you need extra assistance,
+            though, any of these books would be useful, and they are on reserve in the Olin library:
+            
+            <ul>
+              <li>Sipser, <i><a href="https://www.amazon.com/Introduction-Theory-Computation-Michael-Sipser/dp/1133187811">Introduction to the Theory of Computation</a></i></li>
+	      <li>Hopcroft, Motwani, Ullman, <i><a href="https://www.amazon.com/Introduction-Automata-Theory-Languages-Computation/dp/0321455363">Automata Theory, Languages, and Computation</a></i></li>
+            </ul>
+            
+            An inexpensive and reasonable book is the following, although it uses Ruby instead of OCaml:
+            <ul>
+	      <li>Stuart, <i><a href="http://computationbook.com">Understanding Computation</a></i></li>
+            </ul>
+            It very much follows the spirit of this iteration of FoCS. Again, not required. But if you enjoy the course, you may enjoy the book.
+            
+          </li>
+
+          
+          <li><p><b>Programming:</b> All programming in this course will be done using the programming
+            language <a href="https://www.haskell.org/">Haskell</a>. The Haskell compiler (GHC) can
+            be downloaded from the web site, and supports installations on most common systems. You
+            can find the installation
+              instructions <a href="https://www.haskell.org/get-started/">here</a>. (Don't worry about Cabal or Stack — they will get installed by default, but we're not going to use them.) Installation steps from the link above: install GHCup (which install the required GHC, and optionally lets you install HLC which you need in order to use VSCode or related editor in a way that can do syntax highlighting); install VSCode; install the Haskell extension to VSCode.</p>
+
+            <p>Once Haskell is installed, type <tt>ghci</tt> in the terminal to start the interactive shell. That's mostly what we'll be using. Type <tt>:quit</tt> to quit.</p>
+
+            <p>There are a couple of reasonable books on Haskell that you might want to get your hands
+            on if you prefer learning your programming language from a book instead of the web:
+            
+            <ul>
+              <li>Hutton, <i><a href="https://www.cambridge.org/us/universitypress/subjects/computer-science/programming-languages-and-applied-logic/programming-haskell-2nd-edition">Programming in Haskell</a></i></li>
+              <li>Allen, Moronuki, <i><a href="https://haskellbook.com/">Haskell Programming From First Principles</a></i></li>
+            </ul>
+
+            Useful onlines resources can be found on the <a href="https://www.haskell.org">Haskell website</a>. In particular, the <a href="https://www.haskell.org/documentation/">Documentation</a> section contains links to tutorials that may be useful. Note the introduction link to <a href="https://www.seas.upenn.edu/~cis1940/spring13/lectures.html">CIS194</a>, an introductory course on Haskell. The <a href="https://www.seas.upenn.edu/~cis1940/spring13/lectures/01-intro.html">first CIS194 lecture</a>, in particular, is all we really need to get started.</p>
+          </li>
+          
+          <li><b>Grading:</b> TBD <!-- The final grade is based on weekly
+            homework (60%), in-class quizzes (20%), and a final exam
+            (20%). All work will be done individually. Late homeworks
+            will be penalized (10% per 24 hours) and no homework will
+            be accepted after its solution has been discussed in
+            class. <b>Please do not post your homework code on a
+            publicly available repository like GitHub.</b> I hate to
+            do this kind of policing, but we've had some issues in the
+            past, and I'd like to avoid a repeat if possible. -->
+                  </li>
+
+          <li><b>Course Assistants:</b> Ben Morris, details TBD. <!-- (<tt>hsmith1</tt> at the
+            usual olin dot edu domain) Office hours: TBD-->
+          </li>
+
+          <li>I expect all of us to follow the <b><a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a></b>.</li>
+
+          <li><b>Chat server:</b> Announcements and discussions take place on <a href="https://chat.rpucella.net" target="_blank">our chat server</a>, which double as our homework submission server. You should have received account information by email. If not, please reach out.</li>
+
+  </section>
+
+  <section id="lectures">
+
+    <h2>
+      Lectures and Readings
+    </h2>
+
+    <p>Subject to changes.</p>
+
+    <ul class="lectures">
+
+      <li><p><span class="hdr">Sep 11: </span><b>Introduction</b></p>
+      </li>
+
+      <li><p><b>MACHINE MODELS</b></p></li>
+
+      <li><p><span class="hdr">Sep 18: </span><b>Formal languages</b></p>
+      </li>
+
+      <li><p><span class="hdr">Sep 25: </span><b>Finite state machines</b></p>
+      </li>
+
+      <li><p><span class="hdr">Oct 2: </span><b>Turing machines</b></p>
+      </li>
+
+      <li><p><span class="hdr">Oct 11: </span><b>Multi-tape Turing machines</b></p>
+      </li>
+
+      <li><p><span class="hdr">Oct 16: </span><b>Compiling to Turing machines</b></p>
+      </li>
+
+      <li><p><span class="hdr">Oct 16: </span><b>Non-computable languages</b></p>
+      </li>
+
+      
+      <li><p><b>ALTERNATIVE MODELS</b></p></li>
+
+      <li><p><span class="hdr">Oct 23: </span><b>Production grammars</b></p>
+      </li>
+
+      <li><p><span class="hdr">Oct 30: </span><b>Lambda calculus (1)</b></p>
+      </li>
+
+      <li><p><span class="hdr">Nov 3: </span><b>Lambda calculus (2)</b></p>
+      </li>
+
+      
+      <li><p><b>ABSTRACTION</b></p></li>
+
+      <li><p><span class="hdr">Nov 6: </span><b>TBD</b></p>
+      </li>
+      
+      <li><p><span class="hdr">Nov 13: </span><b>TBD</b></p>
+      </li>
+
+      <li><p><span class="hdr">Nov 27: </span><b>TBD</b></p>
+      </li>
+      
+      <li><p><span class="hdr">Dec 4: </span><b>TBD</b></p>
+      </li>
+
+    </ul>
+
+  </section>
+
+
+  <section id="homeworks">
+    
+    <h2>Homeworks</h2>
+    
+    <ul class="plain">
+    </ul>
+    
+  </section>
+  
+</main>
+
+    
+  </body>
+</html>

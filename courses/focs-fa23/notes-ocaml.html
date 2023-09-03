@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Notes on OCaml</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700' rel='stylesheet' type='text/css'>
+    <style>
+      body { font-family: 'Open Sans', Optima, Palatino, Arial, sans-serif; }
+      code,tt,pre { color: blue; font-size: 130%; }
+      p { }
+      h1 { text-align: center; }
+    </style>
+  </head>
+
+
+  <body>
+
+    <h1>Notes on OCaml</h1>
+
+    <p><a href="#cheat">Quick Cheat Sheet</a></p>
+
+    <h3>Basic Expressions and Types</h3>
+    
+    <p>OCaml is an expression-oriented language: everything (except
+      top-level definitions) is an expression that evaluates to a value.</p>
+
+    <p>OCaml is <i>statically typed</i>, that is, every expression has
+      a type (the type of the value that it evaluates to) and 
+      expressions are checked for type correctness before being
+      evaluated. OCaml also uses <i>type inference</i>, that is, it
+      will try to determine automatically what the type of an expression
+      is.</p>
+
+    <p>The basic types are integers, floating point numbers, booleans,
+      strings, and characters.</p>
+    
+    <p>Integers and floating point numbers are numeric types.</p>
+
+    <pre>
+# 10;;
+- : int = 10
+# 5.0;;
+- : float = 5.
+# 10 + 20;;
+- : int = 30
+</pre>
+
+<p>Integers and floating point numbers do not mix. The basic
+  operations <tt>+</tt>, <tt>-</tt>, <tt>*</tt>, and <tt>/</tt> all
+  expect integers.</p>
+
+<pre>
+# 5.0 + 10;;
+Characters 0-3:
+  5.0 + 10;;
+  ^^^
+Error: This expression has type float but an expression was expected of type
+         int
+# 5.0 + 10.0;;
+Characters 0-3:
+  5.0 + 10.0;;
+  ^^^
+Error: This expression has type float but an expression was expected of type
+         int
+</pre>
+
+    <p>Floating point numbers have their own
+      operations, <tt>+.</tt>, <tt>-.</tt>, <tt>*.</tt>,
+      and <tt>/.</tt>.</p>
+
+    <p>Conversion functions are used to convert values from one type
+      to another. For instance, function <tt>float</tt> converts an
+      integer to a floating point number.</p>
+
+<pre>
+# 5.0 +. 10.0;;
+- : float = 15.
+# float 10;;
+- : float = 10.
+# float (10);;
+- : float = 10.
+# float (10) +. 5.0;;
+- : float = 15.
+</pre>
+
+    <p>Boolean values include <tt>true</tt>
+      and <tt>false</tt>. Logical operations <tt>&amp;&amp;</tt>
+      (and), <tt>||</tt> (or), and <tt>not</tt> are available for
+      Booleans. Equality <tt>=</tt> between values <i>of the same
+      type</i> returns a Boolean.</p>
+
+<pre>
+# true;;
+- : bool = true
+# false;;
+- : bool = false
+# true && false;;
+- : bool = false
+# not(true);;
+- : bool = false
+# not(false);;
+- : bool = true
+# 10 = 10;;
+- : bool = true
+# 5 = 10;;
+- : bool = false
+# 10 = 10.0;;
+Characters 5-9:
+  10 = 10.0;;
+       ^^^^
+Error: This expression has type float but an expression was expected of type
+         int
+# true = 4;;
+Characters 7-8:
+  true = 4;;
+         ^
+Error: This expression has type int but an expression was expected of type
+         bool
+</pre>
+
+    <p>It's important to note that value equality in OCaml uses a <i>single</i> <tt>=</tt>, unlike pretty much any other language you've used. In other languages, that's usually to distinguish equality from assignment, but OCaml doesn't have assignment in the standard form, so there's no confusion possible. Always use <tt>=</tt> for testing equality.</p>
+
+    <p>(What can be a source of subtle bugs is that OCaml does support a <tt>==</tt> operator, but it's used only for <i>pointer equality</i>, which is very rarely what you need. Intuitively, two values are pointer-equal if their representation live in the same exact memory location. So in particular, string literals, which are allocated afresh every time they are evaluated, are not pointer-equal: <tt>"foo" == "foo"</tt> evaluates to <tt>false</tt>.)</p>
+
+<p>String literals are constructed with double quotes, while
+  characters are constructed with single quotes. Note that a character and a
+  single-character string are different values. Operations on strings
+  include <tt>^</tt> for concatenation.</p>
+
+<pre>
+ # "hello world";;
+- : string = "hello world"
+# "hello"^"world";;
+- : string = "helloworld"
+# 'a';;
+- : char = 'a'
+# 'b';;
+- : char = 'b'
+# 'abc';;
+Characters 0-1:
+  'abc';;
+  ^
+Error: Syntax error
+</pre>
+
+
+<h3>Conditional and Local Definition Expressions</h3>
+
+<p>OCaml evaluates expressions to get values. A
+  primitive value is an expression. An operation such as <tt>+</tt>
+  applies to expressions is an expression. A function such
+  as <tt>float</tt> applied to an expression is an expression.</p>
+
+
+<p>There are two other ways of forming expressions: conditionals, and
+  local definitions.</p>
+
+<p>A conditional expression is an expression of the
+  form <tt><b>if</b> <i>condition</i> <b>then</b> <i>expr1</i> <b>else</b> <i>expr2</i></tt>
+  and evaluates as follows: first <tt><i>condition</i></tt> is evaluated
+  &mdash; if it evaluates to <tt>true</tt>, then <tt><i>expr1</i></tt> is
+  evaluated and used as the result of the conditional expression,
+  otherwise, <tt><i>expr2</i></tt> is. Of course, <tt><i>expr1</i></tt>
+  and <tt><i>expr2</i></tt> can be arbitrary expressions.</p>
+
+<pre>
+# if true then 10 else 20;;
+- : int = 10
+# if false then 10 else 20;;
+- : int = 20
+# if 1 = 1 then 10 else 20;;
+- : int = 10
+# if 1 = 0 then 10 else 20;;
+- : int = 20
+# if true then 10 + 20 else 30;;
+- : int = 30
+# if true then (if true then 10 else 20) else 30
+  ;;
+- : int = 10
+# 10 + (if true then 1 else 2);;
+- : int = 11
+# 10 + (if false then 1 else 2);;
+- : int = 12
+</pre>
+
+    <p>A note about some of the examples above: just like in mathematical formulas, you can wrap any expression in parentheses. It has the same meaning as in formulas: it forces OCaml to evaluate the expression in parentheses before the expression in which it is embedded. It's also useful when the expression becomes confusing to parse. That often happens in nested conditionals: when I write <tt>if a then if b then c else d else e</tt>, it is unambiguous, but it's probably difficult to see the nested conditional. Wrapping the subexpression in parentheses makes things clearer: <tt>if a then (if b then c else d) else e</tt>. I will generally do this silently in these notes and elsewhere. Parentheses are almost never required by the syntax, but they can be added around <i>any</i> expression to clarify how to interpret the expression.</p>
+
+<p>A local definition expression lets you
+evaluate an expression to a value to which you can give a name and use
+in another expression: <tt><b>let</b> <i>n</i>
+  = <i>expr1</i> <b>in</b> <i>expr2</i></tt> first
+evaluates <tt><i>expr1</i></tt> to a value <tt><i>v</i></tt>, gives it
+name <tt><i>n</i></tt>, and then evaluates <tt><i>expr2</i></tt>,
+in which name <tt><i>n</i></tt> has value <tt><i>v</i></tt>. Note that
+the fact that <tt><i>n</i></tt> has value <tt><i>v</i></tt> is only
+  valid during the evaluation of <tt><i>expr2</i></tt>.</p>
+
+<pre>
+# let a = 10 in 2 * a;;
+- : int = 20
+# 100 + (let a = 20 + 20 in 2 * a);;
+- : int = 180
+# let a = 10 in let b = 20 in a * b;;
+- : int = 200
+# a;;
+Characters 0-1:
+  a;;
+  ^
+Error: Unbound value a
+</pre>
+
+
+<h3>Definitions</h3>
+
+<p>Expressions evaluate to values, and that's the driving engine of
+  OCaml. Beside evaluating expressions, you can also write <i>top-level</i> 
+  definitions, which define constants and functions. </p>
+
+    <p>A constant is defined by the top-level
+      definition <tt><b>let</b> <i>n</i> = <i>expr</i></tt>. Note that
+      this <i>looks</i> like a temporary name expression, but it's
+      not. There's no <tt><b>in</b></tt>. And once defined, the
+      name <tt><i>n</i></tt> is available for any other expression
+      evaluated at the shell (or defined later in a program).</p>
+
+    <p>It is important to realize that this defines a <i>constant</i>,
+      not a variable. It is not possible to change the value
+      of <tt><i>n</i></tt> later. The only thing you can do is define
+      a new constant with the same name, but anything you've already
+      defined that uses the old name will keep on using the old
+      value. Learning to work without variables will be a big part of
+      you getting acclimated to OCaml.</p>
+
+    <p>Make sure you understand the examples below.</p>
+
+<pre>
+# let x = 10;;
+val x : int = 10
+# x;;
+- : int = 10
+# x + 10;;
+- : int = 20
+# let y = 10 in x * y;;
+- : int = 100
+# y;;
+Characters 0-1:
+  y;;
+  ^
+Error: Unbound value y
+# let z = (let y = 10 in 2 * y);;
+val z : int = 20
+# z;;
+- : int = 20
+# y;;
+Characters 0-1:
+  y;;
+  ^
+Error: Unbound value y
+</pre>
+
+<p>Again, OCaml is statically typed, so every defined constant gets a
+  type, usually inferred. If OCaml cannot infer a type for the name
+  based on the expression, it rejects the definition.</p>
+
+<p>A similar mechanism is used to define functions. A function is
+  defined
+  by <tt><b>let</b> <i>f</i> <i>arg<sub>1</sub></i> <i>arg<sub>2</sub></i>
+    ... <i>arg<sub>k</sub></i> = <i>expr</i></tt>. This defines a function <tt><i>f</i></tt> of
+  <i>k</i> arguments, with <tt><i>expr</i></tt> as the body of the function,
+  which can refer to arguments <tt><i>arg<sub>1</sub></i></tt>,
+  ..., <tt><i>arg<sub>k</sub></i></tt>.
+</p>
+
+<p>
+  To call a function,
+  you use the form <tt><i>f expr<sub>1</sub> ... expr<sub>k</sub></i></tt>, which first
+  evaluates <tt><i>expr<sub>1</sub></i></tt>, ..., <tt><i>expr<sub>k</sub></i></tt> to values, and calls
+  function <tt><i>f</i></tt> with those values as arguments.</p>
+
+<p>Remember, you can put parentheses around any expression,
+  and a function call is an expression. So you can wrap any argument in parentheses (you will need to if it is a complex expression itself) and you can wrap the whole expression in parentheses (if it is part of a larger expression):</p>
+
+<pre>
+# let c_to_f c = (c *. 9.0 /. 5.0) +. 32.0;;
+val c_to_f : float -> float = &lt;fun&gt;
+# c_to_f 0.0;;
+- : float = 32.
+# c_to_f 37.0;;
+- : float = 98.6
+
+# let plus x y = x + y;;
+val plus : int -> int -> int = &lt;fun&gt;
+# plus 10 20;;
+- : int = 30
+# plus 1 (2 * 3);;
+- : int = 7
+# plus (plus 1 2) 3;;
+- : int = 6
+</pre>
+
+    <p>Note that the type of a function expecting arguments of
+      type <tt><i>T<sub>1</sub></i></tt>,
+      ..., <tt><i>T<sub>k</sub></i></tt> and returning values of
+      type <tt><i>T</i></tt>  has the form <tt><i>T<sub>1</sub></i> ->
+	... -> <i>T<sub>k</sub></i> -> <i>T</i></tt>.</p>
+
+<p>Again, OCaml is statically typed: OCaml will try to infer the type of the function
+  automatically. If it cannot infer the type because you messed
+  up the definition, it will complain and refuse to define the
+  function. You can only define functions that type check. (Like in
+  Java, but unlike Python and JavaScript.)</p>
+
+<pre>
+# let c_to_f c = (c *. 9.0 /. 5.0) + 32.0;;
+Characters 15-32:
+  let c_to_f c = (c *. 9.0 /. 5.0) + 32.0;;
+                 ^^^^^^^^^^^^^^^^^
+Error: This expression has type float but an expression was expected of type
+         int
+</pre>
+
+
+<p>Loops in OCaml are implemented using recursive functions. A
+  recursive functions requires the <tt><b>rec</b></tt> keyword right
+  after the <tt><b>let</b></tt> in the definition. Consider the
+  following Python definition of a function which sums up all integers 
+  from 0 to n, which is how you'd write the function from scratch if you didn't want to use a built-in function like <tt>range</tt>:</p>
+
+<pre>
+      def sumto (n):
+         result = 0
+         index = 0
+         while index <= n:
+           result += index
+           index += 1
+         return result
+</pre>
+
+<p>The way to implement this function in OCaml is to use the
+  following intuition: if you have <tt>sumto n = 0 + 1 + ... + n-2 + n-1 + n</tt>
+      then in fact:
+  <tt>sumto n = (0 + 1 + ... + n-1) + n</tt>
+      which is just
+  <tt>sumto n = (sumto (n-1)) + n</tt>
+  which works fine except when <tt>n = 0</tt>, where you just know that
+  <tt>sumto 0 = 0</tt>
+  and the above translates to an OCaml definition immediately:</p>
+
+<pre>
+# let rec sumto n = 
+    if n = 0 then 0 else sumto (n-1) + n;;
+val sumto : int -> int = &lt;fun&gt;
+# sumto 10;;
+- : int = 55
+</pre>
+
+    <p>Developing recursive functions is a skill that we will develop over time.</p>
+
+    <p>I'll note for the record that it's also possible to write a close equivalent to the Python code above that uses a while loop. The following functions reproduce the above pretty much exactly. The recursive function <tt>sumto_loop</tt> plays the role of the loop, and is parameterized by the "loop variables" <tt>index</tt>, <tt>n</tt>, and <tt>result</tt>. Calling the function with a value for these identifiers is morally equivalent to doing one iteration of the loop with a value for the loop variables. The function <tt>sumto2</tt> starts the loop with the initial value of the "loop variables":</p>
+
+<pre>
+# let rec sumto_loop index n result = 
+   if index <= n
+     then sumto_loop (index+1) n (result+index)
+   else
+     result;;
+val sumto_loop : int -> int -> int -> int = &lt;fun&gt;
+# let sumto2 n = sumto_loop 0 n 0;;
+val sumto2 : int -> int = &lt;fun&gt;
+# sumto2 10;;
+- : int = 55
+</pre>
+
+
+    
+    <h3>Structured Data</h3>
+    
+<p>Tuples and lists let us package values together.</p>
+
+<p>A tuple is created using parentheses and commas to separate the
+  values in the tuple.</p>
+<pre>
+# (10,20);;
+- : int * int = (10, 20)
+</pre>
+
+<p>The values in different positions of a tuple need not have the same
+  type. Note the resulting tuple type, which uses <tt>*</tt>:</p>
+<pre>
+# (10, "hello");;
+- : int * string = (10, "hello")
+# (10, true, "help");;
+- : int * bool * string = (10, true, "help")
+</pre>
+
+<p>You can of course package tuples as elements of other tuples. Note
+  the types &mdash;  tuple of three elements, where the third element is a tuple of
+     two elements, is different from a tuple of four elements.</p>
+
+<pre>
+# (1,"hello",(10,20));;
+- : int * string * (int * int) = (1, "hello", (10, 20))
+# (1,"hello",10,20);;
+- : int * string * int * int = (1, "hello", 10, 20)
+</pre>
+
+<p>How do you get values out of a tuple? You use <i>pattern
+    matching</i>, which is our last expression form, and which is
+  quite versatile.</p>
+
+<pre>
+# match a with (x,y) -> x;;
+- : int = 10
+# match a with (x,y) -> x + y;;
+- : int = 30
+</pre>
+
+<p>Here's a function that takes a pair and sums its two elements:</p>
+
+<pre>
+# let addpair p = match p with (x,y) -> x + y;;
+val addpair : int * int -> int = &lt;fun&gt;
+# addpair (10,20);;
+- : int = 30
+</pre>
+
+<p>This looks very much like we're calling a function with two
+     arguments in a language like Python or JavaScript.</p>
+
+
+<p>Lists, as opposed to tuples, can have 
+     arbitrary length, but are restricted to values of the same type; the
+  type of the list indicates the type of its content.</p>
+
+<pre>
+# [10; 20; 30];;
+- : int list = [10; 20; 30]
+# ["hello"; "world"];;
+- : string list = ["hello"; "world"]
+</pre>
+
+    <p>Note the use of <tt>;</tt> to separate the elements of the
+      list. If you use <tt>,</tt> you will get odd type error
+      messages.</p>
+
+<p>You can add values to the
+     front of a list using the :: operator.  This creates a new list
+     with that element in front. Lists are immutable. You can't change
+     their elements once they've been created. Any operation on lists
+     returns new lists.</p>
+
+<pre>
+# 1 :: [2; 3];;
+- : int list = [1; 2; 3]
+# "hello" :: [2; 3];;
+Characters 10-11:
+  "hello" :: [2; 3];;
+            ^
+Error: This expression has type int but an expression was expected of type
+         string
+</pre>
+
+
+<p>Since lists are recursive structures, it makes sense to use recursive
+     functions to traverse a list. To take a list apart, we can use
+     pattern matching, just like for tuples. To pattern match on a list
+     you check whether the list is empty, or if it's not empty, then 
+     you match on the first element of the list and the rest of the
+  list, using the following "pattern":</p>
+<pre>
+  <b>match</b> <i>list-expression</i> <b>with</b>
+    [] -> <i>expr for an empty list</i>
+  | h::t -> <i>expr a nonempty list (with first element h and rest t)</i>
+</pre>
+    <p>The <tt>h</tt> and <tt>t</tt> are user-selected names that get bound to the head
+      and the tail of the list, respectively</p>
+
+    <p>You can get pretty fancy if you want. You can add match cases if you want to, to deal with special cases, such as <tt>[x]</tt> for a one-element list, or <tt>x::(y::xs)</tt> for a list with at least two elements (yes, patterns can nest). For example, the following function returns 0 for an empty list, the first element for a list of length 1, and the second element for a list of length more than 1:
+<pre>
+# let rec firstOrSecond l = 
+    match l with
+      [] -> 0
+    | [x] -> x
+    | x::(y::xs) -> y
+val firstOrSecond : int list -> int = &lt;fun&gt;
+</pre>
+
+    <p>For the <i>vast</i> majority of recursive functions on lists you'll have to write though, the standard pattern of empty/non-empty is sufficient.</p>
+
+<p>Here's a function to sum the elements of a list of integers. Note
+  the type of the function, which makes it clear it expects a list of integers.</p>
+
+<pre>
+# let rec sum_list l = 
+    match l with
+      [] -> 0
+    | head::tail -> head + (sum_list tail);;
+val sum_list : int list -> int = &lt;fun&gt;
+# sum_list [1; 2; 3];;
+- : int = 6
+# sum_list [1; 2; 3; 4; 5; 6; 7; 8; 9; 10];;
+- : int = 55
+</pre>
+
+    <p>Here's a similar function, to compute the length of a list.</p>
+
+<pre>
+# let rec length l = 
+    match l with
+      [] -> 0
+    | head::tail -> 1 + (length tail);;
+val length : 'a list -> int = &lt;fun&gt;
+</pre>
+
+<p>Something funny here: the length of a list does not depend on its
+     content, and in particular, does not depend on the type of the
+     values it contents. OCaml notices, and gives the function a
+     <i>polymorphic</i> type: the function works with a list of any type, 
+     represented by the type <tt>'a list</tt>, where <tt>'a</tt> is called  
+     a type variable.</p>
+
+<pre>
+# length [1; 2; 3];;
+- : int = 3
+# length ["hello"; "world"];;
+- : int = 2
+# length [];;
+- : int = 0
+</pre>
+
+<p>This also gives you a hint as to what the type of an empty list
+  is: it is polymorphic.</p>
+<pre>
+# [];;
+- : 'a list = []
+</pre>
+
+<p>There is more to polymorphic functions that just being able to take
+     arguments of various types. They can also track the result type of
+     a function as a function of its argument types. As an example, let's
+     look at a function that expects a list of pairs, and returning the list 
+  of all the first components of the pairs.</p>
+
+    <p>First: what does a list of pairs look like? Note the type.</p>
+
+<pre>
+# [(1, "hello"); (2, "world")];;
+- : (int * string) list = [(1, "hello"); (2, "world")]
+</pre>
+
+<p>Here's the function to project out all the first components. Notice the nested matching to take the tuple at the head of the list apart. (There's a way to merge the two matches together -- I will let you explore that on your own.) Again,
+  note the type: it expects a list of pairs, each of type <tt>('a * 'b)</tt>
+  for some <tt>'a</tt> and some <tt>'b</tt>, and returns an <tt>'a list</tt>, that is, it returns
+     a list whose type depend on the type of the first component of the
+  pairs in the list passed as an argument.</p>
+
+<pre>
+# let rec projectFirst l = 
+    match l with
+      [] -> []
+    | head::tail -> (match head with (x,y) -> x :: (projectFirst tail));;
+val projectFirst : ('a * 'b) list -> 'a list = &lt;fun&gt;
+</pre>
+
+    <p>If we call <tt>projectFirst</tt> with a list of type <tt>(int * string) list</tt>, 
+      that is, where <tt>'a = int</tt> and <tt>'b = string</tt>, we
+      expect a list of type <tt>'a = int</tt>
+     as a result. And indeed:
+<pre>
+# projectFirst [(1, "hello"); (2, "world")];;
+- : int list = [1; 2]
+</pre>
+
+
+<hr style="margin: 50px;">
+
+<a name="cheat">
+  <h3>Quick Cheat Sheet</h3>
+  
+  <p>Basic values:</p>
+  <ul>
+    <li>Integers <tt>-1</tt>, <tt>0</tt>, <tt>1</tt>,... of type <tt>int</tt></li>
+    <li>Floating point numbers <tt>3.141516</tt> of type <tt>float</tt></li>
+    <li>Booleans <tt>true</tt>, <tt>false</tt> of type <tt>bool</tt></li>
+    <li>Strings <tt>"hello world"</tt> of type <tt>string</tt></li>
+    <li>Characters <tt>'z'</tt> of type <tt>char</tt></li>
+  </ul>
+
+  <p>Structured data:</p>
+  <ul>
+    <li>Tuples such as <tt>(1, "hello")</tt> of type <tt>int * string</tt></li>
+    <li>Lists such as <tt>[1; 2; 3]</tt> of type <tt>int list</tt></li>
+  </ul>
+  
+  <p>Expressions can be formed by:</p>
+  <ul>
+    <li>Basic values: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>1</tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>"hello"</tt></li>
+    <li>Structures values: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>(1 + 2, "hello")</tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>[1; (3 + 4); (5 * 60]</tt>
+    <li>Operations performed on expressions: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>1 + 2</tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>3 * (4 + 5)</tt></li>
+    <li>Functions applied to expressions: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>float (3 + 4)</tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt>max 10 20</tt></li>
+    <li>Conditionals:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt><b>if</b> x <b>then</b> y <b>else</b> z</tt></li>
+    <li>Local declarations:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt><b>let</b> x = (10 + 20) <b>in</b> x * x</tt></li>
+    <li>Pattern matching:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt><b>match</b> x <b>with</b> (x, y) <b>-&gt;</b> x</tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt><b>match</b> l <b>with</b> [] <b>-&gt;</b> 0 <b>|</b> x::y <b>-&gt;</b> x</tt></li>
+  </ul>
+
+  <p>Top-level definitions include:</p>
+  <ul>
+    <li>Constants:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt><b>let</b> a = 42</tt></li>
+    <li>Functions:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt><b>let</b> add1 n = n + 1</tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt><b>let</b> plus n m = n + m</tt></li>
+    <li>Recursive functions:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt><b>let rec</b> infinite_loop n = infinite_loop (n + 1)</tt>
+  </ul>
+    
+  <hr style="margin: 50px;">
+
+  
+  </body>
+</html>
