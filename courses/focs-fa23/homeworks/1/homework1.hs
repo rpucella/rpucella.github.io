@@ -63,8 +63,8 @@ prefix s xs =
   error "Not implemented"
 
 
-longerThan :: [String] -> [String]
-longerThan xs =
+longerThan :: Int -> [String] -> [String]
+longerThan n xs =
   error "Not implemented"
 
 
