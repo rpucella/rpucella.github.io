@@ -1,0 +1,371 @@
+<script>
+  document.title = 'Homework 1 - FOCS FA23'
+</script>
+
+<h1>Homework 1</h1>
+
+<h2>Due Date: Thursday, Sept 21, 2023 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.</p></li>
+
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+
+<li><p>All programming is to be done in Haskell using GHC v9.</p></li>
+
+<li><p>Code your answers by modifying the file <a href="homework1.hs"><code>homework1.hs</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you
+wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+<li><p><strong>Please do not change the types in the signature of the
+function stubs I provide</strong>. Doing so will make it
+impossible to load your code into the testing infrastructure,
+and make me unhappy.</p></li>
+
+<li><p>Feel free to define as many helper functions as you need.</p></li>
+</ul>
+
+<h2>Electronic Submission Instructions</h2>
+
+<ul>
+<li><p>Start a <em>fresh</em>  <code>ghci</code> shell.</p></li>
+
+<li><p>Load your homework code via <code>:load homework1.hs</code> to make sure that there are no errors when I will load your code.</p></li>
+
+<li><p>If there are any error, do not submit. I can't test what I can't <code>:load</code>.</p></li>
+
+<li><p>When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <b>Submit File</b> in the profile menu (your initials in the upper right corner).</p></li>
+</ul>
+
+<hr>
+
+<h2>Question 1: Haskell Exercises</h2>
+
+<p>These functions are not recursive, and are defined over floating point
+numbers (type <code>Float</code>).</p>
+
+<h3>(A)</h3>
+
+<p>Code a function</p>
+
+<pre><code>clamp :: Float -&gt; Float -&gt; Float -&gt; Float
+</code></pre>
+
+<p>where <code>clamp a b v</code> returns <code>v</code> if <code>v</code> is between <code>a</code> and <code>b</code> (inclusively), and otherwise returns
+the smallest of <code>a</code> and <code>b</code> if <code>v</code> is smaller, or the largest of <code>a</code>
+and <code>b</code> if <code>v</code> is larger. In most uses, <code>a</code> would be the smaller value
+and <code>b</code> would be the larger value, but that's not a requirement.</p>
+
+<pre><code>...
+</code></pre>
+
+<p>Note that you have library functions <code>min</code> and <code>max</code> available.</p>
+
+<h3>(B)</h3>
+
+<p>Code a function</p>
+
+<pre><code>interpolate :: Float -&gt; Float -&gt; Float -&gt; Float
+</code></pre>
+
+<p>where <code>interpolate a b v</code> maps the interval <code>[0, 1]</code> to the interval
+<code>[a, b]</code>, and returns the value corresponding to value <code>v</code> with
+respect <code>[0, 1]</code> to the corresponding value with respect to <code>[a, b]</code>.
+Thus, <code>0.5</code> is in the middle of <code>[0, 1]</code>, so it should map to
+<code>15</code> with respect to <code>[10, 20]</code> or to <code>[20, 10]</code>.</p>
+
+<p>Note that <code>v</code> could be outside <code>[0, 1]</code>. So 1.5 with respect to <code>[0, 1]</code>
+is halfway past the end point, so corresponds to 25 with respect
+to <code>[10, 20]</code>, and corresponds to 30 with respect to <code>[0, 20]</code>. It
+also corresponds to 5 with respect to <code>[20, 10]</code>.</p>
+
+<p>This is obviously all about ratios.</p>
+
+<pre><code>...
+</code></pre>
+
+<hr>
+
+<h2>Question 2: List Functions</h2>
+
+<p>All of the functions below can be written as recursive
+functions over lists. They all fit the general pattern of:</p>
+
+<pre><code>f xs ... = 
+   case xs of
+     [] -&gt; e1
+     x:xs' -&gt; e2
+</code></pre>
+
+<p>where <code>e2</code> can use <code>x</code>, <code>xs'</code>, and the
+recursive function itself. For some functions, you may need to do some
+additional matching in <code>e2</code>.</p>
+
+<p>You can always define helper functions if it makes your life easier.</p>
+
+<h3>(A)</h3>
+
+<p>Code a function</p>
+
+<pre><code>pairDouble :: [Int] -&gt; [(Int, Int)]
+</code></pre>
+
+<p>which takes a list <code>xs</code> of integers and returns a new list in which
+every element of <code>xs</code> becomes a pair of that element and its double.</p>
+
+<pre><code>...
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a function</p>
+
+<pre><code>cap :: Int -&gt; [Int] -&gt; [Int]
+</code></pre>
+
+<p>which takes a threshold integer <code>m</code> and a list <code>xs</code> of integers and
+returns a new list in which every element of <code>xs</code> is capped at <code>m</code>:
+it becomes <code>m</code> if it is larger than <code>m</code>, and is unchanged otherwise.</p>
+
+<pre><code>...
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a function</p>
+
+<pre><code> prefix :: String -&gt; [String] -&gt; [String]
+</code></pre>
+
+<p>which takes a string <code>s</code> and a list of strings <code>xs</code> and returns the
+list obtained by prefixing every string in <code>xs</code> with <code>s</code>.</p>
+
+<pre><code>...
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Code a function</p>
+
+<pre><code>longerThan : Int -&gt; [String] -&gt; [String]
+</code></pre>
+
+<p>which takes an integer <code>n</code> and a list <code>xs</code> of strings and returns a
+new list containing only the strings in <code>xs</code> that have length <em>at least</em>
+<code>n</code>, in the same order as they appear in <code>xs</code>.</p>
+
+<pre><code>...
+</code></pre>
+
+<p>Note that you can use function <code>length</code> to get the length of a string.</p>
+
+<h3>(E)</h3>
+
+<p>Code a function</p>
+
+<pre><code>within :: Int -&gt; Int -&gt; [Int] -&gt; [Int]
+</code></pre>
+
+<p>which takes two integers <code>a</code> and <code>b</code> and a list <code>xs</code> of integers and
+returns a new list with only the integers in <code>xs</code> that are between
+<code>a</code> and <code>b</code> (inclusively).</p>
+
+<pre><code>...
+</code></pre>
+
+<p>Make this work whether <code>a</code> or <code>b</code> is the smallest number.</p>
+
+<h3>(F)</h3>
+
+<p>Code a function</p>
+
+<pre><code>find :: Int -&gt; [(Int, a)] -&gt; a -&gt; a
+</code></pre>
+
+<p>where <code>find v xs d</code> takes an integer <code>v</code>, a list of pairs <code>xs</code>, and a
+default value <code>d</code>, and tries the find the first pair in <code>xs</code> where the
+first component of the pair is <code>v</code>. When it finds such a pair, it
+returns the second component of that pair. If there is no pair in <code>xs</code>
+whose first component is <code>v</code>, then default value <code>d</code> is returned
+instead.</p>
+
+<h3>(G) (challenging)</h3>
+
+<p>Code a function</p>
+
+<pre><code>split :: Int -&gt; [Int] -&gt; ([Int], [Int])
+</code></pre>
+
+<p>which takes a threshold integer <code>m</code> and a list <code>xs</code> of integers and
+returns a pair of lists, where the first list in the pair contains all
+the elements in <code>xs</code> that are at most <code>m</code> and the second list in the
+pair contains all the elements in <code>xs</code> that are greater than <code>m</code>.</p>
+
+<p>The order of the elements in each list should be consistent with the
+order of the elements in the original list.</p>
+
+<pre><code>...
+</code></pre>
+
+<hr>
+
+<h2>Question 3: Vectors</h2>
+
+<p>We can implement vectors as lists of floating point
+numbers. Operations on vectors such as addition or scalar
+multiplication can then be implemented as recursive functions over
+lists.</p>
+
+<p>One difference from Question 2 is that you will sometimes have to
+recurse over two lists at the same time, which means matching over two
+lists. One way to do so is to first match over the first list, and
+then match over the second list in each case of the first list (if
+applicable). For example:</p>
+
+<pre><code>f xs ys =
+  case xs of
+    [] -&gt; e1
+    x:xs' -&gt; case ys of
+                [] -&gt; e2
+                y:ys' -&gt; e3
+</code></pre>
+
+<p>An alternate, slightly more advanced, approach relies on generalized pattern matching,
+matching on both lists at the same time by creating a pair of lists. For example, something like:</p>
+
+<pre><code>f xs ys =
+  case (xs, ys) of
+    ([], []) -&gt; e4
+    (x:xs', []) -&gt; e5
+    ([], y:ys') -&gt; e6
+    (x:xs', y:ys') -&gt; e7
+</code></pre>
+
+<p>Please only use this last approach if it makes sense to you. There is
+no effective difference between the two.</p>
+
+<p>These functions only make sense if their vector arguments have the
+same length. You can assume that your code will be given vectors of
+the same length. I'm only going to test your code with vectors of the
+same length. Still, you should probably make sure that your code does
+return a value in case vectors do not have the same length (I don't
+care what that value is), or error out with <code>error &quot;message&quot;</code>.</p>
+
+<h3>(A)</h3>
+
+<p>Code a function</p>
+
+<pre><code>vScale :: Float -&gt; [Float] -&gt; [Float]
+</code></pre>
+
+<p>which takes a float <code>a</code> and a vector <code>v</code> and computes the scalar
+multiplication <code>a v</code> (multiplying every component of <code>v</code> by <code>a</code>).</p>
+
+<pre><code>...
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a function</p>
+
+<pre><code>vAdd :: [Float] -&gt; [Float] -&gt; [Float]
+</code></pre>
+
+<p>which takes two vectors <code>v</code> and <code>w</code> and returns the vector sum <code>v + w</code>.</p>
+
+<pre><code>...
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a function</p>
+
+<pre><code>vLength :: [Float] -&gt; Float
+</code></pre>
+
+<p>which takes a vector <code>v</code> and returns the length (or <a href="https://en.wikipedia.org/wiki/Norm_(mathematics">Euclidean
+norm</a>#Euclidean_norm))
+of vector <code>v</code>, defined to be the square root of the sum of the squares
+of the components of <code>v</code>.</p>
+
+<p>The square root can be computed using library function <code>sqrt</code>.</p>
+
+<p>I suggest you write a helper function to compute the sum of the
+squares of the components of <code>v</code> first, and use that in <code>vLength</code>.</p>
+
+<pre><code>...
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Code a function</p>
+
+<pre><code>vInner :: [Float] -&gt; [Float] -&gt; Float
+</code></pre>
+
+<p>which takes two vectors <code>v</code> and <code>w</code> and returns the <a href="https://en.wikipedia.org/wiki/Dot_product">inner
+product</a> <code>v</code> &middot; <code>w</code>.</p>
+
+<pre><code>...
+</code></pre>
+
+<hr>
+
+<h2>Question 4: More general recursion</h2>
+
+<p>There are more general forms of recursions that will occur much less
+often in this course. Sometimes, those forms of recursions can be
+reduced to a recursion over lists (first problem below), other times
+not (second problem below).</p>
+
+<h3>(A)</h3>
+
+<p>Code a function</p>
+
+<pre><code>repeatStr :: String -&gt; Int -&gt; [String]
+</code></pre>
+
+<p>where <code>repeatStr s n</code> takes a string <code>s</code> and a non-negative integer <code>n</code>
+and returns the result of concatenating <code>s</code> with itself <code>n</code>
+times. When <code>n</code> is zero or negative, the result should be the empty
+string.</p>
+
+<pre><code>...
+</code></pre>
+
+<p>Note that the operator for string concatenation in Haskell is <code>++</code>.</p>
+
+<p>It is possible to write this as a recursion over the natural number argument <code>n</code>, using the fact
+that <code>repeatStr s n</code> is <code>s ++ (repeatStr s (n - 1))</code> when <code>n</code> is greater than 0.</p>
+
+<p>But another way to implemnent the function which does not require any
+new concepts is to use the Haskell notation <code>[1..n]</code> to create the
+list <code>[1, 2, ..., n]</code> and pass it to a helper function that takes a
+string <code>s</code> and a list such as <code>[1, 2, ..., n]</code> and uses recursion over
+lists to construct <code>s ++ s ++ s ++ ... ++ s</code>.</p>
+
+<h3>(B)</h3>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Collatz_conjecture">Collatz
+conjecture</a> says
+that if you start with any positive <em>n</em> (greater than 0) and iterate
+the transformation <strong>when <em>n</em> is even return <em>n</em> / 2 and when <em>n</em> is
+odd return 3 <em>n</em> + 1</strong>, then this process eventually yields 1 after a
+finite number of steps.</p>
+
+<p>Code a function</p>
+
+<pre><code>collatzSeq :: Int -&gt; [Int]
+</code></pre>
+
+<p>where <code>collatzSeq n</code> takes a positive integer <code>n</code> and returns
+the sequence of integers obtained by the process described above,
+starting with the number <code>n</code> itself and ending with the final 1.</p>
+
+<pre><code>...
+</code></pre>

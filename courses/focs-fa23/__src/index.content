@@ -104,6 +104,9 @@
     <ul class="lectures">
 
       <li><p><span class="hdr">Sep 11: </span><b>Introduction</b></p>
+        <div class="lect">
+      	<p>The <a href="./demo.hs">Haskell demo</a> that I worked through in class.</p>
+        </div>
       </li>
 
       <li><p><b>MACHINE MODELS</b></p></li>
@@ -163,6 +166,7 @@
     <h2>Homeworks</h2>
     
     <ul class="plain">
+      <li><a href="./homeworks/1">Homework 1</a> &mdash; due Thursday Sep 21 (23h59)</li>
     </ul>
     
   </section>

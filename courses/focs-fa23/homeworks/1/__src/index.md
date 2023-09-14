@@ -1,0 +1,357 @@
+<script>
+  document.title = 'Homework 1 - FOCS FA23'
+</script>
+
+# Homework 1
+
+## Due Date: Thursday, Sept 21, 2023 (23h59)
+
+- This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.
+
+- **Please do not post your solutions on a public website or a public repository like GitHub.**
+
+- All programming is to be done in Haskell using GHC v9. 
+
+- Code your answers by modifying the file [`homework1.hs`](homework1.hs) provided. Add your **name**, your **email address**, and any **remarks** that you
+wish to make to the instructor to the block comment at the head of the file.
+
+- **Please do not change the types in the signature of the
+function stubs I provide**. Doing so will make it
+impossible to load your code into the testing infrastructure,
+and make me unhappy.
+
+- Feel free to define as many helper functions as you need.
+
+
+## Electronic Submission Instructions
+
+- Start a _fresh_  `ghci` shell.
+
+- Load your homework code via `:load homework1.hs` to make sure that there are no errors when I will load your code.
+
+- If there are any error, do not submit. I can't test what I can't `:load`.
+
+- When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <b>Submit File</b> in the profile menu (your initials in the upper right corner).
+
+
+* * *
+
+
+## Question 1: Haskell Exercises
+
+These functions are not recursive, and are defined over floating point
+numbers (type `Float`).
+
+
+### (A)
+
+Code a function
+
+    clamp :: Float -> Float -> Float -> Float
+
+where `clamp a b v` returns `v` if `v` is between `a` and `b` (inclusively), and otherwise returns 
+the smallest of `a` and `b` if `v` is smaller, or the largest of `a`
+and `b` if `v` is larger. In most uses, `a` would be the smaller value
+and `b` would be the larger value, but that's not a requirement.
+
+    ...
+
+Note that you have library functions `min` and `max` available.
+
+
+### (B)
+
+Code a function
+
+    interpolate :: Float -> Float -> Float -> Float
+
+where `interpolate a b v` maps the interval `[0, 1]` to the interval
+`[a, b]`, and returns the value corresponding to value `v` with
+respect `[0, 1]` to the corresponding value with respect to `[a, b]`. 
+Thus, `0.5` is in the middle of `[0, 1]`, so it should map to 
+`15` with respect to `[10, 20]` or to `[20, 10]`.
+
+Note that `v` could be outside `[0, 1]`. So 1.5 with respect to `[0, 1]` 
+is halfway past the end point, so corresponds to 25 with respect
+to `[10, 20]`, and corresponds to 30 with respect to `[0, 20]`. It
+also corresponds to 5 with respect to `[20, 10]`.
+
+This is obviously all about ratios.
+
+    ...
+
+### 
+* * *
+
+
+## Question 2: List Functions
+
+All of the functions below can be written as recursive
+functions over lists. They all fit the general pattern of:
+
+    f xs ... = 
+       case xs of
+         [] -> e1
+         x:xs' -> e2
+
+where `e2` can use `x`, `xs'`, and the
+recursive function itself. For some functions, you may need to do some
+additional matching in `e2`.
+
+You can always define helper functions if it makes your life easier.
+
+
+### (A)
+
+Code a function
+
+    pairDouble :: [Int] -> [(Int, Int)]
+
+which takes a list `xs` of integers and returns a new list in which
+every element of `xs` becomes a pair of that element and its double.
+
+    ...
+
+### (B)
+
+Code a function
+
+    cap :: Int -> [Int] -> [Int]
+
+which takes a threshold integer `m` and a list `xs` of integers and
+returns a new list in which every element of `xs` is capped at `m`:
+it becomes `m` if it is larger than `m`, and is unchanged otherwise.
+
+    ...
+
+### (C)
+
+Code a function
+
+     prefix :: String -> [String] -> [String]
+     
+which takes a string `s` and a list of strings `xs` and returns the
+list obtained by prefixing every string in `xs` with `s`.
+
+
+    ...
+
+### (D)
+
+Code a function
+
+    longerThan : Int -> [String] -> [String]
+
+which takes an integer `n` and a list `xs` of strings and returns a
+new list containing only the strings in `xs` that have length _at least_
+`n`, in the same order as they appear in `xs`.
+
+    ...
+    
+Note that you can use function `length` to get the length of a string.
+
+
+### (E)
+
+Code a function
+
+    within :: Int -> Int -> [Int] -> [Int]
+
+which takes two integers `a` and `b` and a list `xs` of integers and
+returns a new list with only the integers in `xs` that are between
+`a` and `b` (inclusively).
+
+    ...
+    
+Make this work whether `a` or `b` is the smallest number.
+
+
+### (F)
+
+Code a function
+
+    find :: Int -> [(Int, a)] -> a -> a
+
+where `find v xs d` takes an integer `v`, a list of pairs `xs`, and a
+default value `d`, and tries the find the first pair in `xs` where the
+first component of the pair is `v`. When it finds such a pair, it
+returns the second component of that pair. If there is no pair in `xs`
+whose first component is `v`, then default value `d` is returned
+instead.
+
+
+### (G) (challenging)
+
+Code a function
+
+    split :: Int -> [Int] -> ([Int], [Int])
+
+which takes a threshold integer `m` and a list `xs` of integers and
+returns a pair of lists, where the first list in the pair contains all
+the elements in `xs` that are at most `m` and the second list in the
+pair contains all the elements in `xs` that are greater than `m`.
+
+The order of the elements in each list should be consistent with the
+order of the elements in the original list.
+
+    ...
+    
+
+* * *
+
+
+## Question 3: Vectors
+
+We can implement vectors as lists of floating point
+numbers. Operations on vectors such as addition or scalar
+multiplication can then be implemented as recursive functions over
+lists.
+
+One difference from Question 2 is that you will sometimes have to
+recurse over two lists at the same time, which means matching over two
+lists. One way to do so is to first match over the first list, and
+then match over the second list in each case of the first list (if
+applicable). For example:
+
+    f xs ys =
+      case xs of
+        [] -> e1
+        x:xs' -> case ys of
+                    [] -> e2
+                    y:ys' -> e3
+
+An alternate, slightly more advanced, approach relies on generalized pattern matching, 
+matching on both lists at the same time by creating a pair of lists. For example, something like:
+
+    f xs ys =
+      case (xs, ys) of
+        ([], []) -> e4
+        (x:xs', []) -> e5
+        ([], y:ys') -> e6
+        (x:xs', y:ys') -> e7
+
+Please only use this last approach if it makes sense to you. There is
+no effective difference between the two.
+
+These functions only make sense if their vector arguments have the
+same length. You can assume that your code will be given vectors of
+the same length. I'm only going to test your code with vectors of the
+same length. Still, you should probably make sure that your code does
+return a value in case vectors do not have the same length (I don't
+care what that value is), or error out with `error "message"`.
+
+
+### (A)
+
+Code a function
+
+    vScale :: Float -> [Float] -> [Float]
+
+which takes a float `a` and a vector `v` and computes the scalar
+multiplication `a v` (multiplying every component of `v` by `a`).
+
+    ...
+    
+
+### (B)
+
+Code a function
+
+    vAdd :: [Float] -> [Float] -> [Float]
+
+which takes two vectors `v` and `w` and returns the vector sum `v + w`.
+
+    ...
+
+### (C)
+
+Code a function
+
+    vLength :: [Float] -> Float
+
+which takes a vector `v` and returns the length (or [Euclidean
+norm](https://en.wikipedia.org/wiki/Norm_(mathematics)#Euclidean_norm))
+of vector `v`, defined to be the square root of the sum of the squares
+of the components of `v`.
+
+The square root can be computed using library function `sqrt`.
+
+I suggest you write a helper function to compute the sum of the
+squares of the components of `v` first, and use that in `vLength`.
+
+    ...
+    
+
+### (D)
+
+Code a function
+
+    vInner :: [Float] -> [Float] -> Float
+    
+which takes two vectors `v` and `w` and returns the [inner
+product](https://en.wikipedia.org/wiki/Dot_product) `v` &middot; `w`.
+
+    ...
+    
+
+***
+
+## Question 4: More general recursion
+
+There are more general forms of recursions that will occur much less
+often in this course. Sometimes, those forms of recursions can be
+reduced to a recursion over lists (first problem below), other times
+not (second problem below).
+
+### (A)
+
+Code a function
+
+    repeatStr :: String -> Int -> [String]
+
+where `repeatStr s n` takes a string `s` and a non-negative integer `n`
+and returns the result of concatenating `s` with itself `n`
+times. When `n` is zero or negative, the result should be the empty
+string.
+
+
+    ...
+    
+Note that the operator for string concatenation in Haskell is `++`.
+
+It is possible to write this as a recursion over the natural number argument `n`, using the fact
+that `repeatStr s n` is ` s ++ (repeatStr s (n - 1))` when `n` is greater than 0.
+
+But another way to implemnent the function which does not require any
+new concepts is to use the Haskell notation `[1..n]` to create the
+list `[1, 2, ..., n]` and pass it to a helper function that takes a
+string `s` and a list such as `[1, 2, ..., n]` and uses recursion over
+lists to construct `s ++ s ++ s ++ ... ++ s`.
+
+
+
+### (B)
+
+The [Collatz
+conjecture](https://en.wikipedia.org/wiki/Collatz_conjecture) says
+that if you start with any positive _n_ (greater than 0) and iterate
+the transformation **when _n_ is even return _n_ / 2 and when _n_ is
+odd return 3 _n_ + 1**, then this process eventually yields 1 after a
+finite number of steps.
+
+Code a function
+
+    collatzSeq :: Int -> [Int]
+
+where `collatzSeq n` takes a positive integer `n` and returns
+the sequence of integers obtained by the process described above,
+starting with the number `n` itself and ending with the final 1.
+ 
+    ...
+
