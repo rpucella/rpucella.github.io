@@ -39,6 +39,11 @@ and make me unhappy.
 - When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
 and click <b>Submit File</b> in the profile menu (your initials in the upper right corner).
 
+* * *
+
+<span style="color: blue;">
+UPDATE 9/14/23: added sample outputs and fixed stub for `longerThan` in `homework1.hs`.
+</span>
 
 * * *
 
@@ -60,7 +65,23 @@ the smallest of `a` and `b` if `v` is smaller, or the largest of `a`
 and `b` if `v` is larger. In most uses, `a` would be the smaller value
 and `b` would be the larger value, but that's not a requirement.
 
-    ...
+    ghci> clamp 1 2 1.5
+    1.5
+
+    ghci> clamp 1 2 1
+    1.0
+
+    ghci> clamp 1 2 2
+    2.0
+
+    ghci> clamp 1 2 0.5
+    1.0
+
+    ghci> clamp 1 2 1.5
+    1.5
+
+    ghci> clamp 2 1 1.5
+    1.5
 
 Note that you have library functions `min` and `max` available.
 
@@ -84,9 +105,25 @@ also corresponds to 5 with respect to `[20, 10]`.
 
 This is obviously all about ratios.
 
-    ...
+    ghci> interpolate 10 20 0
+    10.0
 
-### 
+    ghci> interpolate 10 20 1
+    20.0
+
+    ghci> interpolate 10 20 0.5
+    15.0
+
+    ghci> interpolate 10 20 0.25
+    12.5
+
+    ghci> interpolate 10 20 1.5
+    25.0
+
+    ghci> interpolate 20 10 1.5
+    5.0
+
+
 * * *
 
 
@@ -116,7 +153,27 @@ Code a function
 which takes a list `xs` of integers and returns a new list in which
 every element of `xs` becomes a pair of that element and its double.
 
-    ...
+    ghci> pairDouble []
+    []
+
+    ghci> pairDouble [1]
+    [(1,2)]
+
+    ghci> pairDouble [1, 2]
+    [(1,2),(2,4)]
+
+    ghci> pairDouble [1, 2, 3]
+    [(1,2),(2,4),(3,6)]
+
+    ghci> pairDouble [1, 2, 3, -4]
+    [(1,2),(2,4),(3,6),(-4,-8)]
+
+    ghci> pairDouble [1, 2, 3, -4, -5]
+    [(1,2),(2,4),(3,6),(-4,-8),(-5,-10)]
+
+    ghci> pairDouble [1, 2, 3, -4, -5, 5]
+    [(1,2),(2,4),(3,6),(-4,-8),(-5,-10),(5,10)]
+
 
 ### (B)
 
@@ -128,7 +185,22 @@ which takes a threshold integer `m` and a list `xs` of integers and
 returns a new list in which every element of `xs` is capped at `m`:
 it becomes `m` if it is larger than `m`, and is unchanged otherwise.
 
-    ...
+    ghci> cap 5 []
+    []
+
+    ghci> cap 5 [1, 2, 3]
+    [1,2,3]
+
+    ghci> cap 5 [6, 7, 8]
+    [5,5,5]
+
+    ghci> cap 5 [1, 2, 3, 4, 5, 6, 7, 8]
+    [1,2,3,4,5,5,5,5]
+
+    ghci> cap 5 [1, 3, 5, 7, 9, 7, 5, 3, 1]
+    [1,3,5,5,5,5,5,3,1]
+
+    
 
 ### (C)
 
@@ -139,8 +211,25 @@ Code a function
 which takes a string `s` and a list of strings `xs` and returns the
 list obtained by prefixing every string in `xs` with `s`.
 
+    ghci> prefix "" []
+    []
 
-    ...
+    ghci> prefix "" ["Alice", "Bob"]
+    ["Alice","Bob"]
+
+    ghci> prefix "Hello " []
+    []
+
+    ghci> prefix "Hello " ["Alice"]
+    ["Hello Alice"]
+
+    ghci> prefix "Hello " ["Alice", "Bob"]
+    ["Hello Alice","Hello Bob"]
+
+    ghci> prefix "Hello " ["Alice", "Bob", "Bob"]
+    ["Hello Alice","Hello Bob","Hello Bob"]
+
+    
 
 ### (D)
 
@@ -152,7 +241,24 @@ which takes an integer `n` and a list `xs` of strings and returns a
 new list containing only the strings in `xs` that have length _at least_
 `n`, in the same order as they appear in `xs`.
 
-    ...
+    ghci> longerThan 5 []
+    []
+
+    ghci> longerThan 5 ["hello"]
+    ["hello"]
+
+    ghci> longerThan 5 ["hello", "world"]
+    ["hello","world"]
+
+    ghci> longerThan 5 ["hello", "world", "full", "of", "wonders"]
+    ["hello","world","wonders"]
+
+    ghci> longerThan 5 ["feed", "well"]
+    []
+
+    ghci> longerThan 0 ["", "a", "aa", "aaa"]
+    ["","a","aa","aaa"]
+
     
 Note that you can use function `length` to get the length of a string.
 
@@ -167,7 +273,30 @@ which takes two integers `a` and `b` and a list `xs` of integers and
 returns a new list with only the integers in `xs` that are between
 `a` and `b` (inclusively).
 
-    ...
+    ghci> within 10 20 []
+    []
+
+    ghci> within 10 20 [5]
+    []
+
+    ghci> within 10 20 [15]
+    [15]
+
+    ghci> within 10 20 [25]
+    []
+
+    ghci> within 10 20 [5, 10 , 15, 20, 25]
+    [10,15,20]
+
+    ghci> within 10 15 [5, 10 , 15, 20, 25]
+    [10,15]
+
+    ghci> within 15 25 [5, 10 , 15, 20, 25]
+    [15,20,25]
+
+    ghci> within 25 15 [5, 10 , 15, 20, 25]
+    [15,20,25]
+
     
 Make this work whether `a` or `b` is the smallest number.
 
@@ -185,6 +314,28 @@ returns the second component of that pair. If there is no pair in `xs`
 whose first component is `v`, then default value `d` is returned
 instead.
 
+    ghci> find 5 [] "nothing"
+    "nothing"
+
+    ghci> find 5 [(1, "one")] "nothing"
+    "nothing"
+
+    ghci> find 5 [(1, "one"), (5, "five")] "nothing"
+    "five"
+
+    ghci> find 5 [(1, "one"), (5, "five"), (10, "ten")] "nothing"
+    "five"
+
+    ghci> find 5 [(1, "one"), (5, "five"), (10, "ten"), (5, "another-five")] "nothing"
+    "five"
+
+    ghci> find 1 [(1, "one"), (5, "five"), (10, "ten")] "nothing"
+    "one"
+
+    ghci> find 5 [(1, 10001), (5, 10005), (10, 10010)] 0
+    10005
+
+    
 
 ### (G) (challenging)
 
@@ -200,7 +351,34 @@ pair contains all the elements in `xs` that are greater than `m`.
 The order of the elements in each list should be consistent with the
 order of the elements in the original list.
 
-    ...
+    ghci> split 5 []
+    ([],[])
+
+    ghci> split 5 [0]
+    ([0],[])
+
+    ghci> split 5 [0, 5]
+    ([0,5],[])
+
+    ghci> split 5 [0, 5, 10]
+    ([0,5],[10])
+
+    ghci> split 5 [0, 5, 10, 15]
+    ([0,5],[10,15])
+
+    ghci> split 5 [0, 5, 10, 15, 2]
+    ([0,5,2],[10,15])
+
+    ghci> split 5 [0, 5, 10, 15, 2, 7]
+    ([0,5,2],[10,15,7])
+
+    ghci> split 5 [1, 2, 3, 4]
+    ([1,2,3,4],[])
+
+    ghci> split 5 [6, 7, 8, 9]
+    ([],[6,7,8,9])
+
+    
     
 
 * * *
@@ -256,7 +434,24 @@ Code a function
 which takes a float `a` and a vector `v` and computes the scalar
 multiplication `a v` (multiplying every component of `v` by `a`).
 
-    ...
+    ghci> vScale 10 []
+    []
+
+    ghci> vScale 0 [1, 2, 3]
+    [0.0,0.0,0.0]
+
+    ghci> vScale 1 [1, 2, 3]
+    [1.0,2.0,3.0]
+
+    ghci> vScale 2 [1, 2, 3]
+    [2.0,4.0,6.0]
+
+    ghci> vScale 2.5 [1, 2, 3]
+    [2.5,5.0,7.5]
+
+    ghci> vScale (-2.5) [1, 2, 3]
+    [-2.5,-5.0,-7.5]
+
     
 
 ### (B)
@@ -267,7 +462,16 @@ Code a function
 
 which takes two vectors `v` and `w` and returns the vector sum `v + w`.
 
-    ...
+    ghci> vAdd [] []
+    []
+
+    ghci> vAdd [10] [20]
+    [30.0]
+
+    ghci> vAdd [10, 20, 30] [20, 40, 60]
+    [30.0,60.0,90.0]
+
+    
 
 ### (C)
 
@@ -285,7 +489,24 @@ The square root can be computed using library function `sqrt`.
 I suggest you write a helper function to compute the sum of the
 squares of the components of `v` first, and use that in `vLength`.
 
-    ...
+    ghci> vLength []
+    0.0
+
+    ghci> vLength [10]
+    10.0
+
+    ghci> vLength [10, 20]
+    22.36068
+
+    ghci> vLength [10, 20, 30]
+    37.416573
+
+    ghci> vLength [10, 20, 30, 40]
+    54.772255
+
+    ghci> vLength [10, 10]
+    14.142136
+
     
 
 ### (D)
@@ -297,7 +518,18 @@ Code a function
 which takes two vectors `v` and `w` and returns the [inner
 product](https://en.wikipedia.org/wiki/Dot_product) `v` &middot; `w`.
 
-    ...
+    ghci> vInner [] []
+    0.0
+
+    ghci> vInner [10] [20]
+    200.0
+
+    ghci> vInner [1, 2, 3] [4, 5, 6]
+    32.0
+
+    ghci> vInner [1, 2, 3] [8, 10, 12]
+    64.0
+
     
 
 ***
@@ -320,8 +552,33 @@ and returns the result of concatenating `s` with itself `n`
 times. When `n` is zero or negative, the result should be the empty
 string.
 
+    ghci> repeatStr "" 0
+    ""
 
-    ...
+    ghci> repeatStr "" 1
+    ""
+
+    ghci> repeatStr "" 10
+    ""
+
+    ghci> repeatStr "a" 0
+    ""
+
+    ghci> repeatStr "a" 1
+    "a"
+
+    ghci> repeatStr "a" 10
+    "aaaaaaaaaa"
+
+    ghci> repeatStr "hello" 0
+    ""
+
+    ghci> repeatStr "hello" 1
+    "hello"
+
+    ghci> repeatStr "hello" 10
+    "hellohellohellohellohellohellohellohellohellohello"
+
     
 Note that the operator for string concatenation in Haskell is `++`.
 
@@ -353,5 +610,31 @@ where `collatzSeq n` takes a positive integer `n` and returns
 the sequence of integers obtained by the process described above,
 starting with the number `n` itself and ending with the final 1.
  
-    ...
+    ghci> collatzSeq 1
+    [1]
+
+    ghci> collatzSeq 2
+    [2,1]
+
+    ghci> collatzSeq 3
+    [3,10,5,16,8,4,2,1]
+
+    ghci> collatzSeq 4
+    [4,2,1]
+
+    ghci> collatzSeq 12
+    [12,6,3,10,5,16,8,4,2,1]
+
+    ghci> collatzSeq 19
+    [19,58,29,88,44,22,11,34,17,52,26,13,40,20,10,5,16,8,4,2,1]
+
+    ghci> collatzSeq 27
+    [27,82,41,124,62,31,94,47,142,71,214,107,322,161,484,242,121,364,182,
+    91,274,137,412,206,103,310,155,466,233,700,350,175,526,263,790,395,
+    1186,593,1780,890,445,1336,668,334,167,502,251,754,377,1132,566,283,
+    850,425,1276,638,319,958,479,1438,719,2158,1079,3238,1619,4858,2429,
+    7288,3644,1822,911,2734,1367,4102,2051,6154,3077,9232,4616,2308,1154,
+    577,1732,866,433,1300,650,325,976,488,244,122,61,184,92,46,23,70,35,
+    106,53,160,80,40,20,10,5,16,8,4,2,1]
+
 
