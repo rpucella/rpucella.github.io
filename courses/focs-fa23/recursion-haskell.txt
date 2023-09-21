@@ -1,0 +1,80 @@
+Recursive Functions
+-------------------
+
+It came to my attention that some of you were never exposed to recursion. Let's remedy that.
+
+A recursive function is a function that basically invokes itself.[1] Why would you want to do that? Well, recursive functions are the natural way to express recursive algorithms, and to work with recursive structures such as linked lists and trees. Moreover, recursive functions are used in lieu of loops in some languages, such as Haskell.[2]
+
+Consider the following function in Python that sums all the numbers between 0 and n (inclusive) using a loop:
+
+      def sumto (n):
+         result = 0
+         index = 0
+         while index <= n:
+           result += index
+           index += 1
+         return result
+
+It's pretty straightforward. But it uses mutable state (variables result and index) which Haskell doesn't allow. The way to write the above function is to it with recursion.
+
+The trick with recursion is to think about the following two questions:
+
+- is there an input for which I can return a result immediately, without doing a lot of work? - that's the base case
+- for all other inputs, is there a way to use the function I'm writing on a "smaller" input to get a partial result that I can combine with the current input to get the result for the current input?
+
+In the above statement, "smaller" is the tricky term - it basically means: am I getting closer to the base case?
+
+Thinking about summing all the numbers from 0 to n (inclusive), what is the input (a value of n) for which you don't have to do a lot of work. Easy - when n = 0, the sum of all the number between 0 and 0 is 0.
+
+So we can start to write our function:
+
+    sumto n =
+      if (n == 0)
+        then 0
+      else {- ?? -}
+
+What about when n is not 0? Well, the current input is n. If I can get the sum of all the numbers from 0 to n-1, then all I need to do is to add n to that sum to get the sum of all the numbers from 0 to n. And I know how to get the sum of all the number from 0 to n-1 -- I can just call sumto! And n-1 is closer to 0 than n, so the input I'm using on the recursive call is closer to 0 than my current input. Which leads to:
+
+    sumto n =
+      if (n == 0)
+        then 0
+      else n + sumto (n - 1)
+
+That's going to be the shape of most recursive functions over numbers:
+
+    f <inputs> = 
+      if <test-for-base-case>
+        then <simple-base-case-value>
+      else <some operation using the current input and the recursive call to f on a smaller input>
+
+As you gain more experience with recursion, you can complicate stuff (like multiple base cases, or multiple recursive clauses) but for now, this takes care of most things.
+
+In this example, we took the result of the recursive call sumto (n-1) which was a number and added it to the current input to get a new number. But of course, we can do other stuff with the result. If the result of the recursive call is a list, you can combine it with the current input to form another list, and return that. 
+
+For a similar perspective, please read:  https://medium.com/@daniel.oliver.king/getting-started-with-recursion-f89f57c5b60e
+
+When working over lists in Haskell, it's usually even simpler. The base case is almost always the empty list, and the if-then-else that I used above is made much much simpler using pattern matching. For instance, the function that lets you sum all the elements of a list can be written:
+
+    sumlist l =
+      case l of
+        [] -> 0
+        x:xs -> x + sumlist xs
+
+Note that the structure is basically the same as above: the base case, where you don't have to do any work, here is the empty list (which has sum 0). And in the other case, you take the tail of the current input which is a smaller list (i.e., closer to being empty), recursively determine its sum, and when you're done, you have the sum of all but the first element of the list, and to get the sum of the elements of the full list, you simply need to add the first element to the sum of all but the first element of the list.
+
+I can break it down a little bit more to really highlight the steps:
+
+    sumlist l =
+      case l of
+        [] -> 0
+        x:xs -> let partial_result = sumlist xs in
+                  x + partial_result
+
+Both versions of sumlist are equivalent. Use whichever style makes you happier.
+
+Yes, it feels like magic. But it's not. Just recursion. It may take a bit of time to sink in, but it will.
+
+[1] If you have a function A that invokes a function B that itself invokes A, that's also recursion. All the concepts I'm talking about here apply, except taking the fact that you have B around into account.
+
+[2] Loops and recursive functions are equivalent, one of the nicest results to come out of denotational semantics.
+
