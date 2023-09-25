@@ -148,16 +148,48 @@
 
       <li><p><span class="hdr">Sep 11: </span><b>Introduction</b></p>
         <div class="lect">
-      	<p>The <a href="./demo.hs">Haskell demo</a> that I worked through in class.</p>
+	   <p><a href="https://en.wikipedia.org/wiki/Hilbert's_problems">Hilbert's problems</a>, ten of
+	     which were presented at the ICM in Paris in
+	     1900. His <a href="https://en.wikipedia.org/wiki/Hilbert's_tenth_problem">tenth
+	       problem</a>, on the solvability of Diphantine equations, spoke directly to the notion of
+	     computation.</p>
+           
+      	  <p>The <a href="./demo.hs">Haskell demo</a> that I worked through in class.</p>
         </div>
       </li>
 
       <li><p><b>MACHINE MODELS</b></p></li>
 
       <li><p><span class="hdr">Sep 18: </span><b>Formal languages</b></p>
+        <div class="lect">
+           <p>Reading: Chen, pages 8 - 10.</p>
+           
+           <p>The mathematical notions we'll be using are in Chen
+           above. Here's <a href="languages.pdf">additional notes</a> on what I presented in class.
+           
+	   <p>When talking about set comprehension, I mentioned that there usually needs to be some
+	     restrictions on the properties allowed in order to ensure that the sets can be constructed
+	     by comprehension. <a href="https://plato.stanford.edu/entries/russell-paradox/">Russell's
+	       Paradox</a> is why we need such restrictions.</p>
+           
+	   <p>You may have noticed that union, intersection, and complementation of sets were defined
+	     using set comprehensions that uses conjunction, disjunction, and negation,
+	     respectively. This close connection between set operations and logic is a reflection of the
+	     fact that sets form a <a href="https://en.wikipedia.org/wiki/Boolean_algebra">Boolean
+	       algebra</a>.</p>
+           
+	   <p>Regular expressions are used to search for patterns in text. <a href="http://www.cs.columbia.edu/~tal/3261/fall07/handout/egrep_mini-tutorial.htm">Here is an example of how they are used in egrep</a>. Note that the equivalence between regular expressions and regular languages only holds for <i>pure</i> regular expressions. Most regular expression packages used in practice extend regular expressions in ways that let you express non-regular languages.</p>
+           
+           <p>An <a href="https://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html">interesting article by Brian Kernighan</a> on elegant code for regular expression matching. Note that Kernighan's definition of regular expressions is more restricted than ours. (The point of the article is not regular expressions, but elegant code.)</p>
+           
+	    <p>If you define two regular expressions to be equal when they denote the same set of strings, then regular expressions obey the laws of <a href="https://en.wikipedia.org/wiki/Kleene_algebra">Kleene algebras</a>.</p>
+        </div>
       </li>
 
       <li><p><span class="hdr">Sep 25: </span><b>Finite state machines</b></p>
+        <div class="lect">
+           <p>Reading: Chen, Sections 1.1 - 1.4.</p>
+        </div>
       </li>
 
       <li><p><span class="hdr">Oct 2: </span><b>Turing machines</b></p>
