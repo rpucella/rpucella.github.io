@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <script>
+  document.title = 'Homework 2 - FOCS FA23'
+</script>
+
+<h1>Homework 2</h1>
+
+<h2>Due Date: Friday, Oct 6, 2023 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.</p></li>
+
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+
+<li><p>All programming is to be done in Haskell using GHC v9.</p></li>
+
+<li><p>Code your answers by modifying the file <a href="homework2.hs"><code>homework2.hs</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you
+wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+<li><p><strong>Please do not change the types in the signature of the
+function stubs I provide</strong>. Doing so will make it
+impossible to load your code into the testing infrastructure,
+and make me unhappy.</p></li>
+
+<li><p>Feel free to define as many helper functions as you need.</p></li>
+</ul>
+
+<h2>Electronic Submission Instructions</h2>
+
+<ul>
+<li><p>Start a <em>fresh</em>  <code>ghci</code> shell.</p></li>
+
+<li><p>Load your homework code via <code>:load</code> <em>path-to-file</em><code>/homework2.hs</code> to make sure that there are no errors when I will load your code.</p></li>
+
+<li><p>If there are any error, do not submit. I can't test what I can't <code>:load</code>.</p></li>
+
+<li><p>When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <b>Submit File</b> in the profile menu (your initials in the upper right corner).</p></li>
+</ul>
+
+<hr>
+
+<p>Consider the following Haskell type for finite automata, or finite state machines:</p>
+
+<pre><code>data FA = FA {
+  states :: [Int],
+  alphabet :: [Char],
+  delta :: [(Int, Char, Int)],
+  start :: Int,
+  final :: [Int]
+}
+</code></pre>
+
+<p>A finite automaton is described by a <em>record</em> with fields holding the various components of the
+automaton: the set of states, the alphabet, the transition relation &Delta;, the start state, and
+the set of final states. Lists are used to represent sets. The transition relation is represented
+using list of triples (<em>p</em>, <em>a</em>, <em>q</em>), stating that in state <em>p</em>, reading symbol <em>a</em> makes the machine
+transition to state <em>q</em>. For simplicity, we're going to represent states using integers. (It's easy enough to
+modify this declaration to make finite state machines generic over the type of the state.)</p>
+
+<p>Haskell uses the type <code>Char</code> for characters, with literals written <code>'a'</code>, <code>'b'</code>, <code>'c'</code>, .... A string is defined as just a list of characters, so that <code>String</code> and <code>[Char]</code> are in fact exactly the same type. This means that you can iterate over the characters in a string using recursion, in the usual way.</p>
+
+<p>Recall that a finite automaton is <strong>deterministic</strong> if for every state <em>p</em> and every symbol <em>a</em> there is
+exactly one transition out of <em>p</em> labelled <em>a</em> in the automaton. Nondeterministic finite automata have
+no restrictions: there can be any number of transitions labelled <em>a</em> out of any state, including none. This homework is all about deterministic finite automata.</p>
+
+<p>Records are basically dictionaries, except that they are statically typed, and the field names
+making up a record are part of its type. For information how to work with records in Haskell, <a href="https://devtut.github.io/haskell/record-syntax.html">check
+out this link</a>. It's pretty straightforward. You create a record by calling the constructor (here, <code>FA</code>) and passing a value for each field. To access the fields of a record, you treat the field names as <em>accessor functions</em>, so that, for example, the alphabet of a finite automata <code>fm</code> in the above representation can be accessed with <code>alphabet fm</code>. You can also use pattern matching if you wish, but I'll let you figure that one out on your own.</p>
+
+<p>Here is an example of a deterministic finite automaton that accepts the set of all strings over
+<code>{a, b}</code> that contains a number of <code>a</code>s that is a multiple of 3.</p>
+
+<pre><code>faMod3a = FA { states = [1, 2, 3],
+               alphabet = ['a', 'b'],
+               delta = [ (1, 'a', 2),
+                         (2, 'a', 3),
+                         (3, 'a', 1),
+                         (1, 'b', 1),
+                         (2, 'b', 2),
+                         (3, 'b', 3) ],
+               start = 1,
+               final = [1]
+             }
+</code></pre>
+
+<p>Here is an example of a deterministic finite automaton that accepts the language of all strings over <code>{a, b, c}</code> that start with an <code>a</code> and end with a <code>c</code>.</p>
+
+<pre><code>faStartaEndc = FA { states = [0, 1, 2, 99],
+                    alphabet = ['a', 'b', 'c'],
+                    delta = [ (0, 'a', 1),
+                              (1, 'a', 1),
+                              (2, 'a', 1),
+			  (99, 'a', 99),
+			  (0, 'b', 99),
+                              (1, 'b', 1),
+                              (2, 'b', 1),
+			  (99, 'b', 99),
+			  (0, 'c', 99),
+                              (1, 'c', 2),
+                              (2, 'c', 2),
+			  (99, 'c', 99) ],
+                    start = 0,
+                    final = [2]
+                  }
+</code></pre>
+
+<hr>
+
+<h2>Question 1: Simulating Deterministic Finite Automata</h2>
+
+<p>We are going to code up a simulator for deterministic finite automata. Deterministic finite automata
+are pretty easy to simulate. Basically, start at the start state, and follow symbols from the input
+string until you reach the end of the string. Accept if you are on a final state. We're going to
+build up the code in steps. (If the automaton is in fact not deterministic, we will treat it as deterministic by ignoring extra transitions out of a state with the same label.)</p>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>isFinal</code></strong> of type <strong><code>[Int] -&gt; Int -&gt; Bool</code></strong> where <code>isFinal fs q</code> returns True if <code>q</code> is a final state of automaton included in the final states <code>fs</code>, and False otherwise.</p>
+
+<pre><code>&gt; isFinal (final faMod3a) 1
+True
+&gt; isFinal (final faMod3a) 2
+False
+&gt; isFinal (final faMod3a) 3
+False
+
+&gt; isFinal (final faStartaEndc) 0
+False
+&gt; isFinal (final faStartaEndc) 1
+False
+&gt; isFinal (final faStartaEndc) 2
+True
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a function <strong><code>followSymbol</code></strong> of type <strong><code>[(Int, Char, Int)] -&gt; Int -&gt; Char -&gt; Int</code></strong> where <code>followSymbol delta q sym</code> returns the state that can be reached by a transition in <code>delta</code> labeled <code>sym</code> from state <code>q</code>.</p>
+
+<p>If there is more than one such transition, you should use the first transition you find, and ignore all others.</p>
+
+<p>If there is no transition, use <code>error &quot;incomplete automaton&quot;</code> to abort execution.</p>
+
+<pre><code>&gt; followSymbol (delta faMod3a) 1 'a'
+2
+&gt; followSymbol (delta faMod3a) 1 'b'
+1
+&gt; followSymbol (delta faMod3a) 2 'a'
+3
+&gt; followSymbol (delta faMod3a) 2 'b'
+2
+&gt; followSymbol (delta faMod3a) 3 'a'
+1
+&gt; followSymbol (delta faMod3a) 3 'b'
+3
+&gt; followSymbol (delta faStartaEndc) 0 'a'
+1
+&gt; followSymbol (delta faStartaEndc) 1 'a'
+1
+&gt; followSymbol (delta faStartaEndc) 1 'b'
+1
+&gt; followSymbol (delta faStartaEndc) 1 'c'
+2
+&gt; followSymbol (delta faStartaEndc) 2 'a'
+1
+&gt; followSymbol (delta faStartaEndc) 0 'b'
+99
+&gt; followSymbol (delta faStartaEndc) 0 'c'
+99
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a function <strong><code>followString</code></strong> of type <strong><code>[(Int, Char, Int)] -&gt; Int -&gt; [Char] -&gt; Int</code></strong> where <code>followString delta q syms</code>
+returns the state that is reachable by following a sequence of transitions in <code>delta</code> labeled by the
+symbols in <code>syms</code> (in order) starting from state <code>q</code>.</p>
+
+<pre><code>&gt; followString (delta faMod3a) 1 []
+1
+&gt; followString (delta faMod3a) 1 ['a']
+2
+&gt; followString (delta faMod3a) 1 ['a', 'b']
+2
+&gt; followString (delta faMod3a) 1 ['a', 'b', 'a', 'b', 'a']
+1
+&gt; followString (delta faMod3a) 2 ['a']
+3
+&gt; followString (delta faMod3a) 2 ['a', 'b']
+3
+&gt; followString (delta faMod3a) 2 ['a', 'b', 'a']
+1
+
+&gt; followString (delta faStartaEndc) 0 []
+0
+&gt; followString (delta faStartaEndc) 0 ['a']
+1
+&gt; followString (delta faStartaEndc) 0 ['a', 'c']
+2
+&gt; followString (delta faStartaEndc) 0 ['a', 'b', 'a', 'c']
+2
+&gt; followString (delta faStartaEndc) 0 ['a', 'b', 'a', 'b']
+1
+&gt; followString (delta faStartaEndc) 1 ['c']
+2
+&gt; followString (delta faStartaEndc) 1 ['c', 'a']
+1
+&gt; followString (delta faStartaEndc) 0 ['b']
+99
+&gt; followString (delta faStartaEndc) 0 ['c', 'c']
+99
+</code></pre>
+
+<p>If at any point there is no transition to follow, use <code>error &quot;incomplete automaton&quot;</code> to abort execution.</p>
+
+<p><strong>Hint</strong>: Use <code>followSymbol</code>.</p>
+
+<h3>(D)</h3>
+
+<p>Code a function <strong><code>accept</code></strong> of type <strong><code>FA -&gt; String -&gt; Bool</code></strong> where
+<code>accept m s</code> returns True if and only if deterministic finite
+automaton <code>m</code> accepts the string <code>s</code>. That is, it returns True exactly
+when following the transitions of <code>m</code> labeled by the symbols in <code>s</code>
+from the start state leads to a final state.</p>
+
+<p><strong>Hint</strong>: Use <code>followString</code> and <code>isFinal</code>.</p>
+
+<p>For testing purposes, I've provided you with a function <code>lang</code> where
+<code>lang m k</code> prints out all the strings of length up to <code>k</code> accepted by
+finite automaton <code>m</code>. Note that this function assumes that you have a working <code>accept</code>, so it will not work correctly until you have completed <code>accept</code>.</p>
+
+<pre><code>&gt; accept faMod3a &quot;&quot;
+True
+&gt; accept faMod3a &quot;babab&quot;
+False
+&gt; accept faMod3a &quot;bababa&quot;
+True
+&gt; accept faMod3a &quot;bababab&quot;
+True
+&gt; accept faMod3a &quot;babababa&quot;
+False
+
+&gt; accept faStartaEndc &quot;&quot;
+False
+&gt; accept faStartaEndc &quot;ac&quot;
+True
+&gt; accept faStartaEndc &quot;aabcabcabcc&quot;
+True
+&gt; accept faStartaEndc &quot;aabcabcabcb&quot;
+False
+&gt; accept faStartaEndc &quot;bbbcabcabcc&quot;
+False
+
+&gt; lang faMod3a 6
+  &lt;empty-string&gt;
+  b
+  bb
+  aaa
+  bbb
+  baaa
+  abaa
+  aaba
+  aaab
+  bbbb
+  bbaaa
+  babaa
+  abbaa
+  baaba
+  ababa
+  aabba
+  baaab
+  abaab
+  aabab
+  aaabb
+  bbbbb
+  aaaaaa
+  bbbaaa
+  bbabaa
+  babbaa
+  abbbaa
+  bbaaba
+  bababa
+  abbaba
+  baabba
+  ababba
+  aabbba
+  bbaaab
+  babaab
+  abbaab
+  baabab
+  ababab
+  aabbab
+  baaabb
+  abaabb
+  aababb
+  aaabbb
+  bbbbbb
+
+&gt; lang faStartaEndc 6
+  ac
+  aac
+  abc
+  acc
+  aaac
+  abac
+  acac
+  aabc
+  abbc
+  acbc
+  aacc
+  abcc
+  accc
+  aaaac
+  abaac
+  acaac
+  aabac
+  abbac
+  acbac
+  aacac
+  abcac
+  accac
+  aaabc
+  ababc
+  acabc
+  aabbc
+  abbbc
+  acbbc
+  aacbc
+  abcbc
+  accbc
+  aaacc
+  abacc
+  acacc
+  aabcc
+  abbcc
+  acbcc
+  aaccc
+  abccc
+  acccc
+  aaaaac
+  abaaac
+  acaaac
+  aabaac
+  abbaac
+  acbaac
+  aacaac
+  abcaac
+  accaac
+  aaabac
+  ababac
+  acabac
+  aabbac
+  abbbac
+  acbbac
+  aacbac
+  abcbac
+  accbac
+  aaacac
+  abacac
+  acacac
+  aabcac
+  abbcac
+  acbcac
+  aaccac
+  abccac
+  acccac
+  aaaabc
+  abaabc
+  acaabc
+  aababc
+  abbabc
+  acbabc
+  aacabc
+  abcabc
+  accabc
+  aaabbc
+  ababbc
+  acabbc
+  aabbbc
+  abbbbc
+  acbbbc
+  aacbbc
+  abcbbc
+  accbbc
+  aaacbc
+  abacbc
+  acacbc
+  aabcbc
+  abbcbc
+  acbcbc
+  aaccbc
+  abccbc
+  acccbc
+  aaaacc
+  abaacc
+  acaacc
+  aabacc
+  abbacc
+  acbacc
+  aacacc
+  abcacc
+  accacc
+  aaabcc
+  ababcc
+  acabcc
+  aabbcc
+  abbbcc
+  acbbcc
+  aacbcc
+  abcbcc
+  accbcc
+  aaaccc
+  abaccc
+  acaccc
+  aabccc
+  abbccc
+  acbccc
+  aacccc
+  abcccc
+  accccc
+</code></pre>
+
+<hr>
+
+<h2>Question 2: Constructing Deterministic Finite Automata</h2>
+
+<p>In this question, you will come up with deterministic finite
+automata. Test your automata with the code you wrote in Question 1.</p>
+
+<p>For submission purposes, I ask you to define those finite automata as
+constants of type <code>FA</code> with a fixed name given below in each
+question. There is already a dummy placeholder in <code>homework2.hs</code> for those
+answers. Just replace the placeholder with your definition.</p>
+
+<h3>(A)</h3>
+
+<p>Construct a finite automaton <strong><code>fa_part_a</code></strong> for the language consisting of
+all strings over the alphabet <code>{a,b,c}</code> of length 3n or 3n+1 for any n
+(i.e., of length 0, 1, 3, 4, 6, 7, 9, 10, 12, 13, ...)</p>
+
+<pre><code>&gt; lang fa_part_a 6
+  &lt;empty-string&gt;
+  a
+  b
+  c
+  aaa
+  baa
+  caa
+  aba
+  bba
+  cba
+  aca
+  bca
+  cca
+  aab
+  bab
+  cab
+  abb
+  bbb
+  cbb
+  acb
+  bcb
+  ccb
+  aac
+  bac
+  cac
+  abc
+  bbc
+  cbc
+  acc
+  bcc
+  ccc
+  aaaa
+  baaa
+  caaa
+  abaa
+  bbaa
+  cbaa
+  acaa
+  bcaa
+  ccaa
+  aaba
+  baba
+  caba
+  abba
+  bbba
+  cbba
+  acba
+  bcba
+  ccba
+  aaca
+  baca
+  caca
+  abca
+  bbca
+  cbca
+  acca
+  bcca
+  ccca
+  aaab
+  baab
+  caab
+  abab
+  bbab
+  cbab
+  acab
+  bcab
+  ccab
+  aabb
+  babb
+  cabb
+  abbb
+  bbbb
+  cbbb
+  acbb
+  bcbb
+  ccbb
+  aacb
+  bacb
+  cacb
+  abcb
+  bbcb
+  cbcb
+  accb
+  bccb
+  cccb
+  aaac
+  baac
+  caac
+  abac
+  bbac
+  cbac
+  acac
+  bcac
+  ccac
+  aabc
+  babc
+  cabc
+  abbc
+  bbbc
+  cbbc
+  acbc
+  bcbc
+  ccbc
+  aacc
+  bacc
+  cacc
+  abcc
+  bbcc
+  cbcc
+  accc
+  bccc
+  cccc
+  aaaaaa
+  baaaaa
+  caaaaa
+  abaaaa
+  bbaaaa
+  cbaaaa
+  acaaaa
+  bcaaaa
+  ccaaaa
+  aabaaa
+  babaaa
+  cabaaa
+  abbaaa
+  bbbaaa
+  cbbaaa
+  acbaaa
+  bcbaaa
+  ccbaaa
+  aacaaa
+  bacaaa
+  cacaaa
+  abcaaa
+  bbcaaa
+  cbcaaa
+  accaaa
+  bccaaa
+  cccaaa
+  aaabaa
+  baabaa
+  caabaa
+  ababaa
+  bbabaa
+  cbabaa
+  acabaa
+  bcabaa
+  ccabaa
+  aabbaa
+  babbaa
+  cabbaa
+  abbbaa
+  bbbbaa
+  cbbbaa
+  acbbaa
+  bcbbaa
+  ccbbaa
+  aacbaa
+  bacbaa
+  cacbaa
+  abcbaa
+  bbcbaa
+  cbcbaa
+  accbaa
+  bccbaa
+  cccbaa
+  aaacaa
+  baacaa
+  caacaa
+  abacaa
+  bbacaa
+  cbacaa
+  acacaa
+  bcacaa
+  ccacaa
+  aabcaa
+  babcaa
+  cabcaa
+  abbcaa
+  bbbcaa
+  cbbcaa
+  acbcaa
+  bcbcaa
+  ccbcaa
+  aaccaa
+  baccaa
+  caccaa
+  abccaa
+  bbccaa
+  cbccaa
+  acccaa
+  bcccaa
+  ccccaa
+  aaaaba
+  baaaba
+  caaaba
+  abaaba
+  bbaaba
+  cbaaba
+  acaaba
+  bcaaba
+  ccaaba
+  aababa
+  bababa
+  cababa
+  abbaba
+  bbbaba
+  cbbaba
+  acbaba
+  bcbaba
+  ccbaba
+  aacaba
+  bacaba
+  cacaba
+  abcaba
+  bbcaba
+  cbcaba
+  accaba
+  bccaba
+  cccaba
+  aaabba
+  baabba
+  caabba
+  ababba
+  bbabba
+  cbabba
+  acabba
+  bcabba
+  ccabba
+  aabbba
+  babbba
+  cabbba
+  abbbba
+  bbbbba
+  cbbbba
+  acbbba
+  bcbbba
+  ccbbba
+  aacbba
+  bacbba
+  cacbba
+  abcbba
+  bbcbba
+  cbcbba
+  accbba
+  bccbba
+  cccbba
+  aaacba
+  baacba
+  caacba
+  abacba
+  bbacba
+  cbacba
+  acacba
+  bcacba
+  ccacba
+  aabcba
+  babcba
+  cabcba
+  abbcba
+  bbbcba
+  cbbcba
+  acbcba
+  bcbcba
+  ccbcba
+  aaccba
+  baccba
+  caccba
+  abccba
+  bbccba
+  cbccba
+  acccba
+  bcccba
+  ccccba
+  aaaaca
+  baaaca
+  caaaca
+  abaaca
+  bbaaca
+  cbaaca
+  acaaca
+  bcaaca
+  ccaaca
+  aabaca
+  babaca
+  cabaca
+  abbaca
+  bbbaca
+  cbbaca
+  acbaca
+  bcbaca
+  ccbaca
+  aacaca
+  bacaca
+  cacaca
+  abcaca
+  bbcaca
+  cbcaca
+  accaca
+  bccaca
+  cccaca
+  aaabca
+  baabca
+  caabca
+  ababca
+  bbabca
+  cbabca
+  acabca
+  bcabca
+  ccabca
+  aabbca
+  babbca
+  cabbca
+  abbbca
+  bbbbca
+  cbbbca
+  acbbca
+  bcbbca
+  ccbbca
+  aacbca
+  bacbca
+  cacbca
+  abcbca
+  bbcbca
+  cbcbca
+  accbca
+  bccbca
+  cccbca
+  aaacca
+  baacca
+  caacca
+  abacca
+  bbacca
+  cbacca
+  acacca
+  bcacca
+  ccacca
+  aabcca
+  babcca
+  cabcca
+  abbcca
+  bbbcca
+  cbbcca
+  acbcca
+  bcbcca
+  ccbcca
+  aaccca
+  baccca
+  caccca
+  abccca
+  bbccca
+  cbccca
+  acccca
+  bcccca
+  ccccca
+  aaaaab
+  baaaab
+  caaaab
+  abaaab
+  bbaaab
+  cbaaab
+  acaaab
+  bcaaab
+  ccaaab
+  aabaab
+  babaab
+  cabaab
+  abbaab
+  bbbaab
+  cbbaab
+  acbaab
+  bcbaab
+  ccbaab
+  aacaab
+  bacaab
+  cacaab
+  abcaab
+  bbcaab
+  cbcaab
+  accaab
+  bccaab
+  cccaab
+  aaabab
+  baabab
+  caabab
+  ababab
+  bbabab
+  cbabab
+  acabab
+  bcabab
+  ccabab
+  aabbab
+  babbab
+  cabbab
+  abbbab
+  bbbbab
+  cbbbab
+  acbbab
+  bcbbab
+  ccbbab
+  aacbab
+  bacbab
+  cacbab
+  abcbab
+  bbcbab
+  cbcbab
+  accbab
+  bccbab
+  cccbab
+  aaacab
+  baacab
+  caacab
+  abacab
+  bbacab
+  cbacab
+  acacab
+  bcacab
+  ccacab
+  aabcab
+  babcab
+  cabcab
+  abbcab
+  bbbcab
+  cbbcab
+  acbcab
+  bcbcab
+  ccbcab
+  aaccab
+  baccab
+  caccab
+  abccab
+  bbccab
+  cbccab
+  acccab
+  bcccab
+  ccccab
+  aaaabb
+  baaabb
+  caaabb
+  abaabb
+  bbaabb
+  cbaabb
+  acaabb
+  bcaabb
+  ccaabb
+  aababb
+  bababb
+  cababb
+  abbabb
+  bbbabb
+  cbbabb
+  acbabb
+  bcbabb
+  ccbabb
+  aacabb
+  bacabb
+  cacabb
+  abcabb
+  bbcabb
+  cbcabb
+  accabb
+  bccabb
+  cccabb
+  aaabbb
+  baabbb
+  caabbb
+  ababbb
+  bbabbb
+  cbabbb
+  acabbb
+  bcabbb
+  ccabbb
+  aabbbb
+  babbbb
+  cabbbb
+  abbbbb
+  bbbbbb
+  cbbbbb
+  acbbbb
+  bcbbbb
+  ccbbbb
+  aacbbb
+  bacbbb
+  cacbbb
+  abcbbb
+  bbcbbb
+  cbcbbb
+  accbbb
+  bccbbb
+  cccbbb
+  aaacbb
+  baacbb
+  caacbb
+  abacbb
+  bbacbb
+  cbacbb
+  acacbb
+  bcacbb
+  ccacbb
+  aabcbb
+  babcbb
+  cabcbb
+  abbcbb
+  bbbcbb
+  cbbcbb
+  acbcbb
+  bcbcbb
+  ccbcbb
+  aaccbb
+  baccbb
+  caccbb
+  abccbb
+  bbccbb
+  cbccbb
+  acccbb
+  bcccbb
+  ccccbb
+  aaaacb
+  baaacb
+  caaacb
+  abaacb
+  bbaacb
+  cbaacb
+  acaacb
+  bcaacb
+  ccaacb
+  aabacb
+  babacb
+  cabacb
+  abbacb
+  bbbacb
+  cbbacb
+  acbacb
+  bcbacb
+  ccbacb
+  aacacb
+  bacacb
+  cacacb
+  abcacb
+  bbcacb
+  cbcacb
+  accacb
+  bccacb
+  cccacb
+  aaabcb
+  baabcb
+  caabcb
+  ababcb
+  bbabcb
+  cbabcb
+  acabcb
+  bcabcb
+  ccabcb
+  aabbcb
+  babbcb
+  cabbcb
+  abbbcb
+  bbbbcb
+  cbbbcb
+  acbbcb
+  bcbbcb
+  ccbbcb
+  aacbcb
+  bacbcb
+  cacbcb
+  abcbcb
+  bbcbcb
+  cbcbcb
+  accbcb
+  bccbcb
+  cccbcb
+  aaaccb
+  baaccb
+  caaccb
+  abaccb
+  bbaccb
+  cbaccb
+  acaccb
+  bcaccb
+  ccaccb
+  aabccb
+  babccb
+  cabccb
+  abbccb
+  bbbccb
+  cbbccb
+  acbccb
+  bcbccb
+  ccbccb
+  aacccb
+  bacccb
+  cacccb
+  abcccb
+  bbcccb
+  cbcccb
+  accccb
+  bccccb
+  cccccb
+  aaaaac
+  baaaac
+  caaaac
+  abaaac
+  bbaaac
+  cbaaac
+  acaaac
+  bcaaac
+  ccaaac
+  aabaac
+  babaac
+  cabaac
+  abbaac
+  bbbaac
+  cbbaac
+  acbaac
+  bcbaac
+  ccbaac
+  aacaac
+  bacaac
+  cacaac
+  abcaac
+  bbcaac
+  cbcaac
+  accaac
+  bccaac
+  cccaac
+  aaabac
+  baabac
+  caabac
+  ababac
+  bbabac
+  cbabac
+  acabac
+  bcabac
+  ccabac
+  aabbac
+  babbac
+  cabbac
+  abbbac
+  bbbbac
+  cbbbac
+  acbbac
+  bcbbac
+  ccbbac
+  aacbac
+  bacbac
+  cacbac
+  abcbac
+  bbcbac
+  cbcbac
+  accbac
+  bccbac
+  cccbac
+  aaacac
+  baacac
+  caacac
+  abacac
+  bbacac
+  cbacac
+  acacac
+  bcacac
+  ccacac
+  aabcac
+  babcac
+  cabcac
+  abbcac
+  bbbcac
+  cbbcac
+  acbcac
+  bcbcac
+  ccbcac
+  aaccac
+  baccac
+  caccac
+  abccac
+  bbccac
+  cbccac
+  acccac
+  bcccac
+  ccccac
+  aaaabc
+  baaabc
+  caaabc
+  abaabc
+  bbaabc
+  cbaabc
+  acaabc
+  bcaabc
+  ccaabc
+  aababc
+  bababc
+  cababc
+  abbabc
+  bbbabc
+  cbbabc
+  acbabc
+  bcbabc
+  ccbabc
+  aacabc
+  bacabc
+  cacabc
+  abcabc
+  bbcabc
+  cbcabc
+  accabc
+  bccabc
+  cccabc
+  aaabbc
+  baabbc
+  caabbc
+  ababbc
+  bbabbc
+  cbabbc
+  acabbc
+  bcabbc
+  ccabbc
+  aabbbc
+  babbbc
+  cabbbc
+  abbbbc
+  bbbbbc
+  cbbbbc
+  acbbbc
+  bcbbbc
+  ccbbbc
+  aacbbc
+  bacbbc
+  cacbbc
+  abcbbc
+  bbcbbc
+  cbcbbc
+  accbbc
+  bccbbc
+  cccbbc
+  aaacbc
+  baacbc
+  caacbc
+  abacbc
+  bbacbc
+  cbacbc
+  acacbc
+  bcacbc
+  ccacbc
+  aabcbc
+  babcbc
+  cabcbc
+  abbcbc
+  bbbcbc
+  cbbcbc
+  acbcbc
+  bcbcbc
+  ccbcbc
+  aaccbc
+  baccbc
+  caccbc
+  abccbc
+  bbccbc
+  cbccbc
+  acccbc
+  bcccbc
+  ccccbc
+  aaaacc
+  baaacc
+  caaacc
+  abaacc
+  bbaacc
+  cbaacc
+  acaacc
+  bcaacc
+  ccaacc
+  aabacc
+  babacc
+  cabacc
+  abbacc
+  bbbacc
+  cbbacc
+  acbacc
+  bcbacc
+  ccbacc
+  aacacc
+  bacacc
+  cacacc
+  abcacc
+  bbcacc
+  cbcacc
+  accacc
+  bccacc
+  cccacc
+  aaabcc
+  baabcc
+  caabcc
+  ababcc
+  bbabcc
+  cbabcc
+  acabcc
+  bcabcc
+  ccabcc
+  aabbcc
+  babbcc
+  cabbcc
+  abbbcc
+  bbbbcc
+  cbbbcc
+  acbbcc
+  bcbbcc
+  ccbbcc
+  aacbcc
+  bacbcc
+  cacbcc
+  abcbcc
+  bbcbcc
+  cbcbcc
+  accbcc
+  bccbcc
+  cccbcc
+  aaaccc
+  baaccc
+  caaccc
+  abaccc
+  bbaccc
+  cbaccc
+  acaccc
+  bcaccc
+  ccaccc
+  aabccc
+  babccc
+  cabccc
+  abbccc
+  bbbccc
+  cbbccc
+  acbccc
+  bcbccc
+  ccbccc
+  aacccc
+  bacccc
+  cacccc
+  abcccc
+  bbcccc
+  cbcccc
+  accccc
+  bccccc
+  cccccc
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Construct a finite automaton <strong><code>fa_part_b</code></strong> for the language
+consisting of all strings over the alphabet <code>{a,b,c}</code> with exactly four <code>a</code>
+and no <code>b</code> in them (and any number of <code>c</code>).</p>
+
+<pre><code>&gt; lang fa_part_b 6
+  aaaa
+  caaaa
+  acaaa
+  aacaa
+  aaaca
+  aaaac
+  ccaaaa
+  cacaaa
+  accaaa
+  caacaa
+  acacaa
+  aaccaa
+  caaaca
+  acaaca
+  aacaca
+  aaacca
+  caaaac
+  acaaac
+  aacaac
+  aaacac
+  aaaacc
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Construct a finite automaton <strong><code>fa_part_c</code></strong> for the language
+consisting of all strings over the alphabet <code>{a,b,c}</code> with exactly three <code>a</code>
+and one <code>b</code> in them (and any number of <code>c</code>).</p>
+
+<pre><code>&gt; lang fa_part_c 6
+  baaa
+  abaa
+  aaba
+  aaab
+  cbaaa
+  bcaaa
+  cabaa
+  acbaa
+  bacaa
+  abcaa
+  caaba
+  acaba
+  aacba
+  baaca
+  abaca
+  aabca
+  caaab
+  acaab
+  aacab
+  aaacb
+  baaac
+  abaac
+  aabac
+  aaabc
+  ccbaaa
+  cbcaaa
+  bccaaa
+  ccabaa
+  cacbaa
+  accbaa
+  cbacaa
+  bcacaa
+  cabcaa
+  acbcaa
+  baccaa
+  abccaa
+  ccaaba
+  cacaba
+  accaba
+  caacba
+  acacba
+  aaccba
+  cbaaca
+  bcaaca
+  cabaca
+  acbaca
+  bacaca
+  abcaca
+  caabca
+  acabca
+  aacbca
+  baacca
+  abacca
+  aabcca
+  ccaaab
+  cacaab
+  accaab
+  caacab
+  acacab
+  aaccab
+  caaacb
+  acaacb
+  aacacb
+  aaaccb
+  cbaaac
+  bcaaac
+  cabaac
+  acbaac
+  bacaac
+  abcaac
+  caabac
+  acabac
+  aacbac
+  baacac
+  abacac
+  aabcac
+  caaabc
+  acaabc
+  aacabc
+  aaacbc
+  baaacc
+  abaacc
+  aabacc
+  aaabcc
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Construct a finite automaton <strong><code>fa_part_d</code></strong> for
+the language consisting of all strings over the alphabet
+<code>{a,b,c}</code> in which there are an odd number
+of <code>a</code>, an even number of <code>b</code>, and any number of <code>c</code>.</p>
+
+<pre><code>&gt; lang fa_part_d 6
+  a
+  ca
+  ac
+  aaa
+  bba
+  cca
+  bab
+  abb
+  cac
+  acc
+  caaa
+  acaa
+  cbba
+  bcba
+  aaca
+  bbca
+  ccca
+  cbab
+  bcab
+  cabb
+  acbb
+  bacb
+  abcb
+  aaac
+  bbac
+  ccac
+  babc
+  abbc
+  cacc
+  accc
+  aaaaa
+  bbaaa
+  ccaaa
+  babaa
+  abbaa
+  cacaa
+  accaa
+  baaba
+  ababa
+  aabba
+  bbbba
+  ccbba
+  cbcba
+  bccba
+  caaca
+  acaca
+  cbbca
+  bcbca
+  aacca
+  bbcca
+  cccca
+  baaab
+  abaab
+  aabab
+  bbbab
+  ccbab
+  cbcab
+  bccab
+  aaabb
+  bbabb
+  ccabb
+  babbb
+  abbbb
+  cacbb
+  accbb
+  cbacb
+  bcacb
+  cabcb
+  acbcb
+  baccb
+  abccb
+  caaac
+  acaac
+  cbbac
+  bcbac
+  aacac
+  bbcac
+  cccac
+  cbabc
+  bcabc
+  cabbc
+  acbbc
+  bacbc
+  abcbc
+  aaacc
+  bbacc
+  ccacc
+  babcc
+  abbcc
+  caccc
+  acccc
+  caaaaa
+  acaaaa
+  cbbaaa
+  bcbaaa
+  aacaaa
+  bbcaaa
+  cccaaa
+  cbabaa
+  bcabaa
+  cabbaa
+  acbbaa
+  bacbaa
+  abcbaa
+  aaacaa
+  bbacaa
+  ccacaa
+  babcaa
+  abbcaa
+  caccaa
+  acccaa
+  cbaaba
+  bcaaba
+  cababa
+  acbaba
+  bacaba
+  abcaba
+  caabba
+  acabba
+  cbbbba
+  bcbbba
+  aacbba
+  bbcbba
+  cccbba
+  baacba
+  abacba
+  aabcba
+  bbbcba
+  ccbcba
+  cbccba
+  bcccba
+  aaaaca
+  bbaaca
+  ccaaca
+  babaca
+  abbaca
+  cacaca
+  accaca
+  baabca
+  ababca
+  aabbca
+  bbbbca
+  ccbbca
+  cbcbca
+  bccbca
+  caacca
+  acacca
+  cbbcca
+  bcbcca
+  aaccca
+  bbccca
+  ccccca
+  cbaaab
+  bcaaab
+  cabaab
+  acbaab
+  bacaab
+  abcaab
+  caabab
+  acabab
+  cbbbab
+  bcbbab
+  aacbab
+  bbcbab
+  cccbab
+  baacab
+  abacab
+  aabcab
+  bbbcab
+  ccbcab
+  cbccab
+  bcccab
+  caaabb
+  acaabb
+  cbbabb
+  bcbabb
+  aacabb
+  bbcabb
+  cccabb
+  cbabbb
+  bcabbb
+  cabbbb
+  acbbbb
+  bacbbb
+  abcbbb
+  aaacbb
+  bbacbb
+  ccacbb
+  babcbb
+  abbcbb
+  caccbb
+  acccbb
+  baaacb
+  abaacb
+  aabacb
+  bbbacb
+  ccbacb
+  cbcacb
+  bccacb
+  aaabcb
+  bbabcb
+  ccabcb
+  babbcb
+  abbbcb
+  cacbcb
+  accbcb
+  cbaccb
+  bcaccb
+  cabccb
+  acbccb
+  bacccb
+  abcccb
+  aaaaac
+  bbaaac
+  ccaaac
+  babaac
+  abbaac
+  cacaac
+  accaac
+  baabac
+  ababac
+  aabbac
+  bbbbac
+  ccbbac
+  cbcbac
+  bccbac
+  caacac
+  acacac
+  cbbcac
+  bcbcac
+  aaccac
+  bbccac
+  ccccac
+  baaabc
+  abaabc
+  aababc
+  bbbabc
+  ccbabc
+  cbcabc
+  bccabc
+  aaabbc
+  bbabbc
+  ccabbc
+  babbbc
+  abbbbc
+  cacbbc
+  accbbc
+  cbacbc
+  bcacbc
+  cabcbc
+  acbcbc
+  baccbc
+  abccbc
+  caaacc
+  acaacc
+  cbbacc
+  bcbacc
+  aacacc
+  bbcacc
+  cccacc
+  cbabcc
+  bcabcc
+  cabbcc
+  acbbcc
+  bacbcc
+  abcbcc
+  aaaccc
+  bbaccc
+  ccaccc
+  babccc
+  abbccc
+  cacccc
+  accccc
+</code></pre>
+
+<h3>(E)</h3>
+
+<p>Construct a finite automaton <strong><code>fa_part_e</code></strong> for
+the language consisting of all strings over the alphabet
+<code>{a,b,c}</code> in which there are an even number
+of <code>a</code>, a multiple-of-3 number of <code>b</code>, and no <code>c</code>.</p>
+
+<pre><code>&gt; lang fa_part_e 6
+  &lt;empty-string&gt;
+  aa
+  bbb
+  aaaa
+  babb
+  abbb
+  bbbaa
+  bbaba
+  bbaab
+  baabb
+  ababb
+  aabbb
+  aaaaaa
+  babbaa
+  abbbaa
+  bababa
+  abbaba
+  babaab
+  abbaab
+  baaabb
+  abaabb
+  aababb
+  aaabbb
+  bbbbbb
+</code></pre>
+
+<hr>
+
+<h2>Question 3: Functions as First-Class Values</h2>
+
+<p>We saw in class that functions are first-class values in Haskell: they can be passed to other functions as arguments, and returned from functions as results. They can also be stored in lists, tuples, or records.</p>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>makeFunction</code></strong> of type <strong><code>[(Int, a)] -&gt; a -&gt; (Int -&gt; a)</code></strong> which takes a list <code>gr</code> of tuples of the form (<em>input</em>, <em>output</em>) and a default, and create a function of one parameter that takes a value and returns the output corresponding to that value in list <code>gr</code>, or the default if the value is not an input in <code>gr</code>.</p>
+
+<pre><code>&gt; f = makeFunction [] &quot;nothing&quot;
+&gt; f 0
+&quot;nothing&quot;
+&gt; f 1
+&quot;nothing&quot;
+&gt; f 100
+&quot;nothing&quot;
+
+&gt; g = makeFunction [(0, &quot;zero&quot;), (1, &quot;one&quot;), (2, &quot;two&quot;), (3, &quot;three&quot;)] &quot;unknown&quot;
+&gt; g 0
+&quot;zero&quot;
+&gt; g 1
+&quot;one&quot;
+&gt; g 2
+&quot;two&quot;
+&gt; g 3
+&quot;three&quot;
+&gt; g 4
+&quot;unknown&quot;
+&gt; g (-2)
+&quot;unknown&quot;
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a function <strong><code>functionGraph</code></strong> of type <strong><code>(Int -&gt; a) -&gt; [Int] -&gt; [(Int, a)]</code></strong> which takes a function <code>f</code> and a <em>domain of definition</em> and returns the graph of the function over the domain, namely the list of tuple <code>(v, f v)</code> for every <code>v</code> in the domain of definition.</p>
+
+<pre><code>&gt; functionGraph (\x -&gt; 2 * x) []
+[]
+
+&gt; functionGraph (\x -&gt; 2 * x) [1, 2, 3, 4]
+[(1,2),(2,4),(3,6),(4,8)]
+
+&gt; functionGraph (\x -&gt; abs x) [-1, -2, -3, 1, 2, 3]
+[(-1,1),(-2,2),(-3,3),(1,1),(2,2),(3,3)]
+</code></pre>
+
+    
+  </body>
+  
+</html>
+
