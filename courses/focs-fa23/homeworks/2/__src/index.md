@@ -4,7 +4,7 @@
 
 # Homework 2
 
-## Due Date: Friday, Oct 6, 2023 (23h59)
+## Due Date: Thursday, Oct 5, 2023 (23h59)
 
 - This homework is to be done individually. You may discuss problems
 with fellow students, but all submitted work must be entirely your
