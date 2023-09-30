@@ -1698,32 +1698,59 @@ the language consisting of all strings over the alphabet
 `{a,b,c}` in which there are an even number
 of `a`, a multiple-of-3 number of `b`, and no `c`.
 
-    > lang fa_part_e 6
+    > lang fa_part_e 7
       <empty-string>
       aa
       bbb
       aaaa
-      babb
-      abbb
       bbbaa
       bbaba
+      babba
+      abbba
       bbaab
+      babab
+      abbab
       baabb
       ababb
       aabbb
       aaaaaa
-      babbaa
-      abbbaa
-      bababa
-      abbaba
-      babaab
-      abbaab
-      baaabb
-      abaabb
-      aababb
-      aaabbb
       bbbbbb
-  
+      bbbaaaa
+      bbabaaa
+      babbaaa
+      abbbaaa
+      bbaabaa
+      bababaa
+      abbabaa
+      baabbaa
+      ababbaa
+      aabbbaa
+      bbaaaba
+      babaaba
+      abbaaba
+      baababa
+      abababa
+      aabbaba
+      baaabba
+      abaabba
+      aababba
+      aaabbba
+      bbaaaab
+      babaaab
+      abbaaab
+      baabaab
+      ababaab
+      aabbaab
+      baaabab
+      abaabab
+      aababab
+      aaabbab
+      baaaabb
+      abaaabb
+      aabaabb
+      aaababb
+      aaaabbb
+
 
 ***
 
