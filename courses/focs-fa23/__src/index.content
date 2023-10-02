@@ -146,45 +146,46 @@
       <li><p><span class="hdr">Sep 25: </span><b>Finite state machines</b></p>
         <div class="lect">
            <p>Reading: Chen, Sections 1.1 - 1.4.</p>
+           <p>Some <a href="automata.pdf">additional notes</a> on what I presented in class. These notes cover some stuff we'll see next time.</p>
         </div>
       </li>
 
-      <li><p><span class="hdr">Oct 2: </span><b>Turing machines</b></p>
+      <li><p><span class="hdr">Oct 2: </span><b>Nondeterministic machines</b></p>
+        <div class="lect">
+           <p>Reading: Chen, Sections 1.1 - 1.4.</p>
+         </div>
       </li>
 
-      <li><p><span class="hdr">Oct 11: </span><b>Multi-tape Turing machines</b></p>
+      <li><p><span class="hdr">Oct 11: </span><b>Turing machines (I)</b></p>
       </li>
 
-      <li><p><span class="hdr">Oct 16: </span><b>Compiling to Turing machines</b></p>
+      <li><p><span class="hdr">Oct 16: </span><b>Turing machines (II)</b></p>
       </li>
 
-      <li><p><span class="hdr">Oct 16: </span><b>Non-computable languages</b></p>
+      <li><p><span class="hdr">Oct 23: </span><b>Non-computable languages</b></p>
       </li>
 
       
       <li><p><b>ALTERNATIVE MODELS</b></p></li>
 
-      <li><p><span class="hdr">Oct 23: </span><b>Production grammars</b></p>
+      <li><p><span class="hdr">Oct 30: </span><b>Production grammars</b></p>
       </li>
 
-      <li><p><span class="hdr">Oct 30: </span><b>Lambda calculus (1)</b></p>
+      <li><p><span class="hdr">Nov 3: </span><b>Lambda calculus (1)</b></p>
       </li>
 
-      <li><p><span class="hdr">Nov 3: </span><b>Lambda calculus (2)</b></p>
+      <li><p><span class="hdr">Nov 6: </span><b>Lambda calculus (2)</b></p>
       </li>
 
       
       <li><p><b>ABSTRACTION</b></p></li>
 
-      <li><p><span class="hdr">Nov 6: </span><b>TBD</b></p>
-      </li>
-      
       <li><p><span class="hdr">Nov 13: </span><b>TBD</b></p>
       </li>
-
+      
       <li><p><span class="hdr">Nov 27: </span><b>TBD</b></p>
       </li>
-      
+
       <li><p><span class="hdr">Dec 4: </span><b>TBD</b></p>
       </li>
 
