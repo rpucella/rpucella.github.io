@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <script>
+  document.title = 'Homework 3 - FOCS FA23'
+</script>
+
+<h1>Homework 3</h1>
+
+<h2>Due Date: Sunday Oct 15, 2023 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.</p></li>
+
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+
+<li><p>All programming is to be done in Haskell using GHC v9.</p></li>
+
+<li><p>Code your answers by modifying the file <a href="homework3.hs"><code>homework3.hs</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you
+wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+<li><p><strong>Please do not change the types in the signature of the
+function stubs I provide</strong>. Doing so will make it
+impossible to load your code into the testing infrastructure,
+and make me unhappy.</p></li>
+
+<li><p>Feel free to define as many helper functions as you need.</p></li>
+</ul>
+
+<h2>Electronic Submission Instructions</h2>
+
+<ul>
+<li><p>Start a <em>fresh</em>  <code>ghci</code> shell.</p></li>
+
+<li><p>Load your homework code via <code>:load</code> <em>path-to-file</em><code>/homework3.hs</code> to make sure that there are no errors when I will load your code.</p></li>
+
+<li><p>If there are any error, do not submit. I can't test what I can't <code>:load</code>.</p></li>
+
+<li><p>When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <b>Submit File</b> in the profile menu (your initials in the upper right corner).</p></li>
+</ul>
+
+<hr>
+
+<h2>Question 1: Set Functions</h2>
+
+<p>A set is a collection of elements in which repetition and order is irrelevant; mathematically, the
+sets {1, 1, 2, 3} and {2, 3, 3, 1} are the same set.</p>
+
+<p>We use lists as a representation for sets. Our set operations will use that set representation. For simplicity, we're going to focus on sets of integers.</p>
+
+<p>Let's impose the invariant that <strong>a list representing a set cannot have repeated elements</strong>.  It is
+therefore your responsibility in the functions for this question to make sure that when your function produces sets, you have no repeated elements. When expecting sets as arguments, it is okay
+for you to assume that the lists given as inputs don't have repeated elements.</p>
+
+<p>Order is irrelevant. It's okay if the order of elements in your results differ from my
+sample outputs below, as long as there are no repetitions. My tester will handle it.</p>
+
+<p>Most of these functions are recursive. I will generally not bother pointing out when I'm asking for
+a recursive function.</p>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>set</code></strong> of type <strong><code>[Int]-&gt; [Int]</code></strong> which takes
+a list <code>xs</code> and returns a set (a list without repeated elements)
+with the same elements as <code>xs</code>.</p>
+
+<pre><code>&gt; set []
+[]
+
+&gt; set [1]
+[1]
+
+&gt; set [1, 2, 3]
+[1,2,3]
+
+&gt; set [1, 2, 3, 2, 1]
+[3,2,1]
+
+&gt; set [1, 2, 3, 2, 1, 2, 3, 4, 3, 2, 1]
+[4,3,2,1]
+</code></pre>
+
+<p>Note that library function <code>elem</code> can be used to check if an element is a member of a list, as in <code>elem 10 [1, 2, 10, 20]</code>.</p>
+
+<h3>(B)</h3>
+
+<p>Code a function <strong><code>setSub</code></strong> of type <strong><code>[Int] -&gt; [Int] -&gt; Bool</code></strong> which takes two sets <code>s</code> and <code>t</code>
+and returns True exactly when <code>s</code> is a subset of <code>t</code> (that is, every element of <code>s</code> is an element of
+<code>t</code>).</p>
+
+<pre><code>&gt; setSub [] []
+True
+
+&gt; setSub [] [1]
+True
+
+&gt; setSub [1] [1]
+True
+
+&gt; setSub [1] [1, 2]
+True
+
+&gt; setSub [1] [1, 2, 3]
+True
+
+&gt; setSub [1, 2] [1, 2, 3]
+True
+
+&gt; setSub [2, 1] [1, 2, 3]
+True
+
+&gt; setSub [3, 2, 1] [1, 2, 3]
+True
+
+&gt; setSub [4, 3, 2, 1] [1, 2, 3]
+False
+
+&gt; setSub [4, 3, 2] [1, 2, 3]
+False
+
+&gt; setSub [4] [1, 2, 3]
+False
+
+&gt; setSub [4] []
+False
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a function <strong><code>setEqual</code></strong> of type <strong><code>[Int] -&gt; [Int] -&gt; Bool</code></strong> which takes two sets <code>s</code> and <code>t</code>
+and returns True exactly when <code>s</code> and <code>t</code> are equal as sets (that is, they have the same elements).</p>
+
+<pre><code>&gt; setEqual [] []
+True
+
+&gt; setEqual [] [1]
+False
+
+&gt; setEqual [] [1, 2]
+False
+
+&gt; setEqual [1, 2] []
+False
+
+&gt; setEqual [1, 2] [1]
+False
+
+&gt; setEqual [1, 2] [1, 2]
+True
+
+&gt; setEqual [1, 2] [2, 1]
+True
+
+&gt; setEqual [1, 2] [2, 1, 3]
+False
+
+&gt; setEqual [3, 1, 2] [2, 1, 3]
+True
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Code a function <strong><code>setUnion</code></strong> of type <strong><code>[Int] -&gt; [Int] -&gt; [Int]</code></strong> which takes two sets <code>s</code> and
+<code>t</code> and returns a set made up of all the elements in <code>s</code> and <code>t</code>.</p>
+
+<pre><code>&gt; setUnion [] []
+[]
+
+&gt; setUnion [] [1, 2]
+[1,2]
+
+&gt; setUnion [1, 2] []
+[1,2]
+
+&gt; setUnion [1, 2] [3, 4]
+[1,2,3,4]
+
+&gt; setUnion [1, 2] [2, 3]
+[1,2,3]
+
+&gt; setUnion [1, 2] [1, 2, 3, 4]
+[1,2,3,4]
+
+&gt; setUnion [1, 2, 3, 4] [1, 2]
+[3,4,1,2]
+</code></pre>
+
+<h3>(E)</h3>
+
+<p>Code a function <strong><code>setInter</code></strong> of type <strong><code>[Int] -&gt; [Int] -&gt; [Int]</code></strong> which takes two sets <code>s</code> and
+<code>t</code> and returns a new set made up of all the elements in common to <code>s</code> and <code>t</code>.</p>
+
+<pre><code>&gt; setInter [] []
+[]
+
+&gt; setInter [1] []
+[]
+
+&gt; setInter [1, 2] []
+[]
+
+&gt; setInter [] [1, 2]
+[]
+
+&gt; setInter [1] [1, 2]
+[1]
+
+&gt; setInter [1, 2] [1, 2]
+[1,2]
+
+&gt; setInter [1, 2, 3] [1, 2]
+[1,2]
+
+&gt; setInter [1, 2, 3] [2]
+[2]
+
+&gt; setInter [1, 2, 3] [2, 3]
+[2,3]
+
+&gt; setInter [2, 3] [1, 2, 3]
+[2,3]
+</code></pre>
+
+<hr>
+
+<h2>Question 2: Mapping and Filtering</h2>
+
+<p>Recall that <em>higher-order functions</em> are functions that take other functions as arguments. Two important higher-order functions are <code>map</code> and <code>filter</code>, both built-in in Haskell.</p>
+
+<p>Function <code>map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code> takes a function <code>f</code> and a list <code>xs</code> and returns the list obtained by applying <code>f</code> successively to every element of <code>xs</code>.</p>
+
+<p>Function <code>filter :: (a -&gt; Bool) -&gt; [a] -&gt; [a]</code> takes a predicate <code>p</code> (a function returning a
+Boolean) and a list <code>xs</code> and returns the list of all the elements in <code>xs</code> for which the predicate
+returns True.</p>
+
+<p>For each function in this question, full points will be awarded if the function and its helpers use
+<code>map</code> and <code>filter</code> instead of recursion.</p>
+
+<p>To illustrate, here is the <code>squares</code> function defined using explicit recursion:</p>
+
+<pre><code>squares :: [Int] -&gt; [Int]
+squares xs = 
+  case xs of
+    [] -&gt; []
+    x:xs' -&gt; (x * x) : squares xs'
+</code></pre>
+
+<p>Here is the <code>squares</code> function defined without using explicit recursion:</p>
+
+<pre><code>squares :: [Int] -&gt; [Int]
+squares xs = 
+  map (\x -&gt; x * x) xs
+</code></pre>
+
+<p>If you can't get a function to work without explicit recursion, please go ahead and implement a
+version with explicit recursion for partial marks.</p>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>mapFunctions</code></strong> of type <strong><code>[(a -&gt; b)] -&gt; a -&gt; [b]</code></strong> where <code>mapFunctions fs x</code> returns the list obtained by applying every function in <code>fs</code> to <code>x</code>, in order.</p>
+
+<pre><code>&gt; mapFunctions [] 0
+[]
+
+&gt; mapFunctions [\x -&gt; x+1] 0
+[1]
+
+&gt; mapFunctions [\x -&gt; x+1, \x -&gt; x + 2] 0
+[1,2]
+
+&gt; mapFunctions [\x -&gt; x+1, \x -&gt; x + 2, \x -&gt; x + 99] 0
+[1,2,99]
+
+&gt; mapFunctions [\x -&gt; x+1, \x -&gt; x + 2, \x -&gt; x + 99] 100
+[101,102,199]
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a function <strong><code>keepPalindromes</code></strong> of type <strong><code>String -&gt; [String] -&gt; [String]</code></strong> where <code>keepPalindromes s xs</code> returns the strings in <code>xs</code> with the property that appending them to <code>s</code> yield a <em>palindrome</em>, that is, a string equal to its own reverse, such as <code>abbba</code>.</p>
+
+<pre><code>&gt; keepPalindromes &quot;&quot; []
+[]
+
+&gt; keepPalindromes &quot;&quot; [&quot;a&quot;, &quot;ab&quot;, &quot;ba&quot;, &quot;abbb&quot;, &quot;bbba&quot;, &quot;abbba&quot;]
+[&quot;a&quot;,&quot;abbba&quot;]
+
+&gt; keepPalindromes &quot;a&quot; [&quot;a&quot;, &quot;ab&quot;, &quot;ba&quot;, &quot;abbb&quot;, &quot;bbba&quot;, &quot;abbba&quot;]
+[&quot;a&quot;,&quot;ba&quot;,&quot;bbba&quot;]
+
+&gt; keepPalindromes &quot;b&quot; [&quot;a&quot;, &quot;ab&quot;, &quot;ba&quot;, &quot;abbb&quot;, &quot;bbba&quot;, &quot;abbba&quot;]
+[&quot;ab&quot;]
+
+&gt; keepPalindromes &quot;ab&quot; [&quot;a&quot;, &quot;ab&quot;, &quot;ba&quot;, &quot;abbb&quot;, &quot;bbba&quot;, &quot;abbba&quot;]
+[&quot;a&quot;,&quot;ba&quot;,&quot;bbba&quot;]
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a function <strong><code>incrementPositive</code></strong> of type <strong><code>[Int] -&gt; [Int]</code></strong> where <code>incrementPositive xs</code> returns the list of only the positive integers in <code>xs</code>, each incremented by 1.</p>
+
+<pre><code>&gt; incrementPositive []
+[]
+
+&gt; incrementPositive [1, 2, 3]
+[2,3,4]
+
+&gt; incrementPositive [-1, -2, -3, 1, 2, 3]
+[2,3,4]
+
+&gt; incrementPositive [-1, -2, -3]
+[]
+
+&gt; incrementPositive [-1, 1, -2, 2, -3, 3]
+[2,3,4]
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Code a function <strong><code>distribute</code></strong> of type <strong><code>a -&gt; [b] -&gt; [(a, b)]</code></strong> where <code>distribute x ys</code> returns the list of all pairs of <code>x</code> paired with an element of <code>ys</code>.</p>
+
+<pre><code>&gt; distribute 9 []
+[]
+
+&gt; distribute 9 [&quot;a&quot;]
+[(9,&quot;a&quot;)]
+
+&gt; distribute 9 [&quot;a&quot;, &quot;b&quot;]
+[(9,&quot;a&quot;),(9,&quot;b&quot;)]
+
+&gt; distribute 9 [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+[(9,&quot;a&quot;),(9,&quot;b&quot;),(9,&quot;c&quot;)]
+
+&gt; distribute 9 [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;]
+[(9,&quot;a&quot;),(9,&quot;b&quot;),(9,&quot;c&quot;),(9,&quot;c&quot;)]
+
+&gt; distribute &quot;hello&quot; [1, 2, 3, 4, 5]
+[(&quot;hello&quot;,1),(&quot;hello&quot;,2),(&quot;hello&quot;,3),(&quot;hello&quot;,4),(&quot;hello&quot;,5)]
+</code></pre>
+
+<h3>(E)</h3>
+
+<p>Code a function <strong><code>consAll</code></strong> of type <strong><code>a -&gt; [[a]] -&gt; [[a]]</code></strong> where <code>consAll x xss</code> returns the list obtained by adding <code>x</code> as the first element of every list in <code>xss</code>.</p>
+
+<pre><code>&gt; consAll 1 []
+[]
+
+&gt; consAll 1 [[]]
+[[1]]
+
+&gt; consAll 1 [[66]]
+[[1,66]]
+
+&gt; consAll 1 [[66], [99]]
+[[1,66],[1,99]]
+
+&gt; consAll 1 [[66], [99], []]
+[[1,66],[1,99],[1]]
+
+&gt; consAll 1 [[66], [99], [], [66, 99]]
+[[1,66],[1,99],[1],[1,66,99]]
+
+&gt; consAll &quot;+&quot; [[&quot;hello&quot;, &quot;world&quot;], [&quot;goodbye&quot;]]
+[[&quot;+&quot;,&quot;hello&quot;,&quot;world&quot;],[&quot;+&quot;,&quot;goodbye&quot;]]
+</code></pre>
+
+<hr>
+
+<h2>Question 3: Simulating Nondeterministic Finite Automata</h2>
+
+<p>In Homework 2, you wrote a simulator for <em>deterministic</em> finite state machines (DFAs). It was pretty
+simple: you start in the start state of the finite state machine, then you go to the next state
+according to the symbol you get from the input string and the transition relation of the
+machine. You're only ever in one state, and determine whether to accept based on the state you end
+up with when you exhaust all symbols from the input string.</p>
+
+<p>In this question, we write a simulator for <em>nondeterministic</em> finite state machines (NFAs). Now,
+there are a few ways of doing such a simulation. One is to convert the NFA into a DFA using
+the subset construction I described in class, and simulate the resulting DFA using the simulator for
+Homework 2.</p>
+
+<p>Here, we'll focus on simulating NFAs directly. We are going to use the &quot;pebbles&quot; technique I
+described in class to follow all possible paths at the same time: we first put a pebble on the start
+state, then repeatedly move all the pebbles we have put on the various states to new states
+according to transitions labeled appropriately in the transition relation, creating new pebbles when
+any given pebble can move to multiple states from a given state. We accept the input string when we have seen every
+symbol from the input string and there is at least one pebble on a final state. Indeed, if there's a pebble
+on some final stte, there is a path from the start state to a finalstate, namely the path
+the pebble took to get to that final state.</p>
+
+<p>As usual, we'll build this in pieces.</p>
+
+<p>The type of an NFA is just the type of finite state machines we saw last time. We simply remove the
+restriction that there is a single translation out of any given state labeled with any given symbol. (This restriction was never captured in the type anyway.)</p>
+
+<pre><code>data FA = FA {
+  states :: [Int],
+  alphabet :: [Char],
+  delta :: [(Int, Char, Int)],
+  start :: Int,
+  final :: [Int]
+}
+</code></pre>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>hasFinal</code></strong> of type <strong><code>[Int] -&gt; [Int] -&gt; Bool</code></strong> where <code>hasFinal final qs</code> returns True
+    when one of the states in <code>qs</code> is a final state in <code>final</code>.</p>
+
+<pre><code>&gt; hasFinal (final faStartaEndc) [0, 1]
+False
+
+&gt; hasFinal (final faStartaEndc) [1, 2]
+True
+
+
+&gt; hasFinal (final faLastabc) []
+False
+
+&gt; hasFinal (final faLastabc) [0]
+False
+
+&gt; hasFinal (final faLastabc) [0, 1]
+False
+
+&gt; hasFinal (final faLastabc) [0, 1, 2]
+False
+
+&gt; hasFinal (final faLastabc) [0, 1, 2, 3]
+True
+
+&gt; hasFinal (final faLastabc) [3]
+True
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a function <strong><code>followSymbol</code></strong> of type <strong><code>[(Int, Char, Int)] -&gt; [Int] -&gt; Char -&gt; [Int]</code></strong> where <code>followSymbol delta qs sym</code> returns a list of states that you can reach from <em>any</em> of the states in <code>qs</code> by following symbol <code>sym</code> given a transition relation <code>delta</code>.</p>
+
+<p>Intuitively, think of <code>qs</code> as the states where you have a pebble, and think of the result of the
+function as the set of states where you have pebbles after moving pebbles according to symbol <code>sym</code>
+and the transition relation.</p>
+
+<p>Note that the order or repetition of states in the result is irrelevant. (I will compare the results
+as sets.)</p>
+
+<pre><code>&gt; followSymbol (delta faStartaEndc) [] 'c'
+[]
+
+&gt; followSymbol (delta faStartaEndc) [0] 'c'
+[99]
+
+&gt; followSymbol (delta faStartaEndc) [0, 1] 'c'
+[99,2]
+
+&gt; followSymbol (delta faStartaEndc) [0, 1, 2] 'c'
+[99,2,2]
+
+&gt; followSymbol (delta faStartaEndc) [0, 1, 2, 99] 'c'
+[99,2,2,99]
+
+&gt; followSymbol (delta faStartaEndc) [1, 2, 99] 'c'
+[2,2,99]
+
+
+&gt; followSymbol (delta faLastabc) [] 'a'
+[]
+
+&gt; followSymbol (delta faLastabc) [0] 'a'
+[0,1]
+
+&gt; followSymbol (delta faLastabc) [0, 1, 2, 3] 'a'
+[0,1]
+
+&gt; followSymbol (delta faLastabc) [0, 1, 2, 3] 'b'
+[0,2]
+
+&gt; followSymbol (delta faLastabc) [0, 1, 2, 3] 'c'
+[0,3]
+</code></pre>
+
+<p><strong>Hint:</strong> This can be challenging to do directly. I suggest you write a helper function <code>followSymbolFromState</code> of type <code>[(Int, Char, Int]) -&gt; Int -&gt; Char -&gt; [Int]</code> where <code>followSymbolFromState delta q sym</code> returns a list of states that you can reach by following symbol <code>sym</code> from the single state <code>q</code> given the transition relation <code>delta</code>.</p>
+
+<h3>(C)</h3>
+
+<p>Code a function <strong><code>followString</code></strong> of type <strong><code>[(Int, Char, Int)] -&gt; [Int] -&gt; [Char] -&gt; [Int]</code></strong> where <code>followString delta qs syms</code> returns a list of states that you can reach from <em>any</em> of the states in <code>qs</code> by following the <em>string</em> of symbols in <code>syms</code> in order, given a transition relation <code>delta</code>.</p>
+
+<p>Intuitively, think of <code>qs</code> as the state where you have a pebble, think of the result as the set of states where you have pebbles after moving pebbles according to the sequence of symbols in <code>syms</code> and the transition relation.</p>
+
+<p>Note that the order or repetition of states in the result is irrelevant. (I will compare the results
+as sets.)</p>
+
+<pre><code>&gt; followString (delta faStartaEndc) [] &quot;a&quot;
+[]
+
+&gt; followString (delta faStartaEndc) [0] &quot;a&quot;
+[1]
+
+&gt; followString (delta faStartaEndc) [0] &quot;ab&quot;
+[1]
+
+&gt; followString (delta faStartaEndc) [0] &quot;abc&quot;
+[2]
+
+&gt; followString (delta faStartaEndc) [0] &quot;ac&quot;
+[2]
+
+&gt; followString (delta faStartaEndc) [0] &quot;c&quot;
+[99]
+
+&gt; followString (delta faStartaEndc) [0, 1] &quot;ac&quot;
+[2,2]
+
+&gt; followString (delta faStartaEndc) [0, 1] &quot;ca&quot;
+[99,1]
+
+
+&gt; followString (delta faLastabc) [] &quot;&quot;
+[]
+
+&gt; followString (delta faLastabc) [] &quot;a&quot;
+[]
+
+&gt; followString (delta faLastabc) [] &quot;ab&quot;
+[]
+
+&gt; followString (delta faLastabc) [0] &quot;&quot;
+[0]
+
+&gt; followString (delta faLastabc) [0] &quot;a&quot;
+[0,1]
+
+&gt; followString (delta faLastabc) [0] &quot;ab&quot;
+[0,2]
+
+&gt; followString (delta faLastabc) [0] &quot;abc&quot;
+[0,3]
+
+&gt; followString (delta faLastabc) [0] &quot;abbc&quot;
+[0]
+
+&gt; followString (delta faLastabc) [0] &quot;aabc&quot;
+[0,3]
+
+&gt; followString (delta faLastabc) [1, 2] &quot;bc&quot;
+[3]
+
+&gt; followString (delta faLastabc) [1, 2] &quot;cb&quot;
+[]
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Code a function <strong><code>accept</code></strong> of type <strong><code>FA -&gt; String -&gt; Bool</code></strong> where <code>accept m s</code> returns True when string <code>s</code> is accepted by NFA <code>m</code>, and false otherwise.</p>
+
+<p>As in Homework 2, you can use the function <code>lang</code> I give you to get all the strings (up to a certain length) that a given NFA accepts, once you have implemented <code>accept</code>.</p>
+
+<pre><code>&gt; accept faStartaEndc &quot;abbbc&quot;
+True
+
+&gt; accept faStartaEndc &quot;abbbcb&quot;
+False
+
+&gt; lang faStartaEndc 6
+  ac
+  aac
+  abc
+  acc
+  aaac
+  abac
+  acac
+  aabc
+  abbc
+  acbc
+  aacc
+  abcc
+  accc
+  aaaac
+  abaac
+  acaac
+  aabac
+  abbac
+  acbac
+  aacac
+  abcac
+  accac
+  aaabc
+  ababc
+  acabc
+  aabbc
+  abbbc
+  acbbc
+  aacbc
+  abcbc
+  accbc
+  aaacc
+  abacc
+  acacc
+  aabcc
+  abbcc
+  acbcc
+  aaccc
+  abccc
+  acccc
+  aaaaac
+  abaaac
+  acaaac
+  aabaac
+  abbaac
+  acbaac
+  aacaac
+  abcaac
+  accaac
+  aaabac
+  ababac
+  acabac
+  aabbac
+  abbbac
+  acbbac
+  aacbac
+  abcbac
+  accbac
+  aaacac
+  abacac
+  acacac
+  aabcac
+  abbcac
+  acbcac
+  aaccac
+  abccac
+  acccac
+  aaaabc
+  abaabc
+  acaabc
+  aababc
+  abbabc
+  acbabc
+  aacabc
+  abcabc
+  accabc
+  aaabbc
+  ababbc
+  acabbc
+  aabbbc
+  abbbbc
+  acbbbc
+  aacbbc
+  abcbbc
+  accbbc
+  aaacbc
+  abacbc
+  acacbc
+  aabcbc
+  abbcbc
+  acbcbc
+  aaccbc
+  abccbc
+  acccbc
+  aaaacc
+  abaacc
+  acaacc
+  aabacc
+  abbacc
+  acbacc
+  aacacc
+  abcacc
+  accacc
+  aaabcc
+  ababcc
+  acabcc
+  aabbcc
+  abbbcc
+  acbbcc
+  aacbcc
+  abcbcc
+  accbcc
+  aaaccc
+  abaccc
+  acaccc
+  aabccc
+  abbccc
+  acbccc
+  aacccc
+  abcccc
+  accccc
+
+
+&gt; accept faLastabc &quot;aaaabc&quot;
+True
+
+&gt; accept faLastabc &quot;aaaabcb&quot;
+False
+
+&gt; lang faLastabc 6
+  abc
+  aabc
+  babc
+  cabc
+  aaabc
+  baabc
+  caabc
+  ababc
+  bbabc
+  cbabc
+  acabc
+  bcabc
+  ccabc
+  aaaabc
+  baaabc
+  caaabc
+  abaabc
+  bbaabc
+  cbaabc
+  acaabc
+  bcaabc
+  ccaabc
+  aababc
+  bababc
+  cababc
+  abbabc
+  bbbabc
+  cbbabc
+  acbabc
+  bcbabc
+  ccbabc
+  aacabc
+  bacabc
+  cacabc
+  abcabc
+  bbcabc
+  cbcabc
+  accabc
+  bccabc
+  cccabc
+</code></pre>
+
+<p><strong>Hint:</strong> use <code>hasFinal</code> and <code>followString</code>.</p>
+
+    
+  </body>
+  
+</html>
+
