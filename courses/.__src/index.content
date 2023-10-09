@@ -59,6 +59,18 @@
 	</div>
 
 	<div class="course">
+	   <div>
+	     <div><a href="/courses/dsa-fa22">Data Structures and Algorithms</a></div>
+	     <div>Olin College | ENGR 3515</div>
+	     <div>Fall 2022</div>
+	   </div>
+	   <div>
+	     <div>Olin College</div>
+	     <div>ENGR 3515</div>
+	   </div>
+	</div>
+
+	<div class="course">
 	  <div>
 	    <div><a href="/courses/db-fa21">Databases</a></div>
             <div>Olin College | ENGR 3599</div>
