@@ -1,0 +1,681 @@
+<script>
+  document.title = 'Homework 4 - FOCS FA23'
+</script>
+
+<h1>Homework 4</h1>
+
+<h2>Due Date: Sunday Oct 22, 2023 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.</p></li>
+
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+
+<li><p>All programming is to be done in Haskell using GHC v9.</p></li>
+
+<li><p>Code your answers by modifying the file <a href="homework4.hs"><code>homework4.hs</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you
+wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+<li><p><strong>Please do not change the types in the signature of the
+function stubs I provide</strong>. Doing so will make it
+impossible to load your code into the testing infrastructure,
+and make me unhappy.</p></li>
+
+<li><p>Feel free to define as many helper functions as you need.</p></li>
+</ul>
+
+<h2>Electronic Submission Instructions</h2>
+
+<ul>
+<li><p>Start a <em>fresh</em>  <code>ghci</code> shell.</p></li>
+
+<li><p>Load your homework code via <code>:load</code> <em>path-to-file</em><code>/homework4.hs</code> to make sure that there are no errors when I will load your code.</p></li>
+
+<li><p>If there are any error, do not submit. I can't test what I can't <code>:load</code>.</p></li>
+
+<li><p>When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <b>Submit File</b> in the profile menu (your initials in the upper right corner).</p></li>
+</ul>
+
+<hr>
+
+<p>Here is a type for deterministic Turing machines with integer-named states:</p>
+
+<pre><code>data TM = TM { states :: [Int],
+               inputAlpha :: [Char],
+               tapeAlpha :: [Char],
+               delta :: Int -&gt; Char -&gt; (Int, Char, Int),   -- 1 = Right, -1 = Left
+               start :: Int,
+               accept :: Int,
+               reject :: Int
+             }
+</code></pre>
+
+<p>The definition follows that of Turing machines we've seen in class. The transition function is given
+by a <em>Haskell function</em> taking as input the current state <em>p</em> and the symbol <em>a</em> in the cell under the pointer and returning a triple <em>(q, b, dir)</em> indicating that the machine should transition
+into a state <em>q</em>, writing <em>b</em> in the cell under the pointer, and then moving the pointer in direction
+<em>dir</em> (left when it is -1, and right when it is 1). We use <code>_</code> as the symbol for blank space, which
+should always be part of the tape alphabet.</p>
+
+<p>(As we saw, functions in Haskell are values like any other &mdash;
+they can be put into lists and records, they can be passed as arguments to other functions, they can
+be returned from other functions. Here, we store a function in the field of a record.)</p>
+
+<p>As a simple example of a Turing machine, here is the code implementing a Turing machine accepting
+the language &lcub;a<sup>n</sup>b<sup>n</sup> | n &ge; 0&rcub;:</p>
+
+<pre><code>anbn :: TM
+anbn = 
+  let d sym state =
+         case (sym, state) of
+           (1, 'a') -&gt; (2, 'X', 1)
+           (1, '_') -&gt; (777, '_', 1)
+           (2, 'a') -&gt; (2, 'a', 1)
+           (2, 'Y') -&gt; (2, 'Y', 1)
+           (2, 'b') -&gt; (4, 'Y', -1)
+           (4, 'Y') -&gt; (4, 'Y', -1)
+           (4, 'a') -&gt; (7, 'a', -1)
+           (4, 'X') -&gt; (6, 'X', 1)
+           (6, 'Y') -&gt; (6, 'Y', 1)
+           (6, '_') -&gt; (777, '_', 1)
+           (7, 'a') -&gt; (7, 'a', -1)
+           (7, 'X') -&gt; (1, 'X', 1)
+           (_, c) -&gt; (666, c, 1) in
+    TM { states = [1, 2, 4, 6, 7, 777, 666],
+         inputAlpha = ['a', 'b'],
+         tapeAlpha = ['a', 'b', 'X', 'Y', '_'],
+         start = 1,
+         accept = 777,
+         reject = 666,
+         delta = d }
+</code></pre>
+
+<p>Note that I define the function <code>d</code> locally before placing it inside the record. Note also that the final clause of the <code>case</code> definining that function use a <em>wildcard</em> to match any state and any symbol:</p>
+
+<pre><code>           (_, c) -&gt; (666,c , 1)
+</code></pre>
+
+<p>which roughly reads: if when <code>(sym, state)</code> is of the form <code>(_, c)</code> for some <code>c</code> as the second component of the pair &mdash; we don't care about the first component &mdash; then return <code>(666, c, 1)</code>.</p>
+
+<p>I also provide you with another Turing machine <code>anbncn</code> accepting &lcub;a<sup>n</sup>b<sup>n</sup>c<sup>n</sup> | n &ge; 0&rcub;.</p>
+
+<p>Recall from lecture that a configuration represents a snapshot of the Turing machine during
+execution: the current state of the machine, the content of the tape, and the position of the
+tape pointer. Type <code>Config</code> is the type of a configuration, defined as follows:</p>
+
+<pre><code>data Config = Config { state :: Int,
+                       tape :: [Char],
+                       position :: Int
+                     }
+</code></pre>
+
+<p>Field <code>state</code> is the current state, field <code>tape</code> is the content of the tape, and <code>position</code> is the
+position of the tape pointer, with 1 as the left-most position on the tape. The tape content in a
+configuration can always be extended to the right with blank symbols <code>_</code> while denoting the same
+configuration. So in all of my sample outputs, you should ignore trailing blank symbols on the tape,
+and feel free to handle trailing blanks differently. (My tester will disregard trailing blanks.)</p>
+
+<p>In Question 1, you will complete a simulator for Turing machines that lets you simulate the execution of a Turing machine on a given input string. The simulator for a Turing machine is a function <code>run</code> that I give you:</p>
+
+<pre><code>run :: TM -&gt; String -&gt; IO String
+run m input =
+  let loop c =
+        if isAcceptConfig m c
+        then return &quot;ACCEPT&quot;
+        else if isRejectConfig m c
+        then return &quot;REJECT&quot;
+        else do c' &lt;- return (step m c)
+                printConfig m c'
+                loop c'
+      init = startConfig m input in
+    do validateStates m
+       printConfig m init
+       loop init
+</code></pre>
+
+<p>(You don't have to understand this function, it uses concepts from Haskell we haven't seen to manage the IO.)</p>
+
+<p>Once you complete Question 1, you will be able to simulate, for instance, machine <code>anbn</code> on some input and determine if it accepts the string (returns <code>&quot;ACCEPT&quot;</code>) or rejects the string (returns <code>&quot;REJECT&quot;</code>):</p>
+
+<pre><code>ghci&gt; run anbn &quot;aaabbb&quot;
+----------------------------------------
+Validating Turing machine:
+ state 1
+ state 777
+ state 666
+ state 2
+ state 4
+ state 6
+ state 7
+----------------------------------------
+1    [a] a  a  b  b  b 
+2     X [a] a  b  b  b 
+2     X  a [a] b  b  b 
+2     X  a  a [b] b  b 
+4     X  a [a] Y  b  b 
+7     X [a] a  Y  b  b 
+7    [X] a  a  Y  b  b 
+1     X [a] a  Y  b  b 
+2     X  X [a] Y  b  b 
+2     X  X  a [Y] b  b 
+2     X  X  a  Y [b] b 
+4     X  X  a [Y] Y  b 
+4     X  X [a] Y  Y  b 
+7     X [X] a  Y  Y  b 
+1     X  X [a] Y  Y  b 
+2     X  X  X [Y] Y  b 
+2     X  X  X  Y [Y] b 
+2     X  X  X  Y  Y [b]
+4     X  X  X  Y [Y] Y 
+4     X  X  X [Y] Y  Y 
+4     X  X [X] Y  Y  Y 
+6     X  X  X [Y] Y  Y 
+6     X  X  X  Y [Y] Y 
+6     X  X  X  Y  Y [Y]
+6     X  X  X  Y  Y  Y [_]
+777   X  X  X  Y  Y  Y  _ [_]
+&quot;ACCEPT&quot;
+
+
+ghci&gt; run anbn &quot;aaaabbb&quot;
+----------------------------------------
+Validating Turing machine:
+ state 1
+ state 777
+ state 666
+ state 2
+ state 4
+ state 6
+ state 7
+----------------------------------------
+1    [a] a  a  a  b  b  b 
+2     X [a] a  a  b  b  b 
+2     X  a [a] a  b  b  b 
+2     X  a  a [a] b  b  b 
+2     X  a  a  a [b] b  b 
+4     X  a  a [a] Y  b  b 
+7     X  a [a] a  Y  b  b 
+7     X [a] a  a  Y  b  b 
+7    [X] a  a  a  Y  b  b 
+1     X [a] a  a  Y  b  b 
+2     X  X [a] a  Y  b  b 
+2     X  X  a [a] Y  b  b 
+2     X  X  a  a [Y] b  b 
+2     X  X  a  a  Y [b] b 
+4     X  X  a  a [Y] Y  b 
+4     X  X  a [a] Y  Y  b 
+7     X  X [a] a  Y  Y  b 
+7     X [X] a  a  Y  Y  b 
+1     X  X [a] a  Y  Y  b 
+2     X  X  X [a] Y  Y  b 
+2     X  X  X  a [Y] Y  b 
+2     X  X  X  a  Y [Y] b 
+2     X  X  X  a  Y  Y [b]
+4     X  X  X  a  Y [Y] Y 
+4     X  X  X  a [Y] Y  Y 
+4     X  X  X [a] Y  Y  Y 
+7     X  X [X] a  Y  Y  Y 
+1     X  X  X [a] Y  Y  Y 
+2     X  X  X  X [Y] Y  Y 
+2     X  X  X  X  Y [Y] Y 
+2     X  X  X  X  Y  Y [Y]
+2     X  X  X  X  Y  Y  Y [_]
+666   X  X  X  X  Y  Y  Y  _ [_]
+&quot;REJECT&quot;
+</code></pre>
+
+<hr>
+
+<h2>Question 1: Simulating Turing Machines</h2>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>startConfig</code></strong> with type <strong><code>TM -&gt; String -&gt; Config</code></strong> where <code>startConfig m w</code> returns the starting configuration for Turing machine <code>m</code> with <code>w</code> as input string.</p>
+
+<pre><code>&gt; startConfig anbn &quot;&quot;
+Config {state = 1, tape = &quot;&quot;, position = 1}
+
+&gt; startConfig anbn &quot;aabb&quot;
+Config {state = 1, tape = &quot;aabb&quot;, position = 1}
+
+&gt; startConfig anbn &quot;aabbaa&quot;
+Config {state = 1, tape = &quot;aabbaa&quot;, position = 1}
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code functions <strong><code>isAcceptConfig</code></strong> and <strong><code>isRejectConfig</code></strong> each of type <strong><code>TM -&gt; Config -&gt; Bool</code></strong> where <code>isAcceptConfig m c</code> returns True if and only if <code>c</code> is an accepting configuration for Turing machine <code>m</code>, and <code>isRejectConfig m c</code> returns True if and only if <code>c</code> is a rejecting configuration for Turing machine <code>m</code>.</p>
+
+<pre><code>&gt; isAcceptConfig anbn (Config {state = 1, tape = &quot;aabb&quot;, position = 1})
+False
+
+&gt; isAcceptConfig anbn (Config {state = 2, tape = &quot;aabb&quot;, position = 1})
+False
+
+&gt; isAcceptConfig anbn (Config {state = 666, tape = &quot;aabb&quot;, position = 1})
+False
+
+&gt; isAcceptConfig anbn (Config {state = 777, tape = &quot;aabb&quot;, position = 1})
+True
+
+&gt; isRejectConfig anbn (Config {state = 1, tape = &quot;aabb&quot;, position = 1})
+False
+
+&gt; isRejectConfig anbn (Config {state = 2, tape = &quot;aabb&quot;, position = 1})
+False
+
+&gt; isRejectConfig anbn (Config {state = 666, tape = &quot;aabb&quot;, position = 1})
+True
+
+&gt; isRejectConfig anbn (Config {state = 777, tape = &quot;aabb&quot;, position = 1})
+False
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a function <strong><code>getNth</code></strong> with type <strong><code>[a] -&gt; Int -&gt; a</code></strong> where <code>getNth xs n</code>
+returns the element at in the <code>n</code><sup>th</sup> position in list <code>xs</code>. The
+first element of the list is taken to be at position 1.</p>
+
+<p>If <code>n</code> is not a valid position in the list, the function should return an error.</p>
+
+<pre><code>&gt; getNth ['a', 'b', 'c', 'd'] 1
+'a'
+
+&gt; getNth ['a', 'b', 'c', 'd'] 2
+'b'
+
+&gt; getNth ['a', 'b', 'c', 'd'] 3
+'c'
+
+&gt; getNth ['a', 'b', 'c', 'd'] 4
+'d'
+
+&gt; getNth ['a', 'b', 'c', 'd'] 5
+*** Exception: Out of bounds
+
+&gt; getNth ['a', 'b', 'c', 'd'] 0
+*** Exception: Out of bounds
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Code a function <strong><code>replaceNth</code></strong> with type <strong><code>[a] -&gt; Int -&gt; a -&gt; [a]</code></strong> where <code>replaceNth xs n x</code>
+returns a new list which looks just like <code>xs</code> except the element in <code>n</code><sup>th</sup> position is <code>x</code>. The
+first element of the list is taken to be at position 1.</p>
+
+<p>If <code>n</code> is not a valid position in the list, the function should return an error.</p>
+
+<pre><code>&gt; replaceNth ['a', 'b', 'c', 'd'] 1 'x'
+&quot;xbcd&quot;
+
+&gt; replaceNth ['a', 'b', 'c', 'd'] 2 'x'
+&quot;axcd&quot;
+
+&gt; replaceNth ['a', 'b', 'c', 'd'] 3 'x'
+&quot;abxd&quot;
+
+&gt; replaceNth ['a', 'b', 'c', 'd'] 4 'x'
+&quot;abcx&quot;
+
+&gt; replaceNth ['a', 'b', 'c', 'd'] 0 'x'
+&quot;abcd*** Exception: Out of bounds
+
+&gt; replaceNth ['a', 'b', 'c', 'd'] 5 'x'
+&quot;abcd*** Exception: Out of bounds
+</code></pre>
+
+<h3>(E)</h3>
+
+<p>Code a function <strong><code>step</code></strong> with type <strong><code>TM -&gt; Config -&gt; Config</code></strong> where <code>step m c</code> returns the configuration
+obtained by taking one step of Turing machine <code>m</code> from configuration <code>c</code>.</p>
+
+<p>Remember that the tape head cannot move at positions less than 1 (it bottoms out at 1, so moving
+left from position 1 is like not moving at all), but it's fine for the tape head to move to the
+right past the end of the content of the tape in the configuration &mdash; you just need to add
+blanks (symbol <code>_</code>).</p>
+
+<pre><code>-– Running through anbn step by step over input string `aabb`
+
+&gt; step anbn (Config {state = 1, tape = &quot;aabb&quot;, position = 1})
+Config {state = 2, tape = &quot;Xabb&quot;, position = 2}
+
+&gt; step anbn (Config {state = 2, tape = &quot;Xabb&quot;, position = 2})
+Config {state = 2, tape = &quot;Xabb&quot;, position = 3}
+
+&gt; step anbn (Config {state = 2, tape = &quot;Xabb&quot;, position = 3})
+Config {state = 4, tape = &quot;XaYb&quot;, position = 2}
+
+&gt; step anbn (Config {state = 4, tape = &quot;XaYb&quot;, position = 2})
+Config {state = 7, tape = &quot;XaYb&quot;, position = 1}
+
+&gt; step anbn (Config {state = 7, tape = &quot;XaYb&quot;, position = 1})
+Config {state = 1, tape = &quot;XaYb&quot;, position = 2}
+
+&gt; step anbn (Config {state = 1, tape = &quot;XaYb&quot;, position = 2})
+Config {state = 2, tape = &quot;XXYb&quot;, position = 3}
+
+&gt; step anbn (Config {state = 2, tape = &quot;XXYb&quot;, position = 3})
+Config {state = 2, tape = &quot;XXYb&quot;, position = 4}
+
+&gt; step anbn (Config {state = 2, tape = &quot;XXYb&quot;, position = 4})
+Config {state = 4, tape = &quot;XXYY&quot;, position = 3}
+
+&gt; step anbn (Config {state = 4, tape = &quot;XXYY&quot;, position = 3})
+Config {state = 4, tape = &quot;XXYY&quot;, position = 2}
+
+&gt; step anbn (Config {state = 4, tape = &quot;XXYY&quot;, position = 2})
+Config {state = 6, tape = &quot;XXYY&quot;, position = 3}
+
+&gt; step anbn (Config {state = 6, tape = &quot;XXYY&quot;, position = 3})
+Config {state = 6, tape = &quot;XXYY&quot;, position = 4}
+
+&gt; step anbn (Config {state = 6, tape = &quot;XXYY&quot;, position = 4})
+Config {state = 6, tape = &quot;XXYY&quot;, position = 5}
+
+&gt; step anbn (Config {state = 6, tape = &quot;XXYY&quot;, position = 5})
+Config {state = 777, tape = &quot;XXYY_&quot;, position = 6}
+
+&gt; step anbn (Config {state = 777, tape = &quot;XXYY_&quot;, position = 6})
+Config {state = 666, tape = &quot;XXYY__&quot;, position = 7}
+</code></pre>
+
+<p>Once you have completed Parts (A)–(E), you should be able to use the <code>run</code> function to simulate Turing machines.</p>
+
+<hr>
+
+<h2>Question 2: Constructing Turing Machines</h2>
+
+<p>In this question, you will construct Turing machines. You
+can test your Turing machines with the code you wrote in Question
+1.</p>
+
+<p>For submission purposes, I ask you to define those Turing machines as constants with a fixed name
+given below in each question. They are initialized with a dummy Turing machine that you should
+replace with your own definition.</p>
+
+<h3>(A)</h3>
+
+<p>Construct a halting Turing machine <strong><code>tm_ab3</code></strong> that accepts the language
+consisting of all strings over the alphabet <code>{a, b}</code> of the form
+<code>a</code><sup>n</sup><code>b</code><sup>3n</sup></sup> for any n &ge; 0 (that is, all string with n <code>a</code>'s follow by 3n <code>b</code>'s).</p>
+
+<p>Sample output not showing printed configurations:</p>
+
+<pre><code>&gt; run tm_ab3 &quot;&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_ab3 &quot;abbb&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_ab3 &quot;aabbbbbb&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_ab3 &quot;aaabbbbbbbbb&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_ab3 &quot;a&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_ab3 &quot;abb&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_ab3 &quot;abbbb&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_ab3 &quot;aabbb&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_ab3 &quot;abbba&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_ab3 &quot;abbbabbb&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_ab3 &quot;bbba&quot;
+&quot;REJECTED&quot;
+</code></pre>
+
+<p><strong>Hint</strong>: modify <code>anbn</code></p>
+
+<h2>(B)</h2>
+
+<p>Construct a halting Turing machine <strong><code>tm_palindrome</code></strong> that accepts the language
+consisting of all strings over the alphabet <code>{a, b}</code> that are <em>palindromes</em>, that is, that read the same forward and backward.</p>
+
+<p>Note that there are both even-length palindromes such as &epsilon;, <code>aa</code>, <code>abba</code>, <code>abbbba</code>, and odd-length
+palindromes, such as <code>a</code>, <code>bab</code>, <code>bbbbb</code>.</p>
+
+<p>Sample output not showing printed configurations:</p>
+
+<pre><code>&gt; run tm_palindrome &quot;&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_palindrome &quot;a&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_palindrome &quot;aa&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_palindrome &quot;aaa&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_palindrome &quot;aba&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_palindrome &quot;abba&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_palindrome &quot;aabbbbaa&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_palindrome &quot;ababa&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_palindrome &quot;abbbbba&quot;
+&quot;ACCEPTED&quot;
+
+&gt; run tm_palindrome &quot;ab&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_palindrome &quot;abb&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_palindrome &quot;aabbb&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_palindrome &quot;ba&quot;
+&quot;REJECTED&quot;
+
+&gt; run tm_palindrome &quot;bbba&quot;
+&quot;REJECTED&quot;
+</code></pre>
+
+<hr>
+
+<h2>Question 3: Folding</h2>
+
+<p>In Homework 3, we saw two important higher-order functions working on lists, <code>map</code> and <code>filter</code>. Function <code>map</code> lets you transform a list by applying (mapping) a given function over every element of the list, while <code>filter</code> lets you transform a list by removing all the elements that do not satisfy a given predicate. (These functions do not actually modify the original list, they create new lists with the results.)</p>
+
+<p>Both <code>map</code> and <code>filter</code> capture a certain form of recursive functions over lists. For example, <code>map f xs</code> basically abstracts away from the following recursive pattern:</p>
+
+<pre><code>exampleMap:: [a] -&gt; [a]
+exampleMap xs = 
+  case xs of 
+    [] -&gt; []
+    x:xs' -&gt; (&lt;function&gt; x) : exampleMap xs'
+</code></pre>
+
+<p>and <code>filter p xs</code> abstracts away from the following recursive pattern:</p>
+
+<pre><code>exampleFlt :: [a] -&gt; [a]
+exampleFlt xs = 
+  case xs of 
+    [] -&gt; []
+    x::xs' -&gt; if &lt;predicate&gt; x 
+              then x : exampleFlt xs'
+              else exampleFlt xs'
+</code></pre>
+
+<p>There are other functions that can abstract from even more general recursive patterns. The most general, which in a precise sense you can think of capturing the <em>essence of recursive functions over lists</em> is called <strong>fold</strong> (and more specifically, fold right — yes, there is a fold left, no, we're probably not going to use it — feel free to look it up though). It also exists in other programming languages under the name <code>reduce</code>.</p>
+
+<p>Fold is built into Haskell, but you could define it easily enough if you needed to:</p>
+
+<pre><code>foldr :: (a -&gt; b -&gt; b) -&gt; b -&gt; [a] -&gt; b
+foldr f init xs = 
+  case xs of
+    [] -&gt; init
+    x:xs' -&gt; f x (foldr f init xs')
+</code></pre>
+
+<p>It looks somewhat mysterious. But here's how you use it. Suppose you wanted to write a function <code>sum</code> that takes a list of integers and returns the sum of the elements in the list. You obviously can't write it with <code>map</code> or with <code>filter</code> (why?). The recursive definition is easy though:</p>
+
+<pre><code>sum :: [Int] -&gt; Int
+sum xs =
+  case xs of
+    [] -&gt; 0
+    x:xs' -&gt; x + sum xs'
+</code></pre>
+
+<p>Let's break it down: when the list is empty, we return a specific initial value (here 0), and when the list is not empty, we take both the current element of the list (<code>x</code>) and the result of the recursive call (<code>sum xs'</code>), and we combine the two to get the final result (using <code>+</code>). To be pedantic about it, I could isolate the initial value and the function that combines the current element and the result of the recursive call:</p>
+
+<pre><code>sum :: [Int] -&gt; Int
+sum xs =
+  case xs of
+    [] -&gt; let init = 0 in
+            init
+    x:xs' -&gt; let combine x rec = x + rec in
+               combine x (sum xs')
+</code></pre>
+
+<p>(Think about the type of <code>combine</code> in the middle there: it is <code>Int -&gt; Int -&gt; Int</code>.)</p>
+
+<p>What's the relationship with <code>foldr</code>? Well, <code>foldr</code> is like <code>sum</code> except it's taking both the combine function and the initial value as parameters. To see it, take <code>sum</code> and pull <code>combine</code> and <code>init</code> out as parameters:</p>
+
+<pre><code>sum :: (Int -&gt; Int -&gt; Int) -&gt; Int -&gt; [Int] -&gt; Int
+sum combine init xs = 
+  case xs of
+    [] -&gt; init
+    x:xs' -&gt; combine x (sum combine xs')
+</code></pre>
+
+<p>Renaming <code>sum</code> as <code>foldr</code> and <code>combine</code> as <code>f</code> gives us back the original <code>foldr</code>, under a more specialized type than it needs to be:</p>
+
+<pre><code>foldr :: (Int -&gt; Int -&gt; Int) -&gt; Int -&gt; [Int] -&gt; Int
+foldr f init xs = 
+  case xs of
+    [] -&gt; init
+    x:xs' -&gt; f x (foldr f init xs')
+</code></pre>
+
+<p>That means that since we have <code>foldr</code> as a built-in function, we can define <code>sum</code> simply as:</p>
+
+<pre><code>sum xs = foldr (\x -&gt; \rec -&gt; x + rec) 0 xs
+</code></pre>
+
+<p>More generally, any function defined by the pattern:</p>
+
+<pre><code>exampleFld :: [a] -&gt; b
+exampleFld xs =
+  case xs of 
+    [] -&gt; &lt;init&gt;
+    x:xs' -&gt; &lt;combine&gt; x (exampleFld xs')
+</code></pre>
+
+<p>can be defined with recursion using:</p>
+
+<pre><code>exampleFld xs = foldr &lt;combine&gt; &lt;init&gt; xs
+</code></pre>
+
+<p>In this question, I'm going to ask you to write functions using <code>foldr</code>. For each function in this
+question, full points will be awarded if the function and its helpers use <code>foldr</code> instead of
+recursion. If you can't get a function to work without explicit recursion, please go ahead and
+implement a version with explicit recursion for partial marks.</p>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>compose</code></strong> with type <strong><code>[a -&gt; a] -&gt; (a -&gt; a)</code></strong> where <code>compose fs</code> return a function that when applied to <code>x</code> return <code>f1 (f2 (f3 (... (fk x)...)))</code> when <code>fs</code> is the list <code>[f1, f2, ..., fk]</code>, or simply <code>x</code> when <code>fs</code> is empty.</p>
+
+<pre><code>&gt; compose [] 10
+10
+
+&gt; compose [\x -&gt; x + 1] 10
+11
+
+&gt; compose [\x -&gt; x + 1, \x -&gt; x * 2] 10
+21
+
+&gt; compose [\x -&gt; x * 2, \x -&gt; x + 1] 10
+22
+
+&gt; compose [\x -&gt; x * 2, \x -&gt; x + 1, \x -&gt; x * 3] 10
+62
+
+&gt; compose [\x -&gt; x * 2, \x -&gt; x + 1, \x -&gt; x * 3] 11
+68
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a function <strong><code>prefixes</code></strong> of type <code>'a list -&gt; ('a list) list</code> where <code>prefixes xs</code> returns the list of all prefixes of <code>xs</code>. For instance, the prefixes of <code>[x1; x2; x3]</code> are <code>[]</code>, <code>[x1]</code>, <code>[x1; x2]</code>, and <code>[x1; x2; x3]</code>. Note that the empty list is always a prefix.</p>
+
+<pre><code>&gt; prefixes []
+[[]]
+
+&gt; prefixes [1]
+[[],[1]]
+
+&gt; prefixes [1, 2, 3, 4]
+[[],[1],[1,2],[1,2,3],[1,2,3,4]]
+</code></pre>
+
+<p><strong>Hint</strong>: Use function <code>consAll</code> you wrote for homework 3.</p>
+
+<h3>(C)</h3>
+
+<p>Code a function <strong><code>suffixes</code></strong> of type <code>'a list -&gt; ('a list) list</code> where
+<code>suffixes xs</code> returns the list of all suffixes of <code>xs</code>. For instance, the
+suffixes of <code>[x1; x2; x3]</code> are <code>[]</code>, <code>[x3]</code>, <code>[x2; x3]</code>, and <code>[x1; x2; x3]</code>.
+Note that the empty list is always a suffix.</p>
+
+<pre><code>&gt; suffixes []
+[[]]
+
+&gt; suffixes [1]
+[[1],[]]
+
+&gt; suffixes [1, 2, 3, 4]
+[[1,2,3,4],[2,3,4],[3,4],[4],[]]
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Code a function <strong><code>maxElement</code></strong> of type <strong><code>[Int] -&gt; Int</code></strong> where <code>maxElement xs</code> returns the largest integer in <code>xs</code>, or an error if the list is empty.</p>
+
+<p>Make sure you can handle negative numbers in the list.</p>
+
+<pre><code>&gt; maxElement [] 0
+0
+
+&gt; maxElement [] 3
+3
+
+&gt; maxElement [1, 2, 3, 4] 0
+4
+
+&gt; maxElement [1, 2, 3, 4] 99
+4
+
+&gt; maxElement [-1, -2, -3, -4] 0
+-1
+
+&gt; maxElement [0, 1, 2, 3, 2, 1, 0, -1, -2, -1, 0] 0
+3
+</code></pre>
+
+<p><strong>Hint</strong>: first check if the list is empty before calling <code>foldr</code> to compute that maximal element.</p>
