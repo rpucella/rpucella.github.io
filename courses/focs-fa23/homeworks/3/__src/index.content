@@ -300,7 +300,7 @@ version with explicit recursion for partial marks.</p>
 
 <h3>(C)</h3>
 
-<p>Code a function <strong><code>incrementPositive</code></strong> of type <strong><code>[Int] -&gt; [Int]</code></strong> where <code>incrementPositive xs</code> returns the list of only the positive integers in <code>xs</code>, each incremented by 1.</p>
+<p>Code a function <strong><code>incrementPositive</code></strong> of type <strong><code>[Int] -&gt; [Int]</code></strong> where <code>incrementPositive xs</code> returns the list of only the positive integers in <code>xs</code>, each incremented by 1. Number 0 is <em>not</em> considered positive.</p>
 
 <pre><code>&gt; incrementPositive []
 []

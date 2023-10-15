@@ -301,7 +301,7 @@ Code a function **`keepPalindromes`** of type **`String -> [String] -> [String]`
 
 ### (C)
 
-Code a function **`incrementPositive`** of type **`[Int] -> [Int]`** where `incrementPositive xs` returns the list of only the positive integers in `xs`, each incremented by 1.
+Code a function **`incrementPositive`** of type **`[Int] -> [Int]`** where `incrementPositive xs` returns the list of only the positive integers in `xs`, each incremented by 1. Number 0 is _not_ considered positive.
 
     > incrementPositive []
     []
