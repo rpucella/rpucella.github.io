@@ -143,23 +143,51 @@
         </div>
       </li>
 
-      <li><p><span class="hdr">Sep 25: </span><b>Finite state machines</b></p>
+      <li><p><span class="hdr">Sep 25 – Oct 2: </span><b>Finite state machines</b></p>
         <div class="lect">
            <p>Reading: Chen, Sections 1.1 - 1.4.</p>
-           <p>Some <a href="automata.pdf">additional notes</a> on what I presented in class. These notes cover some stuff we'll see next time.</p>
+           
+           <p>Some <a href="automata.pdf">notes</a> on what I presented in class. The transformation
+           from regular expressions to finite state machines doesn't go through &epsilon;-NFAs, but
+           directly to NFAs, which is a bit more complicated.</p>
+           
+           <p>One reason to study nondeterministic finite automata is that they can be easier to
+           describe than deterministic finite automata. More specifically, there exists languages
+           that can be accepted by nondeterministic finite automata with N states whose smallest
+           deterministic finite automata that accept those same languages have at least
+           2<sup>N</sup> states. One example is the language over {<tt>a</tt>,<tt>b</tt>} consisting
+           of all strings whose Nth from last symbol is <tt>a</tt>. <a
+           href="https://commons.wikimedia.org/wiki/File:NFA_with_exponential_blown-up_DFA.gif">Here
+           is an illustration</a> of the subset construction for that language, over alphabet {0,1},
+           and N=4.</p> 
+
         </div>
       </li>
-
-      <li><p><span class="hdr">Oct 2: </span><b>Nondeterministic machines</b></p>
-        <div class="lect">
-           <p>Reading: Chen, Sections 1.1 - 1.4.</p>
-         </div>
-      </li>
-
+      
       <li><p><span class="hdr">Oct 11: </span><b>Turing machines (I)</b></p>
+        <div class="lect">
+           <p>Reading: Chen, Section 2.1.</p>
+          <p>A <a href="./tm-anbn.png">diagram</a> of the Turing machine I showed in class to accept the langage {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup> | n &ge; 0}. If you want to practice, you can try to modify the machine to accept the languages {<tt>a</tt><sup>m</sup><tt>b</tt><sup>n</sup> | n &ge; m &ge; 0} and {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup><tt>c</tt><sup>n</sup> | n &ge; 0}.</p>
+            
+	  <p><a href="https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf"><i>On Computable
+	        Numbers, with an Application to the Entscheidungsproblem</i></a>, the original paper by
+	    Turing that describes his machines. (Though it's not the most accessible
+	    description.)</p>
+	  
+	  <p>As I mentioned, we can create a variant of finite automata that do not use a tape but that
+	    can count. The resulting model is called
+	    a <a href="https://en.wikipedia.org/wiki/Counter_automaton">counter automata</a>. When
+	    equipped with a single counter, it can accept languages such as
+	    {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup> | n &ge; 0}, but cannot accept all
+	    computable languages. When equipped with two counters, the resulting machines can accept
+	    all computable languages, and are equivalent to Turing machines.</p>
+         </div>            
       </li>
 
       <li><p><span class="hdr">Oct 16: </span><b>Turing machines (II)</b></p>
+        <div class="lect">
+          <p>Reading: Chen, Sections 2.6 &ndash; 2.7</p>
+        </div>
       </li>
 
       <li><p><span class="hdr">Oct 23: </span><b>Non-computable languages</b></p>
