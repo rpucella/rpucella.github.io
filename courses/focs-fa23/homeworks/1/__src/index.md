@@ -65,6 +65,9 @@ the smallest of `a` and `b` if `v` is smaller, or the largest of `a`
 and `b` if `v` is larger. In most uses, `a` would be the smaller value
 and `b` would be the larger value, but that's not a requirement.
 
+<details open>
+<summary>Sample outputs:</summary>
+
     ghci> clamp 1 2 1.5
     1.5
 
@@ -82,6 +85,8 @@ and `b` would be the larger value, but that's not a requirement.
 
     ghci> clamp 2 1 1.5
     1.5
+    
+</details>
 
 Note that you have library functions `min` and `max` available.
 

@@ -67,6 +67,9 @@ the smallest of <code>a</code> and <code>b</code> if <code>v</code> is smaller, 
 and <code>b</code> if <code>v</code> is larger. In most uses, <code>a</code> would be the smaller value
 and <code>b</code> would be the larger value, but that's not a requirement.</p>
 
+<p><details open>
+<summary>Sample outputs:</summary></p>
+
 <pre><code>ghci&gt; clamp 1 2 1.5
 1.5
 
@@ -85,6 +88,8 @@ ghci&gt; clamp 1 2 1.5
 ghci&gt; clamp 2 1 1.5
 1.5
 </code></pre>
+
+<p></details></p>
 
 <p>Note that you have library functions <code>min</code> and <code>max</code> available.</p>
 
