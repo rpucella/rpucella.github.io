@@ -84,6 +84,15 @@ and click <b>Submit File</b> in the profile menu (your initials in the upper rig
 
 <hr>
 
+<p><strong>Update</strong> 10/19:</p>
+
+<ul>
+<li>Fixed parameter names of the delta functions in the provided TMs to reflect the fact that the first argument is the state and the second argument is the symbol</li>
+<li>Fixed 3(D) to account for default value</li>
+</ul>
+
+<hr>
+
 <p>Here is a type for deterministic Turing machines with integer-named states:</p>
 
 <pre><code>data TM = TM { states :: [Int],
@@ -111,8 +120,8 @@ the language &lcub;a<sup>n</sup>b<sup>n</sup> | n &ge; 0&rcub;:</p>
 
 <pre><code>anbn :: TM
 anbn = 
-  let d sym state =
-         case (sym, state) of
+  let d state sym =
+         case (state, sym) of
            (1, 'a') -&gt; (2, 'X', 1)
            (1, '_') -&gt; (777, '_', 1)
            (2, 'a') -&gt; (2, 'a', 1)
@@ -695,7 +704,7 @@ Note that the empty list is always a suffix.</p>
 
 <h3>(D)</h3>
 
-<p>Code a function <strong><code>maxElement</code></strong> of type <strong><code>[Int] -&gt; Int</code></strong> where <code>maxElement xs</code> returns the largest integer in <code>xs</code>, or an error if the list is empty.</p>
+<p>Code a function <strong><code>maxElement</code></strong> of type <strong><code>[Int] -&gt; Int -&gt; Int</code></strong> where <code>maxElement xs def</code> returns the largest integer in <code>xs</code>, or <code>def</code> if the list is empty.</p>
 
 <p>Make sure you can handle negative numbers in the list.</p>
 

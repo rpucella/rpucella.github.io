@@ -59,8 +59,8 @@ data Config = Config { state :: Int,
 -- anbncn is the non-regular language {a^n b^n c^n | n >= 0}.
 
 asbs :: TM
-asbs = let d sym state =
-              case (sym, state) of
+asbs = let d state sym =
+              case (state, sym) of
                 (1, 'a') -> (1, 'a', 1)
                 (1, 'b') -> (10, 'b', 1)
                 (1, '_') -> (777, '_', 1)
@@ -79,8 +79,8 @@ asbs = let d sym state =
               delta = d }
 
 anbn :: TM
-anbn = let d sym state =
-              case (sym, state) of
+anbn = let d state sym =
+              case (state, sym) of
                 (1, 'a') -> (2, 'X', 1)
                 (1, '_') -> (777, '_', 1)
                 (2, 'a') -> (2, 'a', 1)
@@ -104,8 +104,8 @@ anbn = let d sym state =
 
 
 anbncn :: TM
-anbncn = let d sym state =
-                case (sym, state) of
+anbncn = let d state sym =
+                case (state, sym) of
                   (1, 'a') -> (2, 'X', 1)
                   (1, '_') -> (777, '_', 1)
                   (2, 'a') -> (2, 'a', 1)

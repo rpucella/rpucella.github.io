@@ -39,6 +39,12 @@ and make me unhappy.
 - When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
 and click <b>Submit File</b> in the profile menu (your initials in the upper right corner).
 
+***
+
+**Update** 10/19:
+
+- Fixed parameter names of the delta functions in the provided TMs to reflect the fact that the first argument is the state and the second argument is the symbol
+- Fixed 3(D) to account for default value
 
 * * *
 
@@ -68,8 +74,8 @@ the language &lcub;a<sup>n</sup>b<sup>n</sup> | n &ge; 0&rcub;:
 
     anbn :: TM
     anbn = 
-      let d sym state =
-             case (sym, state) of
+      let d state sym =
+             case (state, sym) of
                (1, 'a') -> (2, 'X', 1)
                (1, '_') -> (777, '_', 1)
                (2, 'a') -> (2, 'a', 1)
@@ -647,7 +653,7 @@ Note that the empty list is always a suffix.
 
 ### (D)
 
-Code a function **`maxElement`** of type **`[Int] -> Int`** where `maxElement xs` returns the largest integer in `xs`, or an error if the list is empty.
+Code a function **`maxElement`** of type **`[Int] -> Int -> Int`** where `maxElement xs def` returns the largest integer in `xs`, or `def` if the list is empty.
 
 Make sure you can handle negative numbers in the list.
 
