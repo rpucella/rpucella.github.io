@@ -45,7 +45,7 @@ and click <b>Submit File</b> in the profile menu (your initials in the upper rig
 ## Question 1: Arithmetic for Turing machines
 
 In this question, you will construct Turing machines. You can test your Turing machines with the
-code you wrote in last homework. you can copy and paste the implementation of your Turing machines functions (A)-(D) from Homework 4 into `homework5.hs`, replacing the stubs that I provided.
+code you wrote in last homework. you can copy and paste the implementation of your Turing machines functions from Question 1 of Homework 4 into `homework5.hs`, replacing the stubs that I provided.
 
 For submission purposes, I ask you to define those Turing machines as constants with a fixed name
 given below in each question. They are initialized with a dummy Turing machine that you should
