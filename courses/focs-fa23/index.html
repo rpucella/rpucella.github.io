@@ -243,33 +243,50 @@
         </div>            
       </li>
 
-      <li><p><span class="hdr">Oct 23: </span><b>Non-computable languages</b></p>
+      <li><p><span class="hdr">Oct 23 - 30: </span><b>Non-computable languages</b></p>
         <div class="lect">
           <p>Quiz: finite state machines</p>
           
           <p>Reading: Chen, Sections 2.2 &ndash; 2.4</p>
+
+            <p>Wikipedia links: the <a href="https://en.wikipedia.org/wiki/Halting_problem">Halting Problem</a>; <a href="https://en.wikipedia.org/wiki/Reduction_(complexity)">Reducibility</a>; <a href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice's Theorem</a>.</p>
+
+            <p>I mentioned that the non-computability of the halting problem for Turing machines impacts any kind of reasoning that we wish to make about programs in modern programming languages. This is a simple application of the Church-Turing thesis. Matthew Might has an accessible account that <a href="https://matt.might.net/articles/intro-static-analysis/">describes how the non-computability of the halting problem impacts static analysis of programs</a>.
+
+            <p>The <a href="https://en.wikipedia.org/wiki/Post_correspondence_problem">Post Correspondence Problem</a> is non-computable, doesn't talk about Turing machines or interpreters for programming languages, and shows that there are reasonable problems that are non-computable. Here's a <a href="pcp-proof.pdf">proof of non-computability</a> from Sipser, basically showing that you can reduce the Halting Problem for Turing machines to PCP.</p>
+
         </div>
       </li>
 
       
       <li><p><b>ALTERNATIVE MODELS</b></p></li>
 
-      <li><p><span class="hdr">Oct 30: </span><b>Production grammars</b></p>
+      <li><p><span class="hdr">Nov 3: </span><b>Production grammars</b></p>
+      <div class="lect">
+            <p>Succinct <a href="./grammars.pdf">notes</a> from the lecture. It includes the
+            construction of the unrestricted grammar that can simulate a given Turing machine, which I skipped in class. (These 
+            notes are using a slightly different definition of a Turing machine with a marker
+            at the beginning of the tape. It is completely equivalent to our definition of Turing
+            machines, by a straightforward application of the Church-Turing thesis.)</p>
+
+	    <p>Grammars are used in linguistics (introduced by <a href="https://en.wikipedia.org/wiki/Syntactic_Structures">Chomsky to study the structure of natural languages</a>) and in computer science to implement parsers, that is, turning a string of symbols into a structured artifact like an Abstract Syntax Tree to represent a program in a form that it more amenable to execution and/or compilation. <a href="http://homepages.cwi.nl/~storm/teaching/sc1112/intro-parsing.pdf">Here's
+	        a reasonable high-level presentation</a> of the basics of parsing, to give you a flavor.</p>
+
+	    <p>A beautiful application of grammars
+	      is <a href="https://en.wikipedia.org/wiki/L-system">L-systems</a>,
+	      a class of grammars that model the growth processes of plant
+	      development.</p>
+
+	    <p><a href="https://en.wikipedia.org/wiki/Pushdown_automaton">Pushdown automata</a> are machine models that exactly capture context-free languages:
+              a language A is context-free if and only if you can find a pushdown automaton that accepts A.</p>
+	  </div>
+          </div>
       </li>
 
-      <li><p><span class="hdr">Nov 3: </span><b>Lambda calculus (1)</b></p>
+      <li><p><span class="hdr">Nov 13: </span><b>Lambda calculus (1)</b></p>
       </li>
 
-      <li><p><span class="hdr">Nov 6: </span><b>Lambda calculus (2)</b></p>
-      </li>
-
-      
-      <li><p><b>ABSTRACTION</b></p></li>
-
-      <li><p><span class="hdr">Nov 13: </span><b>TBD</b></p>
-      </li>
-      
-      <li><p><span class="hdr">Nov 27: </span><b>TBD</b></p>
+      <li><p><span class="hdr">Nov 27: </span><b>Lambda calculus (2)</b></p>
       </li>
 
       <li><p><span class="hdr">Dec 4: </span><b>TBD</b></p>
@@ -290,6 +307,7 @@
       <li><a href="./homeworks/3">Homework 3</a> &mdash; due Sunday Oct 15 (23h59)</li>
       <li><a href="./homeworks/4">Homework 4</a> &mdash; due Sunday Oct 22 (23h59)</li>
       <li><a href="./homeworks/5">Homework 5</a> &mdash; due Sunday Oct 29 (23h59)</li>
+      <li><a href="./homeworks/6">Homework 6</a> &mdash; due Sunday Nov 12 (23h59)</li>
     </ul>
     
   </section>
