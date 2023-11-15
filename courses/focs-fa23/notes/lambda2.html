@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <h1>Notes on the λ-calculus (Part 2)</h1>
+
+<h2>Recursion</h2>
+
+<p>With conditionals and basic data types, we are very close to having
+enough to code up a simulator for Turing machines — basically code
+that replicates the Turing machine simulator that we implemented in
+OCaml.</p>
+
+<p>All that is missing is a way to do loops. It turns out we can write
+recursive functions in the λ-calculus, which as we know is
+sufficient to give us loops.</p>
+
+<p>Consider factorial. Intuitively, we would like to define a term <strong>fact</strong>
+by</p>
+
+<blockquote>
+<p><strong>fact</strong> = ( n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (<strong>fact</strong> (<strong>pred</strong> n))) )</p>
+</blockquote>
+
+<p>The problem is that this is not a valid definition: the right-hand
+side refers to the term being defined. It is really an <em>equation</em>, the
+same way <em>x = 3x + 1</em> is an equation.</p>
+
+<p>Consider that equation, <em>x = 3x + 1</em>. Using algebraic manipulations,
+we can derive a solution to this equations, <em>x = -1/2</em>. So the
+equation <em>x = 3x + 1</em> indirectly yields a definition of <em>x = -1/2</em>
+that satisfies the equation.</p>
+
+<p>Intuitively, we want to do the same with equation involving <strong>fact</strong>
+above — let's call it Equation (1).  Equation (1) describes a
+property we need <strong>fact</strong> to have. A solution of that equation will
+give us a function that satisfies that property, that is, a factorial
+function. So how can we derive a definition of a function that
+satisfies Equation (1)?</p>
+
+<p>Unfortunately, it is not really possible to perform algebraic
+manipulations the way we can to solve arithmetic equations. Instead,
+we'll take a slightly different tack.</p>
+
+<p>Let's return to equation <em>x = 3x + 1</em>. Define a function <em>F</em> to
+capture the right hand side, so that we can write <em>x = F(x)</em> where <em>F</em>
+is a function such that <em>F(x) = 3x + 1</em>. Call this <em>F</em> the <em>generating
+function</em> of the equation. I claim that a value <em>x<sub>0</sub></em> is a
+solution of <em>x = 3x + 1</em> exactly when <em>x<sub>0</sub></em> is a <em>fixed
+point</em> of <em>F</em>. Recall that a fixed point of a function f: A → A
+is a value a ∈ A such that f(a) = a.</p>
+
+<blockquote>
+<p><strong>Proof</strong>: <em>x<sub>0</sub></em> is a solution of <em>x = 3x + 1</em> exactly when <em>x<sub>0</sub> = 3x<sub>0</sub> + 1</em>
+ which is just <em>x<sub>0</sub> = F(x<sub>0</sub>)</em> which is just <em>x<sub>0</sub></em> being a fixed point of <em>F</em>.</p>
+</blockquote>
+
+<p>We are going to find a solution to Equation (1) by finding a fixed
+point of its generating function. What is the generating function of
+Equation (1)? Well, we can write Equation (1) as</p>
+
+<blockquote>
+<p><strong>fact</strong> = F<sub>fact</sub> <strong>fact</strong></p>
+</blockquote>
+
+<p>where F<sub>fact</sub> is:</p>
+
+<blockquote>
+<p>F<sub>fact</sub> = ( f → ( n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (f (<strong>pred</strong> n))) ) )</p>
+</blockquote>
+
+<p>We can check that a fixed point of F<sub>fact</sub> could be used as a
+factorial function. Let <strong>f</strong> be a fixed point of F<sub>fact</sub>,
+that is, F<sub>fact</sub> <strong>f</strong> = <strong>f</strong>. In fact, we'll show that
+<strong>f</strong> ⇒ F<sub>fact</sub> <strong>f</strong>, which is compatible with our use
+of ⇒ for simplifications.</p>
+
+<blockquote>
+<p><strong>f</strong> <strong>3</strong><br>
+ ⇒ F<sub>fact</sub> <strong>f</strong> <strong>3</strong><br>
+ ⇒ ( f → ( n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (f (<strong>pred</strong> n))) ) ) <strong>f</strong> <strong>3</strong><br>
+ ⇒ ( n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (<strong>f</strong> (<strong>pred</strong> n))) ) <strong>3</strong><br>
+ ⇒ <strong>if</strong> (<strong>iszero?</strong> <strong>3</strong>) <strong>1</strong> (<strong>times</strong> <strong>3</strong> (<strong>f</strong> (<strong>pred</strong> <strong>3</strong>)<br>
+ ⇒ <strong>times</strong> <strong>3</strong> (<strong>f</strong> (<strong>pred</strong> <strong>3</strong>))<br>
+ ⇒ <strong>times</strong> <strong>3</strong> (<strong>f</strong> <strong>2</strong>)<br>
+ ⇒ <strong>times</strong> <strong>3</strong> (F<sub>fact</sub> <strong>f</strong> <strong>2</strong>)<br>
+ ⇒ <strong>times</strong> <strong>3</strong> (<strong>times</strong> <strong>2</strong> (<strong>f</strong> <strong>1</strong>))<br>
+ ⇒ <strong>times</strong> <strong>3</strong> (<strong>times</strong> <strong>2</strong> (F<sub>fact</sub> <strong>f</strong> <strong>1</strong>))<br>
+ ⇒ <strong>times</strong> <strong>3</strong> (<strong>times</strong> <strong>2</strong> (<strong>times</strong> <strong>1</strong> (<strong>f</strong> <strong>1</strong>)))<br>
+ ⇒ <strong>times</strong> <strong>3</strong> (<strong>times</strong> <strong>2</strong> (<strong>times</strong> <strong>1</strong> (F<sub>fact</sub> <strong>f</strong> <strong>1</strong>)))<br>
+ ⇒ <strong>times</strong> <strong>3</strong> (<strong>times</strong> <strong>2</strong> (<strong>times</strong> <strong>1</strong> <strong>1</strong>))<br>
+ ⇒ <strong>6</strong></p>
+</blockquote>
+
+<p>I coalesced together several sequences of simplification steps in the above,
+for the sake of space.</p>
+
+<p>It's not hard to see that (<strong>f</strong> n) simplifies to the
+factorial of n, and therefore a fixed point of F<sub>fact</sub>
+indeed can be used as the factorial function.</p>
+
+<p>The only thing we need now is to figure out how to find fixed points in the
+λ-calculus. The following term Θ does just that, for <em>any</em> term of the λ-calculus:</p>
+
+<blockquote>
+<p>Θ<sub>0</sub> = ( x → ( y → y ((x x) y) ) )</p>
+
+<p>Θ = Θ<sub>0</sub> Θ<sub>0</sub></p>
+</blockquote>
+
+<p>(I used Y = ( f → ( x → f (x x) ) (x → f (x x) ) ) in class, but Θ is actually somewhat easier to work with because we have Θ G ⇒ F (Θ G) while we only have Y F = F (Y F) for Y.)</p>
+
+<p><strong>Theorem:</strong> Θ G is a fixed point of G for any term G.</p>
+
+<p>More specifically (and more usefully for us), we get that Θ G ⇒ F (Θ G):</p>
+
+<blockquote>
+<p>Θ G<br>
+⇒ (Θ<sub>0</sub> Θ<sub>0</sub>) G<br>
+⇒ (( x → ( y → y ((x x) y) ) ) Θ<sub>0</sub>) G<br>
+⇒ ( y → y ((Θ<sub>0</sub> Θ<sub>0</sub>) y) ) G<br>
+⇒ G ((Θ<sub>0</sub> Θ<sub>0</sub>) G)<br>
+⇒ G (Θ G)</p>
+</blockquote>
+
+<p>Therefore, Θ G ⇒ G (Θ G) — exactly the simplification
+that we used above to show that Θ F<sub>fact</sub> could be used
+as the factorial function.</p>
+
+<p>We can therefore define factorial as:</p>
+
+<blockquote>
+<p><strong>fact</strong> = Θ F<sub>fact</sub></p>
+</blockquote>
+
+<p>And we can check directly that</p>
+
+<blockquote>
+<p><strong>fact</strong> <strong>3</strong> ⇒ <strong>6</strong></p>
+
+<p><strong>fact</strong> <strong>4</strong> ⇒ <strong>24</strong></p>
+</blockquote>
+
+<p>Once we have natural numbers, conditionals, pairing, and recursion, it
+is a simple matter to implement a Turing machine simulator (similarly
+to how we implemented a Turing machine simulator in OCaml) showing the
+λ-calculus Turing-complete, and therefore able to express all
+computable decision problems.</p>
+
+    
+  </body>
+  
+</html>
+
