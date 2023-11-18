@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <script>
+  document.title = 'Homework 7 - FOCS FA23'
+</script>
+
+<h1>Homework 7</h1>
+
+<h2>Due Date: Thurday, Nov 30, 2023 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.</p></li>
+
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+
+<li><p>All programming is to be done in Haskell using GHC v9.</p></li>
+
+<li><p>Code your answers by modifying the file <a href="homework7.hs"><code>homework7.hs</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you
+wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+<li><p><strong>Please do not change the types in the signature of the
+function stubs I provide</strong>. Doing so will make it
+impossible to load your code into the testing infrastructure,
+and make me unhappy.</p></li>
+
+<li><p>Feel free to define as many helper functions as you need.</p></li>
+</ul>
+
+<h2>Electronic Submission Instructions</h2>
+
+<ul>
+<li><p>Start a <em>fresh</em>  <code>ghci</code> shell.</p></li>
+
+<li><p>Load your homework code via <code>:load</code> <em>path-to-file</em><code>/homework7.hs</code> to make sure that there are no errors when I will load your code.</p></li>
+
+<li><p>If there are any error, do not submit. I can't test what I can't <code>:load</code>.</p></li>
+
+<li><p>When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <b>Submit File</b> in the profile menu (your initials in the upper right corner).</p></li>
+</ul>
+
+<hr>
+
+<p>This homework is about the lambda calculus. I've implemented
+some code for you to simplify lambda-calculus expressions using the
+rules we saw in class. The result is not fast, but it
+works.</p>
+
+<p>A lambda expression is just a string in Haskell. The syntax of expressions is
+the one we saw in class, adapted to the ASCII character set and the constraints of Haskell:</p>
+
+<ul>
+<li>An identifier can be any sequence of alphanumeric characters (including <code>_</code>, and starting with a letter), such as <code>x</code> or <code>arg_2</code></li>
+<li>A function is written <code>(/identifier -&gt; M)</code>  where <code>M</code> is an expression; thus, <code>(/x -&gt; x)</code> and <code>(/arg -&gt; plus arg arg)</code> are functions &mdash; note that unlike in class, we use a forward slash / instead of a backslash, since backslashes are used as an escape character in Haskell strings</li>
+<li>An application is written <code>M N</code>, where <code>M</code> and <code>N</code> are expressions</li>
+<li>Expressions can be wrapped in parentheses, such as <code>((/x -&gt; x))</code> or <code>(ident1 (/y -&gt; y))</code>. Without parentheses, applications associate to the left, so that <code>M N O P</code> parses as <code>((M N) O) P</code>.</li>
+</ul>
+
+<p>To simplify expressions, I implemented a function <code>simplify</code>
+that repeatedly simplifies redexes until the expression reaches a normal
+form. (If a normal form is not reached after 5000
+steps, you'll get an error.)</p>
+
+<pre><code>ghci&gt; simplify [] &quot;(/x -&gt; x)&quot;
+----------------------------------------
+(/x -&gt; x)
+----------------------------------------
+(/x -&gt; x)
+
+ghci&gt; simplify [] &quot;(/x -&gt; x) z&quot;
+----------------------------------------
+(/x -&gt; x) z
+ =&gt; z
+----------------------------------------
+z
+
+ghci&gt; simplify [] &quot;(/x -&gt; (/y -&gt; y y) x) z&quot;
+----------------------------------------
+(/x -&gt; (/y -&gt; y y) x) z
+ =&gt; (/y -&gt; y y) z
+ =&gt; z z
+----------------------------------------
+z z
+</code></pre>
+
+<p>The simplifications are contained between the lines, and the result (the normal form) is returned.</p>
+
+<p>The first argument to <code>simplify</code> is a list of abbreviations that can
+be used in the expression you want to simplify. Recall that when I presented
+the lambda calculus in class, I started defining expressions as
+abbreviations, such as <code>true</code> and <code>false</code>, to help us when writing
+down more interesting expressions. The abbreviations you pass to <code>simplify</code>
+have the form <em>(name,def)</em> where <em>name</em> is the name of the expression being
+defined, and <em>def</em> is the definition.</p>
+
+<pre><code>ghci&gt; my_defs = [ (&quot;plus3&quot;, &quot;(/n -&gt; succ (succ (succ n)))&quot;) ]
+
+ghci&gt; simplify my_defs &quot;plus3 _2&quot;
+----------------------------------------
+(/n -&gt; (/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) ((/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) ((/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) n))) (/f -&gt; (/x -&gt; f (f x)))
+ =&gt; (/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) ((/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) ((/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) (/f -&gt; (/x -&gt; f (f x)))))
+ =&gt; (/f -&gt; (/x -&gt; (/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) ((/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) (/f -&gt; (/x -&gt; f (f x)))) f (f x)))
+ =&gt; (/f -&gt; (/x -&gt; (/f -&gt; (/x -&gt; (/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) (/f -&gt; (/x -&gt; f (f x))) f (f x))) f (f x)))
+ =&gt; (/f -&gt; (/x -&gt; (/x -&gt; (/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) (/f -&gt; (/x -&gt; f (f x))) f (f x)) (f x)))
+ =&gt; (/f -&gt; (/x -&gt; (/n -&gt; (/f -&gt; (/x -&gt; n f (f x)))) (/f -&gt; (/x -&gt; f (f x))) f (f (f x))))
+ =&gt; (/f -&gt; (/x -&gt; (/f -&gt; (/x -&gt; (/f -&gt; (/x -&gt; f (f x))) f (f x))) f (f (f x))))
+ =&gt; (/f -&gt; (/x -&gt; (/x -&gt; (/f -&gt; (/x -&gt; f (f x))) f (f x)) (f (f x))))
+ =&gt; (/f -&gt; (/x -&gt; (/f -&gt; (/x -&gt; f (f x))) f (f (f (f x)))))
+ =&gt; (/f -&gt; (/x -&gt; (/x -&gt; f (f x)) (f (f (f x)))))
+ =&gt; (/f -&gt; (/x -&gt; f (f (f (f (f x))))))
+----------------------------------------
+(/f -&gt; (/x -&gt; f (f (f (f (f x))))))
+</code></pre>
+
+<p>To make your life easier, <code>simplify</code> already knows about some of the
+abbreviations we saw in class, including natural number arithmetic,
+complete with a predecessor function. These are are available to you
+without you needing to do anything special, and your own abbreviations can use them:</p>
+
+<pre><code>let default_defs = [
+       (&quot;true&quot;, &quot;(/x -&gt; (/y -&gt; x))&quot;),
+       (&quot;false&quot;, &quot;(/x -&gt; (/y -&gt; y))&quot;),
+       (&quot;if&quot;, &quot;(/c -&gt; (/x -&gt; (/y -&gt; c x y)))&quot;),
+       (&quot;_0&quot;,&quot;(/f -&gt; (/x -&gt; x))&quot;),
+       (&quot;_1&quot;,&quot;(/f -&gt; (/x -&gt; f x))&quot;),
+       (&quot;_2&quot;,&quot;(/f -&gt; (/x -&gt; f (f x)))&quot;),
+       (&quot;_3&quot;,&quot;(/f -&gt; (/x -&gt; f (f (f x))))&quot;),
+       (&quot;_4&quot;,&quot;(/f -&gt; (/x -&gt; f (f (f (f x)))))&quot;),
+       (&quot;_5&quot;,&quot;(/f -&gt; (/x -&gt; f (f (f (f (f x))))))&quot;),
+       (&quot;succ&quot;,&quot;(/n -&gt; (/f -&gt; (/x -&gt; (n f) (f x))))&quot;),
+       (&quot;plus&quot;,&quot;(/m -&gt; (/n -&gt; (/f -&gt; (/x -&gt; (m f) (n f x)))))&quot;),
+       (&quot;times&quot;,&quot;(/m -&gt; (/n -&gt; (/f -&gt; (/x -&gt; m (n f) x))))&quot;),
+       (&quot;iszero&quot;,&quot;(/n -&gt; n (/x -&gt; false) true)&quot;),
+       (&quot;pred&quot;,&quot;(/n -&gt; (/f -&gt; (/x -&gt; n (/g -&gt; (/h -&gt; h (g f))) (/u -&gt; x) (/u -&gt; u))))&quot;),
+       (&quot;pair&quot;,&quot;(/x -&gt; (/y -&gt; (/s -&gt; s x y)))&quot;),
+       (&quot;first&quot;, &quot;(/p -&gt; p (/x -&gt; (/y -&gt; x)))&quot;),
+       (&quot;second&quot;, &quot;(/p -&gt; p (/x -&gt; (/y -&gt; y)))&quot;),
+       (&quot;some&quot;, &quot;(/a -&gt; (/s -&gt; (/n -&gt; s a)))&quot;),
+       (&quot;none&quot;, &quot;(/s -&gt; (/n -&gt; n))&quot;),
+       (&quot;empty&quot;, &quot;(/p -&gt; first p)&quot;),
+       (&quot;cons&quot;, &quot;(/x -&gt; (/y -&gt; (/p -&gt; (second p) x y)))&quot;),
+       (&quot;head&quot;, &quot;(/p -&gt; p (pair false true))&quot;),
+       (&quot;tail&quot;, &quot;(/p -&gt; p (pair false false))&quot;),
+       (&quot;Theta&quot;, &quot;(/x -&gt; (/y -&gt; y ((x x) y))) (/x -&gt; (/y -&gt; y ((x x) y)))&quot;),
+       (&quot;sumto&quot;,&quot;Theta (/f -&gt; (/n -&gt; (/iszero n) _0 (plus n (f (pred n)))))&quot;)
+     ]   
+</code></pre>
+
+<p><strong>Please do not modify the default definitions in <code>simplify</code> or add to them.  I will be testing your code with my own definition of <code>simplify</code> and I will not see the changes you've made. This will make my tests fail on your code.</strong></p>
+
+<p>You'll note that you have only the first 6 natural numbers defined as
+literals. This means that if you want to use natural number 8
+somewhere, for instance, you will either have to create it by hand, or
+use the arithmetic operations:</p>
+
+<pre><code>ghci&gt; simplify [] &quot;plus _4 _4&quot;
+----------------------------------------
+(/m -&gt; (/n -&gt; (/f -&gt; (/x -&gt; m f (n f x))))) (/f -&gt; (/x -&gt; f (f (f (f x))))) (/f -&gt; (/x -&gt; f (f (f (f x)))))
+ =&gt; (/n -&gt; (/f -&gt; (/x -&gt; (/f -&gt; (/x -&gt; f (f (f (f x))))) f (n f x)))) (/f -&gt; (/x -&gt; f (f (f (f x)))))
+ =&gt; (/f -&gt; (/x -&gt; (/f -&gt; (/x -&gt; f (f (f (f x))))) f ((/f -&gt; (/x -&gt; f (f (f (f x))))) f x)))
+ =&gt; (/f -&gt; (/x -&gt; (/x -&gt; f (f (f (f x)))) ((/f -&gt; (/x -&gt; f (f (f (f x))))) f x)))
+ =&gt; (/f -&gt; (/x -&gt; f (f (f (f ((/f -&gt; (/x -&gt; f (f (f (f x))))) f x))))))
+ =&gt; (/f -&gt; (/x -&gt; f (f (f (f ((/x -&gt; f (f (f (f x)))) x))))))
+ =&gt; (/f -&gt; (/x -&gt; f (f (f (f (f (f (f (f x)))))))))
+----------------------------------------
+(/f -&gt; (/x -&gt; f (f (f (f (f (f (f (f x)))))))))
+</code></pre>
+
+<p>When you simplify an expression, all abbreviations are expanded out using their definition
+before simplification occurs. This means that when you get
+the normal form back, it will be expressed in
+expressions of the expanded out definitions. Thus, if you want to check
+that the number 8 you create above is zero or not, you'll get
+the resulting <code>false</code> as <code>(/x -&gt; (/y -&gt; y))</code>:</p>
+
+<pre><code>ghci&gt; simplify [] &quot;iszero (plus _4 _4)&quot;
+----------------------------------------
+(/n -&gt; n (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x))) ((/m -&gt; (/n -&gt; (/f -&gt; (/x -&gt; m f (n f x))))) (/f -&gt; (/x -&gt; f (f (f (f x))))) (/f -&gt; (/x -&gt; f (f (f (f x))))))
+ =&gt; (/m -&gt; (/n -&gt; (/f -&gt; (/x -&gt; m f (n f x))))) (/f -&gt; (/x -&gt; f (f (f (f x))))) (/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x))
+ =&gt; (/n -&gt; (/f -&gt; (/x -&gt; (/f -&gt; (/x -&gt; f (f (f (f x))))) f (n f x)))) (/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x))
+ =&gt; (/f -&gt; (/x -&gt; (/f -&gt; (/x -&gt; f (f (f (f x))))) f ((/f -&gt; (/x -&gt; f (f (f (f x))))) f x))) (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x))
+ =&gt; (/x -&gt; (/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) ((/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) x)) (/x -&gt; (/y -&gt; x))
+ =&gt; (/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) ((/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x)))
+ =&gt; (/x -&gt; (/x -&gt; (/x -&gt; (/y -&gt; y))) ((/x -&gt; (/x -&gt; (/y -&gt; y))) ((/x -&gt; (/x -&gt; (/y -&gt; y))) ((/x -&gt; (/x -&gt; (/y -&gt; y))) x)))) ((/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x)))
+ =&gt; (/x -&gt; (/x -&gt; (/y -&gt; y))) ((/x -&gt; (/x -&gt; (/y -&gt; y))) ((/x -&gt; (/x -&gt; (/y -&gt; y))) ((/x -&gt; (/x -&gt; (/y -&gt; y))) ((/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x))))))
+ =&gt; (/x -&gt; (/y -&gt; y))
+----------------------------------------
+(/x -&gt; (/y -&gt; y))
+</code></pre>
+
+<p>By the time you're done with this homework, your brain will be rewired so that you'll read <code>(/x -&gt; (/y -&gt; y))</code> as <code>false</code> and <code>(/x -&gt; (/y -&gt; x))</code> as <code>true</code>. You're welcome.</p>
+
+<p>A tricky point about definitions: every definition in the list of
+definitions can only refer to previously defined expressions. This means two
+things. First, that you can't write recursive definitions. (Recursion
+in the lambda calculus is achieved via fixed point combinators.) It
+also means that the order of definitions is important. What's tricky
+is that if you mess it up, the simplification process will not
+complain. An undefined identifier is just that, an identifier, and it
+is passed around as an identifier. This makes debugging somewhat
+painful. For instance, suppose you mistakenly wrote <code>pluss</code> instead of
+<code>plus</code> in a previous example:</p>
+
+<pre><code>ghci&gt; simplify [] &quot;iszero (pluss _4 _4)&quot;
+----------------------------------------
+(/n -&gt; n (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x))) (pluss (/f -&gt; (/x -&gt; f (f (f (f x))))) (/f -&gt; (/x -&gt; f (f (f (f x))))))
+ =&gt; pluss (/f -&gt; (/x -&gt; f (f (f (f x))))) (/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x))
+----------------------------------------
+pluss (/f -&gt; (/x -&gt; f (f (f (f x))))) (/f -&gt; (/x -&gt; f (f (f (f x))))) (/x -&gt; (/x -&gt; (/y -&gt; y))) (/x -&gt; (/y -&gt; x))
+</code></pre>
+
+<p>That's not great. The clue that something went wrong is the <code>pluss</code> there at the beginning of the normal form.</p>
+
+<p>All the questions below ask you to create definitions. <strong>You will add
+those definitions to the list <code>qdefs</code></strong> I give you in
+<code>homework7.hs</code>. There are already placeholders that you will need to
+replace. That's the list I will test when grading.  All the helper
+functions needed by your definitions should also go into that list,
+since I will need to simplify your expressions. Feel free to add as
+many helper functions as you need.</p>
+
+<p>Sample outputs in the questions below skip the simplifications for all
+the obvious reasons, and only gie you the normal forms.</p>
+
+<hr>
+
+<h2>Question 1: Encodings</h2>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>not</code></strong> which takes a Boolean argument <em>a</em> and return
+<code>true</code> when <em>a</em> is false and returns <code>false</code> when <em>a</em> is true.</p>
+
+<p>Code a function <strong><code>and</code></strong> which takes two Boolean arguments <em>a</em> and
+<em>b</em> and returns <code>true</code> when both <em>a</em> and <em>b</em>
+are true, and returns <code>false</code> otherwise.</p>
+
+<p>Code a function <strong><code>or</code></strong> which takes two Boolean arguments <em>a</em> and <em>b</em> and
+returns <code>true</code> when at least one of <em>a</em> and <em>b</em> is true, and returns
+<code>false</code> otherwise.</p>
+
+<pre><code>&gt; simplify qdefs &quot;not true&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;not false&quot;
+(/x -&gt; (/y -&gt; x))
+
+
+&gt; simplify qdefs &quot;and true true&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;and true false&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;and false true&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;and false false&quot;
+(/x -&gt; (/y -&gt; y))
+
+
+&gt; simplify qdefs &quot;or true true&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;or true false&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;or false true&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;or false false&quot;
+(/x -&gt; (/y -&gt; y))
+</code></pre>
+
+<p><strong>Hint:</strong> Use cascaded <code>if</code>s.</p>
+
+<h3>(B)</h3>
+
+<p>Code a function <strong><code>minus</code></strong> which takes two Church numeral arguments
+<em>m</em> and <em>n</em> and returns <em>m-n</em> if <em>m</em> is greater
+than <em>n</em>, and 0 otherwise.</p>
+
+<pre><code>&gt; simplify qdefs &quot;minus _3 _0&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+
+&gt; simplify qdefs &quot;minus _3 _2&quot;
+(/f -&gt; (/x -&gt; f x))
+
+&gt; simplify qdefs &quot;minus _3 _3&quot;
+(/f -&gt; (/x -&gt; x))
+
+&gt; simplify qdefs &quot;minus _3 _4&quot;
+(/f -&gt; (/x -&gt; x))
+
+&gt; simplify qdefs &quot;minus _0 _0&quot;
+(/f -&gt; (/x -&gt; x))
+
+&gt; simplify qdefs &quot;minus _0 _2&quot;
+(/f -&gt; (/x -&gt; x))
+</code></pre>
+
+<p><strong>Hint:</strong> <code>pred 0</code> is <code>0</code>.</p>
+
+<h3>(C)</h3>
+
+<p>Code a function <strong><code>ge</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns <code>true</code> when <em>m</em> is greater than or equal to <em>n</em>, and <code>false</code> otherwise.</p>
+
+<p>Code a function <strong><code>gt</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns <code>true</code> when <em>m</em> is greater than (but not equal to) <em>n</em>, and <code>false</code> otherwise.</p>
+
+<pre><code>&gt; simplify qdefs &quot;ge _3 _0&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;ge _3 _2&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;ge _3 _3&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;ge _3 _4&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;ge _0 _0&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;ge _0 _1&quot;
+(/x -&gt; (/y -&gt; y))
+
+
+&gt; simplify qdefs &quot;gt _3 _0&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;gt _3 _2&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;gt _3 _3&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;gt _3 _4&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;gt _0 _0&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;gt _0 _1&quot;
+(/x -&gt; (/y -&gt; y))
+</code></pre>
+
+<p><strong>Hint</strong> there is one approach that uses <code>minus</code>.</p>
+
+<h3>(D)</h3>
+
+<p>Code a function <strong><code>max</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns the larger of the two.</p>
+
+<p>Code a function <strong><code>min</code></strong> which takes two Church numeral arguments <em>m</em> and <em>n</em> and returns the smaller of the two.</p>
+
+<pre><code>&gt; simplify qdefs &quot;max _3 _0&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+
+&gt; simplify qdefs &quot;max _3 _2&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+
+&gt; simplify qdefs &quot;max _3 _3&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+
+&gt; simplify qdefs &quot;max _3 _4&quot;
+(/f -&gt; (/x -&gt; f (f (f (f x)))))
+
+&gt; simplify qdefs &quot;max _0 _0&quot;
+(/f -&gt; (/x -&gt; x))
+
+&gt; simplify qdefs &quot;max _0 _1&quot;
+(/f -&gt; (/x -&gt; f x))
+
+
+&gt; simplify qdefs &quot;min _3 _0&quot;
+(/f -&gt; (/x -&gt; x))
+
+&gt; simplify qdefs &quot;min _3 _2&quot;
+(/f -&gt; (/x -&gt; f (f x)))
+
+&gt; simplify qdefs &quot;min _3 _3&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+
+&gt; simplify qdefs &quot;min _3 _4&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+
+&gt; simplify qdefs &quot;min _0 _0&quot;
+(/f -&gt; (/x -&gt; x))
+
+&gt; simplify qdefs &quot;min _0 _1&quot;
+(/f -&gt; (/x -&gt; x))
+</code></pre>
+
+<hr>
+
+<h2>Question 2: Integers</h2>
+
+<p>We saw in class an encoding of natural numbers
+0, 1, 2, 3, ... In this question, we consider an encoding of
+integers, ..., -3, -2, -1, 0, 1, 2, 3,...</p>
+
+<p>The encoding is simple. An integer is a pair of a
+sign and a natural number. The sign will be represented by a
+Boolean value: <code>true</code> for positive integers,
+and <code>false</code> for negative integers. Thus,
+<em>(true,3)</em> is the representation of integer 3,
+and <em>(false,2)</em> the representation of integer
+-2. <strong>Integer 0 is always represented as (true,0).</strong></p>
+
+<p>Use the implementation of pairs in the lambda calculus described in class.</p>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>int</code></strong> which
+takes a natural number <em>n</em> and returns a (positive) integer
+<em>n</em> in the encoding described above.</p>
+
+<pre><code>&gt; simplify qdefs &quot;first (int _0)&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;second (int _0)&quot;
+(/f -&gt; (/x -&gt; x))
+
+
+&gt; simplify qdefs &quot;first (int _2)&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;second (int _2)&quot;
+(/f -&gt; (/x -&gt; f (f x)))
+
+
+&gt; simplify qdefs &quot;first (int _4)&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;second (int _4)&quot;
+(/f -&gt; (/x -&gt; f (f (f (f x)))))
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a function <strong><code>neg_int</code></strong> which takes an integer <em>n</em> in the encoding
+described above, and returns its negation. Recall that the negation of
+2 is -2, and the negation of -3 is 3.</p>
+
+<p>Be careful about the negation of 0.</p>
+
+<pre><code>&gt; simplify qdefs &quot;first (neg_int (int _3))&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;second (neg_int (int _3))&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+
+
+&gt; simplify qdefs &quot;first (neg_int (neg_int (int _3)))&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;second (neg_int (neg_int (int _3)))&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a function <strong><code>abs_int</code></strong> which
+takes an integer <em>n</em> in the encoding described
+above, and returns its absolute value <em>as an integer</em>.</p>
+
+<pre><code>&gt; simplify qdefs &quot;first (abs_int (int _3))&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;second (abs_int (int _3))&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+
+
+&gt; simplify qdefs &quot;first (abs_int (neg_int (int _3)))&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;second (abs_int (neg_int (int _3)))&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Code a function <strong><code>plus_int</code></strong> which
+takes two integers <em>m</em> and <em>n</em> in the encoding
+described above and returns integer <em>m+n</em>. Of course, <em>m</em> and <em>n</em> may be negative.</p>
+
+<pre><code>&gt; simplify qdefs &quot;first (plus_int (int _3) (int _2))&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;second (plus_int (int _3) (int _2))&quot;
+(/f -&gt; (/x -&gt; f (f (f (f (f x))))))
+
+
+&gt; simplify qdefs &quot;first (plus_int (int _3) (neg_int (int _2)))&quot;
+(/x -&gt; (/y -&gt; x))
+
+&gt; simplify qdefs &quot;second (plus_int (int _3) (neg_int (int _2)))&quot;
+(/f -&gt; (/x -&gt; f x))
+
+
+&gt; simplify qdefs &quot;first (plus_int (neg_int (int _3)) (int _2))&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;second (plus_int (neg_int (int _3)) (int _2))&quot;
+(/f -&gt; (/x -&gt; f x))
+
+
+&gt; simplify qdefs &quot;first (plus_int (neg_int (int _3)) (neg_int (int _2)))&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;second (plus_int (neg_int (int _3)) (neg_int (int _2)))&quot;
+(/f -&gt; (/x -&gt; f (f (f (f (f x))))))
+</code></pre>
+
+<p><strong>Hint:</strong> Just consider all possibilities. You will find functions <code>ge</code> and <code>minus</code> from Question 1 useful here.</p>
+
+<hr>
+
+<h2>Question 3: Optional Values and Lists</h2>
+
+<p>In this question, we are going to emulate the optional type from
+Haskell we saw in <a href="../6/">Homework 6</a>. Recall that type <code>Maybe b</code> is a
+built-in Haskell type that gives a way to represent an optional value.
+A value of type <code>Maybe b</code> is either <code>Nothing</code> or <code>Just</code> <em>v</em>, where <em>v</em>
+has type <code>b</code>. To use a value of this type in Haskell, you do a case
+analysis to check if the value is <code>Nothing</code> or it's <code>Just</code> <em>v</em> for
+some <em>v</em>:</p>
+
+<pre><code>case exp of
+  Nothing -&gt;  &lt;result when exp evaluates to `Nothing`
+  Just v -&gt;  &lt;result when exp evaluates to `Just x` and bind `x` to identifier `v`&gt;
+</code></pre>
+
+<p>Consider the following encoding for optional values in the lambda
+calculus. The intuition here is that an optional value is constructed in such a way that it is either easy to recover the content, or we get an indication that the optional value is &quot;nothing&quot;:</p>
+
+<pre><code>just = (/x -&gt; (/s -&gt; (/n -&gt; s x)))
+nothing = (/s -&gt; (/n -&gt; n))
+</code></pre>
+
+<p>As you can see, an optional value is a function of the form <code>(/s -&gt; (/n -&gt; ...))</code>: an optional value is a function that expects two arguments, <code>s</code> and <code>n</code>, and the idea is that when given a value for <code>s</code> and for <code>n</code>, if the the optional value was built with <code>just</code> then it applies <code>s</code> to the value given in the <code>just</code>, and if the optional value was build with <code>nothing</code> then it simply returns <code>n</code>. The optional value is constructed differently via the
+<code>just</code> constructor and via the <code>nothing</code> constructor, but the shape of
+the resulting optional value is the same. Case analysis is done simply by calling the optional value with a function to apply in the case of <code>just</code> and something to return in the case of <code>nothing</code>.</p>
+
+<p>Lists are similar to optional values. There are two kinds of lists
+that need to be handled differently: empty lists, and non-empty
+lists. Here is the encoding for an empty list <code>empty</code>, and the
+encoding for a nonempty list <code>cons x y</code> with first element <code>x</code> and
+rest <code>y</code> (essentially <code>x:y</code> in Haskell):</p>
+
+<pre><code>empty = (/ne -&gt; (/e -&gt; e))
+cons  = (/x -&gt; (/y -&gt; (/ne -&gt; (/e -&gt; ne x y))))
+</code></pre>
+
+<p>A list is therefore a function of the form <code>(/ne -&gt; (/e -&gt; ...))</code>: a function that expects two arguments <code>ne</code> and <code>e</code>, and when provided values for those arguments, it either returns <code>e</code> if the list is empty, and it returns <code>ne</code> applied to both the head of the list and to the tail of the list when the list is non-empty.</p>
+
+<p>Roughly speaking, if <code>lst</code> is a list in the above encoding, then <code>lst a (/h -&gt; (/t -&gt; M))</code> behaves just like the following in Haskell:</p>
+
+<pre><code>case lst of
+  [] -&gt; a
+  h:t -&gt; M 
+</code></pre>
+
+<p>(where <code>M</code> can refer to <code>h</code> and to <code>t</code>).</p>
+
+<h3>(A)</h3>
+
+<p>Code a function <strong><code>default</code></strong> which takes an optional value <em>opt</em> and a
+value <em>v</em> and returns either the underlying &quot;just&quot; value of <em>opt</em> when
+it is a &quot;just&quot; option, or <em>v</em> when <em>opt</em> is a &quot;nothing&quot; option.</p>
+
+<pre><code>&gt; simplify qdefs &quot;default (just a) b&quot;
+a
+
+&gt; simplify qdefs &quot;default nothing b&quot;
+b
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>As in Homework 6, we can use optional values to represent &quot;partial&quot;
+functions in the lambda calculus, that is, functions that return
+values only under some circumstances. A function returns a &quot;just&quot;
+option when it is defined for an argument, and a &quot;nothing&quot; option when it
+is undefined for the argument.</p>
+
+<p>Code a function <strong><code>either</code></strong> which takes two partial functions <em>f</em> and <em>g</em>
+that return option values and returns a new function <em>h</em> that when
+given an argument <em>x</em> behaves as <em>f</em> if <em>f</em> is defined on <em>x</em>, behaves
+as <em>g</em> if <em>g</em> is defined on <em>x</em>, and is undefined in all other
+cases. <em>h</em> should itself be a partial function that returns an
+appropriate option value.</p>
+
+<pre><code>&gt; simplify qdefs &quot;(either (/x -&gt; just (F x)) (/y -&gt; just (G y)) a) S N&quot;
+S (F a)
+
+&gt; simplify qdefs &quot;(either (/x -&gt; nothing) (/y -&gt; just (G y)) a) S N&quot;
+S (G a)
+
+&gt; simplify qdefs &quot;(either (/x -&gt; just (F x)) (/y -&gt; nothing) a) S N&quot;
+S (F a)
+
+&gt; simplify qdefs &quot;(either (/x -&gt; nothing) (/y -&gt; nothing) a) S N&quot;
+N
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a function <strong><code>sum</code></strong> which
+takes a list of natural numbers in the encoding described above and
+returns a natural number (in the encoding we saw in class)
+representing the sum of its elements.</p>
+
+<pre><code>&gt; simplify qdefs &quot;sum empty&quot;
+(/f -&gt; (/x -&gt; x))
+
+&gt; simplify qdefs &quot;sum (cons _1 empty)&quot;
+(/f -&gt; (/x -&gt; f x))
+
+&gt; simplify qdefs &quot;sum (cons _1 (cons _2 empty))&quot;
+(/f -&gt; (/x -&gt; f (f (f x))))
+
+&gt; simplify qdefs &quot;sum (cons _1 (cons _2 (cons _3 empty)))&quot;
+(/f -&gt; (/x -&gt; f (f (f (f (f (f x)))))))
+
+&gt; simplify qdefs &quot;sum (cons _1 (cons _2 (cons _3 (cons _4 empty))))&quot;
+(/f -&gt; (/x -&gt; f (f (f (f (f (f (f (f (f (f x)))))))))))
+</code></pre>
+
+<p><strong>Hint:</strong> Use &Theta; for the recursion.</p>
+
+<h3>(D)</h3>
+
+<p>Code a function <strong><code>nth</code></strong> which takes a natural number <em>n</em> (in the Church
+encoding we saw in class) and a list <em>L</em> (in the encoding above) and
+returns the <em>n</em>th element of the list when <em>n</em> is between 0 and one
+less than the length of the list, or <code>false</code> when <em>n</em> is greater than
+or equal to the length of the list.</p>
+
+<p>Interestingly, it is possible to write <code>nth</code> without using recursion,
+using the fact that the natural number <em>n</em> in the Church encoding can
+apply a function <em>n</em> times to an argument. But feel free to use
+recursion if you want.</p>
+
+<pre><code>&gt; simplify qdefs &quot;nth _0 (cons a (cons b (cons c empty)))&quot;
+a
+
+&gt; simplify qdefs &quot;nth _1 (cons a (cons b (cons c empty)))&quot;
+b
+
+&gt; simplify qdefs &quot;nth _2 (cons a (cons b (cons c empty)))&quot;
+c
+
+&gt; simplify qdefs &quot;nth _3 (cons a (cons b (cons c empty)))&quot;
+(/x -&gt; (/y -&gt; y))
+
+&gt; simplify qdefs &quot;nth _4 (cons a (cons b (cons c empty)))&quot;
+(/x -&gt; (/y -&gt; y))
+</code></pre>
+
+    
+  </body>
+  
+</html>
+
