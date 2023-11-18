@@ -15,7 +15,7 @@ sufficient to give us loops.
 Consider factorial. Intuitively, we would like to define a term __fact__
 by 
 
-> __fact__ = ( n → __if__ (__iszero?__ n) __1__ (__times__ n (__fact__ (__pred__ n))) )
+> __fact__ = ( \n → __if__ (__iszero?__ n) __1__ (__times__ n (__fact__ (__pred__ n))) )
 
 The problem is that this is not a valid definition: the right-hand
 side refers to the term being defined. It is really an *equation*, the
@@ -56,7 +56,7 @@ Equation (1)? Well, we can write Equation (1) as
 
 where F<sub>fact</sub> is:
 
-> F<sub>fact</sub> = ( f → ( n → __if__ (__iszero?__ n) __1__ (__times__ n (f (__pred__ n))) ) )
+> F<sub>fact</sub> = ( \f → ( \n → __if__ (__iszero?__ n) __1__ (__times__ n (f (__pred__ n))) ) )
 
 We can check that a fixed point of F<sub>fact</sub> could be used as a
 factorial function. Let __f__ be a fixed point of F<sub>fact</sub>,
@@ -66,8 +66,8 @@ of ⇒ for simplifications.
 
 > __f__ __3__  
 >  ⇒ F<sub>fact</sub> __f__ __3__  
->  ⇒ ( f → ( n → __if__ (__iszero?__ n) __1__ (__times__ n (f (__pred__ n))) ) ) __f__ __3__  
->  ⇒ ( n → __if__ (__iszero?__ n) __1__ (__times__ n (__f__ (__pred__ n))) ) __3__  
+>  ⇒ ( \f → ( \n → __if__ (__iszero?__ n) __1__ (__times__ n (f (__pred__ n))) ) ) __f__ __3__  
+>  ⇒ ( \n → __if__ (__iszero?__ n) __1__ (__times__ n (__f__ (__pred__ n))) ) __3__  
 >  ⇒ __if__ (__iszero?__ __3__) __1__ (__times__ __3__ (__f__ (__pred__ __3__)  
 >  ⇒ __times__ __3__ (__f__ (__pred__ __3__))  
 >  ⇒ __times__ __3__ (__f__ __2__)  
@@ -89,11 +89,9 @@ indeed can be used as the factorial function.
 The only thing we need now is to figure out how to find fixed points in the
 λ-calculus. The following term Θ does just that, for *any* term of the λ-calculus:
 
-> Θ<sub>0</sub> = ( x → ( y → y ((x x) y) ) )
+> Θ<sub>0</sub> = ( \x → ( \y → y ((x x) y) ) )
 
 > Θ = Θ<sub>0</sub> Θ<sub>0</sub>
-
-(I used Y = ( f → ( x → f (x x) ) (x → f (x x) ) ) in class, but Θ is actually somewhat easier to work with because we have Θ G ⇒ F (Θ G) while we only have Y F = F (Y F) for Y.)
 
 **Theorem:** Θ G is a fixed point of G for any term G.
 
@@ -101,8 +99,8 @@ More specifically (and more usefully for us), we get that Θ G ⇒ F (Θ G):
 
 > Θ G  
 > ⇒ (Θ<sub>0</sub> Θ<sub>0</sub>) G  
-> ⇒ (( x → ( y → y ((x x) y) ) ) Θ<sub>0</sub>) G  
-> ⇒ ( y → y ((Θ<sub>0</sub> Θ<sub>0</sub>) y) ) G  
+> ⇒ (( \x → ( \y → y ((x x) y) ) ) Θ<sub>0</sub>) G  
+> ⇒ ( \y → y ((Θ<sub>0</sub> Θ<sub>0</sub>) y) ) G  
 > ⇒ G ((Θ<sub>0</sub> Θ<sub>0</sub>) G)  
 > ⇒ G (Θ G)
 

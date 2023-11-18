@@ -252,6 +252,11 @@
       <li><p><span class="hdr">Nov 13: </span><b>Lambda calculus (2)</b></p>
       <div class="lect">
           <p>Quiz: register machines</p>
+            <p><a href="notes/lambda2.html">Notes from the lecture</a>.</p>
+
+	    <p>A general discussion of <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">fixed-point combinators</a>, of which &Theta; is an example.</p>
+
+            <p>I showed in class that many of the encodings from the lambda calculus can be directly represented in Haskell. That's because Haskell is in large part based on the lambda calculus. Another language based on the lambda calculus is Lisp, and I would be remiss if I did not point you to <a href="https://sarabander.github.io/sicp/html/index.xhtml">Structure and Interpretation of Computer Programs</a>, which uses a Lisp-like language to explore all sorts of ideas for how to approach the art of programming.</p>
           
       </div>
       </li>

@@ -15,7 +15,7 @@ sufficient to give us loops.</p>
 by</p>
 
 <blockquote>
-<p><strong>fact</strong> = ( n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (<strong>fact</strong> (<strong>pred</strong> n))) )</p>
+<p><strong>fact</strong> = ( \n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (<strong>fact</strong> (<strong>pred</strong> n))) )</p>
 </blockquote>
 
 <p>The problem is that this is not a valid definition: the right-hand
@@ -62,7 +62,7 @@ Equation (1)? Well, we can write Equation (1) as</p>
 <p>where F<sub>fact</sub> is:</p>
 
 <blockquote>
-<p>F<sub>fact</sub> = ( f → ( n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (f (<strong>pred</strong> n))) ) )</p>
+<p>F<sub>fact</sub> = ( \f → ( \n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (f (<strong>pred</strong> n))) ) )</p>
 </blockquote>
 
 <p>We can check that a fixed point of F<sub>fact</sub> could be used as a
@@ -74,8 +74,8 @@ of ⇒ for simplifications.</p>
 <blockquote>
 <p><strong>f</strong> <strong>3</strong><br>
  ⇒ F<sub>fact</sub> <strong>f</strong> <strong>3</strong><br>
- ⇒ ( f → ( n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (f (<strong>pred</strong> n))) ) ) <strong>f</strong> <strong>3</strong><br>
- ⇒ ( n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (<strong>f</strong> (<strong>pred</strong> n))) ) <strong>3</strong><br>
+ ⇒ ( \f → ( \n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (f (<strong>pred</strong> n))) ) ) <strong>f</strong> <strong>3</strong><br>
+ ⇒ ( \n → <strong>if</strong> (<strong>iszero?</strong> n) <strong>1</strong> (<strong>times</strong> n (<strong>f</strong> (<strong>pred</strong> n))) ) <strong>3</strong><br>
  ⇒ <strong>if</strong> (<strong>iszero?</strong> <strong>3</strong>) <strong>1</strong> (<strong>times</strong> <strong>3</strong> (<strong>f</strong> (<strong>pred</strong> <strong>3</strong>)<br>
  ⇒ <strong>times</strong> <strong>3</strong> (<strong>f</strong> (<strong>pred</strong> <strong>3</strong>))<br>
  ⇒ <strong>times</strong> <strong>3</strong> (<strong>f</strong> <strong>2</strong>)<br>
@@ -99,12 +99,10 @@ indeed can be used as the factorial function.</p>
 λ-calculus. The following term Θ does just that, for <em>any</em> term of the λ-calculus:</p>
 
 <blockquote>
-<p>Θ<sub>0</sub> = ( x → ( y → y ((x x) y) ) )</p>
+<p>Θ<sub>0</sub> = ( \x → ( \y → y ((x x) y) ) )</p>
 
 <p>Θ = Θ<sub>0</sub> Θ<sub>0</sub></p>
 </blockquote>
-
-<p>(I used Y = ( f → ( x → f (x x) ) (x → f (x x) ) ) in class, but Θ is actually somewhat easier to work with because we have Θ G ⇒ F (Θ G) while we only have Y F = F (Y F) for Y.)</p>
 
 <p><strong>Theorem:</strong> Θ G is a fixed point of G for any term G.</p>
 
@@ -113,8 +111,8 @@ indeed can be used as the factorial function.</p>
 <blockquote>
 <p>Θ G<br>
 ⇒ (Θ<sub>0</sub> Θ<sub>0</sub>) G<br>
-⇒ (( x → ( y → y ((x x) y) ) ) Θ<sub>0</sub>) G<br>
-⇒ ( y → y ((Θ<sub>0</sub> Θ<sub>0</sub>) y) ) G<br>
+⇒ (( \x → ( \y → y ((x x) y) ) ) Θ<sub>0</sub>) G<br>
+⇒ ( \y → y ((Θ<sub>0</sub> Θ<sub>0</sub>) y) ) G<br>
 ⇒ G ((Θ<sub>0</sub> Θ<sub>0</sub>) G)<br>
 ⇒ G (Θ G)</p>
 </blockquote>
