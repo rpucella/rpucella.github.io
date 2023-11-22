@@ -557,7 +557,7 @@ cons  = (/x -&gt; (/y -&gt; (/ne -&gt; (/e -&gt; ne x y))))
 
 <p>A list is therefore a function of the form <code>(/ne -&gt; (/e -&gt; ...))</code>: a function that expects two arguments <code>ne</code> and <code>e</code>, and when provided values for those arguments, it either returns <code>e</code> if the list is empty, and it returns <code>ne</code> applied to both the head of the list and to the tail of the list when the list is non-empty.</p>
 
-<p>Roughly speaking, if <code>lst</code> is a list in the above encoding, then <code>lst a (/h -&gt; (/t -&gt; M))</code> behaves just like the following in Haskell:</p>
+<p>Roughly speaking, if <code>lst</code> is a list in the above encoding, then <code>lst (/h -&gt; (/t -&gt; M)) a</code> behaves just like the following in Haskell:</p>
 
 <pre><code>case lst of
   [] -&gt; a

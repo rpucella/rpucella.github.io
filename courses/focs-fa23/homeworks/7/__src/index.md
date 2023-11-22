@@ -554,7 +554,7 @@ rest `y` (essentially `x:y` in Haskell):
 
 A list is therefore a function of the form `(/ne -> (/e -> ...))`: a function that expects two arguments `ne` and `e`, and when provided values for those arguments, it either returns `e` if the list is empty, and it returns `ne` applied to both the head of the list and to the tail of the list when the list is non-empty. 
 
-Roughly speaking, if `lst` is a list in the above encoding, then `lst a (/h -> (/t -> M))` behaves just like the following in Haskell:
+Roughly speaking, if `lst` is a list in the above encoding, then `lst (/h -> (/t -> M)) a` behaves just like the following in Haskell:
 
     case lst of
       [] -> a
