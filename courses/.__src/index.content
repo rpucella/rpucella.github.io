@@ -47,6 +47,18 @@
         <h1>Recent Courses</h1>
 
 	<div class="course">
+	  <div>
+	    <div><a href="/courses/webdev-sp24/">Full-Stack Web Development</a></div>
+            <div>Olin College | ENGR 3599</div>
+	    <div>Spring 2024</div>
+	  </div>
+	   <div>
+            <div>Olin College</div>
+            <div>ENGR 3599</div>
+	   </div>
+        </div>
+
+	<div class="course">
 	   <div>
 	     <div><a href="/courses/focs-fa23">Foundations of Computer Science</a></div>
 	     <div>Olin College | ENGR 3520</div>
@@ -75,18 +87,6 @@
 	    <div><a href="/courses/db-fa21">Databases</a></div>
             <div>Olin College | ENGR 3599</div>
 	    <div>Fall 2021</div>
-	  </div>
-	   <div>
-            <div>Olin College</div>
-            <div>ENGR 3599</div>
-	   </div>
-        </div>
-
-	<div class="course">
-	  <div>
-	    <div><a href="/courses/webdev-sp21/">Web Development</a></div>
-            <div>Olin College | ENGR 3599</div>
-	    <div>Spring 2021</div>
 	  </div>
 	   <div>
             <div>Olin College</div>
