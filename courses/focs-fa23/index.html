@@ -243,7 +243,7 @@
         </div>            
       </li>
 
-      <li><p><span class="hdr">Oct 23</span><b>Non-computable languages</b></p>
+      <li><p><span class="hdr">Oct 23: </span><b>Non-computable languages</b></p>
         <div class="lect">
           <p>Quiz: finite state machines</p>
           
@@ -326,10 +326,23 @@
       </div>
       </li>
 
-      <li><p><span class="hdr">Dec 4: </span><b>TBD</b></p>
-      <div class="lect">
+      <li><p><span class="hdr">Dec 4: </span><b>From lambda calculus to programming languages</b></p>
+        <div class="lect">           
           <p>Quiz: context-free grammars</p>
-      </div>
+          <p><a href="lc-to-pl.pdf">Notes from the lecture</a>, and a
+          more <a href="lc-evaluator.zip">complete version of the code</a> I developed in
+          class. (Unzip, and look at <tt>README.md</tt>.)</p>
+          <p>The lecture was basically me walking you through the first few lectures of a PL
+            interpreters course in an accelerated way. If this topic interests you, a good starting
+            point in the spirit of what I talked about is
+            Krishnamurthy's <i><a href="http://cs.brown.edu/courses/cs173/2012/book/">Programming
+            Languages: Application and Interpretation</a></i>. It uses a dialect of Scheme, a
+            Lisp-like language.</p>
+          <p>
+            Parsing, the process of going from surface syntax (sequence of characters) to an internal representation (a tree structure), has a long and deep history, and lots of associated technology. The sample code above uses <i>parser combinators</i>, a good overview of which you can find in Hutton's <i><a href="https://www.cambridge.org/core/journals/journal-of-functional-programming/article/higherorder-functions-for-parsing/0490F2C8511F7625F9FC15BFFEDBB0AA">Higher-order functions for parsing</a></i>.</p>
+          <p>In practical interpreters and compilers, tools such as <a href="https://en.wikipedia.org/wiki/Yacc">Yacc</a> or <a href="https://en.wikipedia.org/wiki/ANTLR">ANTLR</a> are used for generating efficient parsers. The technology underlying those tools is best described in Aho, Sethi, and Ullman's classic text <i><a href="https://www.amazon.com/Compilers-Principles-Techniques-Alfred-Aho/dp/0201100886/">Compilers: Principles, Techniques, and Tools</a></i>.</p>
+      
+        </div>
       </li>
 
     </ul>
