@@ -1,84 +1,65 @@
 
 <main id="main">
   
-      <h1>Full-Stack Web Development (Spring 2024)</h1>
-    
-    <p>
-      An intensive introduction to the full stack of modern web
-      development, including HTML and CSS, JavaScript, client-side
-      frameworks (React, Angular, Vue, ...), server-side templates,
-      server-side frameworks (Flask, Express, ...), authentication,
-      persistence, REST APIs, and websockets.
-    </p>
-      
-      <section id="info">
-        <h2>Course Information</h2>
+  <h1>Full-Stack Web Development (Spring 2024)</h1>
+  
+  <p>
+    An intensive introduction to the full stack of modern web
+    development, including HTML and CSS, JavaScript, client-side
+    frameworks (React, Angular, Vue, ...), server-side templates,
+    server-side frameworks (Flask, Express, ...), authentication,
+    persistence, REST APIs, and websockets.
+  </p>
+  
+  <section id="info">
+    <h2>Course Information</h2>
 
-        <ul class="plain">
+    <ul class="plain">
 
-          <li><b>Course number:</b> ENGR 3599</li>
+      <li><b>Course number:</b> ENGR 3599</li>
 
-          <li><b>Prerequisites:</b> Software Design. I'm expecting that you know how to program at least in Python.</li>
+      <li><b>Prerequisites:</b> Software Design. I'm expecting that you know how to program at least in Python.</li>
 
-          <li><b>Location and Time:</b>
-            MAC 126 / Tue 6-8:40pm
-          </li>
+      <li><b>Location and Time:</b>
+        MAC 126 / Tue 6-8:40pm
+      </li>
 
 
-          <li><b>Instructor:</b> <a href="https://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)
-          </li>
+      <li><b>Instructor:</b> <a href="https://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)
+      </li>
 
-          <li><b>Office hours:</b> TBD, but probably before class on Tuesdays
-            <!-- MH 353 / Mon 4-5pm (before class) / I'm available at other times over Zoom by request -->
-          </li>
+      <li><b>Office hours:</b> TBD, but probably before class on Tuesdays
+        <!-- MH 353 / Mon 4-5pm (before class) / I'm available at other times over Zoom by request -->
+      </li>
 
-          <li><b>Textbooks:</b> There is no required textbook. We'll mostly be using freely available resources, or documents I will share with you. If you truly want a textbook, the following is a reasonably broad overview of the field as it existed a decade ago, going into a lot of details about the basics, which haven't changed that much since then anyway.
+      <li><b>Textbooks:</b> There is no required textbook. We'll mostly be using freely available resources, or documents I will share with you. If you truly want a textbook, the following is a reasonably broad overview of the field as it existed a decade ago, going into a lot of details about the basics, which haven't changed that much since then anyway.
 
         <ul>
           <li>Sebasta, <a href="https://www.pearson.com/us/higher-education/program/Sebesta-Programming-the-World-Wide-Web-8th-Edition/PGM30365.html"><i>Programming the World Wide Web</i></a>, Pearson. 2015</li>
         </ul>
 
-        <!-- 
-        The following book is the best book I know about JavaScript, and it's thin to boot. It doesn't contain the latest updates to the syntax (known as ES2020) but if you're serious about doing front-end web development, you need to read this book at least once:
-
-        <ul>
-          <li>Crockford, <a href="https://www.oreilly.com/library/view/javascript-the-good/9780596517748/"><i>JavaScript: The Good Parts</i></a>. O'Reilly, 2008</li>
-        </ul>
-
-        We're going to program our servers using Flask, a Python web framework. Plenty of documentation about Flask online. If you need a narrative, this is reasonable:
-        
-        <ul>
-          <li>Grinberg, <a href="https://www.oreilly.com/library/view/flask-web-development/9781491947586/"><i>Flask Web Development</i></a>. O'Reilly, 2014</li>
-        </ul>
-
-        -->
-
         Generally speaking, the technology evolves way too quickly for any good book to be up-to-date with what's currently available out there. Still, the above generally sticks to foundational topics that remains true.
       </li>
-    
+      
       <li><b>Grading</b> Weekly or bi-weekly homeworks (60% of final grade) and a final project and
-        presentation (40% of final grade).  All work done in teams of 2. <!-- Teams of 3 acceptable,
-        but more will be expected. --> Late work will be penalized (10% per 24 hours) and no work
-        will be accepted after its solution has been discussed in class. You have a bank of 3 "hall
-        pass" days &mdash; each of which giving a 1-day extension on the homework &mdash; that you
-        can apply to any homework. You can use those days on a single homework, or multiple
-        homeworks.
-        <!-- 
-          <b>Please do not post your homework code on a
-            publicly available repository like GitHub.</b> I hate to
-            do this kind of policing, but we've had some issues in the
-            past, and I'd like to avoid a repeat if possible.
-          -->
+        presentation (40% of final grade).  All work done in teams of 2. Late work will be penalized
+        (10% per 24 hours) and no work will be accepted after its solution has been discussed in
+        class. You have a bank of 3 "hall pass" days &mdash; each of which giving a 1-day extension
+        on the homework &mdash; that you can apply to any homework. You can use those days on a
+        single homework, or multiple homeworks.
+
+        <b>Please do not post your homework code on a publicly available repository like
+          GitHub.</b>
+      </li>
+      
+      <li><b>Course Assistants:</b> TBD.</li>
+      
+      <li><b>Chat server:</b> Announcements and discussions take place on <a href="https://chat.rpucella.net/webdev-sp24" target="_blank">our chat server</a>, which double as our homework submission server. You should have received account information by email. If not, please reach out.
       </li>
 
-          <li><b>Course Assistants:</b> TBD.</li>
-          
-          <li><b>Chat server:</b> Announcements and discussions take place on <a href="https://chat.rpucella.net/webdev-sp24" target="_blank">our chat server</a>, which double as our homework submission server. You should have received account information by email. If not, please reach out.
-          </li>
-
-          <li><b>Honor code:</b> I expect all of us to follow the <a href="https://www.olin.edu/student-life-student-affairs-and-resources/student-rights-responsibilities">Olin Honor Code</a>.
-          </li>
-          
+      <li><b>Honor code:</b> I expect all of us to follow the <a href="https://www.olin.edu/student-life-student-affairs-and-resources/student-rights-responsibilities">Olin Honor Code</a>.
+      </li>
+      
   </section>
 
   <section id="lectures">
@@ -91,13 +72,51 @@
 
     <ul class="lectures">
 
-      <!--
-      <li><p><span class="hdr">Sep 11: </span><b>Introduction</b></p>
+      <li><p><span class="hdr">Jan 23: </span><b>Introduction and HTML Overview</b></p>
         <div class="lect">
+
+	    <p><a href="notes/intro-html.pdf">Slides from the lecture</a>.</p>
+
+            <p>The <a href="https://home.cern/science/computing/birth-web/short-history-web">history of the web</a> from CERN. Also from CERN, the <a href="http://info.cern.ch/hypertext/WWW/TheProject.html">first web page</a>.</p>
+
+            <p><a href="https://developer.mozilla.org/en-US/">MDN Web Docs</a>, formerly the Mozilla
+              Developer Network, is the most accurate source of information on web tech that you can
+              find. They have a fantastic <a href="https://developer.mozilla.org/en-US/docs/Web">Web
+                Tech portal page</a>.</p>
+
+            <p>Also from MDN:</p>
+
+              <ul>
+            
+                <li>the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML</a> pages that describe pretty much everything you need to know;</li>
+
+                <li>an introduction to
+              the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction">Document
+              Object Model</a>;
+                </li>
+
+                <li>an overview of how browsers render various pieces of a web document, so-called
+                  the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Layout_mode">layout</a>; the
+              basic rendering algorithm with block and inline element I alluded to in class is
+              the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flow_Layout/Block_and_Inline_Layout_in_Normal_Flow">flow
+                    layout</a>
+                </li>
+              </ul>
+
+            <p>
+              This article describes
+              the <a href="https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/">process
+                of turning a web document into a rendered page</a> in overwhelming detail. Note that
+              it also takes styling into account.
+            </p>
+            
+            <p>
+              You will want to become familiar with your browser's <a href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/What_are_browser_developer_tools">Developer Tools</a>, which provide you with a way to access the DOM visually, and see what your browser sees on the page and interact with it. Every browser has them. The above info is for Firefox, but you have them for <a href="https://developer.chrome.com/docs/devtools">Chrome</a> and <a href="https://developer.apple.com/documentation/safari-developer-tools">Safari</a> as well.
+            </p>
+          
         </div>
       </li>
-      -->
-
+      
     </ul>
 
   </section>
@@ -109,8 +128,8 @@
     
     <ul class="plain">
       <!-- 
-      <li><a href="./homeworks/1">Homework 1</a> &mdash; due Thursday Sep 21</li>
-      -->
+           <li><a href="./homeworks/1">Homework 1</a> &mdash; due Thursday Sep 21</li>
+           -->
     </ul>
     
   </section>
