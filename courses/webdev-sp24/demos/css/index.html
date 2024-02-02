@@ -1,0 +1,161 @@
+<html>
+
+  <head>
+
+    <title>CSS Demo</title>
+
+    <style>
+
+      body {
+          /* Applies to the whole page. */
+          font-family: sans-serif;
+          font-size: 20px;
+          margin: 32px 48px;
+          background-color: #e9dbc6;
+          color: #333333;
+          margin-bottom: 128px;
+      }
+                      
+      h1 {
+          /* Center the header, and tilt it slightly to the left. */
+          text-align: center;
+          font-variant: small-caps;
+          padding: 24px 0;
+          transform: rotate(-5deg);
+      }
+
+      p {
+          /* Fully justify the paragraphs. */
+          text-align: justify;
+      }
+
+      img {
+          /* By default an image has a thick border with a wheat mat-like background. */
+          padding: 24px;
+          margin: 24px;
+          border: 4px solid #888888;
+          background: wheat;
+      }
+
+      a {
+          /* Remove default underline for links. */
+          text-decoration: none;
+      }
+
+      a:hover {
+          /* Except show underlines when hovering over a link. */
+          text-decoration: underline;
+      }
+
+      .image-column {
+          /* Container for vertical images (centered). */
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+
+      .image-column img {
+          width: 560px;
+      }
+      
+      .image-row {
+          /* Container for horizontal images. */
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-evenly;
+      }
+
+      .image-row img {
+          height: 240px;
+      }
+
+      .label-image {
+          /* A labeled image is a centered column. */
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+
+      .label-image p {
+          font-weight: bold;
+          font-size: 24px;
+      }
+
+      .footer {
+          /* The footer is fixed at the bottom of the page. */
+          position: fixed;
+          border: 1px solid #333333;
+          background-color: #cccccc;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          line-height: 48px;
+          margin: 8px;
+          text-align: center;
+      }
+      
+    </style>
+
+  </head>
+
+  <body>
+
+    <h1>The 1066 Conquest of England</h1>
+
+    <p>
+      The conquest of England in 1066 was a pivotal event in British history. It began when
+      <a href="https://en.wikipedia.org/wiki/William_the_Conqueror">William, Duke of Normandy</a>,
+      invaded England with a Norman army, aiming to claim the English throne. The conquest was
+      triggered by the death of the childless
+      King <a href="https://en.wikipedia.org/wiki/Edward_the_Confessor">Edward the Confessor</a> and
+      a dispute over his successor. <a href="https://en.wikipedia.org/wiki/Harold_Godwinson">Harold
+      Godwinson</a>, an English noble, was crowned king, but William disputed his claim and launched
+      an invasion. The conquest culminated in the famous Battle of Hastings, where Harold's army was
+      defeated, and William emerged as the victorious conqueror.
+    </p>
+
+    <div class="image-row">
+      <div class="label-image">
+        <img src="images/edward.jpeg">
+        <p>Edward</p>
+      </div>
+      <div class="label-image">
+        <img src="images/harold.jpeg">
+        <p>Harold</p>
+      </div>
+      <div class="label-image">
+        <img src="images/william.jpeg">
+        <p>William</p>
+      </div>
+    </div>
+
+    <p>The Battle of Hastings, fought on October 14, 1066, was a turning point in the conquest of
+    England. Harold's forces fought valiantly, but William's well-organized and disciplined Norman
+    army proved superior. The battle was characterized by its ferocity and intensity, with both
+    sides sustaining heavy casualties. Harold himself was killed, struck by an arrow in the eye, and
+    his death sealed the fate of the English resistance. Following the battle, William was crowned
+    King of England on Christmas Day, solidifying his conquest and establishing Norman rule over the
+    country.</p>
+
+    <div class="image-column">
+      <img src="images/pevensey.jpeg">
+      <img src="images/hastings.jpeg">
+      <img src="images/battle.png">
+    </div>
+
+    <p>The Norman Conquest had a profound impact on England. It brought about significant political,
+    social, and cultural changes. William introduced a centralized and feudal system of governance,
+    replacing the previous Anglo-Saxon system. Norman nobles were granted vast estates, leading to
+    the integration of Norman and Anglo-Saxon aristocracy. The English language also experienced a
+    significant influence from French, as the Normans became the ruling elite. The conquest had
+    long-lasting effects, shaping the course of English history and contributing to the development
+      of the English nation.</p>
+
+    <p class="footer">
+      This summary was generated by ChatGPT
+    </p>
+
+  </body>
+
+</html>
