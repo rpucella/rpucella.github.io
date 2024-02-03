@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <script>
+  document.title = 'Homework 1 - FOCS FA23'
+</script>
+
+<h1>Homework 1: HTML and CSS</h1>
+
+<h2>Due Date: Sunday, February 11, 2024 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done in teams of two. You're welcome to
+discuss with other students, but all submitted work must be original
+and your own. If you use a solution from another source you must cite
+it &mdash; this includes when that source is someone else helping you.</p></li>
+
+<li><p>Here's a zip file <a href="./homework1.zip">homework1.zip</a> containing an HTML document and associated images used as a starting point. Once you unzip the file, use the &quot;Open File&quot; functionality of your browser to open the <code>theft.html</code> file (or just drag it to your browser).</p></li>
+
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+</ul>
+
+<h2>Electronic Submission Instructions</h2>
+
+<ul>
+<li><p>Zip all required files into a file <code>homework1.zip</code>.</p></li>
+
+<li><p>Make sure one of the files is a <code>README</code> text file listing the members of your team, as well as any remarks you want to make about your code.</p></li>
+
+<li><p>When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <b>Submit File</b> in the profile menu (your initials in the upper right corner).</p></li>
+</ul>
+
+<hr>
+
+<h2>Question 1: Basic Styling</h2>
+
+<p>The file <code>theft.html</code> in the .zip file is a very basic HTML documenet holding a simplified version of the Wikipedia page on the 1990 Isabelle Stewart Gardner Museum heist back in 1990, right here in Boston.</p>
+
+<p>Your task: make it pretty, in a way that replicates roughly the formatting of Wikipedia proper. You do not have to make it pixel perfect.</p>
+
+<ul>
+<li><p>Add a margin of 48px around the whole document</p></li>
+
+<li><p>Make the font size for the whole document larger than the browser default. (Make it bigger by 30% or something close.)</p></li>
+
+<li><p>All text should be sans-serif, except for headers at level 1 and 2.</p></li>
+
+<li><p>All text should be spaced so that there is half a line's height between each line. (Hint: look up the <code>line-height</code> property.)</p></li>
+
+<li><p>Headers should be separated by 48px from the text above it.</p></li>
+
+<li><p>Headers at level 1 and level 2 (<code>h1</code> and <code>h2</code> tags) should have a line underneath them that goes
+all the way to the right of the screen.</p></li>
+</ul>
+
+<p>I clearly can't give you a link to a page that shows you what I want. Instead, here's a <a href="./theft.pdf">PDF</a> printout of way I want the page to look.</p>
+
+<p>The PDF also contains the result of the questions below.</p>
+
+<hr>
+
+<h2>Question 2: Links</h2>
+
+<p>Read up on the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">anchor element</a>.</p>
+
+<ul>
+<li><p>Add links to the three list items in the <em>External links</em> section of the document. Make them links to the following URLs: <code>https://www.gardnermuseum.org/about/theft</code>, <code>https://www.fbi.gov/news/stories/5-million-reward-offered-for-return-of-stolen-gardner-museum-artwork</code>, and <code>https://www.wbur.org/podcasts/lastseen</code>, respectively.</p></li>
+
+<li><p>Make the items in the <em>Table of contents</em> list that's after the first paragraphs internal links to the various sections of the document. (Hint: see <em>Linking to an element on the same page</em> on the Anchor element documentation.)</p></li>
+
+<li><p>Style the table of content so that it has no bullets on each list item, and so that the entire table of content has a border and such that the background has color <code>f8f9fa</code>. (See the <a href="./theft.pdf">PDF</a>.)</p></li>
+
+<li><p>Style all links so that they do not have an underline, except when you're hovering over them. (Hint: See the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes"><code>:hover</code> pseudo-class</a>.)</p></li>
+</ul>
+
+<p><center style="padding:20px;"><img style="width: 400px; padding: 10px; border: 1px solid #cccccc;" src="sample-toc.png"></center></p>
+
+<hr>
+
+<h2>Question 3: Tables</h2>
+
+<p>Read up on <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Tables/Basics">HTML tables</a>.</p>
+
+<ul>
+<li><p>Replace the preformatted section in the document containing the table of stolen pieces by a <em>bona fide</em> HTML table.</p></li>
+
+<li><p>Style the table with an overall border and each cell itself bordered. Put a background color to the table, with color <code>eaecf0</code> as the background color  for the header, and <code>f8f9fa</code> as the background color for the rest of the table.</p></li>
+
+<li><p>Center the table in the middle of the page</p></li>
+
+<li><p>Make sure the column names are left aligned. (Some browsers will center them.)</p></li>
+</ul>
+
+<p><center style="padding:20px;"><img style="width: 400px; padding: 10px; border: 1px solid #cccccc;" src="sample-table.png"></center></p>
+
+<hr>
+
+<h2>Question 4: Floating Images</h2>
+
+<p>Read up on the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/float"><code>float</code> property</a>.</p>
+
+<ul>
+<li><p>Float all three images in the text to the right of the document, and make sure they're all a reasonable consistent size.</p></li>
+
+<li><p>Put a centered caption under each image. The caption to use is in a comment underneath each image in the source of the document. (Hint: see the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure">figure element</a> for one way to do that.)</p></li>
+
+<li><p>Style the image so that there is a border at 4px distance from the image and caption.</p></li>
+</ul>
+
+<p><center style="padding:20px;"><img style="width: 400px; padding: 10px; border: 1px solid #cccccc;" src="sample-float.png"></center></p>
+
+<hr>
+
+<h2>Question 5: Flexbox</h2>
+
+<p>Read up on <a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox">Flexbox</a> and keep the summary <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">Flexbox cheatsheet</a> close.</p>
+
+<ul>
+<li><p>Use flexbox to place the two sections <em>References</em> and <em>External links</em> in two columns at the end of the document.</p></li>
+
+<li><p>Make sure there is some gutter space between the two columns. Use your judgment to make it look pleasant.</p></li>
+</ul>
+
+<p>As we saw in class, to use flexbox effectively, you need the ability to create an element whose sole purpose is to &quot;group&quot; other elements so that those elements are considered a single element. (Each column in a flexbox columnar layout needs to be its own element.) The best way to do that is to use a <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div"><code>div</code> element</a>. Divs are flexbox's drinking buddies.</p>
+
+<p><center style="padding:20px;"><img style="width: 800px; padding: 10px; border: 1px solid #cccccc;" src="sample-flex.png"></center></p>
+
+<hr>
+
+<h2>Question 6: Grid</h2>
+
+<p>Read up on <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/grid">Grid</a>. Here's a handy <a href="https://css-tricks.com/snippets/css/complete-guide-grid/">Grid cheatsheet</a>.</p>
+
+<ul>
+<li><p>Find six molasses-disaster related pictures online.</p></li>
+
+<li><p>Create a new section at the end of the document entitled <em>Additional pictures</em>, and make sure that you add the section to the table of contents.</p></li>
+
+<li><p>In that section, create a grid of three pictures over two rows (using <code>display: grid</code>) where each picture takes a third of the screen's width, and is centered within its grid cell both horizontally and vertically.</p></li>
+
+<li><p>Put a border around each picture at some distance (I used 16px) from the picture proper.</p></li>
+
+<li><p>Separate the pictures from each other in a reasonable way (I used 72px distance).</p></li>
+</ul>
+
+<p>Here's a partial snapshot of what I have:</p>
+
+<p><center style="padding:20px;"><img style="width: 800px; padding: 10px; border: 1px solid #cccccc;" src="sample-grid.png"></center></p>
+
+<p><strong>(Somewhat challenging)</strong></p>
+
+<ul>
+<li><p>Make it so that when you hover over one of the picture, it blows up to 1.5 times its size.</p></li>
+
+<li><p>Moreover, and this is the slightly challenging bit: I want the blown-up picture to remain within the screen frame. Thus, the pictures in the left column should blow up more towards the right, the pictures in the middle should blow up in a centered way, and the pcitures on the right should blow up towards the left. (Hint: look at the <code>position</code> property.)</p></li>
+</ul>
+
+<p>No JavaScript. Here's a video of what happens when I hover over the grid:</p>
+
+<p><center style="padding: 20px;">
+<video width="640" controls>
+  <source src="sample-zoom.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</center></p>
+
+    
+  </body>
+  
+</html>
+
