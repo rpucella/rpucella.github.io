@@ -130,7 +130,7 @@ all the way to the right of the screen.</p></li>
 <p>Read up on <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/grid">Grid</a>. Here's a handy <a href="https://css-tricks.com/snippets/css/complete-guide-grid/">Grid cheatsheet</a>.</p>
 
 <ul>
-<li><p>Find six molasses-disaster related pictures online.</p></li>
+<li><p>Find six pictures of the stolen paintings.</p></li>
 
 <li><p>Create a new section at the end of the document entitled <em>Additional pictures</em>, and make sure that you add the section to the table of contents.</p></li>
 
@@ -148,9 +148,9 @@ all the way to the right of the screen.</p></li>
 <p><strong>(Somewhat challenging)</strong></p>
 
 <ul>
-<li><p>Make it so that when you hover over one of the picture, it blows up to 1.5 times its size.</p></li>
+<li><p>Make it so that when you hover over one of the picture, it blows up to 1.5 times its size for as long as you hover over it, returning to its original size once you stop hovering over it.</p></li>
 
-<li><p>Moreover, and this is the slightly challenging bit: I want the blown-up picture to remain within the screen frame. Thus, the pictures in the left column should blow up more towards the right, the pictures in the middle should blow up in a centered way, and the pcitures on the right should blow up towards the left. (Hint: look at the <code>position</code> property.)</p></li>
+<li><p>Moreover, and this is the slightly challenging bit: I want the blown-up picture to remain within the screen frame, not overflowing to the left or to the right outside the frame. Thus, the pictures in the left column should blow up more towards the right, the pictures in the middle should just blow up and the pictures on the right should blow up towards the left. (Hint: look at the <code>position</code> property.) You also probably will not be able to do it using a single uniform class over the whole grid.</p></li>
 </ul>
 
 <p>No JavaScript. Here's a video of what happens when I hover over the grid:</p>

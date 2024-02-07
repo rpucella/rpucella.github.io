@@ -129,7 +129,7 @@ As we saw in class, to use flexbox effectively, you need the ability to create a
 
 Read up on [Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/grid). Here's a handy [Grid cheatsheet](https://css-tricks.com/snippets/css/complete-guide-grid/).
 
-- Find six molasses-disaster related pictures online. 
+- Find six pictures of the stolen paintings. 
 
 - Create a new section at the end of the document entitled _Additional pictures_, and make sure that you add the section to the table of contents.
 
@@ -146,9 +146,9 @@ Here's a partial snapshot of what I have:
 
 **(Somewhat challenging)**
 
-- Make it so that when you hover over one of the picture, it blows up to 1.5 times its size.
+- Make it so that when you hover over one of the picture, it blows up to 1.5 times its size for as long as you hover over it, returning to its original size once you stop hovering over it.
 
-- Moreover, and this is the slightly challenging bit: I want the blown-up picture to remain within the screen frame. Thus, the pictures in the left column should blow up more towards the right, the pictures in the middle should blow up in a centered way, and the pcitures on the right should blow up towards the left. (Hint: look at the `position` property.)
+- Moreover, and this is the slightly challenging bit: I want the blown-up picture to remain within the screen frame, not overflowing to the left or to the right outside the frame. Thus, the pictures in the left column should blow up more towards the right, the pictures in the middle should just blow up and the pictures on the right should blow up towards the left. (Hint: look at the `position` property.) You also probably will not be able to do it using a single uniform class over the whole grid.
 
 No JavaScript. Here's a video of what happens when I hover over the grid:
 
