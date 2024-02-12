@@ -1,0 +1,252 @@
+<script>
+  document.title = 'Homework 1 - FOCS FA23'
+</script>
+
+<h1>Homework 2: Javascript</h1>
+
+<h2>Due Date: Sunday, February 25, 2024 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done in teams of two. You're welcome to
+discuss with other students, but all submitted work must be original
+and your own. If you use a solution from another source you must cite
+it &mdash; this includes when that source is someone else helping you.</p></li>
+
+<li><p>Here's a zip file <code>homework2.zip</code> (coming soon) containing starter files.</p></li>
+
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+</ul>
+
+<h2>Electronic Submission Instructions</h2>
+
+<ul>
+<li><p>Zip all required files into a file <code>homework2.zip</code>.</p></li>
+
+<li><p>Make sure one of the files is a <code>README</code> text file listing the members of your team, as well as any remarks you want to make about your code.</p></li>
+
+<li><p>When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <strong>Submit File</strong> in the profile menu (your initials in the upper right corner).</p></li>
+</ul>
+
+<hr>
+
+<p>In this homework (and the upcoming ones) we are going to build a game of Memory — you know the kind,
+where you have a certain number of cards that are hidden, each cards appearing in pairs, and you
+reveal cards two at a time: when they match you keep them revealed, and when they don't match you
+hide them back. You keep going until you have all cards revealed. The aim is to finish in the fewest
+number of moves or in the shortest time.</p>
+
+<p>In this homework, we're going to get some practice understanding the basic structure of the game and
+how we can implement the basic functionality in raw Javascript.</p>
+
+<h2>Question 0: Warm up</h2>
+
+<p>First, install the latest version of <a href="https://nodejs.org/">Node.js</a> on your system. (We're going to need it during the
+course anyway.) The latest version is v20, and that'll be just fine for us.</p>
+
+<p>Second, download the file <a href="./h2_node.js">h2_node.js</a>. This is a standalone file not needed for the
+rest of the homework, but I'll ask you to submit it within your homework2.zip bundle before the
+deadline.</p>
+
+<p>You can edit <code>h2_node.js</code> in whatever text editor you like. You can start Node.js by running <code>node</code>
+from the command line (depending on your machine) and from there load <code>h2_node.js</code> using:</p>
+
+<pre><code>&gt; .load h2_node.js
+</code></pre>
+
+<p>This assumes you ran <code>node</code> from the same folder as <code>h2_node.js</code> — you will have to give a full path to
+<code>h2_node.js</code> otherwise.</p>
+
+<h3>(A)</h3>
+
+<p>We are going to use integers <code>0</code>, <code>1</code>, <code>2</code>, ... to represent the various card types. A game board
+will have two of each card type.</p>
+
+<p>Write a function <code>createBoard</code> that takes a number <code>N</code> representing the number of card types to
+hold in the board, and returns a random board of 2 <code>N</code> cards (represented as an array) where each
+array position contains a card type. Recall that there must be two occurrences of each card type in
+the array.</p>
+
+<p>A sample run on my machine in the Node.js shell:</p>
+
+<pre><code>&gt; createBoard(2)
+[ 0, 0, 1, 1 ]
+
+&gt; createBoard(2)
+[ 1, 0, 0, 1 ]
+
+&gt; createBoard(2)
+[ 1, 1, 0, 0 ]
+
+&gt; createBoard(5)
+[
+  2, 3, 1, 0, 4,
+  4, 3, 2, 1, 0
+]
+
+&gt; createBoard(5)
+[
+  0, 3, 4, 1, 0,
+  1, 2, 4, 3, 2
+]
+
+&gt; createBoard(5)
+[
+  3, 2, 0, 1, 1,
+  2, 3, 4, 0, 4
+]
+
+&gt; createBoard(5)
+[
+  0, 0, 4, 3, 1,
+  3, 2, 2, 4, 1
+]
+
+&gt; createBoard(10)
+[
+  0, 2, 4, 9, 3, 8, 6,
+  7, 7, 4, 3, 9, 0, 1,
+  5, 6, 8, 2, 5, 1
+]
+</code></pre>
+
+<h2>(B)</h2>
+
+<p>Let's implement a simple command-line version of the game. This version of the game is pretty
+straightforward: it's a loop until all cards are revealed.</p>
+
+<p>Accordingly, write a function <code>run</code> that takes a number <code>N</code> of card types as arugment and that
+implements the following algorithm:</p>
+
+<ul>
+<li>create a random board with <code>N</code> card types (using <code>createBoard</code> above)</li>
+<li>loop until all cards on the board are revealed:
+
+<ul>
+<li>print the board (only showing the revealed cards)</li>
+<li>ask for a position using <code>input()</code></li>
+<li>check that the position is valid and the card there is not revealed</li>
+<li>show the card at the position</li>
+<li>ask for another position using <code>input()</code></li>
+<li>check that the position is valid and the card there is not revealed and the position is
+different from the first position</li>
+<li>show the card at the position</li>
+<li>if the cards are the same, congratulate the player and keep the cards revealed on the board</li>
+<li>if the cards are not the same, keep them &quot;not revealed&quot;</li>
+</ul></li>
+</ul>
+
+<p>I suggest you represent your board as an array of objects, each object representing a card via two
+fields:</p>
+
+<pre><code>{ 
+    card: integer,
+    revealed: boolean
+}
+</code></pre>
+
+<p>where <code>card</code> is an integer between <code>0</code> and <code>N-1</code> (the card type) and <code>revealed</code> is true when the
+card is revealed and false otherwise.</p>
+
+<p>To help you out, I included a function <code>input()</code> in <code>h2_node.js</code> that lets you query the user for
+an input, roughly like Python's <a href="https://docs.python.org/3/library/functions.html#input"><code>input</code> function</a>. You invoke it by giving it a prompt, like so <code>input('First position: ')</code>. The result is a
+string, so you'll have to convert it to an integer.</p>
+
+<p>It's a pretty trivial game to play since you see all your past interactions on the screen :)</p>
+
+<p>A sample run on my machine in the Node.js shell:</p>
+
+<pre><code>&gt; run(4)
+
+---------------------------------
+| - | - | - | - | - | - | - | - |
+---------------------------------
+First choice: 0
+  ==&gt; 2
+Second choice: 1
+  ==&gt; 1
+
+NO MATCH!
+
+---------------------------------
+| - | - | - | - | - | - | - | - |
+---------------------------------
+First choice: 2
+  ==&gt; 1
+Second choice: 3
+  ==&gt; 2
+
+NO MATCH!
+
+---------------------------------
+| - | - | - | - | - | - | - | - |
+---------------------------------
+First choice: 4
+  ==&gt; 3
+Second choice: 5
+  ==&gt; 0
+
+NO MATCH!
+
+---------------------------------
+| - | - | - | - | - | - | - | - |
+---------------------------------
+First choice: 6
+  ==&gt; 0
+Second choice: 7
+  ==&gt; 3
+
+NO MATCH!
+
+---------------------------------
+| - | - | - | - | - | - | - | - |
+---------------------------------
+First choice: 8
+Improper choice - try again
+
+---------------------------------
+| - | - | - | - | - | - | - | - |
+---------------------------------
+First choice: 5
+  ==&gt; 0
+Second choice: 6
+  ==&gt; 0
+
+MATCH!
+
+---------------------------------
+| - | - | - | - | - | 0 | 0 | - |
+---------------------------------
+First choice: 4
+  ==&gt; 3
+Second choice: 7
+  ==&gt; 3
+
+MATCH!
+
+---------------------------------
+| - | - | - | - | 3 | 0 | 0 | 3 |
+---------------------------------
+First choice: 0
+  ==&gt; 2
+Second choice: 3
+  ==&gt; 2
+
+MATCH!
+
+---------------------------------
+| 2 | - | - | 2 | 3 | 0 | 0 | 3 |
+---------------------------------
+First choice: 1
+  ==&gt; 1
+Second choice: 2
+  ==&gt; 1
+
+MATCH!
+</code></pre>
+
+<hr>
+
+<h2>Question 1 and beyond</h2>
+
+<p>Coming soon</p>
