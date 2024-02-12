@@ -68,6 +68,8 @@ hold in the board, and returns a random board of 2 `N` cards (represented as an 
 array position contains a card type. Recall that there must be two occurrences of each card type in
 the array.
 
+You'll probably want to use the built-in function [`Math.random`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random).
+
 A sample run on my machine in the Node.js shell:
 
     > createBoard(2)
