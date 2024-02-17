@@ -52,7 +52,7 @@ discuss with other students, but all submitted work must be original
 and your own. If you use a solution from another source you must cite
 it &mdash; this includes when that source is someone else helping you.</p></li>
 
-<li><p>Here's a zip file <code>homework2.zip</code> (coming soon) containing starter files.</p></li>
+<li><p>Here's a zip file <a href="homework2.zip"><code>homework2.zip</code></a> containing starter files.</p></li>
 
 <li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
 </ul>
@@ -85,8 +85,8 @@ how we can implement the basic functionality in raw Javascript.</p>
 course anyway.) The latest version is v20, and that'll be just fine for us.</p>
 
 <p>Second, download the file <a href="./h2_node.js">h2_node.js</a>. This is a standalone file not needed for the
-rest of the homework, but I'll ask you to submit it within your homework2.zip bundle before the
-deadline.</p>
+rest of the homework, but I'll ask you to submit it within your <code>homework2.zip</code> bundle before the
+deadline. (For simplicity, I've also added it to the <code>homework2.zip</code> bundle above.)</p>
 
 <p>You can edit <code>h2_node.js</code> in whatever text editor you like. You can start Node.js by running <code>node</code>
 from the command line (depending on your machine) and from there load <code>h2_node.js</code> using:</p>
@@ -152,7 +152,7 @@ the array.</p>
 ]
 </code></pre>
 
-<h2>(B)</h2>
+<h3>(B)</h3>
 
 <p>Let's implement a simple command-line version of the game. This version of the game is pretty
 straightforward: it's a loop until all cards are revealed.</p>
@@ -289,9 +289,191 @@ MATCH!
 
 <hr>
 
-<h2>Question 1 and beyond</h2>
+<h2>Question 1: Browser game</h2>
 
-<p>Coming soon</p>
+<p>The <code>homework2.zip</code> file contains two files, <code>homework2.html</code> and <code>homework2.js</code>, and has been setup so that the <code>homework2.html</code> file loads the <code>homework2.js</code> file as a script. When you load <code>homework2.html</code> in your browser (either by dragging the file to it or using &quot;Open File...&quot; in your browser menu:</p>
+
+<p><center style="padding:20px;">
+<img style="width: 300px; padding: 10px; border: 1px solid #cccccc;" src="openfile.png">
+</center></p>
+
+<p>If you open the browser console, you should see the string <strong>Initializing</strong> showing there.</p>
+
+<p>I've set up the <code>homework2.js</code> file to run function <code>init()</code> when the <code>homework2.html</code> page loads
+and the DOM is available. Your task in this homework is to set up the game board in the <code>init()</code>
+function, and to create the appropriate event handlers to actually play the game to
+completion.</p>
+
+<p>There is a sample video below showing my version of the game. Your doesn't have to look exactly like
+that. I care about functionality, mostly.</p>
+
+<h3>(A)</h3>
+
+<p>For this question, you should create a random board and instantiate a 4 x 3 grid of cards. Choose a
+reasonable ratio of about 1.5 for the height of the cards versus their width. Mine are 196px
+by 128px.</p>
+
+<p>To create the random board you can use the same function you implemented in Question 0(A). Just copy
+it over to <code>homework2.js</code>. Since we have 12 cards, you need to create the board with 6 card types.</p>
+
+<p>For reasons that will become clearer next time, don't use the array you get back as the object you
+consult during the game to determine the card type for each card in the grid.  Instead, I'm going to
+ask that <strong>you store the state of the game (including the card type associated with each card in
+the grid) <em>within the card elements</em> themselves</strong>. You can use a <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes."><code>data</code>
+attribute</a>  for
+doing that. I called mine <code>data-card</code>. You can set and retrieve the value of that attribute for any given
+card as usual by using the <code>setAttribute()</code> and <code>getAtttibute()</code> methods of the card element.</p>
+
+<p>Since you'll want the card type to also be shown when you reveal the card, you'll also include that
+the card type as text on the screen. In Question 2 below, we'll modify cards so that they show
+shapes instead of numbers.</p>
+
+<p>Use <code>#eeeeee</code> as background color for the card.</p>
+
+<p><center style="padding:20px;">
+<img style="width: 800px; padding: 10px; border: 1px solid #cccccc;" src="question1a.png">
+</center></p>
+
+<h3>(B)</h3>
+
+<p>Let's add the ability to hide/reveal a card. Every should have two states:</p>
+
+<ul>
+<li>hidden</li>
+<li>revealed</li>
+</ul>
+
+<p>When a card is revealed, it shows the content like we do in (A) above.</p>
+
+<p>When a card is hidden, it shows a simple <code>#666666</code> background without any content.</p>
+
+<p>How do we represent the state of a card? Again, we're just going to store the state of the card
+within the card element itself. The easiest is to simply use a class for revealed cards, and a class
+for hidden cards. (That'll be useful to style the two types of card differently anyway.) To check
+the state of a card, you can simply check for the presence or absence of a specific class. To set
+the state, you add/remove the appropriate classes.</p>
+
+<p>Initialize all cards so that they're all hidden at the beginning of the game.</p>
+
+<p>Style the cards so that they get highlighted with color <code>#333333</code> when you hover over them and they
+are hidden. There is no highlight for revealed cards.</p>
+
+<p>To test, you can use the console to manually add/remove appropriate classes of some cards, or do
+that programmatically.</p>
+
+<p><center style="padding:20px;">
+<img style="width: 800px; padding: 10px; border: 1px solid #cccccc;" src="question1b.png">
+</center></p>
+
+<h3>(C)</h3>
+
+<p>Let's add some flipping functionality.</p>
+
+<p>Add a click handler on cards to that when they are hidden they get revealed, and when they are
+revealed, they get hidden. Do so by changing the state of the card, since eventually we'll want to
+be able to query the state of a card after you've manipulated it.</p>
+
+<p>Change the cursor when you hover over a card to turn it into the cursor that shows when you can
+click on something. See the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/cursor"><code>cursor</code></a> CSS property.</p>
+
+<h3>(D)</h3>
+
+<p>In Part (C), we allowed the user to flip any card over willy nilly. In this question, we're going
+to adjust the click event handler to control what you can flip and when so that we implement the
+actual rules of Memory.</p>
+
+<p>To distinguih a card that we've revealed as part of one of our two guesses per round from the cards that have been revealed because we've matched in the part, we're going to introduce a new state for cards:</p>
+
+<ul>
+<li>chosen</li>
+</ul>
+
+<p>When a card is chosen, it appears just like a revealed card by showing the content. One difference
+is that a chosen card has a dark border <code>#666666</code>, the same color as a hidden card.</p>
+
+<p>Now implement the rules of the game:</p>
+
+<ul>
+<li>clicking on a revealed or chosen card does nothing</li>
+<li>when you click on a hidden card and there are no chosen card, the card you clicked on becomes a chosen card</li>
+<li>when you click on a hidden card and there is one chosen card, the card you clicked on becomes a chosen card, and:
+
+<ul>
+<li>if the two chosen cards have the same card type, then both chosen card switch to the revealed state</li>
+<li>if the two chosen cards do not have the same card type, then after 2 seconds, the cards switch back to the hidden state</li>
+</ul></li>
+</ul>
+
+<p>Javascript built-in function <a href="https://developer.mozilla.org/en-US/docs/Web/API/setTimeout"><code>setTimeout</code></a> is your friend here. Read about it and use it to do the
+&quot;wait 2 seconds and do stuff&quot;.</p>
+
+<p>Some things to keep in mind:</p>
+
+<ul>
+<li>Make sure the cursor only changes on hover when the card is hidden (since clicking on a revealed or chosen card does nothing).</li>
+<li>Depending on how you style your elements, you may see the cards jump or shift when a card is chosen and you add a border. Investiate the <code>box-sizing</code> property.</li>
+<li>Make sure that while you are waiting 2 seconds before hiding two unmatched chosen cards, you cannot in fact flip any other hidden card.</li>
+</ul>
+
+<h3>(E)</h3>
+
+<p>Right now, when you've revealed all cards, you're done, and you can no longer do anything. Let's do
+something more interesting when the game is over.</p>
+
+<p>When all cards are revealed, put up a message box on the screen that says &quot;Congratulations&quot; and has a button
+&quot;Play Again&quot;. Pressing that button should remove the message box and reset the grid to another random board
+and a different instance of the game should start.</p>
+
+<ul>
+<li>When do you check for the game being ended? A natural spot to do so is in the click event handler right after you've revealed the last two cards of the grid.</li>
+<li>How do you put up a message box? The easiest is to show a <code>&lt;div&gt;</code> that was previously hidden, that gets positioned in the center of the screen using <code>position</code> and setting <code>left</code>, <code>right</code>, <code>top</code>, and <code>bottom</code> appropriately, and using the <code>z-index</code> property to show the box &quot;on top of&quot; everything else on the screen. To remove the message box, just hide it by setting its <code>display</code> property to <code>none</code>.</li>
+</ul>
+
+<p>Here's a sample run of my version of the game:</p>
+
+<p><center style="padding: 20px;">
+<video width="640" controls>
+  <source src="question1.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</center></p>
+
+<hr>
+
+<h2>Question 2: Nicer cards</h2>
+
+<p>The game above is playable. But we should not feel restricted to use the numbers 0–5 as the content of each card. We could use images, or anything, really.</p>
+
+<p>Let's do shapes for simplicity. Here's the shapes that I'd like you to use for each card type:</p>
+
+<ul>
+<li>0 = red circle</li>
+<li>1 = blue circle</li>
+<li>2 = green circle</li>
+<li>3 = red square</li>
+<li>4 = blue square</li>
+<li>5 = green square</li>
+</ul>
+
+<p>How do we show a red circle (say) in an HTML element? The easiest way is to use an SVG (scalable vector graphic). Start by <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial">reading a bit on SVGs</a>. In particular, you can create a circle with the <code>&lt;circle&gt;</code> SVG tag, and a square with a <code>&lt;rect&gt;</code> SVG tag.</p>
+
+<p>One very important thing to keep in mind is that if you create an SVG element in Javascript — either an <code>&lt;svg&gt;</code> element proper or a <code>&lt;circle&gt;</code> or <code>&lt;rect&gt;</code> element — you need to use method <code>createElementNS()</code> and pass the appropriate <em>namespace</em> as a first argument. The details of why this is needed are pretty opaque. In practice, it just means that to create an SVG element, you have to use something like:</p>
+
+<pre><code>const svgElt = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+</code></pre>
+
+<p>You can start <a href="https://www.motiontricks.com/creating-dynamic-svg-elements-with-javascript/">reading this tutorial</a> which while it goes much deeper than what we'll be doing, does give you the right setup at the start.</p>
+
+<p>Try to get it to work. If you cannot, you can always go with the backup plan of using static PNG images for the various shapes instead. I'll let you figure out how to set that up.</p>
+
+<p>Here's a sample run of my version of the game:</p>
+
+<p><center style="padding: 20px;">
+<video width="640" controls>
+  <source src="question2.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</center></p>
 
     
   </body>
