@@ -291,27 +291,24 @@ MATCH!
 
 <h2>Question 1: Browser game</h2>
 
-<p>The <code>homework2.zip</code> file contains two files, <code>homework2.html</code> and <code>homework2.js</code>, and has been setup so that the <code>homework2.html</code> file loads the <code>homework2.js</code> file as a script. When you load <code>homework2.html</code> in your browser (either by dragging the file to it or using &quot;Open File...&quot; in your browser menu:</p>
+<p>The <code>homework2.zip</code> file contains two files, <code>homework2.html</code> and <code>homework2.js</code>, and has been setup so that the <code>homework2.html</code> file loads the <code>homework2.js</code> file as a script. When you load <code>homework2.html</code> in your browser (either by dragging the file to it or using &quot;Open File...&quot; in your browser menu and you open the browser console, you should see the string <strong>Initializing</strong> showing there.</p>
 
 <p><center style="padding:20px;">
 <img style="width: 300px; padding: 10px; border: 1px solid #cccccc;" src="openfile.png">
 </center></p>
 
-<p>If you open the browser console, you should see the string <strong>Initializing</strong> showing there.</p>
-
 <p>I've set up the <code>homework2.js</code> file to run function <code>init()</code> when the <code>homework2.html</code> page loads
-and the DOM is available. Your task in this homework is to set up the game board in the <code>init()</code>
-function, and to create the appropriate event handlers to actually play the game to
-completion.</p>
+and the DOM is available. (That's the function that shows the <strong>Initializing</strong> string in the
+console.) Your task in this question is to set up the game board in the <code>init()</code> function, and to
+create the appropriate event handlers to actually play the game to completion.</p>
 
-<p>There is a sample video below showing my version of the game. Your doesn't have to look exactly like
-that. I care about functionality, mostly.</p>
+<p>There is a sample video below showing my version of the game. Yours doesn't have to look exactly like
+that. I mostly care about functionality this time.</p>
 
 <h3>(A)</h3>
 
-<p>For this question, you should create a random board and instantiate a 4 x 3 grid of cards. Choose a
-reasonable ratio of about 1.5 for the height of the cards versus their width. Mine are 196px
-by 128px.</p>
+<p>First, you should create a random board and instantiate a 4 x 3 grid of cards. Choose a reasonable
+ratio of about 1.5 for the height of the cards versus their width. Mine are 196px by 128px.</p>
 
 <p>To create the random board you can use the same function you implemented in Question 0(A). Just copy
 it over to <code>homework2.js</code>. Since we have 12 cards, you need to create the board with 6 card types.</p>

@@ -246,27 +246,24 @@ A sample run on my machine in the Node.js shell:
 
 ## Question 1: Browser game
 
-The `homework2.zip` file contains two files, `homework2.html` and `homework2.js`, and has been setup so that the `homework2.html` file loads the `homework2.js` file as a script. When you load `homework2.html` in your browser (either by dragging the file to it or using "Open File..." in your browser menu:
+The `homework2.zip` file contains two files, `homework2.html` and `homework2.js`, and has been setup so that the `homework2.html` file loads the `homework2.js` file as a script. When you load `homework2.html` in your browser (either by dragging the file to it or using "Open File..." in your browser menu and you open the browser console, you should see the string **Initializing** showing there.
 
 <center style="padding:20px;">
 <img style="width: 300px; padding: 10px; border: 1px solid #cccccc;" src="openfile.png">
 </center>
 
-If you open the browser console, you should see the string **Initializing** showing there.
-
 I've set up the `homework2.js` file to run function `init()` when the `homework2.html` page loads
-and the DOM is available. Your task in this homework is to set up the game board in the `init()`
-function, and to create the appropriate event handlers to actually play the game to
-completion. 
+and the DOM is available. (That's the function that shows the **Initializing** string in the
+console.) Your task in this question is to set up the game board in the `init()` function, and to
+create the appropriate event handlers to actually play the game to completion.
 
-There is a sample video below showing my version of the game. Your doesn't have to look exactly like
-that. I care about functionality, mostly.
+There is a sample video below showing my version of the game. Yours doesn't have to look exactly like
+that. I mostly care about functionality this time.
 
 ### (A)
 
-For this question, you should create a random board and instantiate a 4 x 3 grid of cards. Choose a
-reasonable ratio of about 1.5 for the height of the cards versus their width. Mine are 196px
-by 128px.
+First, you should create a random board and instantiate a 4 x 3 grid of cards. Choose a reasonable
+ratio of about 1.5 for the height of the cards versus their width. Mine are 196px by 128px.
 
 To create the random board you can use the same function you implemented in Question 0(A). Just copy
 it over to `homework2.js`. Since we have 12 cards, you need to create the board with 6 card types.
