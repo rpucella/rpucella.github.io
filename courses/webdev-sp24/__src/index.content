@@ -166,7 +166,33 @@
         </div>
       </li>
 
-      <li><p><span class="hdr">Feb 13: </span><b>DOM and Events</b></p>
+      <li><p><span class="hdr">Feb 13: </span><b>The DOM and Events</b></p>
+        <div class="lect">
+
+	    <p><a href="notes/dom.pdf">Slides from the lecture</a>.</p>
+
+            <p>The demo code I played with in lecture: file <a href="demos/dom/dom-demo.html"><code>dom-demo.html</code></a>; file <a href="demos/dom/dom-demo.js"><code>dom-demo.js</code></a>. (If you click on these links, the browser will open them as HTML documents. To download them to your machine, right-click on the link and chose "Save Link As..." or something equivalent.)</p>
+
+            <p>MDN documentation entry point on the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/">Document Object Model</a>.</p>
+
+            <p>Key classes in the DOM: The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a> class; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a> class; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement">HTMLElement</a> class.</p>
+
+            <p>Finding elements in the DOM: a general <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_object_model/Locating_DOM_elements_using_selectors">introduction</a>; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById">getElementById()</a> method; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector">querySelector()</a> method; the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll">querySelectorAll()</a> method.</p>
+
+            <p>A <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Traversing_an_HTML_table_with_JavaScript_and_DOM_Interfaces">complete example</a> of how to manipulate an HTML table in JavaScript that illustrates all the features of creating elements and adding them to the DOM tree.</p>
+
+            <p>
+              MDN <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events">introduction to events</a>, as well as a list of all <a href="https://developer.mozilla.org/en-US/docs/Web/Events">events types bucketed by category</a>. The MDN introduction includes a good description of event propagation (where an event triggered on an element will propagate or bubble up through its parent elements).
+            </p>
+
+            <p>
+              In the demo I used the <tt>on<it>event</it></tt> property to assign an event handler to a specific element. That lets you assign a single event handle to that element. If you want more than one handler, then you can use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener">addEventListener()</a> method, which also lets you remove an event handler. (This is mostly useful when you write modular code that attaches itself to an existing element, and needs to do so irrespectively of whether there are already handlers on that elements.) You can <a href="https://developer.mozilla.org/en-US/docs/Web/Events/Event_handlers">read a description of these two approaches</a>.
+            </p>
+
+        </div>
+      </li>
+
+      <li><p><span class="hdr">Feb 20: </span><b>MVC</b></p>
         <div class="lect">
 
         </div>

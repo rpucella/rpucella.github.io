@@ -1,0 +1,86 @@
+<html>
+
+  <head>
+
+    <title>DOM Demo</title>
+
+    <script src="dom-demo.js"></script>
+
+    <style>
+
+      body {
+          color: #333333;
+      }
+
+      #create-random {
+          padding: 16px;
+          font-size: 24px;
+      }
+
+      div.basic-box {
+          width: 160px;
+          height: 120px;
+          background-color: #888888;
+          margin: 16px;
+      }
+
+      #boxes {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+      }
+
+      div.red {
+          background-color: red;
+      }
+
+      div.blue {
+          background-color: blue;
+      }
+
+      div.green {
+          background-color: green;
+      }
+
+      #text {
+          border: 2px solid #333333;
+          margin: 16px;
+          padding: 16px;
+          font-size: 24px;
+      }
+
+      #text {
+          display: none;
+      }
+
+      #text.show {
+          display: block;
+      }
+      
+    </style>
+
+  </head>
+
+  <body>
+
+    <h1>DOM Demo</h1>
+
+    <!-- <button id="create-random">Create Random</button> -->
+
+    <select id="color-selector">
+      <option value="random">Random</option>
+      <option value="red">Red</option>
+      <option value="blue">Blue</option>
+      <option value="green">Green</option>
+    </select>
+
+    <button id="create">Create</button>
+
+   <div id="boxes">
+    </div>
+
+   <p id="text"></p>
+
+  </body>
+
+</html>
