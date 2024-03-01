@@ -38,7 +38,7 @@
 
   <body>
   
-    <h1>Notes on Model-View-Controller Structure (MVC)</h1>
+    <h1>Notes on Model-View-Controller Architecture (MVC)</h1>
 
 <p>Javascript is used to</p>
 
@@ -68,12 +68,12 @@ handlers in a way that makes it:</p>
 <p>Many approaches have been developed over the years to make it more manageable to write UIs with event handlers.</p>
 
 <ul>
-<li>many evolve from the so-called MVC archicture developed for SmallTalk</li>
+<li>many evolve from the so-called MVC architecture developed for SmallTalk</li>
 </ul>
 
 <p><img style="width: 600px; padding: 10px;" src="mvc.png"></p>
 
-<p>MVC stands for Model-View-Controller, describing the three components to this architecture</p>
+<p>MVC stands for <em>Model-View-Controller</em>, describing the three components to this architecture</p>
 
 <ul>
 <li>the <strong>model</strong>, which holds the state of the application, and defines actions that can be used to
@@ -82,11 +82,9 @@ update the model</li>
 <li>the <strong>controller</strong>, which handles user input and transforms those inputs into actions on the model</li>
 </ul>
 
-<p>How this gets instantiated in different applications depends on both the application being develop
-and the programming language being used. Whether the view or the controller is a single object or
-multiple objects is again dependent on the application.</p>
-
-<p>((TK MVC is pretty broad, and can take various forms, each claiming to be MVC))</p>
+<p>How this gets instantiated in different applications depends on both the application being
+developped and the programming language being used. For instance, whether the view or the controller
+is a single object or multiple objects depends on application and language.</p>
 
 <p>The controller calls the model using the actions that the model provides. So the controller need to
 know about the model. In most uses of MVC, the model doesn't know about the controller or the
@@ -94,17 +92,75 @@ view. It provides actions for the controller to imvoke. But how does the view kn
 itself to reflect model changes? How does the model tell the view to update if the model doesn't
 know anything about the view?</p>
 
+<h2>Publisher-Subscriber Pattern</h2>
+
 <p>The model and the view are in a Publisher-Subscriber relation. Publisher-Subscriber is a way to
-structure code when you have a piece of the system that create values (the publisher) that other
-pieces of the system (the subscribers) are interested in receiving, in such a way that the publisher
-doesn't need to know the existence of the subscribers ahead of time, and those subscribers can come
-and go dynamically.</p>
+structure code (a so-called <em>design pattern</em>) when you have part of the system creating values (the
+<em>publisher</em>) that other parts of the system are interested in using (the <em>subscribers</em>), and when
+you do not want to hard-code into the publisher which subscribers should get the values created. In
+a Publisher-Subscriber pattern, the publisher has a way to notify subscribers that a new value has
+been created, and subscriber can dynamically <em>subscribe</em> (and potentially unsubscribe) to these
+notifications during program execution.</p>
 
-<p>Here's how to achieve the effect in Python:</p>
+<p>Here's how to implement a simple Publisher-Subscriber pattern in Python:</p>
 
-<p>((TK publisher-subscriber in python))</p>
+<pre><code>class Publisher:
 
-<p>((TK Sample MVC code))</p>
+    def __init__(self):
+        self._subscribers = {}
+
+    def publish(self, channel, v):
+        if channel in self._subscribers:
+            for m in self._subscribers[channel]:
+                m(v)
+
+    def subscribe(self, channel, f):
+        if channel in self._subscribers:
+            self._subscribers[channel].append(f)
+
+    def channel(self, channel):
+        self._subscribers[channel] = []
+
+
+class Subscriber:
+
+    def __init__(self, name):
+        self._name = name
+
+    def receiveApples(self, v):
+        print(f&quot;{self._name} received apples value {v}&quot;)
+
+    def receiveOranges(self, v):
+        print(f&quot;{self._name} received oranges value {v}&quot;)
+
+
+def setup():
+    # Create publisher.
+    p = Publisher()
+    # Create channels on the publisher.
+    p.channel('apples')
+    p.channel('oranges')
+    # Create subscribers.
+    alice = Subscriber('Alice')
+    bob = Subscriber('Bob')
+    charlie = Subscriber('Charlie')
+    # Subscribe to publisher.
+    p.subscribe('apples', alice.receiveApples)
+    p.subscribe('oranges', bob.receiveOranges)
+    p.subscribe('apples', charlie.receiveApples)
+    p.subscribe('oranges', charlie.receiveOranges)
+    return p
+
+def test():
+    p = setup()
+    # Test:
+    print('------------------------------------------------------------')
+    p.publish('apples', 66)
+    print('------------------------------------------------------------')
+    p.publish('oranges', 99)
+</code></pre>
+
+<p>I'm using Python here just to show that Publisher-Subscribe is not Javascript-specific.</p>
 
     
   </body>

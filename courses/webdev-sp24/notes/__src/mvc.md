@@ -38,8 +38,6 @@ How this gets instantiated in different applications depends on both the applica
 developped and the programming language being used. For instance, whether the view or the controller
 is a single object or multiple objects depends on application and language.
 
-((TK MVC is pretty broad, and can take various forms, each claiming to be MVC))
-
 The controller calls the model using the actions that the model provides. So the controller need to
 know about the model. In most uses of MVC, the model doesn't know about the controller or the
 view. It provides actions for the controller to imvoke. But how does the view know when to update
@@ -58,13 +56,59 @@ notifications during program execution.
 
 Here's how to implement a simple Publisher-Subscriber pattern in Python: 
 
-((TK publisher-subscriber in python))
+    class Publisher:
+    
+        def __init__(self):
+            self._subscribers = {}
+    
+        def publish(self, channel, v):
+            if channel in self._subscribers:
+                for m in self._subscribers[channel]:
+                    m(v)
+    
+        def subscribe(self, channel, f):
+            if channel in self._subscribers:
+                self._subscribers[channel].append(f)
+    
+        def channel(self, channel):
+            self._subscribers[channel] = []
+    
+    
+    class Subscriber:
+    
+        def __init__(self, name):
+            self._name = name
+    
+        def receiveApples(self, v):
+            print(f"{self._name} received apples value {v}")
+    
+        def receiveOranges(self, v):
+            print(f"{self._name} received oranges value {v}")
+    
+    
+    def setup():
+        # Create publisher.
+        p = Publisher()
+        # Create channels on the publisher.
+        p.channel('apples')
+        p.channel('oranges')
+        # Create subscribers.
+        alice = Subscriber('Alice')
+        bob = Subscriber('Bob')
+        charlie = Subscriber('Charlie')
+        # Subscribe to publisher.
+        p.subscribe('apples', alice.receiveApples)
+        p.subscribe('oranges', bob.receiveOranges)
+        p.subscribe('apples', charlie.receiveApples)
+        p.subscribe('oranges', charlie.receiveOranges)
+        return p
+    
+    def test():
+        p = setup()
+        # Test:
+        print('------------------------------------------------------------')
+        p.publish('apples', 66)
+        print('------------------------------------------------------------')
+        p.publish('oranges', 99)
 
-(I'm using Python here just to show that Publisher-Subscribe is not Javascript-specific.)
-
-
-
-## Sample Example
-
-
-((TK Sample MVC code))
+I'm using Python here just to show that Publisher-Subscribe is not Javascript-specific.

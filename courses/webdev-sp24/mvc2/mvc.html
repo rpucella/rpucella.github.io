@@ -25,7 +25,7 @@
           font-size: 16px;
       }
 
-      img.main {
+      img {
           width: 100%;
           height: 400px;
           object-fit: contain;
@@ -92,15 +92,10 @@
           height: 1in;
           width: 1in;
           object-fit: contain;
-          cursor: pointer;
       }
 
       .highlight {
           border: 1px solid red;
-      }
-
-      .hidden {
-          display: none;
       }
       
     </style>
@@ -143,22 +138,13 @@
 
         </div>
 
-        <div class="boxed">
-
-          <button id="fetch-picsum">Fetch from picsum</button>
-          <select class="hidden" id="select-picsum"></select>
-          <img class="hidden" id="preview-picsum">
-          <button class="hidden" id="add-picsum">Add picture</button>
-
-        </div>
-
       </div>
 
       <div class="right-column">
 
         <h2 id="name"></h2>
 
-        <img class="main" id="url">
+        <img id="url">
 
         <div id="thumbnails"> </div>
 
