@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <h1>Notes on Model-View-Controller Structure (MVC)</h1>
+
+<p>Javascript is used to</p>
+
+<ul>
+<li>attach actions to events</li>
+<li>modify the DOM as the result of those actions</li>
+</ul>
+
+<p>Writing a UI by simply attaching actions to events with no structure does not scale</p>
+
+<ul>
+<li>the flow of control is all over the place</li>
+<li>the logic ends up in the various event handlers</li>
+<li>in homework 2, for instance, the logic is in the click handler for a card</li>
+</ul>
+
+<p>For any non-trivial UI where we have many controls that come and go and therefore many event
+handlers that are all always primed at the same time, the logic ends up spread out across all the
+handlers in a way that makes it:</p>
+
+<ul>
+<li>hard to make changes - &quot;I want to change X, where do I find where X is done?&quot;</li>
+<li>easy to miss or forget something when doing an update</li>
+<li>difficult to recognize what is the state of the application at any point in time</li>
+</ul>
+
+<p>Many approaches have been developed over the years to make it more manageable to write UIs with event handlers.</p>
+
+<ul>
+<li>many evolve from the so-called MVC archicture developed for SmallTalk</li>
+</ul>
+
+<p><img style="width: 600px; padding: 10px;" src="mvc.png"></p>
+
+<p>MVC stands for Model-View-Controller, describing the three components to this architecture</p>
+
+<ul>
+<li>the <strong>model</strong>, which holds the state of the application, and defines actions that can be used to
+update the model</li>
+<li>the <strong>view</strong>, which reflect the model to the user on the screen</li>
+<li>the <strong>controller</strong>, which handles user input and transforms those inputs into actions on the model</li>
+</ul>
+
+<p>How this gets instantiated in different applications depends on both the application being develop
+and the programming language being used. Whether the view or the controller is a single object or
+multiple objects is again dependent on the application.</p>
+
+<p>((TK MVC is pretty broad, and can take various forms, each claiming to be MVC))</p>
+
+<p>The controller calls the model using the actions that the model provides. So the controller need to
+know about the model. In most uses of MVC, the model doesn't know about the controller or the
+view. It provides actions for the controller to imvoke. But how does the view know when to update
+itself to reflect model changes? How does the model tell the view to update if the model doesn't
+know anything about the view?</p>
+
+<p>The model and the view are in a Publisher-Subscriber relation. Publisher-Subscriber is a way to
+structure code when you have a piece of the system that create values (the publisher) that other
+pieces of the system (the subscribers) are interested in receiving, in such a way that the publisher
+doesn't need to know the existence of the subscribers ahead of time, and those subscribers can come
+and go dynamically.</p>
+
+<p>Here's how to achieve the effect in Python:</p>
+
+<p>((TK publisher-subscriber in python))</p>
+
+<p>((TK Sample MVC code))</p>
+
+    
+  </body>
+  
+</html>
+
