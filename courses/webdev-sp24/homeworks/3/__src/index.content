@@ -1,0 +1,157 @@
+<script>
+  document.title = 'Homework 3 - Web Dev SP24'
+</script>
+
+<h1>Homework 3: MVC</h1>
+
+<h2>Due Date: Wednesday, March 13, 2024 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done in teams of two. You're welcome to
+discuss with other students, but all submitted work must be original
+and your own. If you use a solution from another source you must cite
+it &mdash; this includes when that source is someone else helping you.</p></li>
+
+<li><p>Here's a zip file <a href="homework3.zip"><code>homework3.zip</code></a> containing starter files.</p></li>
+
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+</ul>
+
+<h2>Electronic Submission Instructions</h2>
+
+<ul>
+<li><p>Zip all required files into a file <code>homework3.zip</code>.</p></li>
+
+<li><p>Make sure one of the files is a <code>README</code> text file listing the members of your team, as well as any remarks you want to make about your code.</p></li>
+
+<li><p>When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <strong>Submit File</strong> in the profile menu (your initials in the upper right corner).</p></li>
+</ul>
+
+<hr>
+
+<p>Back to our Memory game.</p>
+
+<p>We're going to re-implement the game we created in the last homework, using the MVC techniques we
+learned in class.</p>
+
+<p>Please use the structure I used for the picture viewer example from class. It'll make everybody's life easier. I have put some very light structure already in the <code>homework3.html</code> and <code>homework3.js</code> files I provided you.</p>
+
+<h2>Question 1: The Game</h2>
+
+<h3>(A)</h3>
+
+<p>Create a model class <code>Model</code> for the Memory game.</p>
+
+<p>I suggest you have an array of cards objects (each card object a simple &quot;dictionary&quot;) as
+the state of the model, where each card object holds:</p>
+
+<ul>
+<li>the card type: an integer from 0, 1, 2, 3, 4, 5.</li>
+<li>the card state: hidden, chosen, or revealed</li>
+</ul>
+
+<p>Recall that a card is hidden when it is flipped so you cannot see its content, revealed when it is
+showing its content and has already been matched with another card, and chosen when it is currently
+showing and has been chosen as a card to compare against another card.</p>
+
+<p>You can also put additional state in the model if it makes your life easier.</p>
+
+<p>The one action of interest is choosing a card. Choosing a card should have different effects
+depending on whether the card is the first card chosen or the second card chosen:</p>
+
+<ul>
+<li>choosing a card that is already chosen or revealed should have no effect</li>
+<li>when there is no card already chosen, choosing a card should change the state of that card to chosen.</li>
+<li>where is already a card chosen, choosing a card should change the state of that card to chosen,
+and then the two chosen cards are compared. If they are the same card type, then their states are
+both changed to revealed. If they are not the same card type, then after 2 seconds, the two cards
+should have their state set back to hidden.</li>
+</ul>
+
+<p>You only need one type of notification for now: notifying interested views/controllers when a
+card has changed its state.</p>
+
+<p>You will need a way to initialize the model with a random board. As in last homework assume a 4 x 3
+board of 12 cards (therefore, 6 card types).</p>
+
+<h3>(B)</h3>
+
+<p>Create a view class <code>BoardView</code> for the board, that displays the cards according to their type and
+state in the model. Have it respond to the &quot;card changed state&quot; notification by updating that card's
+representation on the screen appropriately.</p>
+
+<p>For the content of the cards, use the same SVG representation for cards that you used in Homework 2
+Q3, with a light gray <code>#eeeeee</code> background:</p>
+
+<ul>
+<li>0 = red circle</li>
+<li>1 = blue circle</li>
+<li>2 = green circle</li>
+<li>3 = red square</li>
+<li>4 = blue square</li>
+<li>5 = green square</li>
+</ul>
+
+<p>Use a picture that you like as the &quot;back of the card&quot; when a card is
+hidden, for variety's sake. Change the cursor to be a pointer when hovering over a card that is hidden.</p>
+
+<p>(You can also create a view <code>CardView</code> that you associate with each card, alongside the card
+controller below. There's advantages and disadvantage to that approach as opposed to doing all the
+card view stuff in <code>BoardView</code>. Feel free to explore the design space.)</p>
+
+<p>Make sure you can distinguish a card that is chosen from a card that is revealed. You can use the same kind of highlight (dark grey <code>#666666</code> border) as you did on the last homework.</p>
+
+<h3>(C)</h3>
+
+<p>Create a controller <code>CardController</code> that you can associate with a
+specific card, and whose job is ust to respond to clicks on that card
+and invoke the action &quot;choose card&quot; on the model.</p>
+
+<p>When <code>BoardView</code> initializes, it should assign a controller to each card on the board.</p>
+
+<p><center style="padding: 20px;">
+<video width="640" controls>
+  <source src="question1.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</center></p>
+
+<h2>Question 2: Round counter</h2>
+
+<p>Modify the model and its actions to maintain a new piece of state, the <strong>current round</strong>. The game starts at round 1, and whenever the player chooses two cards (and the game either reveals them or hides them back), the round counter increases by one.</p>
+
+<p>Add a new view <code>RoundView</code> that shows the current round of the game in some way. You will need a new notification channel to notify views that the current round has changed.</p>
+
+<p><center style="padding: 20px;">
+<video width="640" controls>
+  <source src="question2.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</center></p>
+
+<h2>Question 3: Starting a new game</h2>
+
+<p>Just like in homework 2, add a congratulatory end dialog with a &quot;play again&quot; button when the player finishes the game.</p>
+
+<p>You will need a new piece of state in the model, whether the game is <strong>finished</strong> or not. The game being finished should be determined in the choosing a card action: when the last pair of matches is revealed, the state should be flipped to finished. There should be a notification channel for the game being finished.</p>
+
+<p>When the game is <strong>finished</strong>, then choosing a card should have no effect.</p>
+
+<p>Add a new action to the model to start a new game, which should create a new random board with the cards set to hidden, and clear the &quot;game finished&quot; flag. The biggest challenge here is how to get <code>BoardView</code> to show the new cards. Depending on how you implemented <code>BoardView</code>, you may need to refactor some things. It is fine if you need to add a additional channel to notify <code>BoardView</code> that the board has changed. I'm curious to see how you solve that problem.</p>
+
+<p>Create a view <code>FinishedView</code> that subscribes to the &quot;game finished&quot; notification and that shows a dialog box with a &quot;Play again&quot; button when notified of the game being finished. In response to clicking on the  &quot;Play again&quot; button, the &quot;start new game&quot; action should be invoked. Make sure the dialog box disappears when you start a new game, and that the rounds start back at 1.</p>
+
+<p>Set things up so that the initial game setup simply uses the &quot;start new game&quot; action.</p>
+
+<p>And while we're at it, add a button &quot;Start new game&quot; associated with a
+<code>NewGameController</code> that lets you give up on your current game and
+sets up a new board when you click on the button, again by invoking
+the &quot;start new game&quot; action.</p>
+
+<p><center style="padding: 20px;">
+<video width="640" controls>
+  <source src="question3.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</center></p>

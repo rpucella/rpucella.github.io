@@ -209,7 +209,7 @@
 
 	  <p>A useful <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">tutorial on promises</a> that should give you some insight into how to use promises. This tutorial also uses the old <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest">XMLHttpRequest</a> method to fetch data in JavaScript.</p>
 
-	  <p>(If you read about promises, eventually you will encounter <i>asynchronous functions</i>, which we will come back to later in the course. They're basically about using promises in a different (more naturaly?) way.)</p>
+	  <p>(If you read about promises, eventually you will encounter <i>asynchronous functions</i>, which we will come back to later in the course. They're basically about using promises in a different (more natural?) way.)</p>
 	    
         </div>
       </li>
@@ -227,6 +227,7 @@
     <ul class="plain">
       <li><a href="./homeworks/1">Homework 1</a> &mdash; due Sunday Feb 11</li>
       <li><a href="./homeworks/2">Homework 2</a> &mdash; due Sunday Feb 25</li>
+      <li><a href="./homeworks/3">Homework 3</a> &mdash; due Wednesday Mar 13</li>
     </ul>
     
   </section>
