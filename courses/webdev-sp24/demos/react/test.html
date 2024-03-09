@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8">
+  <head>
+    <title>React Test</title>
+    <style>
+      .counter {
+          width: 240px;
+          height: 240px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 24px;
+          gap: 24px;
+          border: 1px solid #333333;
+          box-sizing: border-box;
+      }
+      .counter .header {
+          font-weight: bold;
+      }
+      .count {
+          font-weight: bold;
+          font-size: 80px;
+      }
+    </style>
+    <!-- Load react libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  </head>
+
+  <body>
+    <div id="app">
+    </div>
+
+    <script>
+
+      const e = React.createElement
+
+      window.onload = () => {
+          const domContainer = document.querySelector('#app')
+          const root = ReactDOM.createRoot(domContainer)
+          root.render(e(Test, {}))
+      }
+
+      function Test() {
+          return e('div', {},
+                   e('h1', {}, 'React Test'),
+                   e(Counter, {init: 0}))
+      }
+
+      function Counter({init}) {
+          // const [count, setCount] = React.useState(0)
+          let [count, setCount] = React.useState(init)
+          const handleClick = () => {
+              setCount(count + 1)
+          }
+          if (count > 10 + init) {
+              return e('div', {className: 'counter'},
+                       e('div', {className: 'header'}, 'Counter'),
+                       e('div', {}, "Count too high!"))
+          } else {                       
+              return e('div', {className: 'counter'},
+                       e('div', {className: 'header'}, 'Counter'),
+                       e('button', {onClick: handleClick}, 'Increment'),
+                       e(Count, {value: count, setCount: setCount}))
+          }
+      }
+
+      function Count({value, setCount}) {
+          const handleClick = () => {
+              setCount(value + 1)
+          }
+          return e('div', {onClick: handleClick, className: 'count'}, value)
+      }
+      
+    </script>
+
+  </body>
+
+</html>
+

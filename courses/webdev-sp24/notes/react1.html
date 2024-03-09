@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <script>
+  document.title = 'Notes on React'
+</script>
+
+<h1>Notes on React</h1>
+
+<p><a href="https://react.dev/">React</a> is a framework for developing frontends in
+Javascript with an emphasis on composing together reusable components.</p>
+
+<p>A component is a unit of UI consisting of HTML (and CSS) with some associated behavior.</p>
+
+<p>My goal today is to introduce React in a way that is compatible with how we worked with the
+MVC architecture in our last two classes. This is purely for pedagogical reasons. This is not how
+React is used in practice, and we're going to see how to use it &quot;properly&quot; next class.</p>
+
+<p>(Why this detour? Because I want to explain a little bit what is going on under the hood. React these days
+is streamlined to the point where it is easy to use, but also pretty mysterious.)</p>
+
+<p>First, let's start with the HTML code:</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;head&gt;
+    &lt;title&gt;React Test&lt;/title&gt;
+
+    &lt;style&gt;
+      .counter {
+          width: 240px;
+          height: 240px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 24px;
+          gap: 24px;
+          border: 1px solid #333333;
+          box-sizing: border-box;
+      }
+
+      .counter .header {
+          font-weight: bold;
+      }
+
+      .count {
+          font-weight: bold;
+          font-size: 80px;
+      }
+    &lt;/style&gt;
+
+    &lt;!-- Load react libraries --&gt;
+    &lt;script src=&quot;https://unpkg.com/react@18/umd/react.development.js&quot; crossorigin&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://unpkg.com/react-dom@18/umd/react-dom.development.js&quot; crossorigin&gt;&lt;/script&gt;
+    &lt;script src=&quot;./test.js&quot;&gt;&lt;/script&gt;
+
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;div id=&quot;app&quot;&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Nothing particularly special going on here. There are some CSS classes that we're going to use in the code later.
+Note that we are loading the two React libraries: <code>react</code>, and <code>react-dom</code>. Those make the React framework available
+to us through the global variables <code>React</code> and <code>ReactDOM</code>. Also note that the body of the page is a single div element
+with ID <code>app</code>.</p>
+
+<p>File <code>test.js</code> contains the actual application. In a way similar to
+our MVC code, we assign a function to the window <code>load</code> event to
+initialize the app.</p>
+
+<pre><code>const e = React.createElement
+
+window.onload = () =&gt; {
+  const domContainer = document.getElementById('app')
+  const root = ReactDOM.createRoot(domContainer)
+  root.render(e(Test, {}))
+}
+</code></pre>
+
+<p>This boilerplate basically tells React to add code to the <code>app</code> div.</p>
+
+<p>The code is added through function <code>React.createElement</code> (abbreviated <code>e</code> in the rest of the code for convenience)
+which is basically a souped up version of <code>document.createElement</code>:</p>
+
+<ul>
+<li>Its first argument is either a tag (like <code>document.createElement</code>) or a React component (which we'll cover below). We'll focus on tags for now.</li>
+<li>The second arguent is an object containing the attributes of the element to be created.</li>
+<li>Additional arguments represent the body of the element being created, and can be text, or other elements created via <code>React.createElement</code></li>
+</ul>
+
+<p>For example,</p>
+
+<pre><code>e('h1', {}, 'Hello React!')
+</code></pre>
+
+<p>would create an HTML element</p>
+
+<pre><code>&lt;h1&gt;Hello React!&lt;/h1&gt;
+</code></pre>
+
+<p>while</p>
+
+<pre><code>e('img', {src: 'dog.png'})
+</code></pre>
+
+<p>would create an HTML element</p>
+
+<pre><code>&lt;img src=&quot;dog.png&quot;&gt;
+</code></pre>
+
+<p>Similarly,</p>
+
+<pre><code>e('div', {},
+  e('h1', {}, 'Hello React!'),
+  e('img', {src: 'dog.png'}))
+</code></pre>
+
+<p>would create the element</p>
+
+<pre><code>&lt;div&gt;
+  &lt;h1&gt;Hello React!&lt;/h1&gt;
+  &lt;img src=&quot;dog.png&quot;&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Pretty straightforward. At this point, <code>React.createElement</code> is just a more expressive
+version of <code>document.createElement</code>.</p>
+
+<p><code>React.createElement</code> can also be used to create React component. To a first approximation,
+a React component is a <em>function</em> that returns some HTML code created via <code>React.createElement</code>.</p>
+
+<p>For example, this is simple component that shows a title and a paragraph of text:</p>
+
+<pre><code>function Test() {
+   return e('div', {},
+            e('h1', {}, 'React Test'),
+	e('p', {}, 'Hello - this is your first React component'))
+}
+</code></pre>
+
+<p>To use this component (often referred to as <em>instantiating the
+component</em>) you simply put the function as the first argument to
+<code>React.createElement</code>, as in <code>e(Test, {})</code>.  This will create the
+element that's obtained by calling the function.</p>
+
+<p>You can also parameterize the component, so that you can instantiate it with different values. The function defining the component simply takes those parameters via an object, and you can pass those parameters via the second argument to <code>React.createElement</code>. For example:</p>
+
+<pre><code>function Test({name}) {
+   return e('div', {},
+            e('h1', {}, 'React Test'),
+	e('p', {}, `Hello ${name} - this is your first React component`))
+}
+</code></pre>
+
+<p>(this uses something called <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">destructuring</a> to extract the elements of an object argument passed to the function.)</p>
+
+<p>and now you can instantiate this component with:</p>
+
+<pre><code>e(Test, {name: 'Riccardo'})
+</code></pre>
+
+<p>or</p>
+
+<pre><code>e(Test, {name: 'Alexandra'})
+</code></pre>
+
+<p>to produce either:</p>
+
+<pre><code>&lt;div&gt;
+  &lt;h1&gt;React Test&lt;/h1&gt;
+  &lt;p&gt;Hello Riccardo - this is your first React component&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>or</p>
+
+<pre><code>&lt;div&gt;
+  &lt;h1&gt;React Test&lt;/h1&gt;
+  &lt;p&gt;Hello Alexandra - this is your first React component&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Of course, the elements created by <code>Test</code> can themselves use other components.</p>
+
+<p>None of the above is particularly exciting, or particularly
+special. What makes React component interesting is that they can have
+<em>state</em>, and modifying that state will force a <em>recreation</em> of the
+component in the document by basically re-running the function that defines the component automatically.</p>
+
+<p>Consider the following component that defines a counter with a button
+that when you click increases the count in the counter, and using a
+another component <code>Count</code> internally to display that actual count:</p>
+
+<pre><code>function Counter() {
+  const [count, setCount] = React.useState(0)
+  const handleClick = () =&gt; {
+    setCount(count + 1)
+  }
+  return e('div', {className: 'counter'},
+           e('div', {className: 'header'}, 'Counter'),
+           e('button', {onClick: handleClick}, 'Increment'),
+           e(Count, {value: count}))
+}
+
+function Count({value}) {
+  return e('div', {}, value)
+}
+</code></pre>
+
+<p>The first line of the component is:</p>
+
+<pre><code>const [count, setCount] = React.useState(0)
+</code></pre>
+
+<p>is special and somewhat magical. The first time the component is
+instantiated, this line records within React a state variable
+associated with the component initialized at value 0. It then returns
+the current value of that state to variable <code>count</code>, and also a
+function that you can use to <em>update</em> the value of that special state.</p>
+
+<p>When you call <code>setCount</code> to update the state, React will notice, and
+re-run the function to re-create the component. When a function
+defining a component is re-run to recreate the component, it doesn't
+re-create the state. It knows that there is a state that was created
+the first time the function was run, and simply uses the <em>new</em> value
+of the state that you updated by calling <code>setCount</code>. In other words,
+the special state you create with <code>useState</code> <em>survives</em> each
+invocation of the component function. (This is a version of what's
+called a <a href="https://en.wikipedia.org/wiki/Static_variable">static variable</a>.)</p>
+
+<p>In the above counter example, you see that we create a React state to
+hold the current count (initially 0), and then return some HTML that
+shows a button and the current count. When you click the button, you
+invoke the <code>handleClick</code> event handler, which uses <code>setCount</code> to
+increment the count and update the React state. <em>That's</em> when React
+knows you've changed the state, and it internally clears out the
+component's HTML from the document and recreates it by re-invoking the
+function, which will use the new count as its current count. Here's the behavior:</p>
+
+<video width="320px" controls>
+  <source src="counter.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+
+<p>Here is the full code:</p>
+
+<pre><code>const e = React.createElement
+
+window.onload = () =&gt; {
+  const domContainer = document.getElementById('app')
+  const root = ReactDOM.createRoot(domContainer)
+  root.render(e(Test, {}))
+}
+
+function Test() {
+   return e('div', {},
+            e('h1', {}, 'React Test'),
+            e('Counter', {}))
+}
+
+function Counter() {
+  const [count, setCount] = React.useState(0)
+  const handleClick = () =&gt; {
+    setCount(count + 1)
+  }
+  return e('div', {className: 'counter'},
+           e('div', {className: 'header'}, 'Counter'),
+           e('button', {onClick: handleClick}, 'Increment'),
+           e(Count, {value: count}))
+}
+
+function Count({value}) {
+  return e('div', {}, value)
+}
+</code></pre>
+
+    
+  </body>
+  
+</html>
+
