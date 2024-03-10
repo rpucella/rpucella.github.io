@@ -253,7 +253,7 @@ not only in the invocation code.
 I could think of a way using a custom action `component` to load and fill a nested template pulled
 from a fixed given folder, and setting it up so that it can pass different values for a set of
 parameters (props). Since the custom action is implemented in Go, it can take those values passed as
-props and bundle them up into a map to be used in the nested template. I don't know the extend to
+props and bundle them up into a map to be used in the nested template. I don't know the extent to
 which this scales, and I clearly have not used it *in anger*, but it's an intriguing design that I
 may explore more seriously at some point in the future.
 

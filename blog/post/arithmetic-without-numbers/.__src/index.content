@@ -1,0 +1,377 @@
+<script>
+  document.title = "Arithmetic Without Numbers" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Arithmetic Without Numbers</h3>
+    
+    <div class="date">Nov 20, 2023</div>
+    
+    <div class="body">
+      <p>The <a href="https://en.wikipedia.org/wiki/Lambda_calculus">lambda calculus</a> is a simple rewrite system often used to study computation. Despite having very
+few rules, it is Turing-complete, and it has a reasonably immediate interpretation as a programming
+language model (specifically, for functional programming languages).</p>
+
+<p>Lambda calculus expressions are of the form:</p>
+
+<pre><code>E, F ::= x
+         λx.E
+         E F
+         (E)
+</code></pre>
+
+<p>where <code>x</code> is one of a (countably infinite) set of identifiers. There is only one rewrite rule, that
+lets you rewrite (<em>reduce</em>) a sub-expression <code>(λx.E)</code> into expression <code>E</code> in which every (free) occurrence of identifier
+<code>x</code> is replaced by <code>F</code>. Formally,</p>
+
+<pre><code>(λx.E) F ⇒ E[F/x]
+</code></pre>
+
+<p>I'm skipping over a lot of details here — the definition of free occurrence of identifiers, the fact
+that substitution should be capture-avoiding and free occurrences of identifiers in <code>F</code> should
+remain free even after substitution, etc. You can find all of the information in any <a href="https://en.wikipedia.org/wiki/Lambda_calculus">reference</a>.</p>
+
+<p>Computing with the lambda calculus consists of taking an expression and reducing it using the
+rewrite rule above until you end up with an expression that you can no longer reduce. (It is
+possible to write expressions that never reach that point — the lambda calculus equivalent of
+infinite loops.) For example, the expression</p>
+
+<pre><code>(λx.λy.λz.x (y z)) (λw.w) (λ v.v v) u
+</code></pre>
+
+<p>reduces as follows. It is useful to know that application associates <em>to the left</em>, so that an
+expression <code>A B C D</code> is interpreted as (<code>(A B) C) D</code>. I will parenthesize fully here, for clarity, but will
+soon drop unnecessary parentheses and rely on left-associativity for application:</p>
+
+<pre><code>(((λx.λy.λz.x (y z)) (λw.w)) (λ v.v v)) u
+    ⇒  ((λy.λz.(λw.w) (y z)) (λ v.v v)) u
+    ⇒  (λz.(λw.w) ((λ v.v v) z)) u
+    ⇒  (λw.w) ((λ v.v v) u)
+    ⇒  (λw.w) (u u)
+    ⇒  u u
+</code></pre>
+
+<p>At that point, no more reduction is possible, so <code>u u</code> is the result of the &quot;computation&quot;
+<code>(λx.λy.λz.x (y z)) (λw.w) (λ v.v v) u</code>.</p>
+
+<p>The lambda calculus as defined, though, doesn't have any data types. There's identifiers and
+functions. What are those identifiers referring to? Nothing, or other identifiers, or functions. And
+what are functions acting on? Identifiers, and other functions. That's it. It's a mathematical
+ouroboros.</p>
+
+<p>You can <em>encode</em> other data types though. Church, who first defined the lambda calculus, presented
+encodings for several data types, including natural numbers. What do I mean by encoding here? I
+simply mean that we can <em>represent</em> values like natural numbers using functions, in such a way that
+they <em>behave</em> like natural numbers: you can define operations like addition and multiplication acting
+on natural numbers represented using that encoding, and they will return the expected result, again
+represented in that encoding.</p>
+
+<p>Here is Church's encoding of the first few natural numbers:</p>
+
+<pre><code>0 = λf.λx.x
+
+1 = λf.λx.f x
+
+2 = λf.λx.f (f x)
+
+3 = λf.λx.f (f (f x))
+
+...
+</code></pre>
+
+<p>You can spot the pattern. In general, natural number <code>n</code> is encoded as <code>λf.λx.f (f (f ... x))</code>, that is,
+as a function that expects an argument <code>f</code> and an argument <code>x</code> and applies <code>f</code> to <code>x</code> <code>n</code> times. There is no
+assumption made on what <code>f</code> or <code>x</code> stand for. A natural number <code>n</code> is just a machine to apply any function
+to any argument <code>n</code> times. What is perhaps surprising is that this is a starting point to define
+operations on natural numbers.</p>
+
+<p>Here is one definition the successor function which takes (the encoding of) natural <em>n</em> and returns
+(the encoding of) natural number <em>n + 1</em>:</p>
+
+<pre><code>succ = λn.λf.λx.(n f) (f x)
+</code></pre>
+
+<p>Here's the reduction showing that the successor of 2 is 3:</p>
+
+<pre><code>succ 2 =  (λn.λf.λx.(n f) (f x)) (λf.λx.f (f x))
+       ⇒  λf.λx.((λf.λx.f (f x)) f) (f x)
+       ⇒  λf.λx.(λx.f (f x)) (f x)
+       ⇒  λf.λx.(f (f (f x)))
+       =  3
+</code></pre>
+
+<p>Similarly, addition and multiplication are comparatively easy to define:</p>
+
+<pre><code> plus = λn.λm.λf.λx.(n f) (m f x)
+
+times = λn.λm.λf.λx.n (m f) x
+</code></pre>
+
+<p>Subtraction is more interesting. The encoding of Church is optimized for taking successors — it is
+easy to apply an extra <code>f</code> — but not so much for going the other direction. It is an interesting
+challenge to define a predecessor operation. Pause now if you want to solve this tricky puzzle.</p>
+
+<p>The following definition is due to Kleene:</p>
+
+<pre><code>pred = λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)
+</code></pre>
+
+<p>(One intuition is that this builds a sequence of pairs <em>(0, 1)</em>, <em>(1, 2)</em>, ..., <em>(n - 1, n)</em>
+using the function <code>n</code>, and then takes the first component of the resulting pair. Kleene's definition
+is an optimized form of this intuition.)</p>
+
+<p>It is straightforward to verify that <code>pred</code> <em>n</em> <code>⇒</code> <em>n - 1</em> when <em>n</em> is non-zero, with
+<code>pred 0 ⇒ 0</code>. Subtraction can then be implemented by repeatedly taking predecessors:</p>
+
+<pre><code>minus = λn.λm.m pred n
+</code></pre>
+
+<p>Indeed, <code>minus n m ⇒ pred (pred (pred (pred ... (pred n))))</code> where <code>pred</code> is taken <code>m</code> times. And
+because <code>pred 0 ⇒ 0</code>, <code>minus n m ⇒ 0</code> when <code>m</code> is greater or equal than <code>n</code>.</p>
+
+<p>It is also possible to define predicates over the natural numbers, such as equality. To do so, we
+need a representation of the Booleans true and false. The following definition is also due to Church:</p>
+
+<pre><code> true = λx.(λy.x)
+
+false = λx.(λy.y)
+</code></pre>
+
+<p>Just like the encoding of a natural number <code>n</code> is a function that can apply some <code>f</code> to some <code>x</code> <code>n</code> times,
+the encoding of a Boolean is a function that takes two arguments and returns one of them — the first
+or the second, based on whether the Boolean is true or false. We can confirm easily:</p>
+
+<pre><code> true A B  =  (λx.(λy.x)) A B
+           ⇒  (λy.A) B
+           ⇒  A
+
+false A B  =  (λx.(λy.y)) A B
+           ⇒  (λy.y) B
+           ⇒  B
+</code></pre>
+
+<p>(It's an easy exercise to define operations such as NOT, AND, and OR based on this encoding.)</p>
+
+<p>Once we have Booleans, we can write predicates on natural numbers such as <em>is zero</em>, <em>greater than or equal</em>, and <em>equal</em>:</p>
+
+<pre><code>iszero = λn.n (λx.false) true
+
+    ge = λn.λm.not (iszero (minus (succ m) n))
+
+    eq = λn.λm.and (ge m n) (ge n m)
+</code></pre>
+
+<p>All of the above is well covered in any introduction to the lambda calculus. One thing that is often
+left out though is how to go about encoding integers, that is both positive and negative
+numbers. The most naive encoding is to encoding an integer as a pair of a sign (positive or
+negative, as a Boolean), and a natural number representing the absolute value of the integer. Thus
+<code>(true, 2)</code> would be the representation of integer 2, and <code>(false, 3)</code> the representation of integer -3.</p>
+
+<p>In order to get this encoding, we need a way to encode pairs. That encoding is also well known:</p>
+
+<pre><code>pair = λx.λy.λs.s x y 
+
+ fst = λp.p (λx.λy.x)
+
+ snd = λp.p (λx.λy.y)
+</code></pre>
+
+<p>Intuitively, a pair is a function that expects a <em>selector</em> and calls that selector on the two
+expressions used to create the pair. Extracting the first and second element of the pair (functions
+<code>fst</code> and <code>snd</code>) is then simply a matter of passing the right selector to the pair.</p>
+
+<p>This gives us an implementation of integers. First, to create an integer out of a natural number:</p>
+
+<pre><code>int = λn.pair true n
+</code></pre>
+
+<p>Then, operations. For example, <code>neg_int</code> negates an integer:</p>
+
+<pre><code>neg_int = λi.(ifzero (snd i)) (pair true 0) (pair (not (fst i)) (snd i))
+</code></pre>
+
+<p>Operations <code>plus_int</code>, <code>minus_int</code>, and <code>times_int</code> are left as exercise to the reader. They are
+mostly case analysis on the sign of the arguments, and work with the natural numbers accordingly.</p>
+
+<h2>Integers via Grothendieck Completion</h2>
+
+<p>The encoding of integers as a pair of a sign and a natural number is somewhat inelegant. A
+symptom of that inelegance is the case analysis that has to go into the addition operation.</p>
+
+<p>A more elegant approach is to replicate the
+classical construction of the ring of integers from the natural numbers as
+<a href="https://en.wikipedia.org/wiki/Integer#Equivalence_classes_of_ordered_pairs">equivalence classes of pairs of natural numbers</a>.
+It is well covered in any elementary abstract algebra textbook. (The original construction goes back
+at least to <a href="Kronecker.">Kronecker</a>, and it was generalized
+by <a href="https://en.wikipedia.org/wiki/Alexander_Grothendieck">Grothendieck</a> — one of the most fascinating mathematicians of the twentieth century —
+who used the general construction in his proof of the <a href="https://en.wikipedia.org/wiki/Grothendieck%E2%80%93Riemann%E2%80%93Roch_theorem">Grothendieck-Riemann-Roch theorem</a>.)</p>
+
+<p>The idea is simple: given a semigroup (<em>S</em>, +, *, <em>0</em>, <em>1</em>), we can form a commutative ring <em>R</em> by taking the
+elements of <em>R</em> to be pairs (<em>s</em>, <em>t</em>) of <em>S x S</em> subject to the equivalence that (<em>s</em>, <em>t</em>) and
+(<em>s'</em>, <em>t'</em>) are
+equivalent when <em>s + t'</em> = <em>t + s'</em>. In this way, the semigroup <em>S</em> embeds into <em>R</em> by mapping an element
+<em>s</em> of <em>S</em> to (<em>s</em>, <em>0</em>).</p>
+
+<p>For integers, this means that a pair (<em>n</em>, <em>m</em>) is used to encode integer <em>n</em> - <em>m</em>. When <em>n</em> &gt; <em>m</em>, (<em>n</em>, <em>m</em>)
+represents a
+positive integer, and when <em>n</em> &lt; <em>m</em>, (<em>n</em>, <em>m</em>) represents a negative integer. The equivalence relation
+identifies the infinite number of pairs of natural number whose difference is <em>n - m</em>.  For example, the integer -2 can be
+represented in infinitely many ways, such as (0, 2), (1, 3), (2, 4), (3, 5), (4, 6), (5, 7),
+... Indeed, (0, 2) and (5, 7) are equivalent because 0 + 7 = 2 + 5.</p>
+
+<p>Addition and multiplication then get a delightfully uniform definition:</p>
+
+<pre><code>(n, m) + (n', m') = (n + n', m + m')
+
+(n, m) * (n', m') = (nn' + mm', n'm + nm')
+</code></pre>
+
+<p>The algebra-minded among you can check the commutative ring properties and see that they hold, and
+that addition and multiplication are well defined with respect to the equivalence relation.</p>
+
+<p>This gives us the following encoding of integers in the lambda calculus:</p>
+
+<pre><code>     int = λn.pair n 0
+
+ neg_int = λi.pair (snd i) (fst i)
+
+plus_int = λi.λj.pair (plus (fst i) (fst j)) (plus (snd i) (snd j))
+
+minus_int = λi.λj.pair (plus (fst i) (snd j)) (plus (snd i) (fst j))
+
+times_int = λi.λj.pair (plus (times (fst i) (fst j)) (times (snd i) (snd j))) 
+                       (plus (times (fst j) (snd i)) (times (fst i) (snd j)))
+
+   eq_int = λi.λj.eq (plus (fst i) (snd j)) (plus (snd i) (fst j))
+</code></pre>
+
+<p>You can verify, for instance, that 2 - 3 = -1, that is:</p>
+
+<pre><code>eq_int (plus_int (int 2) (neg_int (int 3))) (neg_int (int 1)) ⇒ true
+</code></pre>
+
+<p>Functions <code>is_zero_int</code> (an extension of <code>is_zero</code> to integers) and <code>ge_int</code> (an extension of <code>ge</code> to
+integers) are easy exercises. As are predicates such as <code>is_pos</code> (taking an integer and returning true
+exactly when that integer is greater than or equal to 0) and functions such as <code>abs</code> (taking an
+integer and returning its absolute value as an integer).</p>
+
+<h2>A Javascript Implementation</h2>
+
+<p>We can try out the above encodings with any untyped programming language that supports anonymous
+functions. (We need the language to be untyped because it turns out that assigning types to the
+Church encoding of natural numbers is tricky. Try it, and see where you get stuck. You basically
+need a form of recursive types.)</p>
+
+<p>Here is an implementation of these encodings in Javascript — I used an underscore prefix to
+highlight the fact that we are working with encodings of numbers. Thus, <code>_3</code> is defined to be the
+encoding of <code>3</code> as a natural number, <code>_plus</code> is addition over encoded natural numbers, and <code>_int</code> takes
+the encoding of a natural number and returns the encoding of it as an integer.</p>
+
+<pre><code>// Booleans
+const _true = x =&gt; y =&gt; x
+const _false = x =&gt; y =&gt; y
+const _not = b =&gt; b(_false)(_true)
+const _and = b =&gt; c =&gt; b(c)(_false)
+
+// Natural numbers
+const _0 = f =&gt; x =&gt; x
+const _1 = f =&gt; x =&gt; f(x)
+const _2 = f =&gt; x =&gt; f(f(x))
+const _3 = f =&gt; x =&gt; f(f(f(x)))
+const _4 = f =&gt; x =&gt; f(f(f(f(x))))
+const _succ = n =&gt; f =&gt; x =&gt; n(f)(f(x))
+const _plus = n =&gt; m =&gt; f =&gt; x =&gt; n(f)(m(f)(x))
+const _times = n =&gt; m =&gt; f =&gt; x =&gt; n(m(f))(x)
+const _pred = n =&gt; f =&gt; x =&gt; n(g =&gt; (h =&gt; h(g(f))))(u =&gt; x)(u =&gt; u)
+const _minus = n =&gt; m =&gt; m(_pred)(n)
+const _iszero = n =&gt; n(x =&gt; _false)(_true)
+const _ge = n =&gt; m =&gt; _not(_iszero(_minus(_succ(n))(m)))
+const _eq = n =&gt; m =&gt; _and(_ge(n)(m))(_ge(m)(n))
+
+// Pairs
+const _pair = x =&gt; y =&gt; s =&gt; s(x)(y)
+const _fst = p =&gt; p(x =&gt; y =&gt; x)
+const _snd = p =&gt; p(x =&gt; y =&gt; y)
+
+// Integers
+const _int = n =&gt; _pair(n)(_0)
+const _neg_int = i =&gt; _pair(_snd(i))(_fst(i))
+const _plus_int = i =&gt; j =&gt; _pair(_plus(_fst(i))(_fst(j)))(_plus(_snd(i))(_snd(j)))
+const _minus_int = i =&gt; j =&gt; _plus_int(i)(_neg_int(j))
+const _times_int = i =&gt; j =&gt; _pair(_plus(_times(_fst(i))(_fst(j)))(_times(_snd(i))(_snd(j))))(_plus(_times(_fst(j))(_snd(i)))(_times(_fst(i))(_snd(j))))
+const _eq_int = i =&gt; j =&gt; _eq(_plus(_fst(i))(_snd(j)))(_plus(_snd(i))(_fst(j)))
+</code></pre>
+
+<p>I freely admit that Javascript makes using the encoding messy, because it requires parentheses
+around function calls arguments. Languages such as ML or Haskell where application is written by
+simple juxtaposition would not have that problem, but there the type systems would get in the way.</p>
+
+<p>Implementing these encodings in Javascript means that we should be able to convert a value in one of
+these encodings into the corresponding primitive value in Javascript.</p>
+
+<p>The following functions let us do just that:</p>
+
+<pre><code>// Convert an encoded Boolean into a primitive Boolean 
+function evalB(b) {
+    return b(true)(false)
+}
+
+// Convert an encoded natural number into a primitive number
+function evalN(n) {
+    return n(a =&gt; a+1)(0)
+}
+
+// Convert an encoded integer into a primitive number
+function evalI(i) {
+    const t = i(x =&gt; y =&gt; [x, y])
+    return evalN(t[0]) - evalN(t[1])
+}
+</code></pre>
+
+<p>We can now use the encodings and validate the results by converting to primitive values. Here's an
+interaction with a <a href="https://nodejs.org">Node.js</a> shell and the above code.</p>
+
+<pre><code>// x = 3 + (2 x 4)
+
+&gt; x = _plus(_3)(_times(_2)(_4))
+[Function (anonymous)]
+
+&gt; evalN(x)
+11
+
+
+// y = 2 + (-3)
+
+&gt; y = _plus_int(_int(_2))(_neg_int(_int(_3)))
+[Function (anonymous)]
+
+&gt; evalI(y)
+-1
+
+
+// y == 1 ?
+
+&gt; evalB(_eq_int(y)(_int(_1)))
+false
+
+// y == -1 ?
+
+&gt; evalB(_eq_int(y)(_neg_int(_int(_1))))
+true
+</code></pre>
+
+<p>The code above is <a href="./grothendieck.js">available</a>.</p>
+
+    </div>
+
+    
+      <div class="reading">The Book of Ebenezer Le Page (by G. E. Edwards)</div>
+    
+
+  </article>
+  
+</main>
