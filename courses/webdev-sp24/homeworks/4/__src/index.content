@@ -1,0 +1,144 @@
+<script>
+  document.title = 'Homework 4 - Web Dev SP24'
+</script>
+
+<h1>Homework 4: React</h1>
+
+<h2>Due Date: Wednesday, April 3, 2024 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done in teams of two. You're welcome to
+discuss with other students, but all submitted work must be original
+and your own. If you use a solution from another source you must cite
+it &mdash; this includes when that source is someone else helping you.</p></li>
+
+<li><p>Here's a zip file <a href="homework4.zip"><code>homework4.zip</code></a> containing starter files.</p></li>
+
+<li><p><strong>Please do not post your solutions on a public website or a public repository like GitHub.</strong></p></li>
+</ul>
+
+<h2>Electronic Submission Instructions</h2>
+
+<ul>
+<li><p>Zip all required files into a file <code>homework4.zip</code>. Do NOT include the <code>node_modules/</code> or the <code>build/</code> folders, because they get way too large, and I can reconstruct them on my end anyway.</p></li>
+
+<li><p>Make sure you edit the <code>README.md</code> file to list the members of your team, as well as any remarks you
+want to make about your code.</p></li>
+
+<li><p>When you're ready to submit, log into our <a href="https://chat.rpucella.net">class chat</a>
+and click <strong>Submit File</strong> in the profile menu (your initials in the upper right corner).</p></li>
+</ul>
+
+<hr>
+
+<p>We're going to re-implement and extend the Memory Game we've been working on for the past few
+homework. This time, it's going to be in React.</p>
+
+<p>I've already created the structure of the application in the provided files, using
+Create React App as we saw in class.</p>
+
+<p>The first thing you need to do is install the latest version of <a href="https://nodejs.org/">Node.js</a> on
+your system. Once you have Node.js installed, open a command line and go to the folder <code>homework4/</code>
+included in the zipped <code>homework4.zip</code>. There, run <code>npm install</code> — that should install all the
+packages needed by the application.</p>
+
+<p>To start the server in &quot;development&quot; mode, type <code>npm start</code>.  That should start the server and open
+your game in your default browser. Any changes to the source files while the development server is
+running will reflect themselves in the browser page. (You may need to hit refresh to restart the
+game from scratch.)</p>
+
+<hr>
+
+<h2>Question 1: Once More With Feeling</h2>
+
+<p>This one is straightward: redo Homework 3, except in React this time. This includes the round
+counter, the button to start a new game, and the dialog box telling you that you have
+completed the game and giving you the option to replay a new one.</p>
+
+<p>Restructure the UI so that there is a panel on the left side of the screen (suggested width: 320px)
+with the title of the game, the current round count, and the button to restart the game. The right
+side of the screen is the game board, showing a board of 3 rows and 4 columns of cards. As usual,
+each card is either hidden (you see the back of the card), or revealed (you see the content of the
+card). A card is chosen if it is temporarily revealed until two cards are chosen in which case if
+they match they become revealed permanently, and if they do not match they go back to being hidden
+after a certain amount of time.</p>
+
+<p>I already created a starting <code>App</code> component for you, although it does not do much but put some
+placeholder text on the screen. I suggest you create a component for every piece of UI that is
+needed. In my code, I have a component <code>Panel</code> for the left-hand panel, a component <code>Board</code> for the
+game board, a component <code>Card</code> to represent an individual card (rendering either the back of the
+card with its image if the card is hidden, or a shape corresponding to the card type if the card is
+showing), a <code>EndDialog</code> component for the end-of-game dialog box, etc. You should feel
+free to define all the components you want and need.</p>
+
+<p>As far as state, the easiest is probably to reproduce the state you put in the model in Homework 3,
+assuming you were happy with it. In my code, I used two React state variable: the content of the
+game board as an array of card objects, each with the card type and the card state (hidden,
+revealed, chosen), and the current game round. You can pass that state down into the components that
+need them.</p>
+
+<p>Remember that if you update the card state within the board array by changing the card object in
+place, then you'll need to re-create a new array when you call the state update function in order
+for React to &quot;notice&quot; that there's been a state change.</p>
+
+<p>Here is my implementation. You do not have to do exactly the same, but it should play roughly the same:</p>
+
+<p><center style="padding: 20px;">
+<video width="800" controls>
+  <source src="question1.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</center></p>
+
+<hr>
+
+<h2>Question 2: Variety is the Spice of Life</h2>
+
+<p>One advantage of programming our game in React is that it reasonably straightforward to extend it
+by simply creating new components and plugging them into the right spots. We're going to show this
+by modifying the game to allow for multiple game board sizes.</p>
+
+<p>In this modified version, the first thing that happens when you start a new game is that
+you're presented with a choice of size of game board: either 3 rows by 4 columns, 4 rows by 6
+columns, or 5 rows by 6 columns. After you've selected a board size, a board (of that size) should
+be randomly created, and the game should start.</p>
+
+<p>The easiest way to get that to work is to allow the React state holding the board to be null. When the board variable is null, you can take it as a flag that a new game is starting, and you show the board
+size selection. When the player selects a board size, you create a new board, set the React state to
+that board, and you can then show the board. To start a new game, you simply set the board state
+back to <code>null</code>, and the code should then automatically show the board size selector again.</p>
+
+<p>You will need to choose enough shapes and colors so that you can cover the 5 x 6 board size. In my
+code, I allow for up to 3 shapes (circle, rectangle, diamond), and up to 5 colors (red, blue, green,
+black, orange).</p>
+
+<p>Here is my implementation. You do not have to do exactly the same, but it should play roughly the same:</p>
+
+<p><center style="padding: 20px;">
+<video width="800" controls>
+  <source src="question2.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</center></p>
+
+<hr>
+
+<h2>Question 3: A Sprinkle of Salt</h2>
+
+<p>In Homework 3, we had only one card style — whatever image you decided to use for the back of the card. In this question, we are going to offer the player a choice of which style of card to use. To keep things simple, you are going to find two images to use when a card is hidden, and let the player switch whenever they want.</p>
+
+<p>Add the card style selector in the left panel below the &quot;start new game&quot; button. Show both card styles, and make the card style currently selected look normal while making the other card style look faded (say, with opacity 0.5). If you can't make that work, use highlights.</p>
+
+<p>When you click on the card style that is not currently selected, it becomes the new card style, and
+any card in play that is hidden should show the new back image.</p>
+
+<p>You will need a new piece of state to record which image is the current card style.</p>
+
+<p>Here is my implementation. You do not have to do exactly the same, but it should play roughly the same:</p>
+
+<p><center style="padding: 20px;">
+<video width="800" controls>
+  <source src="question3.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</center></p>
