@@ -259,18 +259,38 @@
         </div>
       </li>
 
-      <li><p><span class="hdr">Mar 5 - 12: </span><b>React</b></p>
+      <li><p><span class="hdr">Mar 5: </span><b>React</b></p>
         <div class="lect">
 
-          <p><a href="notes/react1.html">Notes from the first lecture</a>.</p>
+          <p><a href="notes/react1.html">Notes from the lecture</a>.</p>
 
           <p>The <a href="demos/react/test.html">first demo</a> I showed in class, with two counters with different initial values. As usual, to see the underlying code, you'll have to right-click on the link and download the <tt>.html</tt> file.</p>
 
-          <p>A reimplementation of our picture viewer in React: <a href="demos/react/app.html"><tt>app.html</tt></a> and <a href="demos/react/app.js"><tt>app.js</tt></a>. Pay special attention to the React state in the <tt>App</tt> component (there are two state variables created) and how the functions to update that state get passed down to subcomponents so that they can update that state when needed.</p> 
+          <p>A first reimplementation of our picture viewer in React: <a href="demos/react/app.html"><tt>app.html</tt></a> and <a href="demos/react/app.js"><tt>app.js</tt></a>. Pay special attention to the React state in the <tt>App</tt> component (there are two state variables created) and how the functions to update that state get passed down to subcomponents so that they can update that state when needed.</p>
+
+          <p>
 
         </div>
       </li>
-      
+
+      <li><p><span class="hdr">Mar 12:</span><b>React in practice</b></p>
+        <div class="lect">
+
+          <p><a href="notes/react2.pdf">Notes from the lecture</a>.</p>
+
+          <p>A JSX-based reimplementation of our picture viewer in React: <a href="demos/picture-viewer-cra.zip"><tt>picture-viewer-cra.zip</tt></a>. You'll need <a href="https://nodejs.org/">Node.js</a> installed. To create the demo, open a command line in the <tt>picture-viewer-cra</tt> directory, and type <tt>npm install</tt>, which will install all the required packages. Then hit <tt>npm start</tt> to bundle and start the app.</p>
+
+          <p>The <a href="https://react.dev/">React documentation</a> is actually pretty reasonable. You also may want to check out the sample <a href="https://react.dev/learn/tutorial-tic-tac-toe">tutorial</a>.</p>
+
+          <p>Overview of <a href="https://react.dev/learn/writing-markup-with-jsx">JSX</a>.</p>
+          
+          <p>I used <a href="https://create-react-app.dev/">Create React App</a> as a quick start for setting up a new project, but it's being slowly phased out. Not entirely sure what will replace it yet.</p>
+          
+          <p>A <a href="https://www.w3schools.com/react/react_es6_modules.asp">quick summary of how modules</a> (aka ES6 modules) work in React. (I dislike W3 Schools links, so it breaks my heart to link to one, but it's the least confusing summary I could find.)</p>
+
+        </div>
+      </li>
+
     </ul>
 
   </section>
