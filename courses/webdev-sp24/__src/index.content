@@ -228,7 +228,7 @@
         </div>
       </li>
 
-      <li><p><span class="hdr">Mar 12:</span><b>React in practice</b></p>
+      <li><p><span class="hdr">Mar 12: </span><b>React in practice</b></p>
         <div class="lect">
 
           <p><a href="notes/react2.pdf">Notes from the lecture</a>.</p>
@@ -243,6 +243,21 @@
           
           <p>A <a href="https://www.w3schools.com/react/react_es6_modules.asp">quick summary of how modules</a> (aka ES6 modules) work in React. (I dislike W3 Schools links, so it breaks my heart to link to one, but it's the least confusing summary I could find.)</p>
 
+        </div>
+      </li>
+
+      <li><p><span class="hdr">Mar 26: </span><b>Web Application Servers</b></p>
+        <div class="lect">
+
+	    <p>Slides from the <a href="notes/web-app-servers.pdf">lecture</a>.</p>
+
+            <p>The <a href="demos/picture-viewer-flask.zip">code for the flask web application server</a> I demoed in class.. Unzip and look at the <tt>README.md</tt> file for installing and running the code.</p>
+
+	    <p>An introduction to <a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Introduction">web application servers</a>, and an overview of <a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Web_frameworks">web frameworks</a> for programming said web application servers.</p>
+
+	    <p>The official <a href="https://flask.palletsprojects.com/en/3.0.x/">Flask</a> documentation.</p>
+
+	    <p>An overview of <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview">HTTP</a>, and a deeper-dive into the specific format of <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages">HTTP requests</a>.</p>
         </div>
       </li>
 
