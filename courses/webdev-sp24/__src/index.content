@@ -261,6 +261,34 @@
         </div>
       </li>
 
+
+      <li><p><span class="hdr">Apr 2: </span><b>Persistence</b></p>
+        <div class="lect">
+
+	    <p>Slides from the <a href="notes/persistence.pdf">lecture</a>.</p>
+
+            <p>The <a href="demos/picture-viewer-persistence.zip">code for the flask web application server with persistence</a> I demoed in class. You can run the server using the same technique as the web application server from last class (it's a variation on that code). By pulling the right implementation from the <tt>dbs</tt> folder by modifying the <tt>from dbs.pictures_<i>XXX</i></tt> line of <tt>app.py</tt>, you can support no persistence, file-system persistence (via a CSV file), and database persistence thought SQLite either via a direct connection, Active Records, or Data Mapping. Using <a href="https://www.sqlite.org/">SQLite</a> will require you to create the tables using the SQL code in <tt>schema.ddl</tt>.</p>
+
+            <p>Wikipedia articles on <a href="https://en.wikipedia.org/wiki/Relational_database">relational databases</a> and <a href="https://en.wikipedia.org/wiki/NoSQL">nonrelational databases</a>.</p>
+
+            <p>A lucid blog post on <a href="https://www.jamesserra.com/archive/2015/08/relational-databases-vs-non-relational-databases/">relational and nonrelational databases</a>. Bottom line: they address different problems. You can read more about document-oriented databases <a href="https://ravendb.net/articles/nosql-document-oriented-databases-detailed-overview">here</a>.</p>
+
+            <p>Wikipedia page on the <a href="https://en.wikipedia.org/wiki/Active_record_pattern">Active Records design pattern</a>, and the <a href="https://rubyonrails.org/">Ruby on Rails</a> <a href="https://guides.rubyonrails.org/active_record_basics.html">tutorial on active records</a>. (Ruby on Rails is one of the most widely used server-side framework based on the active records pattern.</p>
+
+            <p>Wikipedia page on the <a href="https://en.wikipedia.org/wiki/Data_mapper_pattern">Data Mapper design pattern</a>. Most existing <a href="https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping">ORM</a> systems implement the data mapper pattern, including <a href="https://www.sqlalchemy.org/">SQLAlchemy</a> for Python.</p>
+
+	    <p>The difference between Active Records and Data Mapping (which I somewhat bungled in class) is tricky to make clear without concrete examples. One page of documentation (from the TypeORM Javascript-based ORM) does make <a href="https://orkhan.gitbook.io/typeorm/docs/active-record-data-mapper">the distinction somewhat clear</a> though it doesn't really explain when you should use one versus the other. The biggest difference is that Active Records basically reflects the structure of the data in the database into your code, while Data Mapping lets you add a level of indirection, allowing the structure of the data in the database to differen from how you want to access the data in your code.</p>
+
+	</div>
+
+      </li>
+
+      <li><p><span class="hdr">Apr 9: </span><b>REST APIs</b></p>
+        <div class="lect">
+
+	</div>
+      </li>
+      
     </ul>
 
   </section>
