@@ -147,4 +147,48 @@ Your browser does not support the video tag.
 </video>
 </center>
 
+***
 
+## Question 4: Deploying to GitHub Pages
+
+The purpose of this question is to show that if you have a frontend-only web app (that is, one that does not require a web application server), it is easy to deploy it to the public via [GitHub Pages](https://docs.github.com/en/pages).
+
+Here are the steps, assuming you have a GitHub account. These instructions are adapted from [here](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
+
+- Create a fresh GitHub _public_ project to host your web app. I called mine [`gh-frontend-test`](https://github.com/rpucella/gh-frontend-test). I like to initialize mine with at least a `README.md` file.
+
+- Go to **Settings** tab for your project, and then to the **Pages** option. There, select **Deploy from a branch** as your source, and below select branch **main** and folder **/ (root)**:
+
+<center>
+<img width="600" src="source.png">
+</center>
+
+- Clone your project locally
+
+- Go into your frontend code for homework 4 above. Edit your `package.json` file to add a field `"homepage"` with associated value `"."` into it. It doesn't matter where, as long as it is at top level:
+
+        "homepage": ".",
+	
+<center>
+<img width="600" src="package.png">
+</center>
+
+- Run `npm run build` to build your frontend into the `build/` folder.
+
+- At this point you should try to run `python3 -m http.server -d build` and connect your browser to `localhost:8000/index.html` to make sure your frontend works.
+
+- Copy the content of the `build/` folder into your new project. This is what your project folder should look like (roughly):
+
+<center>
+<img width="600" src="root.png">
+</center>
+
+- Commit the changes, and push to your remote branch on GitHub.
+
+- At this point, the website should be publishing. Go to the **Actions** tab for your project, and click on the deployment that should be ongoing. Once the deployment is done, everything should turn green, and you will have a link to your published site, of the form `https://<username>.github.io/<projectname>`:
+
+<center>
+<img width="600" src="build.png">
+</center>
+
+[Here's mine](https://rpucella.github.io/gh-frontend-test).

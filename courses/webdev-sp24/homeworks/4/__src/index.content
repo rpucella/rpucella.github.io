@@ -142,3 +142,58 @@ any card in play that is hidden should show the new back image.</p>
 Your browser does not support the video tag.
 </video>
 </center></p>
+
+<hr>
+
+<h2>Question 4: Deploying to GitHub Pages</h2>
+
+<p>The purpose of this question is to show that if you have a frontend-only web app (that is, one that does not require a web application server), it is easy to deploy it to the public via <a href="https://docs.github.com/en/pages">GitHub Pages</a>.</p>
+
+<p>Here are the steps, assuming you have a GitHub account. These instructions are adapted from <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site">here</a></p>
+
+<ul>
+<li><p>Create a fresh GitHub <em>public</em> project to host your web app. I called mine <a href="https://github.com/rpucella/gh-frontend-test"><code>gh-frontend-test</code></a>. I like to initialize mine with at least a <code>README.md</code> file.</p></li>
+
+<li><p>Go to <strong>Settings</strong> tab for your project, and then to the <strong>Pages</strong> option. There, select <strong>Deploy from a branch</strong> as your source, and below select branch <strong>main</strong> and folder <strong>/ (root)</strong>:</p></li>
+</ul>
+
+<p><center>
+<img width="600" src="source.png">
+</center></p>
+
+<ul>
+<li><p>Clone your project locally</p></li>
+
+<li><p>Go into your frontend code for homework 4 above. Edit your <code>package.json</code> file to add a field <code>&quot;homepage&quot;</code> with associated value <code>&quot;.&quot;</code> into it. It doesn't matter where, as long as it is at top level:</p>
+
+<pre><code>&quot;homepage&quot;: &quot;.&quot;,
+</code></pre></li>
+</ul>
+
+<p><center>
+<img width="600" src="package.png">
+</center></p>
+
+<ul>
+<li><p>Run <code>npm run build</code> to build your frontend into the <code>build/</code> folder.</p></li>
+
+<li><p>At this point you should try to run <code>python3 -m http.server -d build</code> and connect your browser to <code>localhost:8000/index.html</code> to make sure your frontend works.</p></li>
+
+<li><p>Copy the content of the <code>build/</code> folder into your new project. This is what your project folder should look like (roughly):</p></li>
+</ul>
+
+<p><center>
+<img width="600" src="root.png">
+</center></p>
+
+<ul>
+<li><p>Commit the changes, and push to your remote branch on GitHub.</p></li>
+
+<li><p>At this point, the website should be publishing. Go to the <strong>Actions</strong> tab for your project, and click on the deployment that should be ongoing. Once the deployment is done, everything should turn green, and you will have a link to your published site, of the form <code>https://&lt;username&gt;.github.io/&lt;projectname&gt;</code>:</p></li>
+</ul>
+
+<p><center>
+<img width="600" src="build.png">
+</center></p>
+
+<p><a href="https://rpucella.github.io/gh-frontend-test">Here's mine</a>.</p>
