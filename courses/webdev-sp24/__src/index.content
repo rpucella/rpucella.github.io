@@ -315,6 +315,26 @@
 	  
 	</div>
       </li>
+
+      <li><p><span class="hdr">Apr 16: </span><b>RESTful APIs</b></p>
+        <div class="lect">
+
+	  <p>(Two things I talked about at the beginning of class: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">asynchronous functions in Javascript</a>, and <a href="https://www.splunk.com/en_us/blog/learn/serverless-functions.html">serverless functions</a>.)</p>
+
+	  <p><a href="notes/rest.pdf">Slides</a> from the lecture.</p>
+
+          <p>Fielding's dissertation that introduced the notion of <a href="https://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">REST</a>.</p>
+
+          <p>Wikipedia page on <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD operations</a>.</p>
+
+          <p>A reasonably lucid site for delving into the <a href="https://restfulapi.net/">RESTful API methodology</a>.</p>
+
+          <p>MDN description of the various <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods">HTTP methods</a>.</p>
+
+          <p>A RESTful API in the wild: the <a href="https://docs.github.com/en/rest">GitHub REST API</a>.</p>
+	  
+	</div>
+      </li>
       
     </ul>
 
