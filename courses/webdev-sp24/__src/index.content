@@ -338,6 +338,13 @@
 
       <li><p><span class="hdr">Apr 23: </span><b>Potluck</b></p>
         <div class="lect">
+
+	<p><a href="https://webassembly.org/">WebAssembly</a> is a virtual machine running in the browser that can be used to run compiled code from languages such as C, C++, or Rust.</p>
+	<p><a href="https://www.w3.org/WAI/fundamentals/accessibility-intro/">Introduction to Web Accessibility</a>.</p>
+	<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries">Media queries</a> are a way to build responsive web apps by allowing the selective application of CSS rules based on device-specific information such as current screen size, etc.</p>
+	<p>Instead of media queries, you can always resort to using something like <a href="https://github.com/yocontra/react-responsive">react-responsive</a> to adjust components for different screen sizes directly in the React code.</p>
+	<p>Two tools for creating desktop applications using web technologies for the UI: <a href="https://www.electronjs.org/">Electron</a> is older, and wraps a complete Chromium browser around your frontend code to produce a standalone executable, while <a href="https://tauri.app/">Tauri</a> is the more recent tool that uses an OS'supplied web rendering engine to create lightweight standalone applications. Backend code (which in a web app would live on the server) must be written in NodeJS for Electron, and in Rust for Tauri</p>
+	
         </div>
       </li>
       
