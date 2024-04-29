@@ -12,6 +12,13 @@
   
 
     <article class="summary">
+      <div class="title"><a href="/blog/post/arithmetic-without-numbers">Arithmetic Without Numbers</a></div>
+      <div class="date">Nov 20, 2023</div>
+    </article>
+
+  
+
+    <article class="summary">
       <div class="title"><a href="/blog/post/atomic-design">Atomic Design and Go Templates</a></div>
       <div class="date">Jul 17, 2023</div>
     </article>
