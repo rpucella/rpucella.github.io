@@ -5,7 +5,8 @@
 
 # Final Project
 
-## Final Presentations: Thursday, May 2, 2024 (4pm-7pm, MH 126)
+## Final Presentations: Thursday, May 2, 2024 (4pm-7pm, MAC 328 <del>MAC 126</del> )
+
 ## Deliverables Due: Sunday, May 5, 2024 (11pm)
 
 Think of the final project as an open-ended last homework with an associated short presentation.
