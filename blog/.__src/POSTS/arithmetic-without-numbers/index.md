@@ -191,10 +191,10 @@ by [Grothendieck](https://en.wikipedia.org/wiki/Alexander_Grothendieck) — one 
 who used the general construction in his proof of the [Grothendieck-Riemann-Roch theorem](https://en.wikipedia.org/wiki/Grothendieck%E2%80%93Riemann%E2%80%93Roch_theorem).)
 
 The idea is simple: given a semigroup (*S*, +, *, *0*, *1*), we can form a commutative ring *R* by taking the
-elements of *R* to be pairs (*s*, *t*) of *S x S* subject to the equivalence that (*s*, *t*) and
+elements of *R* to be pairs (*s*, *t*) of *S × S* subject to the equivalence that (*s*, *t*) and
 (*s'*, *t'*) are
 equivalent when *s + t'* = *t + s'*. In this way, the semigroup *S* embeds into *R* by mapping an element
-*s* of *S* to (*s*, *0*). 
+*s* to (*s*, *0*). 
 
 For integers, this means that a pair (*n*, *m*) is used to encode integer *n* - *m*. When *n* > *m*, (*n*, *m*)
 represents a

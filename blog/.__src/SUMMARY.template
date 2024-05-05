@@ -12,7 +12,7 @@
   {{ range .Posts }}
 
     <article class="summary">
-      <div class="title"><a href="/blog/post/{{ .Key }}">{{ .Title }}</a></div>
+      <div class="title"><a href="/blog/posts/{{ .Key }}">{{ .Title }}</a></div>
       <div class="date">{{ .FormattedDate }}</div>
     </article>
 

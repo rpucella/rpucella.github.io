@@ -373,7 +373,7 @@ molecule, by invoking <code>component</code>:</p>
 </code></pre>
 
 <p>Here is the code to parse and fill a template, including an implementation of the <code>component</code> action
-through the Go function <code>ComponentAction</code>:</p>
+through the Go function <code>Component()</code>:</p>
 
 <pre><code>// atomic2.go
 
@@ -491,7 +491,7 @@ and it is not entirely clear how to handle container components — that is, com
 are not values like strings and integers, but other components. But you could definitely build
 something usable out of this.</p>
 
-<p>Perhaps unsurprisingly, the component-loading action is entirely compatible with the <a href="/blog/post/static-web-site-generation/">static
+<p>Perhaps unsurprisingly, the component-loading action is entirely compatible with the <a href="../static-web-site-generation/">static
 web site generator I wrote</a> to maintain this website. I have
 no real plan of adding a component system to that generator, but perhaps when I decide to redesign
 mmy website I may revisit this idea and see if it's useful.</p>

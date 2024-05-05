@@ -1,44 +1,4 @@
-<!DOCTYPE html>
-<html>
-
-  <head>
-    
-    <meta charset="utf-8">
-    <title>Riccardo Pucella</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="/static/main.css" type="text/css">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-      rel="stylesheet">
-  </head>
-
-  <body>
-  
-    <nav>
-
-      
-
-      <input type="checkbox" />
-
-      <span></span>
-      <span></span>
-      <span></span>
-
-      <ul>
-	<li id="home"><a href="/">Riccardo Pucella</a></li>
-	<li id="teaching"><a href="/courses">Teaching</a></li>
-	<li id="writing"><a href="/papers">Writing</a></li>
- 	<li id="blogging"><a href="/blog">Blogging</a></li>
-      </ul>
-
-    </nav>
-
-    <script>
+<script>
   document.title = "Static Web Site Generation (Part 3)" + ' — Riccardo Pucella'
   document.querySelector("#blogging").classList.add("active")
 </script>
@@ -52,16 +12,16 @@
     <div class="date">May 20, 2023</div>
     
     <div class="body">
-      <p><em>Previous posts in the series: <a href="/blog/post/static-web-site-generation">Part 1</a>, <a href="/blog/post/static-web-site-generation-2">Part 2</a></em>.</p>
+      <p><em>Previous posts in the series: <a href="../static-web-site-generation">Part 1</a>, <a href="../static-web-site-generation-2">Part 2</a></em>.</p>
 
 <p>This is the latest installment of a series detailing how I maintain this website through a
-custom-built static web site generator I call <code>webgen</code>. Earlier posts described the <a href="/blog/post/static-web-site-generation">general
+custom-built static web site generator I call <code>webgen</code>. Earlier posts described the <a href="../static-web-site-generation">general
 architecture of the tool</a>, which is based on the idea of injecting HTML content files into templates
 to produce pages that can be statically served using a bog-standard file-based web server. (In the
 case of this website, <a href="https://pages.github.com/">Github Pages</a>.)</p>
 
 <p>What I'd like to talk about today is the support I coded into <code>webgen</code> for maintaining this blog. It
-builds directly onto the <a href="/blog/post/static-web-site-generation-2">Markdown processing I described in my last post</a>.</p>
+builds directly onto the <a href="../static-web-site-generation-2">Markdown processing I described in my last post</a>.</p>
 
 <p>Rather than being abstract and general like I've been until now, though, let me show how this very
 blog is set up. The reason is less pedagogical than expedient: blog support in <code>webgen</code> is very much
@@ -188,8 +148,3 @@ free time. Stay tuned.</p>
   </article>
   
 </main>
-
-    
-  </body>
-  
-</html>

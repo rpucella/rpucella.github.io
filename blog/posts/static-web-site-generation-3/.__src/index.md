@@ -4,16 +4,16 @@ date: 2023-05-20
 reading: The Ebony Tower (by John Fowles)
 ---
 
-*Previous posts in the series: [Part 1](/blog/post/static-web-site-generation), [Part 2](/blog/post/static-web-site-generation-2)*.
+*Previous posts in the series: [Part 1](../static-web-site-generation), [Part 2](../static-web-site-generation-2)*.
 
 This is the latest installment of a series detailing how I maintain this website through a
 custom-built static web site generator I call `webgen`. Earlier posts described the [general
-architecture of the tool](/blog/post/static-web-site-generation), which is based on the idea of injecting HTML content files into templates
+architecture of the tool](../static-web-site-generation), which is based on the idea of injecting HTML content files into templates
 to produce pages that can be statically served using a bog-standard file-based web server. (In the
 case of this website, [Github Pages](https://pages.github.com/).)
 
 What I'd like to talk about today is the support I coded into `webgen` for maintaining this blog. It
-builds directly onto the [Markdown processing I described in my last post](/blog/post/static-web-site-generation-2).
+builds directly onto the [Markdown processing I described in my last post](../static-web-site-generation-2).
 
 Rather than being abstract and general like I've been until now, though, let me show how this very
 blog is set up. The reason is less pedagogical than expedient: blog support in `webgen` is very much
