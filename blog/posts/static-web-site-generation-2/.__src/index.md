@@ -4,7 +4,7 @@ date: 2023-05-02
 reading: Mantissa (by John Fowles)
 ---
 
-*Previous post in the series: [Static Web Site Generation (Part 1)](/blog/post/static-web-site-generation)*.
+*Previous post in the series: [Static Web Site Generation (Part 1)](../static-web-site-generation)*.
 
 In my last post, I talked about `webgen`, the tool I wrote to maintain this website. It is a
 fairly conventional static web site generator, based on the simplest of all ideas: HTML templates
@@ -225,7 +225,7 @@ library, the easiest way to support this kind of extended Markdown is to first t
 extended Markdown file into a normal Markdown file in which the mathematical markup has been
 translated to HTML, leaving all standard Markdown untouched. This latter Markdown file can then be
 translated to HTML using the process described above, taking advantage of the fact that the
-Blackfriday library leaves HTML markup in a Markdown file untouched during translation. (You can see the result on this experiment on these <a href="http://localhost:8000/courses/dsa-fa22/notes/analysis1.html">lecture notes on algorithmic analysis</a>. The translation from LaTeX to HTML was done through <a href="https://temml.org/">Temml</a>.)
+Blackfriday library leaves HTML markup in a Markdown file untouched during translation. (You can see the result on this experiment on these <a href="/courses/dsa-fa22/notes/analysis1.html">lecture notes on algorithmic analysis</a>. The translation from LaTeX to HTML was done through <a href="https://temml.org/">Temml</a>.)
 
 The current implementation of `webgen` is not smart about generation. It will regenerate all files
 whenever it is run, whether their source files have been modified or not since the last

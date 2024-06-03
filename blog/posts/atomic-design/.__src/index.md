@@ -310,7 +310,7 @@ molecule, by invoking `component`:
     </html>
 
 Here is the code to parse and fill a template, including an implementation of the `component` action
-through the Go function `ComponentAction`:
+through the Go function `Component()`:
 
     // atomic2.go
     
@@ -427,7 +427,7 @@ are not values like strings and integers, but other components. But you could de
 something usable out of this.
 
 Perhaps unsurprisingly, the component-loading action is entirely compatible with the [static
-web site generator I wrote](/blog/post/static-web-site-generation/) to maintain this website. I have
+web site generator I wrote](../static-web-site-generation/) to maintain this website. I have
 no real plan of adding a component system to that generator, but perhaps when I decide to redesign
 mmy website I may revisit this idea and see if it's useful.
 

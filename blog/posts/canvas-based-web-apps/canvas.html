@@ -1,0 +1,57 @@
+<html>
+
+  <head>
+
+    <title>Canvas Demo</title>
+
+    <style>
+
+      body {
+          color: #333333;
+      }
+
+      canvas {
+          border: 2px solid #333333;
+          margin: 8px;
+          width: 80vw;
+          height: 80vh;
+      }
+
+      button {
+          margin: 8px;
+          width: 5em;
+          padding: 8px;
+      }
+
+      p, span {
+          margin: 8px;
+      }
+
+    </style>
+
+    <script src="canvas.js"></script>
+
+  </head>
+
+  <body>
+
+    <p>Click on the canvas to create a red rectangle. Use buttons to move around the canvas and zoom in and out.</p>
+
+    <canvas id="canvas">
+    </canvas>
+
+    <div>
+    <button id="btn-up">Up</button>
+    <button id="btn-down">Down</button>
+    <button id="btn-left">Left</button>
+    <button id="btn-right">Right</button>
+    <button id="btn-in">In</button>
+    <button id="btn-out">Out</button>
+    <span id="pos-x">X 0</span>
+    <span id="pos-y">Y 0</span>
+    <span id="zoom">Zoom 100%</span>
+    </div>
+
+  </body>
+
+</html>

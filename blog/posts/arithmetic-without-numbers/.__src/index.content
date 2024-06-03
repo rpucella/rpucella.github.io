@@ -211,10 +211,10 @@ by <a href="https://en.wikipedia.org/wiki/Alexander_Grothendieck">Grothendieck</
 who used the general construction in his proof of the <a href="https://en.wikipedia.org/wiki/Grothendieck%E2%80%93Riemann%E2%80%93Roch_theorem">Grothendieck-Riemann-Roch theorem</a>.)</p>
 
 <p>The idea is simple: given a semigroup (<em>S</em>, +, *, <em>0</em>, <em>1</em>), we can form a commutative ring <em>R</em> by taking the
-elements of <em>R</em> to be pairs (<em>s</em>, <em>t</em>) of <em>S x S</em> subject to the equivalence that (<em>s</em>, <em>t</em>) and
+elements of <em>R</em> to be pairs (<em>s</em>, <em>t</em>) of <em>S × S</em> subject to the equivalence that (<em>s</em>, <em>t</em>) and
 (<em>s'</em>, <em>t'</em>) are
 equivalent when <em>s + t'</em> = <em>t + s'</em>. In this way, the semigroup <em>S</em> embeds into <em>R</em> by mapping an element
-<em>s</em> of <em>S</em> to (<em>s</em>, <em>0</em>).</p>
+<em>s</em> to (<em>s</em>, <em>0</em>).</p>
 
 <p>For integers, this means that a pair (<em>n</em>, <em>m</em>) is used to encode integer <em>n</em> - <em>m</em>. When <em>n</em> &gt; <em>m</em>, (<em>n</em>, <em>m</em>)
 represents a

@@ -191,6 +191,7 @@ article.summary div.title {
 	display: flex;
 	flex-direction: row;
 	margin-top: 1em;
+        column-gap: 2em;
     }
 
     article.summary div.title {
@@ -202,6 +203,7 @@ article.summary div.title {
 	margin-right: 0.5em;
 	width: 8em;
 	order: 1;
+        text-align: end;
     }
 }
 

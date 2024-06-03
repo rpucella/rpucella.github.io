@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = "Canvas-Based Web Applications" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Canvas-Based Web Applications</h3>
+    
+    <div class="date">May 25, 2024</div>
+    
+    <div class="body">
+      <p>I just finished giving a course on <a href="https://rpucella.net/courses/webdev-sp24">web development</a> this
+spring and one topic I never got to was canvas-based web applications. We just ran out of
+time. It's a bit of shame because one of my current projects may well benefit from a canvas-based UI,
+and teaching the topic would have been a great forcing function for me to understand the subtleties involved.</p>
+
+<p>To give some perhaps well-known background, the HTML <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas"><code>canvas</code>
+element</a> is an element into which
+you can draw directly using a Javascript programmatic interface, the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas
+API</a>. It is direct (the term <em>immediate</em> is also used) in the sense that it does not rely on the DOM for rendering. If you issue an instruction to draw a line or a rectangle to a canvas element, the line or rectangle gets drawn immediately.  Here's an example:</p>
+
+<pre><code>&lt;canvas width=&quot;100&quot; height=&quot;100&quot;&gt;
+&lt;/canvas&gt;
+
+&lt;script&gt;
+  const canvas = document.querySelector(&quot;canvas&quot;)
+  const ctx = canvas.getContext(&quot;2d&quot;)
+  ctx.fillStyle = &quot;red&quot;
+  ctx.fillRect(20, 20, 60, 60)
+  ctx.fillStyle = &quot;black&quot;
+  ctx.beginPath()
+  ctx.arc(50, 50, 20, 0, 2 * Math.PI)
+  ctx.fill()
+&lt;/script&gt;
+</code></pre>
+
+<p><img src="./rect-circle.png" width="100%"></p>
+
+<p>To draw to a <code>canvas</code> element, you first get a <em>context</em> to draw into that element (think of it as a
+<em>way</em> to draw into the element), and then you issue drawing instructions which take effect
+immediately. While modern versions of canvas support a number of contexts such as
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API">WebGL</a>, I'll focus on the default 2D
+drawing context supported by all browsers.</p>
+
+<p>Canvas tends to be used whenever what needs to be shown in the browser is not easily achievable
+visually using straight HTML elements, or to support applications such as games where having a way
+to draw directly to the screen is important for efficiency. I won't have much to say about games
+here, even though they are arguably the most common use of canvas these days.</p>
+
+<p>An example of the kind of application that benefits from canvas over straight HTML elements is
+<a href="https://workspaceupdates.googleblog.com/2021/05/Google-Docs-Canvas-Based-Rendering-Update.html">Google
+Docs</a>,
+which basically exposes a large canvas element into which the document being edited is &quot;drawn&quot; and
+with which the user interacts. One downside of canvas is that you cannot take advantage of the
+browser's HTML rendering engine, and instead have to do all rendering manually. There are libraries
+to help systematize the drawing of complex objects and controls, such as
+<a href="https://createjs.com/easeljs">EaselJS</a>.</p>
+
+<p>Another application using canvas is <a href="https://www.figma.com/">Figma</a>. Figma is a design tool for
+create user interfaces. At its core, it exposes a canvas element where the user creates their design
+by adding and manipulating shapes and text and other visual components. One thing that makes Figma
+interesting from my perspective is that the design area is basically an infinite virtual &quot;sheet&quot;:
+the canvas element shows only a view into the whole virtual sheet, and you can zoom in and out and
+move around that virtual sheet at will, adding visual components wherever you wish.</p>
+
+<p>That's what I want to explore here: how to support an infinite virtual sheet that can hold objects
+at arbitrary locations, and the ability to move around and zoom in and out across that virtual
+sheet though a canvas element. It turns out to be pretty simple, and really an exercise in coordinate system
+transformations.</p>
+
+<p>We'll keep things simple. The virtual sheet will hold small red blocks, and we will implement a
+basic interface where you drop a new block on the virtual sheet by clicking a location, with
+navigation buttons for manipulating the portion of the sheet we see in the canvas element. We'll
+implement it in raw Javascript. to show that no framework tricks are required. Moving this code to a
+framework like React is an easy exercise. Wrapping it into a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components">Web
+Component</a> is perhaps a bit more
+interesting, and I may come back to that in a future post.</p>
+
+<p>Let's start with the UI:</p>
+
+<p><img src="./sample-ui.png" width="100%"></p>
+
+<pre><code>&lt;body&gt;
+
+  &lt;p&gt;Click on the canvas to create a red rectangle. 
+     Use buttons to move around the canvas and zoom in and out.&lt;/p&gt;
+
+  &lt;canvas id=&quot;canvas&quot;&gt;
+  &lt;/canvas&gt;
+
+  &lt;div&gt;
+    &lt;button id=&quot;btn-up&quot;&gt;Up&lt;/button&gt;
+    &lt;button id=&quot;btn-down&quot;&gt;Down&lt;/button&gt;
+    &lt;button id=&quot;btn-left&quot;&gt;Left&lt;/button&gt;
+    &lt;button id=&quot;btn-right&quot;&gt;Right&lt;/button&gt;
+    &lt;button id=&quot;btn-in&quot;&gt;In&lt;/button&gt;
+    &lt;button id=&quot;btn-out&quot;&gt;Out&lt;/button&gt;
+    &lt;span id=&quot;pos-x&quot;&gt;X 0&lt;/span&gt;
+    &lt;span id=&quot;pos-y&quot;&gt;Y 0&lt;/span&gt;
+    &lt;span id=&quot;zoom&quot;&gt;Zoom 100%&lt;/span&gt;
+  &lt;/div&gt;
+
+&lt;/body&gt;
+</code></pre>
+
+<p>Completely straightforward: a single canvas element that will show part of the underlying virtual
+sheet, and six buttons to navigate the virtual sheet by moving it up, down, left, and right, or
+zooming in and out. I've kept the styling to a minimum, where the only thing
+of interest that I've left out above is the canvas size:</p>
+
+<pre><code>canvas {
+  border: 2px solid #333333;
+  margin: 8px;
+  width: 80vw;
+  height: 80vh;
+}
+</code></pre>
+
+<p>The code itself conceptually splits in three parts: the data structure for the content of the
+virtual sheet, the code to render that content on the canvas, and the various handlers associated
+with the buttons to update the view into the virtual sheet. Let's look at them in order.</p>
+
+<p>The data structure to store the blocks on the virtual sheet is dead simple: it's a list of objects,
+each object representing a red block and recording the position of the center of the block on the
+virtual sheet. I assume a coordinate system on the virtual sheet which I will call the <em>virtual
+coordinate system</em>. Virtual coordinates describe the position of a block within the sheet.</p>
+
+<p>The task of taking what's on the virtual sheet and exposing a portion of it on the canvas is through
+a function <code>render</code>. It takes the content of the virtual sheet as well a <em>view object</em> that
+describes the virtual coordinates of the upper left corner of the canvas (fields <code>startx</code> and
+<code>starty</code>) as well as the zoom factor (field <code>zoom</code>), where a zoom factor of <em>N</em> means that 1 unit of
+virtual coordinates takes <em>N</em> units on the canvas.</p>
+
+<p>In order to render an area of the virtual sheet into the canvas, we need to figure out where every block on the
+virtual sheet appears on the canvas using information stored in the view. To do this, we need to
+convert a virtual position <em>(vx, vy)</em> into a <em>canvas position</em> <em>(cx, cy)</em> on the canvas, where canvas
+coordinates <em>(0, 0)</em> is the upper left corner of the canvas and <em>(w, h)</em> is the lower right corner
+of the canvas, with <em>w</em> and <em>h</em> the dimensions of the canvas on the browser screen.</p>
+
+<p>A bit of math tells us that if the virtual coordinate of the upper left corner of the canvas is
+<em>(vx0, vy0)</em> then virtual point <em>(vx, vy)</em> is at canvas position <em>(z (vx - vx0), z (vy - vy0))</em>
+where <em>z</em> is the zoom factor. In code:</p>
+
+<pre><code>function toCanvas(view, {x, y}) {
+  // Convert a virtual x, y to physical position within the canvas.
+  const nX = (x - view.startx) * view.zoom
+  const nY = (y - view.starty) * view.zoom
+  return {x: nX, y: nY}
+}
+</code></pre>
+
+<p>It will be useful later to transform canvas coordinates back to virtual coordinates as well, which
+is simply the reverse mapping, where <em>(cx, cy)</em> map to virtual point  <em>((cx / z) + vx0, (cy / z) + vy0)</em>:</p>
+
+<pre><code>function fromCanvas(view, {x, y}) {
+  // Convert an x, y WITHIN the canvas to virtual coordinates.
+  const nX = (x / view.zoom) + view.startx
+  const nY = (y / view.zoom) + view.starty
+  return {x: nX, y: nY}
+}
+</code></pre>
+
+<p>Equipped with these functions, we can easily write a <code>render</code> function to draw every block in the
+list of blocks onto the canvas — first clear the canvas, then loop over the blocks, drawing
+each on the canvas given the virtual coordinate at the center of the canvas and the zoom factor:</p>
+
+<pre><code>function render(content, view) {
+  const canvas = document.getElementById('canvas')
+  const ctx = canvas.getContext('2d')
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  const size = 30 * view.zoom
+  ctx.fillStyle = 'red'
+  for (const r of content) {
+    p = toCanvas(view, r)
+    ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size)
+  }
+}
+</code></pre>
+
+<p>Each block has virtual width 20. Note that this was a feature of the canvas element that
+anything drawn outside of the area of the canvas (any canvas coordinate less than <em>(0, 0)</em> or more
+than <em>(w, h)</em>) is not visible. When we have too many objects, we may benefit from first determining if
+an object is visible before drawing it, but for the purpose of this simple experiment, this is good
+enough.</p>
+
+<p>To complete the code, we merely have to add the handlers associated with the various events that
+interest us: clicking on the canvas to add a new block, and clicking on the buttons to modify the
+view into the virtual sheet. Most of this is purely mechanical at this point. First, we need global
+variables to hold the content of the virtual sheet as well as the view shown through the canvas,
+because the handlers will need to modify both.</p>
+
+<pre><code>const CONTENT = []
+
+const VIEW = {
+  startx: 0,
+  starty: 0,
+  zoom: 1
+}
+</code></pre>
+
+<p>In a real system, of course, this information would be kept in the state management layer, or
+encapsulated in an object of the system.</p>
+
+<p>We set up the handlers when the page loads:</p>
+
+<pre><code>window.addEventListener('load', run)
+
+function run() {
+  const canvas = document.getElementById('canvas')
+  canvas.width = canvas.clientWidth
+  canvas.height = canvas.clientHeight
+  canvas.addEventListener('click', canvasClickHandler)
+  document.getElementById('btn-up').addEventListener('click', btnUpHandler)
+  document.getElementById('btn-down').addEventListener('click', btnDownHandler)
+  document.getElementById('btn-left').addEventListener('click', btnLeftHandler)
+  document.getElementById('btn-right').addEventListener('click', btnRightHandler)
+  document.getElementById('btn-in').addEventListener('click', btnInHandler)
+  document.getElementById('btn-out').addEventListener('click', btnOutHandler)
+}
+</code></pre>
+
+<p>We associated an event handler with the canvas so that we can add a new block to the virtual sheet
+by clicking on the canvas. In that event handler, we get the coordinates of the click <em>within</em> the
+canvas element (basically a canvas position), convert it to a virtual position on the sheet given
+the current view using function <code>fromCanvas()</code> defined above, and add the block to the content list.
+We call <code>render</code> to update the canvas after the change:</p>
+
+<pre><code>function getCanvasOffset() {
+  const canvas = document.getElementById('canvas')
+  return [canvas.offsetLeft, canvas.offsetTop]
+}
+
+function canvasClickHandler(evt) {
+  const [eX, eY] = getCanvasOffset()
+  const vp = fromCanvas(VIEW, {x: evt.clientX - eX, y: evt.clientY - eY})
+  CONTENT.push(vp)
+  render(CONTENT, VIEW)
+}
+</code></pre>
+
+<p>The buttons to move simply change the virtual coordinates of the upper left corner of the canvas,
+rendering the canvas after each update to reflect the new view. We move the virtual sheet by 50
+<em>canvas units</em> to make it easier to navigate large virtual sheets:</p>
+
+<pre><code>function btnUpHandler(evt) {
+  VIEW.starty = VIEW.starty + (50 / VIEW.zoom)
+  render(CONTENT, VIEW)
+}
+
+function btnDownHandler(evt) {
+  VIEW.starty = VIEW.starty - (50 / VIEW.zoom)
+  render(CONTENT, VIEW)
+}
+
+function btnLeftHandler(evt) {
+  VIEW.startx = VIEW.startx + (50 / VIEW.zoom)
+  render(CONTENT, VIEW)
+}
+
+function btnRightHandler(evt) {
+  VIEW.startx = VIEW.startx - (50 / VIEW.zoom)
+  render(CONTENT, VIEW)
+}
+</code></pre>
+
+<p>The buttons to zoom in and out are perhaps a touch more interesting, because while they basically
+just increase or decrease the zoom factor, we would like to give the effect of zooming into or out
+of the <em>center</em> of the canvas. This requires finding the virtual coordinates of the center of the
+canvas (given the current view), then recalculating the new virtual coordinates of the upper left
+corner of the canvas after the zoom factor change:</p>
+
+<pre><code>function getCanvasSize() {
+  const canvas = document.getElementById('canvas')
+  return [canvas.width, canvas.height]
+}
+
+function center(view, {x, y}) {
+  // return start x, y that puts virtual x, y in the center of the canvas.
+  const [width, height] = getCanvasSize()
+  const start_x = x - (width / 2) / view.zoom
+  const start_y = y - (height / 2) / view.zoom
+  return {x: start_x, y: start_y}
+}
+
+function btnInHandler(evt) {
+  const [width, height] = getCanvasSize()
+  const old_c = fromCanvas(VIEW, {x: width / 2, y: height / 2})
+  VIEW.zoom = VIEW.zoom * 1.25
+  const new_start = center(VIEW, old_c)
+  VIEW.startx = new_start.x
+  VIEW.starty = new_start.y
+  render(CONTENT, VIEW)
+}
+
+function btnOutHandler(evt) {
+  const [width, height] = getCanvasSize()
+  const old_c = fromCanvas(VIEW, {x: width / 2, y: height / 2})
+  VIEW.zoom = VIEW.zoom / 1.25
+  const new_start = center(VIEW, old_c)
+  VIEW.startx = new_start.x
+  VIEW.starty = new_start.y
+  render(CONTENT, VIEW)
+}
+</code></pre>
+
+<p>And that's it! <a href="./canvas.html">You can try the result</a>: add blocks, move about the virtual sheet,
+zoom in and out.  This is the essential Figma navigation functionality. The Javascript code itself is in
+file <a href="./canvas.js"><code>canvas.js</code></a>.</p>
+
+<p>Obvious next steps for generalization include:</p>
+
+<ul>
+<li>support different shape in the virtual sheet rather than red blocks: lines, rectangles, circles,
+text boxes, etc.</li>
+<li>connect canvas movement to mouse event: click and drag on the canvas to move it, use the scroll
+button to zoom in and out, etc.</li>
+<li>save and load the list of objects on the virtual sheet</li>
+</ul>
+
+<p>More interesting is the ability to select an object on the virtual sheet and manipulate it: move it,
+change it, or delete it. This would require a slightly more involved data structure to represent
+those objects so that it's easier to determine if there is an object on the virtual sheet covering a
+specific point, and if so which one. Structures like <a href="https://en.wikipedia.org/wiki/R-tree">R-trees</a>
+have been developed for that purpose.</p>
+
+<p>I may come back to this later once I make some progress on the project that sent me down this rabbit
+hole in the first place: a web app that lets me create and manipulate virtual index cards on an
+infinite board. Stay tuned.</p>
+
+    </div>
+
+    
+      <div class="reading">On Writers and Writing (by John Gardner)</div>
+    
+
+  </article>
+  
+</main>
+
+    
+  </body>
+  
+</html>
