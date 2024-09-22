@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <p>&lt;!DOCTYPE html&gt;
+<html></p>
+
+<p><head></p>
+
+<pre><code>&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Riccardo Pucella&lt;/title&gt;
+
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/main.css&quot; type=&quot;text/css&quot;&gt;
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+</code></pre>
+
+<p><style type="text/css">
+     code {
+      white-space: pre;
+     }</p>
+
+<pre><code> body { 
+   font-family: sans-serif;
+   margin: 24px;
+   line-height: 1.2;
+   font-size: 16px;
+ }
+
+ hr, h2, h3, h4, h5, h6 {
+     margin-top: 24px;
+ }
+
+ pre { 
+     margin-left: 32px;
+     color: blue;
+ }
+</code></pre>
+
+<p></style></p>
+
+<p></head></p>
+
+<p><body></p>
+
+<pre><code>&lt;script&gt;
+</code></pre>
+
+<p>document.title = 'Homework 1'
+</script></p>
+
+<h1>Homework 1</h1>
+
+<h2>Due Date: Sunday, Sep 29, 2024 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.</p></li>
+
+<li><p>Please do not post your solutions on a public website or a public repository (including GitHub).</p></li>
+
+<li><p>All programming is to be done in Python 3.</p></li>
+
+<li><p>Code your answers by modifying the file <a href="homework1.py"><code>homework1.py</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you
+wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+<li><p>Please do not change the &quot;signature&quot; (number and interpretation of arguments) of the
+functions. Doing so will make it impossible to load your code into the testing infrastructure, and
+make me unhappy.</p></li>
+
+<li><p>Feel free to define helper functions if you need them.</p></li>
+</ul>
+
+<p><strong>Electronic Submission Instructions</strong></p>
+
+<ul>
+<li><p>Make your your file <code>homework1.py</code> loads without error in a fresh Python 3 shell.</p></li>
+
+<li><p>Submission instructions following shortly, probably via Canvas.</p></li>
+</ul>
+
+<hr>
+
+<h2>Deterministic Finite Automata</h2>
+
+<p>Consider a structure for finite automata in Python, as a dictionary:</p>
+
+<pre><code>{ 
+   &quot;states&quot;: ...,
+   &quot;alphabet&quot;: ...
+   &quot;delta&quot;: ...,
+   &quot;start&quot;: ...,
+   &quot;final&quot;: ...
+}
+</code></pre>
+
+<p>A finite automaton is described by a dictionary with fields holding the various components of the
+automaton: a set of states, a set of symbols (the alphabet), a transition function &delta;, a start state, and
+a set of final states. Lists are used to represent sets. The transition function is represented
+using list of triples (<em>p</em>, <em>a</em>, <em>q</em>), stating that in state <em>p</em>, reading symbol <em>a</em> makes the machine
+transition to state <em>q</em>. States can be represented by any value that support equality checking.</p>
+
+<p>A finite automaton is <em>deterministic</em> if for every state <em>p</em> and every symbol <em>a</em> there is
+exactly one transition out of <em>p</em> labelled <em>a</em> in the automaton.</p>
+
+<p>Here is a deterministic finite automaton that accepts the set of all strings over
+{<code>a</code>, <code>b</code>, <code>c</code>} that contains a number of <code>a</code>s that is a multiple of 3:</p>
+
+<pre><code>DFA_MOD_3 = {
+    &quot;states&quot;: [1, 2, 3],
+    &quot;alphabet&quot;: [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;],
+    &quot;delta&quot;: [
+        (1, &quot;a&quot;, 2),
+        (2, &quot;a&quot;, 3),
+        (3, &quot;a&quot;, 1),
+        (1, &quot;b&quot;, 1),
+        (2, &quot;b&quot;, 2),
+        (3, &quot;b&quot;, 3),
+        (1, &quot;c&quot;, 1),
+        (2, &quot;c&quot;, 2),
+        (3, &quot;c&quot;, 3)
+    ],
+    &quot;start&quot;: 1,
+    &quot;final&quot;: [1]
+}
+</code></pre>
+
+<p>Here is a deterministic finite automaton that accepts the language of all strings over {<code>a</code>, <code>b</code>, <code>c</code>} that start with an <code>a</code> and end with a <code>c</code> — notice how 99 is a sink state:</p>
+
+<pre><code>DFA_START_END = {
+    &quot;states&quot;: [0, 1, 2, 99],
+    &quot;alphabet&quot;: [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;],
+    &quot;delta&quot;: [
+        (0, &quot;a&quot;, 1),
+        (0, &quot;b&quot;, 99),
+        (0, &quot;c&quot;, 99),
+        (1, &quot;a&quot;, 1),
+        (1, &quot;b&quot;, 1),
+        (1, &quot;c&quot;, 2),
+        (2, &quot;a&quot;, 1),
+        (2, &quot;b&quot;, 1),
+        (2, &quot;c&quot;, 2),
+        (99, &quot;a&quot;, 99),
+        (99, &quot;b&quot;, 99),
+        (99, &quot;c&quot;, 99),
+    ],
+    &quot;start&quot;: 0,
+    &quot;final&quot;: [2]
+}
+</code></pre>
+
+<hr>
+
+<h2>Question 1: Simulating Deterministic Finite Automata</h2>
+
+<p>We are going to code up a simulator for deterministic finite automata. Deterministic finite automata
+are really easy to simulate: start at the start state, and follow transitions over
+symbols from the input string until you reach the end of the string. Accept if you are on a final
+state.</p>
+
+<p>Code a function <strong><code>accept_dfa(m, input)</code></strong> where <code>accept(m, s)</code> returns <code>True</code> if if deterministic
+finite automaton <code>m</code> accepts the string <code>s</code>, and <code>False</code> otherwise. That is, it returns true exactly
+if there is a way to follow the transitions of <code>m</code> labeled by the symbols in <code>s</code> from the start
+state to a final state.</p>
+
+<p>If you ever discover that the automaton is not deterministic (that is, at some point, we
+either have no transitions to follow or more than one transition to follow), throw an exception.</p>
+
+<p>For testing purposes, I've provided you with a function <code>language</code> where
+<code>language(m, k, acc)</code> prints out all the strings of length up to <code>k</code> accepted by
+finite automaton <code>m</code> via acceptance function <code>acc</code>.</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;&quot;)
+True
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;a&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;aa&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;aaa&quot;)
+True
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;aaaa&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;aaaaa&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;aaaaaa&quot;)
+True
+
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;bacab&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;bacaba&quot;)
+True
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;bacabac&quot;)
+True
+&gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;bacabaca&quot;)
+False
+
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;a&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;ab&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;abc&quot;)
+True
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;abca&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;abcb&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;abcc&quot;)
+True
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;cabcc&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;babcc&quot;)
+False
+&gt;&gt;&gt; accept_dfa(DFA_START_END, &quot;aabcc&quot;)
+True
+
+&gt;&gt;&gt; language(DFA_MOD_3, 6, accept_dfa)
+&lt;empty string&gt;
+b
+c
+bb
+bc
+cb
+cc
+aaa
+bbb
+bbc
+bcb
+bcc
+cbb
+cbc
+ccb
+ccc
+aaab
+aaac
+aaba
+aaca
+abaa
+acaa
+baaa
+bbbb
+bbbc
+bbcb
+bbcc
+bcbb
+bcbc
+bccb
+bccc
+caaa
+cbbb
+cbbc
+cbcb
+cbcc
+ccbb
+ccbc
+cccb
+cccc
+aaabb
+aaabc
+aaacb
+aaacc
+aabab
+aabac
+aabba
+aabca
+aacab
+aacac
+aacba
+aacca
+abaab
+abaac
+ababa
+abaca
+abbaa
+abcaa
+acaab
+acaac
+acaba
+acaca
+acbaa
+accaa
+baaab
+baaac
+baaba
+baaca
+babaa
+bacaa
+bbaaa
+bbbbb
+bbbbc
+bbbcb
+bbbcc
+bbcbb
+bbcbc
+bbccb
+bbccc
+bcaaa
+bcbbb
+bcbbc
+bcbcb
+bcbcc
+bccbb
+bccbc
+bcccb
+bcccc
+caaab
+caaac
+caaba
+caaca
+cabaa
+cacaa
+cbaaa
+cbbbb
+cbbbc
+cbbcb
+cbbcc
+cbcbb
+cbcbc
+cbccb
+cbccc
+ccaaa
+ccbbb
+ccbbc
+ccbcb
+ccbcc
+cccbb
+cccbc
+ccccb
+ccccc
+aaaaaa
+aaabbb
+aaabbc
+aaabcb
+aaabcc
+aaacbb
+aaacbc
+aaaccb
+aaaccc
+aababb
+aababc
+aabacb
+aabacc
+aabbab
+aabbac
+aabbba
+aabbca
+aabcab
+aabcac
+aabcba
+aabcca
+aacabb
+aacabc
+aacacb
+aacacc
+aacbab
+aacbac
+aacbba
+aacbca
+aaccab
+aaccac
+aaccba
+aaccca
+abaabb
+abaabc
+abaacb
+abaacc
+ababab
+ababac
+ababba
+ababca
+abacab
+abacac
+abacba
+abacca
+abbaab
+abbaac
+abbaba
+abbaca
+abbbaa
+abbcaa
+abcaab
+abcaac
+abcaba
+abcaca
+abcbaa
+abccaa
+acaabb
+acaabc
+acaacb
+acaacc
+acabab
+acabac
+acabba
+acabca
+acacab
+acacac
+acacba
+acacca
+acbaab
+acbaac
+acbaba
+acbaca
+acbbaa
+acbcaa
+accaab
+accaac
+accaba
+accaca
+accbaa
+acccaa
+baaabb
+baaabc
+baaacb
+baaacc
+baabab
+baabac
+baabba
+baabca
+baacab
+baacac
+baacba
+baacca
+babaab
+babaac
+bababa
+babaca
+babbaa
+babcaa
+bacaab
+bacaac
+bacaba
+bacaca
+bacbaa
+baccaa
+bbaaab
+bbaaac
+bbaaba
+bbaaca
+bbabaa
+bbacaa
+bbbaaa
+bbbbbb
+bbbbbc
+bbbbcb
+bbbbcc
+bbbcbb
+bbbcbc
+bbbccb
+bbbccc
+bbcaaa
+bbcbbb
+bbcbbc
+bbcbcb
+bbcbcc
+bbccbb
+bbccbc
+bbcccb
+bbcccc
+bcaaab
+bcaaac
+bcaaba
+bcaaca
+bcabaa
+bcacaa
+bcbaaa
+bcbbbb
+bcbbbc
+bcbbcb
+bcbbcc
+bcbcbb
+bcbcbc
+bcbccb
+bcbccc
+bccaaa
+bccbbb
+bccbbc
+bccbcb
+bccbcc
+bcccbb
+bcccbc
+bccccb
+bccccc
+caaabb
+caaabc
+caaacb
+caaacc
+caabab
+caabac
+caabba
+caabca
+caacab
+caacac
+caacba
+caacca
+cabaab
+cabaac
+cababa
+cabaca
+cabbaa
+cabcaa
+cacaab
+cacaac
+cacaba
+cacaca
+cacbaa
+caccaa
+cbaaab
+cbaaac
+cbaaba
+cbaaca
+cbabaa
+cbacaa
+cbbaaa
+cbbbbb
+cbbbbc
+cbbbcb
+cbbbcc
+cbbcbb
+cbbcbc
+cbbccb
+cbbccc
+cbcaaa
+cbcbbb
+cbcbbc
+cbcbcb
+cbcbcc
+cbccbb
+cbccbc
+cbcccb
+cbcccc
+ccaaab
+ccaaac
+ccaaba
+ccaaca
+ccabaa
+ccacaa
+ccbaaa
+ccbbbb
+ccbbbc
+ccbbcb
+ccbbcc
+ccbcbb
+ccbcbc
+ccbccb
+ccbccc
+cccaaa
+cccbbb
+cccbbc
+cccbcb
+cccbcc
+ccccbb
+ccccbc
+cccccb
+cccccc
+
+&gt;&gt;&gt; language(DFA_START_END, 6, accept_dfa)
+ac
+aac
+abc
+acc
+aaac
+aabc
+aacc
+abac
+abbc
+abcc
+acac
+acbc
+accc
+aaaac
+aaabc
+aaacc
+aabac
+aabbc
+aabcc
+aacac
+aacbc
+aaccc
+abaac
+ababc
+abacc
+abbac
+abbbc
+abbcc
+abcac
+abcbc
+abccc
+acaac
+acabc
+acacc
+acbac
+acbbc
+acbcc
+accac
+accbc
+acccc
+aaaaac
+aaaabc
+aaaacc
+aaabac
+aaabbc
+aaabcc
+aaacac
+aaacbc
+aaaccc
+aabaac
+aababc
+aabacc
+aabbac
+aabbbc
+aabbcc
+aabcac
+aabcbc
+aabccc
+aacaac
+aacabc
+aacacc
+aacbac
+aacbbc
+aacbcc
+aaccac
+aaccbc
+aacccc
+abaaac
+abaabc
+abaacc
+ababac
+ababbc
+ababcc
+abacac
+abacbc
+abaccc
+abbaac
+abbabc
+abbacc
+abbbac
+abbbbc
+abbbcc
+abbcac
+abbcbc
+abbccc
+abcaac
+abcabc
+abcacc
+abcbac
+abcbbc
+abcbcc
+abccac
+abccbc
+abcccc
+acaaac
+acaabc
+acaacc
+acabac
+acabbc
+acabcc
+acacac
+acacbc
+acaccc
+acbaac
+acbabc
+acbacc
+acbbac
+acbbbc
+acbbcc
+acbcac
+acbcbc
+acbccc
+accaac
+accabc
+accacc
+accbac
+accbbc
+accbcc
+acccac
+acccbc
+accccc
+</code></pre>
+
+<hr>
+
+<h2>Question 2: Constructing Deterministic Finite Automata</h2>
+
+<p>In this question, you will come up with deterministic finite automata. You can test
+your automata with the code you wrote in Question 1.</p>
+
+<p>For submission purposes, I ask you to define those finite automata as
+constants with a fixed name given below in each
+question. There are already placeholders in <code>homework1.py</code> for those
+answers. Just replace each placeholder with your definition.</p>
+
+<h3>(A)</h3>
+
+<p>Construct a finite automaton <strong><code>DFA_Q2A</code></strong> for the language consisting of
+all strings over the alphabet <code>{a,b,c}</code> of length 3n+1 or 3n+2 for any n
+(i.e., of length 1, 2, 4, 5, 7, 8, 10, 11, ...)</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; language(DFA_Q2A, 6, accept_dfa)
+a
+b
+c
+aa
+ab
+ac
+ba
+bb
+bc
+ca
+cb
+cc
+aaaa
+aaab
+aaac
+aaba
+aabb
+aabc
+aaca
+aacb
+aacc
+abaa
+abab
+abac
+abba
+abbb
+abbc
+abca
+abcb
+abcc
+acaa
+acab
+acac
+acba
+acbb
+acbc
+acca
+accb
+accc
+baaa
+baab
+baac
+baba
+babb
+babc
+baca
+bacb
+bacc
+bbaa
+bbab
+bbac
+bbba
+bbbb
+bbbc
+bbca
+bbcb
+bbcc
+bcaa
+bcab
+bcac
+bcba
+bcbb
+bcbc
+bcca
+bccb
+bccc
+caaa
+caab
+caac
+caba
+cabb
+cabc
+caca
+cacb
+cacc
+cbaa
+cbab
+cbac
+cbba
+cbbb
+cbbc
+cbca
+cbcb
+cbcc
+ccaa
+ccab
+ccac
+ccba
+ccbb
+ccbc
+ccca
+cccb
+cccc
+aaaaa
+aaaab
+aaaac
+aaaba
+aaabb
+aaabc
+aaaca
+aaacb
+aaacc
+aabaa
+aabab
+aabac
+aabba
+aabbb
+aabbc
+aabca
+aabcb
+aabcc
+aacaa
+aacab
+aacac
+aacba
+aacbb
+aacbc
+aacca
+aaccb
+aaccc
+abaaa
+abaab
+abaac
+ababa
+ababb
+ababc
+abaca
+abacb
+abacc
+abbaa
+abbab
+abbac
+abbba
+abbbb
+abbbc
+abbca
+abbcb
+abbcc
+abcaa
+abcab
+abcac
+abcba
+abcbb
+abcbc
+abcca
+abccb
+abccc
+acaaa
+acaab
+acaac
+acaba
+acabb
+acabc
+acaca
+acacb
+acacc
+acbaa
+acbab
+acbac
+acbba
+acbbb
+acbbc
+acbca
+acbcb
+acbcc
+accaa
+accab
+accac
+accba
+accbb
+accbc
+accca
+acccb
+acccc
+baaaa
+baaab
+baaac
+baaba
+baabb
+baabc
+baaca
+baacb
+baacc
+babaa
+babab
+babac
+babba
+babbb
+babbc
+babca
+babcb
+babcc
+bacaa
+bacab
+bacac
+bacba
+bacbb
+bacbc
+bacca
+baccb
+baccc
+bbaaa
+bbaab
+bbaac
+bbaba
+bbabb
+bbabc
+bbaca
+bbacb
+bbacc
+bbbaa
+bbbab
+bbbac
+bbbba
+bbbbb
+bbbbc
+bbbca
+bbbcb
+bbbcc
+bbcaa
+bbcab
+bbcac
+bbcba
+bbcbb
+bbcbc
+bbcca
+bbccb
+bbccc
+bcaaa
+bcaab
+bcaac
+bcaba
+bcabb
+bcabc
+bcaca
+bcacb
+bcacc
+bcbaa
+bcbab
+bcbac
+bcbba
+bcbbb
+bcbbc
+bcbca
+bcbcb
+bcbcc
+bccaa
+bccab
+bccac
+bccba
+bccbb
+bccbc
+bccca
+bcccb
+bcccc
+caaaa
+caaab
+caaac
+caaba
+caabb
+caabc
+caaca
+caacb
+caacc
+cabaa
+cabab
+cabac
+cabba
+cabbb
+cabbc
+cabca
+cabcb
+cabcc
+cacaa
+cacab
+cacac
+cacba
+cacbb
+cacbc
+cacca
+caccb
+caccc
+cbaaa
+cbaab
+cbaac
+cbaba
+cbabb
+cbabc
+cbaca
+cbacb
+cbacc
+cbbaa
+cbbab
+cbbac
+cbbba
+cbbbb
+cbbbc
+cbbca
+cbbcb
+cbbcc
+cbcaa
+cbcab
+cbcac
+cbcba
+cbcbb
+cbcbc
+cbcca
+cbccb
+cbccc
+ccaaa
+ccaab
+ccaac
+ccaba
+ccabb
+ccabc
+ccaca
+ccacb
+ccacc
+ccbaa
+ccbab
+ccbac
+ccbba
+ccbbb
+ccbbc
+ccbca
+ccbcb
+ccbcc
+cccaa
+cccab
+cccac
+cccba
+cccbb
+cccbc
+cccca
+ccccb
+ccccc
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Construct a finite automaton <strong><code>DFA_Q2B</code></strong> for the language
+consisting of all strings over the alphabet <code>{a,b,c}</code> with exactly two <code>a</code>
+and no <code>b</code> in them (and any number of <code>c</code>).</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; language(DFA_Q2B, 6, accept_dfa)
+aa
+aac
+aca
+caa
+aacc
+acac
+acca
+caac
+caca
+ccaa
+aaccc
+acacc
+accac
+accca
+caacc
+cacac
+cacca
+ccaac
+ccaca
+cccaa
+aacccc
+acaccc
+accacc
+acccac
+acccca
+caaccc
+cacacc
+caccac
+caccca
+ccaacc
+ccacac
+ccacca
+cccaac
+cccaca
+ccccaa
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Construct a finite automaton <strong><code>DFA_Q2C</code></strong> for the language
+consisting of all strings over the alphabet <code>{a,b,c}</code> with exactly two <code>a</code>
+and one <code>b</code> in them (and any number of <code>c</code>).</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; language(DFA_Q2C, 6, accept_dfa)
+aab
+aba
+baa
+aabc
+aacb
+abac
+abca
+acab
+acba
+baac
+baca
+bcaa
+caab
+caba
+cbaa
+aabcc
+aacbc
+aaccb
+abacc
+abcac
+abcca
+acabc
+acacb
+acbac
+acbca
+accab
+accba
+baacc
+bacac
+bacca
+bcaac
+bcaca
+bccaa
+caabc
+caacb
+cabac
+cabca
+cacab
+cacba
+cbaac
+cbaca
+cbcaa
+ccaab
+ccaba
+ccbaa
+aabccc
+aacbcc
+aaccbc
+aacccb
+abaccc
+abcacc
+abccac
+abccca
+acabcc
+acacbc
+acaccb
+acbacc
+acbcac
+acbcca
+accabc
+accacb
+accbac
+accbca
+acccab
+acccba
+baaccc
+bacacc
+baccac
+baccca
+bcaacc
+bcacac
+bcacca
+bccaac
+bccaca
+bcccaa
+caabcc
+caacbc
+caaccb
+cabacc
+cabcac
+cabcca
+cacabc
+cacacb
+cacbac
+cacbca
+caccab
+caccba
+cbaacc
+cbacac
+cbacca
+cbcaac
+cbcaca
+cbccaa
+ccaabc
+ccaacb
+ccabac
+ccabca
+ccacab
+ccacba
+ccbaac
+ccbaca
+ccbcaa
+cccaab
+cccaba
+cccbaa
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Construct a finite automaton <strong><code>DFA_Q2D</code></strong> for
+the language consisting of all strings over the alphabet
+<code>{a,b,c}</code> in which there are an odd number
+of <code>a</code>, an even number of <code>b</code>, and any number of <code>c</code>.</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; language(DFA_Q2D, 6, accept_dfa)
+a
+ac
+ca
+aaa
+abb
+acc
+bab
+bba
+cac
+cca
+aaac
+aaca
+abbc
+abcb
+acaa
+acbb
+accc
+babc
+bacb
+bbac
+bbca
+bcab
+bcba
+caaa
+cabb
+cacc
+cbab
+cbba
+ccac
+ccca
+aaaaa
+aaabb
+aaacc
+aabab
+aabba
+aacac
+aacca
+abaab
+ababa
+abbaa
+abbbb
+abbcc
+abcbc
+abccb
+acaac
+acaca
+acbbc
+acbcb
+accaa
+accbb
+acccc
+baaab
+baaba
+babaa
+babbb
+babcc
+bacbc
+baccb
+bbaaa
+bbabb
+bbacc
+bbbab
+bbbba
+bbcac
+bbcca
+bcabc
+bcacb
+bcbac
+bcbca
+bccab
+bccba
+caaac
+caaca
+cabbc
+cabcb
+cacaa
+cacbb
+caccc
+cbabc
+cbacb
+cbbac
+cbbca
+cbcab
+cbcba
+ccaaa
+ccabb
+ccacc
+ccbab
+ccbba
+cccac
+cccca
+aaaaac
+aaaaca
+aaabbc
+aaabcb
+aaacaa
+aaacbb
+aaaccc
+aababc
+aabacb
+aabbac
+aabbca
+aabcab
+aabcba
+aacaaa
+aacabb
+aacacc
+aacbab
+aacbba
+aaccac
+aaccca
+abaabc
+abaacb
+ababac
+ababca
+abacab
+abacba
+abbaac
+abbaca
+abbbbc
+abbbcb
+abbcaa
+abbcbb
+abbccc
+abcaab
+abcaba
+abcbaa
+abcbbb
+abcbcc
+abccbc
+abcccb
+acaaaa
+acaabb
+acaacc
+acabab
+acabba
+acacac
+acacca
+acbaab
+acbaba
+acbbaa
+acbbbb
+acbbcc
+acbcbc
+acbccb
+accaac
+accaca
+accbbc
+accbcb
+acccaa
+acccbb
+accccc
+baaabc
+baaacb
+baabac
+baabca
+baacab
+baacba
+babaac
+babaca
+babbbc
+babbcb
+babcaa
+babcbb
+babccc
+bacaab
+bacaba
+bacbaa
+bacbbb
+bacbcc
+baccbc
+bacccb
+bbaaac
+bbaaca
+bbabbc
+bbabcb
+bbacaa
+bbacbb
+bbaccc
+bbbabc
+bbbacb
+bbbbac
+bbbbca
+bbbcab
+bbbcba
+bbcaaa
+bbcabb
+bbcacc
+bbcbab
+bbcbba
+bbccac
+bbccca
+bcaaab
+bcaaba
+bcabaa
+bcabbb
+bcabcc
+bcacbc
+bcaccb
+bcbaaa
+bcbabb
+bcbacc
+bcbbab
+bcbbba
+bcbcac
+bcbcca
+bccabc
+bccacb
+bccbac
+bccbca
+bcccab
+bcccba
+caaaaa
+caaabb
+caaacc
+caabab
+caabba
+caacac
+caacca
+cabaab
+cababa
+cabbaa
+cabbbb
+cabbcc
+cabcbc
+cabccb
+cacaac
+cacaca
+cacbbc
+cacbcb
+caccaa
+caccbb
+cacccc
+cbaaab
+cbaaba
+cbabaa
+cbabbb
+cbabcc
+cbacbc
+cbaccb
+cbbaaa
+cbbabb
+cbbacc
+cbbbab
+cbbbba
+cbbcac
+cbbcca
+cbcabc
+cbcacb
+cbcbac
+cbcbca
+cbccab
+cbccba
+ccaaac
+ccaaca
+ccabbc
+ccabcb
+ccacaa
+ccacbb
+ccaccc
+ccbabc
+ccbacb
+ccbbac
+ccbbca
+ccbcab
+ccbcba
+cccaaa
+cccabb
+cccacc
+cccbab
+cccbba
+ccccac
+ccccca
+</code></pre>
+
+<h3>(E)</h3>
+
+<p>Construct a finite automaton <strong><code>DFA_Q2E</code></strong> for
+the language consisting of all strings over the alphabet
+<code>{a,b,c}</code> in which there are an odd number
+of <code>a</code>, an even number of <code>b</code>, and exactly one <code>c</code>.</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; language(DFA_Q2E, 6, accept_dfa)
+ac
+bc
+ca
+cb
+aaac
+aabc
+aaca
+aacb
+abac
+abbc
+abca
+abcb
+acaa
+acab
+acba
+acbb
+baac
+babc
+baca
+bacb
+bbac
+bbbc
+bbca
+bbcb
+bcaa
+bcab
+bcba
+bcbb
+caaa
+caab
+caba
+cabb
+cbaa
+cbab
+cbba
+cbbb
+aaaaac
+aaaabc
+aaaaca
+aaaacb
+aaabac
+aaabbc
+aaabca
+aaabcb
+aaacaa
+aaacab
+aaacba
+aaacbb
+aabaac
+aababc
+aabaca
+aabacb
+aabbac
+aabbbc
+aabbca
+aabbcb
+aabcaa
+aabcab
+aabcba
+aabcbb
+aacaaa
+aacaab
+aacaba
+aacabb
+aacbaa
+aacbab
+aacbba
+aacbbb
+abaaac
+abaabc
+abaaca
+abaacb
+ababac
+ababbc
+ababca
+ababcb
+abacaa
+abacab
+abacba
+abacbb
+abbaac
+abbabc
+abbaca
+abbacb
+abbbac
+abbbbc
+abbbca
+abbbcb
+abbcaa
+abbcab
+abbcba
+abbcbb
+abcaaa
+abcaab
+abcaba
+abcabb
+abcbaa
+abcbab
+abcbba
+abcbbb
+acaaaa
+acaaab
+acaaba
+acaabb
+acabaa
+acabab
+acabba
+acabbb
+acbaaa
+acbaab
+acbaba
+acbabb
+acbbaa
+acbbab
+acbbba
+acbbbb
+baaaac
+baaabc
+baaaca
+baaacb
+baabac
+baabbc
+baabca
+baabcb
+baacaa
+baacab
+baacba
+baacbb
+babaac
+bababc
+babaca
+babacb
+babbac
+babbbc
+babbca
+babbcb
+babcaa
+babcab
+babcba
+babcbb
+bacaaa
+bacaab
+bacaba
+bacabb
+bacbaa
+bacbab
+bacbba
+bacbbb
+bbaaac
+bbaabc
+bbaaca
+bbaacb
+bbabac
+bbabbc
+bbabca
+bbabcb
+bbacaa
+bbacab
+bbacba
+bbacbb
+bbbaac
+bbbabc
+bbbaca
+bbbacb
+bbbbac
+bbbbbc
+bbbbca
+bbbbcb
+bbbcaa
+bbbcab
+bbbcba
+bbbcbb
+bbcaaa
+bbcaab
+bbcaba
+bbcabb
+bbcbaa
+bbcbab
+bbcbba
+bbcbbb
+bcaaaa
+bcaaab
+bcaaba
+bcaabb
+bcabaa
+bcabab
+bcabba
+bcabbb
+bcbaaa
+bcbaab
+bcbaba
+bcbabb
+bcbbaa
+bcbbab
+bcbbba
+bcbbbb
+caaaaa
+caaaab
+caaaba
+caaabb
+caabaa
+caabab
+caabba
+caabbb
+cabaaa
+cabaab
+cababa
+cababb
+cabbaa
+cabbab
+cabbba
+cabbbb
+cbaaaa
+cbaaab
+cbaaba
+cbaabb
+cbabaa
+cbabab
+cbabba
+cbabbb
+cbbaaa
+cbbaab
+cbbaba
+cbbabb
+cbbbaa
+cbbbab
+cbbbba
+cbbbbb
+</code></pre>
+
+<hr>
+
+<h2>Question 3: Combining Deterministic Finite Automata</h2>
+
+<p>In this question, we will implement the construction we saw in class to compute the <strong>intersection</strong> of two languages. This construction is described in Chen 1.2.2 under the name <em>the product construction</em>.</p>
+
+<p>Code a function <strong><code>inter(m1, m2)</code></strong> where <code>inter(m1, m2)</code> takes two DFAs <code>m1</code> and <code>m2</code> and returns a <strong>new</strong> DFA with the property that if <code>m1</code> accepts language A and <code>m2</code> accepts language B, then <code>inter(m1, m2)</code> is a DFA that accepts language A ∩ B.</p>
+
+<p>Notice that this is a function that takes two dictionaries and that returns a new dictionary. We're not &quot;executing&quot; any automaton here. We're just constructing a new automaton from two other automata.</p>
+
+<p>Your final automata doesn't need to look exactly like the one I give you a sample output for below. As long as it accepts exactly A ∩ B, I'll be happy.</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; inter(DFA_MOD_3, DFA_START_END)
+{
+   'states': [
+     (1, 0), 
+     (1, 1), 
+     (1, 2), 
+     (1, 99), 
+     (2, 0), 
+     (2, 1), 
+     (2, 2), 
+     (2, 99), 
+     (3, 0), 
+     (3, 1), 
+     (3, 2), 
+     (3, 99)
+   ], 
+   'alphabet': ['a', 'b', 'c'], 
+   'delta': [
+     ((1, 0), 'a', (2, 1)), 
+     ((1, 0), 'b', (1, 99)), 
+     ((1, 0), 'c', (1, 99)), 
+     ((1, 1), 'a', (2, 1)), 
+     ((1, 1), 'b', (1, 1)), 
+     ((1, 1), 'c', (1, 2)), 
+     ((1, 2), 'a', (2, 1)), 
+     ((1, 2), 'b', (1, 1)), 
+     ((1, 2), 'c', (1, 2)), 
+     ((1, 99), 'a', (2, 99)), 
+     ((1, 99), 'b', (1, 99)), 
+     ((1, 99), 'c', (1, 99)), 
+     ((2, 0), 'a', (3, 1)), 
+     ((2, 0), 'b', (2, 99)), 
+     ((2, 0), 'c', (2, 99)), 
+     ((2, 1), 'a', (3, 1)), 
+     ((2, 1), 'b', (2, 1)), 
+     ((2, 1), 'c', (2, 2)), 
+     ((2, 2), 'a', (3, 1)), 
+     ((2, 2), 'b', (2, 1)), 
+     ((2, 2), 'c', (2, 2)), 
+     ((2, 99), 'a', (3, 99)), 
+     ((2, 99), 'b', (2, 99)), 
+     ((2, 99), 'c', (2, 99)), 
+     ((3, 0), 'a', (1, 1)), 
+     ((3, 0), 'b', (3, 99)), 
+     ((3, 0), 'c', (3, 99)), 
+     ((3, 1), 'a', (1, 1)), 
+     ((3, 1), 'b', (3, 1)), 
+     ((3, 1), 'c', (3, 2)), 
+     ((3, 2), 'a', (1, 1)), 
+     ((3, 2), 'b', (3, 1)), 
+     ((3, 2), 'c', (3, 2)), 
+     ((3, 99), 'a', (1, 99)), 
+     ((3, 99), 'b', (3, 99)), 
+     ((3, 99), 'c', (3, 99))], 
+   'start': (1, 0), 
+   'final': [(1, 2)]
+ }
+
+&gt;&gt;&gt; language(inter(DFA_MOD_3, DFA_START_END), 6, accept_dfa)
+# The language of strings starting with a and ending with c with mod 3 a's in them.
+aaac
+aaabc
+aaacc
+aabac
+aacac
+abaac
+acaac
+aaabbc
+aaabcc
+aaacbc
+aaaccc
+aababc
+aabacc
+aabbac
+aabcac
+aacabc
+aacacc
+aacbac
+aaccac
+abaabc
+abaacc
+ababac
+abacac
+abbaac
+abcaac
+acaabc
+acaacc
+acabac
+acacac
+acbaac
+accaac
+</code></pre>
+
+<p></body></p>
+
+<p></html></p>
+
+    
+  </body>
+  
+</html>
+

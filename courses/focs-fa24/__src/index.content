@@ -311,6 +311,10 @@
   <section id="homeworks">
     
     <h2>Homeworks</h2>
+
+    <ul class="plain">
+      <li><a href="./homeworks/1">Homework 1</a> &mdash; due Sunday Sep 29</li>
+      </ul>  
     
   </section>
   
