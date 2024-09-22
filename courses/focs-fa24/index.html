@@ -87,7 +87,7 @@
 	      <li>Hopcroft, Motwani, Ullman, <i><a href="https://www.amazon.com/Introduction-Automata-Theory-Languages-Computation/dp/0321455363">Automata Theory, Languages, and Computation</a></i></li>
             </ul>
             
-            An inexpensive and reasonable book is the following, although it uses Ruby instead of Haskell:
+            An inexpensive and reasonable book is the following, although it uses Ruby instead of Python:
             <ul>
 	      <li>Stuart, <i><a href="http://computationbook.com">Understanding Computation</a></i></li>
             </ul>
@@ -96,41 +96,26 @@
           </li>
 
           
-          <li><p><b>Programming:</b> <!--
-          All programming in this course will be done using the programming
-            language <a href="https://www.haskell.org/">Haskell</a>. The Haskell compiler (GHC) can
-            be downloaded from the web site, and supports installations on most common systems. You
-            can find the installation
-              instructions <a href="https://www.haskell.org/get-started/">here</a>. (Don't worry about Cabal or Stack — they will get installed by default, but we're not going to use them.) Installation steps from the link above: install GHCup (which install the required GHC, and optionally lets you install HLC which you need in order to use VSCode or related editor in a way that can do syntax highlighting); install VSCode; install the Haskell extension to VSCode.</p>
-
-            <p>Once Haskell is installed, type <tt>ghci</tt> in the terminal to start the interactive shell. That's mostly what we'll be using. Type <tt>:quit</tt> to quit.</p>
-
-            <p>There are a couple of reasonable books on Haskell that you might want to get your hands
-            on if you prefer learning your programming language from a book instead of the web:
-            
-            <ul>
-              <li>Hutton, <i><a href="https://www.cambridge.org/us/universitypress/subjects/computer-science/programming-languages-and-applied-logic/programming-haskell-2nd-edition">Programming in Haskell</a></i></li>
-              <li>Allen, Moronuki, <i><a href="https://haskellbook.com/">Haskell Programming From First Principles</a></i></li>
-            </ul>
-
-            Useful onlines resources can be found on the <a href="https://www.haskell.org">Haskell website</a>. In particular, the <a href="https://www.haskell.org/documentation/">Documentation</a> section contains links to tutorials that may be useful. Note the introduction link to <a href="https://www.seas.upenn.edu/~cis1940/spring13/lectures.html">CIS194</a>, an introductory course on Haskell. The <a href="https://www.seas.upenn.edu/~cis1940/spring13/lectures/01-intro.html">first CIS194 lecture</a>, in particular, is all we really need to get started.</p>
-            -->
-          </li>
+          <li><p><b>Programming:</b> All programming in the course
+            will be done in <a
+            href="https://www.python.org/downloads/">Python 3</a>. I
+            will assume working knowledge of the language. We will
+            largely follow the <a
+            href="http://legacy.python.org/dev/peps/pep-0008/">PEP8
+            style guide</a>, and you may also want to read through <a
+            href="https://www.memonic.com/user/pneff/folder/python/id/1bufp">this</a>
+            as well.</li>
           
           <li><b>Grading:</b> The final grade is based on weekly homework (30%), in-class quizzes
             (30%), and a team final project (40%). Homeworks and quizzes will be done
             individually. Late homeworks will be penalized (5% per 24 hours) and no homework will be
             accepted after its solution has been discussed in class.  </li>
 
-          <li><b>Course Assistants:</b> TBD <!-- Ben Morris (<tt>bmorris</tt> at the
-            usual olin.edu domain) -->
+          <li><b>Course Assistant:</b> Ben Kim (details to follow)
           </li>
 
           <li>I expect all of us to follow the <b><a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a></b>.</li>
 
-        <!-- 
-          <li><b>Chat server:</b> Announcements and discussions take place on <a href="https://chat.rpucella.net" target="_blank">our chat server</a>, which double as our homework submission server. You should have received account information by email. If not, please reach out.</li>
-          -->
 
   </section>
 
@@ -145,9 +130,6 @@
     <ul class="lectures">
 
       <li><p><span class="hdr">Sep 9: </span><b>Introduction</b></p>
-      </li>
-
-<!--
         <div class="lect">
 	   <p><a href="https://en.wikipedia.org/wiki/Hilbert's_problems">Hilbert's problems</a>, ten of
 	     which were presented at the ICM in Paris in
@@ -155,21 +137,8 @@
 	       problem</a>, on the solvability of Diphantine equations, spoke directly to the notion of
 	     computation.</p>
            
-      	   <p>The <a href="./demo.hs">Haskell demo</a> that I worked through in class.</p>
-
-           <p>Some notes on <a href="recursion-haskell.txt">writing recursive functions in Haskell</a>.</p>
-        </div>
--->
-
-<!--
-      <li><p><b>MACHINE MODELS</b></p></li>
-
-      <li><p><span class="hdr">Sep 18: </span><b>Formal languages</b></p>
-        <div class="lect">
-           <p>Reading: Chen, pages 8 - 10.</p>
-           
            <p>The mathematical notions we'll be using are in Chen
-           above. Here's <a href="languages.pdf">additional notes</a> on what I presented in class.
+           above, pages 8-10.  Here's <a href="languages.pdf">additional notes</a> on what I presented in class.
            
 	   <p>When talking about set comprehension, I mentioned that there usually needs to be some
 	     restrictions on the properties allowed in order to ensure that the sets can be constructed
@@ -182,171 +151,50 @@
 	     fact that sets form a <a href="https://en.wikipedia.org/wiki/Boolean_algebra">Boolean
 	       algebra</a>.</p>
            
-	   <p>Regular expressions are used to search for patterns in text. <a href="http://www.cs.columbia.edu/~tal/3261/fall07/handout/egrep_mini-tutorial.htm">Here is an example of how they are used in egrep</a>. Note that the equivalence between regular expressions and regular languages only holds for <i>pure</i> regular expressions. Most regular expression packages used in practice extend regular expressions in ways that let you express non-regular languages.</p>
-           
-           <p>An <a href="https://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html">interesting article by Brian Kernighan</a> on elegant code for regular expression matching. Note that Kernighan's definition of regular expressions is more restricted than ours. (The point of the article is not regular expressions, but elegant code.)</p>
-           
-	    <p>If you define two regular expressions to be equal when they denote the same set of strings, then regular expressions obey the laws of <a href="https://en.wikipedia.org/wiki/Kleene_algebra">Kleene algebras</a>.</p>
+        </div>
+
+      <li><p><b>MACHINE MODELS</b></p></li>
+
+      <li><p><span class="hdr">Sep 16: </span><b>Deterministic Finite Automata</b></p>
+        <div class="lect">
+           <p>Reading: Chen, Sections 1.1 - 1.2.</p>
         </div>
       </li>
 
-      <li><p><span class="hdr">Sep 25 – Oct 2: </span><b>Finite state machines</b></p>
+      <li><p><span class="hdr">Sep 23: </span><b>Nondeterministic Finite Automata, Regular Expressions</b></p>
         <div class="lect">
-           <p>Reading: Chen, Sections 1.1 - 1.4.</p>
-           
-           <p>Some <a href="automata.pdf">notes</a> on what I presented in class. The transformation
-           from regular expressions to finite state machines doesn't go through &epsilon;-NFAs, but
-           directly to NFAs, which is a bit more complicated.</p>
-           
-           <p>One reason to study nondeterministic finite automata is that they can be easier to
-           describe than deterministic finite automata. More specifically, there exists languages
-           that can be accepted by nondeterministic finite automata with N states whose smallest
-           deterministic finite automata that accept those same languages have at least
-           2<sup>N</sup> states. One example is the language over {<tt>a</tt>,<tt>b</tt>} consisting
-           of all strings whose Nth from last symbol is <tt>a</tt>. <a
-           href="https://commons.wikimedia.org/wiki/File:NFA_with_exponential_blown-up_DFA.gif">Here
-           is an illustration</a> of the subset construction for that language, over alphabet {0,1},
-           and N=4.</p> 
-
+           <p>Reading: Chen, Sections 1.3 - 1.5.</p>
         </div>
       </li>
       
-      <li><p><span class="hdr">Oct 11 – 16: </span><b>Turing machines</b></p>
-        <div class="lect">
-           <p>Reading: Chen, Section 2.1, 2.6, 2.7</p>
-           
-          <p>A <a href="./tm-anbn.png">diagram</a> of the Turing machine I showed in class to accept the langage {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup> | n &ge; 0}. If you want to practice, you can try to modify the machine to accept the languages {<tt>a</tt><sup>m</sup><tt>b</tt><sup>n</sup> | n &ge; m &ge; 0} and {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup><tt>c</tt><sup>n</sup> | n &ge; 0}.</p>
-            
-	  <p><a href="https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf"><i>On Computable
-	        Numbers, with an Application to the Entscheidungsproblem</i></a>, the original paper by
-	    Turing that describes his machines. (Though it's not the most accessible
-	    description.)</p>
-	  
-	  <p>As I mentioned, we can create a variant of finite automata that do not use a tape but that
-	    can count. The resulting model is called
-	    a <a href="https://en.wikipedia.org/wiki/Counter_automaton">counter automata</a>. When
-	    equipped with a single counter, it can accept languages such as
-	    {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup> | n &ge; 0}, but cannot accept all
-	    computable languages. When equipped with two counters, the resulting machines can accept
-	    all computable languages, and are equivalent to Turing machines.</p>
-
-	   <p>The <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis">Church-Turing
-	       thesis</a>.</p>
-           
-           <p>Pithy mathematical description
-             of <a href="https://en.wikipedia.org/wiki/Multitape_Turing_machine">multi-tape Turing
-               machines</a>. </p>
-           
-           <p><a href="register.pdf">Slides</a> describing the simple register machine I
-             introduced. It is roughly based on Lambek's abacus model, described in the first chapter
-             of <a href="http://www.math.mcgill.ca/barr/papers/pga.pdf"><i>Programs, Grammars,
-                 Arguments</i></a>. </p>
-           <p> 
-        </div>            
+      <li><p><span class="hdr">Sep 30: </span><b>Pushdown Automata, Context-Free Grammars</b></p>
       </li>
 
-      <li><p><span class="hdr">Oct 23: </span><b>Non-computable languages</b></p>
-        <div class="lect">
-          <p>Quiz: finite state machines</p>
-          
-          <p>Reading: Chen, Sections 2.2 &ndash; 2.4</p>
-
-            <p>Wikipedia links: the <a href="https://en.wikipedia.org/wiki/Halting_problem">Halting Problem</a>; <a href="https://en.wikipedia.org/wiki/Reduction_(complexity)">Reducibility</a>; <a href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice's Theorem</a>.</p>
-
-            <p>I mentioned that the non-computability of the halting problem for Turing machines impacts any kind of reasoning that we wish to make about programs in modern programming languages. This is a simple application of the Church-Turing thesis. Matthew Might has an accessible account that <a href="https://matt.might.net/articles/intro-static-analysis/">describes how the non-computability of the halting problem impacts static analysis of programs</a>.
-
-            <p>The <a href="https://en.wikipedia.org/wiki/Post_correspondence_problem">Post Correspondence Problem</a> is non-computable, doesn't talk about Turing machines or interpreters for programming languages, and shows that there are reasonable problems that are non-computable. Here's a <a href="pcp-proof.pdf">proof of non-computability</a> from Sipser, basically showing that you can reduce the Halting Problem for Turing machines to PCP.</p>
-
-        </div>
+      <li><p><span class="hdr">Oct 7: </span><b>Turing Machines</b></p>
       </li>
 
+      <li><p><span class="hdr">Oct 17 (Olin Monday): </span><b>Non-computable Languages</b></p>
+      </li>
+
+      <li><p><b>CHURCH-TURING THESIS</b></p></li>
+
+      <li><p><span class="hdr">Oct 21: </span><b>The Abacus Model</b></p>
+      </li>
+
+      <li><p><span class="hdr">Nov 4: </span><b>Compiling Arithmetic Expressions</b></p>
+      </li>
+
+      <li><p><span class="hdr">Nov 11: </span><b>Simple Control Flow</b></p>
+      </li>
+
+      <li><p><span class="hdr">Nov 18: </span><b>Adding Functions</b></p>
+      </li>
       
-      <li><p><b>ALTERNATIVE MODELS</b></p></li>
-
-      <li><p><span class="hdr">Oct 30: </span><b>Production grammars</b></p>
-      <div class="lect">
-            <p>Succinct <a href="./grammars.pdf">notes</a> from the lecture. It includes the
-            construction of the unrestricted grammar that can simulate a given Turing machine, which I skipped in class. (These 
-            notes are using a slightly different definition of a Turing machine with a marker
-            at the beginning of the tape. It is completely equivalent to our definition of Turing
-            machines, by a straightforward application of the Church-Turing thesis.)</p>
-
-	    <p>Grammars are used in linguistics (introduced by <a href="https://en.wikipedia.org/wiki/Syntactic_Structures">Chomsky to study the structure of natural languages</a>) and in computer science to implement parsers, that is, turning a string of symbols into a structured artifact like an Abstract Syntax Tree to represent a program in a form that it more amenable to execution and/or compilation. <a href="http://homepages.cwi.nl/~storm/teaching/sc1112/intro-parsing.pdf">Here's
-	        a reasonable high-level presentation</a> of the basics of parsing, to give you a flavor.</p>
-
-	    <p>A beautiful application of grammars
-	      is <a href="https://en.wikipedia.org/wiki/L-system">L-systems</a>,
-	      a class of grammars that model the growth processes of plant
-	      development.</p>
-
-	    <p><a href="https://en.wikipedia.org/wiki/Pushdown_automaton">Pushdown automata</a> are machine models that exactly capture context-free languages:
-              a language A is context-free if and only if you can find a pushdown automaton that accepts A.</p>
-	  </div>
-          </div>
+      <li><p><span class="hdr">Dec 2: </span><b>TDB</b></p>
       </li>
 
-      <li><p><span class="hdr">Nov 6: </span><b>Lambda calculus (1)</b></p>
-      <div class="lect">
-          <p>Quiz: Turing machines</p>
-            <p><a href="notes/lambda1.html">Notes from the lecture</a>.</p>
-	    <p>The fact that the order in which you perform simplifications in the lambda calculus doesn't matter (aside from the possibility of never reaching a normal form) is the <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Rosser_theorem">Church-Rosser property</a>.</p>
-	    <p>Some additional introductory references on the lambda calculus: <a href="http://palmstroem.blogspot.com/2012/05/lambda-calculus-for-absolute-dummies.html">The Lambda Calculus for Absolute Dummies (Like Myself)</a> and Rojas's <a href="http://www.inf.fu-berlin.de/lehre/WS03/alpi/lambda.pdf">A Tutorial Introduction to the Lambda Calculus</a>. Note that these references use the standard presentation of the calculus, with <i>&lambda;x.M</i> instead of <i>( \x &rarr; M)</i>. These also cover some of the material I will talk about next time.</p>
-          </div>
-          
-      </div>
+      <li><p><span class="hdr">Dec 9: </span><b>TDB</b></p>
       </li>
-
-      <li><p><span class="hdr">Nov 13: </span><b>Lambda calculus (2)</b></p>
-      <div class="lect">
-          <p>Quiz: register machines</p>
-            <p><a href="notes/lambda2.html">Notes from the lecture</a>.</p>
-
-	    <p>A general discussion of <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator">fixed-point combinators</a>, of which &Theta; is an example.</p>
-
-            <p>I showed in class that many of the encodings from the lambda calculus can be directly represented in Haskell. That's because Haskell is in large part based on the lambda calculus. Another language based on the lambda calculus is Lisp, and I would be remiss if I did not point you to <a href="https://sarabander.github.io/sicp/html/index.xhtml">Structure and Interpretation of Computer Programs</a>, which uses a Lisp-like language to explore all sorts of ideas for how to approach the art of programming.</p>
-          
-      </div>
-      </li>
-
-      <li><p><span class="hdr">Nov 27: </span><b>Streams</b></p>
-      <div class="lect">
-
-          <p><a href="./streams.pdf">Notes</a> from the lecture.</p>
-          
-	  <p>There are two main sources for the dataflow
-	    computational model, neither of which is exactly what I
-	    presented: Gilles Kahn's work
-	    on <a href="https://en.wikipedia.org/wiki/Kahn_process_networks">Kahn
-	      Process Networks</a>, and Jack Dennis's work on
-	    <a href="http://www.capsl.udel.edu/courses/cpeg852/2014/slides/Topic-A-Dataflow-part1.pdf">dataflow
-	      architectures</a>.</p>
-
-              <p><a href="https://wiki.python.org/moin/Generators">Generators</a> such as found in Python and other languages can also be used to implement infinite streams of values.</p>
-
-	  <p>The programming language <a href="https://en.wikipedia.org/wiki/Lucid_(programming_language)">Lucid</a> embodies some of the ideas of stream programming in an interesting way.</p>
-
-      </div>
-      </li>
-
-      <li><p><span class="hdr">Dec 4: </span><b>From lambda calculus to programming languages</b></p>
-        <div class="lect">           
-          <p>Quiz: context-free grammars</p>
-          <p><a href="lc-to-pl.pdf">Notes from the lecture</a>, and a
-          more <a href="lc-evaluator.zip">complete version of the code</a> I developed in
-          class. (Unzip, and look at <tt>README.md</tt>.)</p>
-          <p>The lecture was basically me walking you through the first few lectures of a PL
-            interpreters course in an accelerated way. If this topic interests you, a good starting
-            point in the spirit of what I talked about is
-            Krishnamurthy's <i><a href="http://cs.brown.edu/courses/cs173/2012/book/">Programming
-            Languages: Application and Interpretation</a></i>. It uses a dialect of Scheme, a
-            Lisp-like language.</p>
-          <p>
-            Parsing, the process of going from surface syntax (sequence of characters) to an internal representation (a tree structure), has a long and deep history, and lots of associated technology. The sample code above uses <i>parser combinators</i>, a good overview of which you can find in Hutton's <i><a href="https://www.cambridge.org/core/journals/journal-of-functional-programming/article/higherorder-functions-for-parsing/0490F2C8511F7625F9FC15BFFEDBB0AA">Higher-order functions for parsing</a></i>.</p>
-          <p>In practical interpreters and compilers, tools such as <a href="https://en.wikipedia.org/wiki/Yacc">Yacc</a> or <a href="https://en.wikipedia.org/wiki/ANTLR">ANTLR</a> are used for generating efficient parsers. The technology underlying those tools is best described in Aho, Sethi, and Ullman's classic text <i><a href="https://www.amazon.com/Compilers-Principles-Techniques-Alfred-Aho/dp/0201100886/">Compilers: Principles, Techniques, and Tools</a></i>.</p>
-      
-        </div>
-      </li>
-      -->
 
     </ul>
 
