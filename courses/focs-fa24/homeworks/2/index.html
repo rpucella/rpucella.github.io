@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <script>
+  document.title = 'Homework 2'
+</script>
+
+<h1>Homework 2</h1>
+
+<h2>Due Date: Tuesday Oct 8, 2024 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.</p></li>
+
+<li><p>Please do not post your solutions on a public website or a public repository (including GitHub).</p></li>
+
+<li><p>All programming is to be done in Python 3.</p></li>
+
+<li><p>Code your answers by modifying the file <a href="homework2.py"><code>homework2.py</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you
+wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+<li><p>Please do not change the &quot;signature&quot; (number and interpretation of arguments) of the
+functions. Doing so will make it impossible to load your code into the testing infrastructure, and
+make me unhappy.</p></li>
+
+<li><p>Feel free to define helper functions if you need them.</p></li>
+</ul>
+
+<p><strong>Electronic Submission Instructions</strong></p>
+
+<ul>
+<li><p>Make your your file <code>homework2.py</code> loads without error in a fresh Python 3 shell.</p></li>
+
+<li><p>Submission via <a href="https://canvas.olin.edu">Canvas</a>.</p></li>
+</ul>
+
+<hr>
+
+<h2>Nondeterministic Finite Automata</h2>
+
+<p>Consider the structure for finite automata that we saw last time, as a Python dictionary:</p>
+
+<pre><code>{ 
+   &quot;states&quot;: ...,
+   &quot;alphabet&quot;: ...
+   &quot;delta&quot;: ...,
+   &quot;start&quot;: ...,
+   &quot;final&quot;: ...
+}
+</code></pre>
+
+<p>A finite automaton is described by a dictionary with fields holding the various components of the
+automaton: a set of states, a set of symbols (the alphabet), a transition function &delta;, a start state, and
+a set of final states. Lists are used to represent sets. The transition function is represented
+using list of triples (<em>p</em>, <em>a</em>, <em>q</em>), stating that in state <em>p</em>, reading symbol <em>a</em> makes the machine
+transition to state <em>q</em>. States can be represented by any value that support equality checking.</p>
+
+<p>In the last homework, we focused on deterministic finite automata, where for every state <em>p</em> and every
+symbol <em>a</em> there is exactly one transition out of <em>p</em> labelled <em>a</em> in the automaton.</p>
+
+<p>Here, we drop this restriction, and consider nondeterministic finite automata (NFA), where there can be no transition labeled for some symbols out of a given state, or more than one. Clearly, every DFA can be considered an NFA. (Why?)</p>
+
+<p>Here are some NFAs that are not deterministic. The first is an NFA that accepts all strings over
+<code>{a, b, c}</code> that end with <code>a</code>:</p>
+
+<pre><code>NFA_LAST = {
+    &quot;states&quot;: [0, 1],
+    &quot;alphabet&quot;: [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;],
+    &quot;delta&quot;: [
+        (0, &quot;a&quot;, 0),
+        (0, &quot;b&quot;, 0),
+        (0, &quot;c&quot;, 0),
+        (0, &quot;a&quot;, 1)
+    ],
+    &quot;start&quot;: 0,
+    &quot;final&quot;: [1]
+}
+</code></pre>
+
+<p>Here is a generalization, <em>function</em> that takes a number <code>n &gt; 0</code> and returns an NFA that accepts all
+strings over <code>{a, b, c}</code> where then <code>n</code>th position from the end has an <code>a</code>:</p>
+
+<pre><code>def NFA_FIXED(n):
+    if n &gt; 0:
+        return {
+            &quot;states&quot;: [-1] + list(range(n)),
+            &quot;alphabet&quot;: [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;],
+            &quot;delta&quot;: [
+                (-1, &quot;a&quot;, -1),
+                (-1, &quot;b&quot;, -1),
+                (-1, &quot;c&quot;, -1),
+                (-1, &quot;a&quot;, 0)
+            ] + [(i - 1, &quot;a&quot;, i) for i in range(1, n)]
+            + [(i - 1, &quot;b&quot;, i) for i in range(1, n)]
+            + [(i - 1, &quot;c&quot;, i) for i in range(1, n)],
+            &quot;start&quot;: -1,
+            &quot;final&quot;: [n - 1]
+        }
+    raise Exception(f&quot;Number {n} not supported&quot;)
+</code></pre>
+
+<p>So <code>NFA_FIXED(1)</code> is just <code>NFA_LAST</code>, but <code>NFA_FIXED(7)</code> is the set of all strings with an <code>a</code> in the 7th position from the end of the string.</p>
+
+<hr>
+
+<h2>Question 1: Simulating Nondeterministic Finite Automata</h2>
+
+<p>We are going to code up a simulator for nondeterministic finite automata. Nondeterministic finite automata
+are harder to simulate than deterministic ones because we have to find ONE possible path in the automaton that brings us from the start state to a final state. We can either do that by searching, or by basically attempting to follow all possible paths at once. It's this second approach I want you to implement.</p>
+
+<p>Code a function <strong><code>accept_nfa(m, input)</code></strong> where <code>accept_nfa(m, s)</code> returns <code>True</code> if if finite
+automaton <code>m</code> accepts the string <code>s</code>, and <code>False</code> otherwise. That is, it returns true exactly if
+there is <em>some</em> way to follow the transitions of <code>m</code> labeled by the symbols in <code>s</code> from the start
+state to a final state.</p>
+
+<p><strong>Hint 1</strong>: Use the same process that we used as to accept a string with a DFA. That is, loop over all
+the symbols in the input string in order, and keep track of your current position in the automaton
+after each symbol. The initial position is just the start state of the automaton. The one difference
+here is that instead of the current position being represented as a single state (like for a DFA),
+the current position is represented by a <em>set</em> of states, like we saw in class. The current position
+(which is a set of states) is updated to the next position after reading symbol <code>a</code> from the input
+string by following all transitions labeled <code>a</code> from a state in the current position — the set of
+all states that can be reached following an <code>a</code>-transition from a state in the current position
+forms the next position.</p>
+
+<p><strong>Hint 2</strong>: You will want to use <a href="https://docs.python.org/3/library/stdtypes.html#set-types-set-frozenset">Python's <code>set</code> or <code>frozenset</code> structures</a> to represent sets of states. It will make your life <em>much</em> simpler. (Two sets compare with <code>==</code> the way you want sets to compare, with no regard to repetition or order of elements.)</p>
+
+<p><strong>Hint 3</strong>: I strongly suggest you write a helper function <code>next_states(delta, current, sym)</code> that takes the <code>delta</code>
+transition relation of an NFA, a set of states of that NFA, and a symbol <code>sym</code>, and returns the set of
+all states that can be reached by following an <code>a</code>-transition out of a state in <code>current</code>.</p>
+
+<p>An input string should be accepted if the set of states you get after following all the symbols in
+the input string contains a final state of the NFA.</p>
+
+<p>You can use function <code>language(m, length, accept)</code> I introduced last time (and included in <code>homework2.py</code> to print all strings accepted by NFA <code>m</code> of length at most <code>length</code> by passing <code>accept_nfa</code> as the acceptance function.)</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; accept_nfa(NFA_LAST, &quot;&quot;)
+False
+&gt;&gt;&gt; accept_nfa(NFA_LAST, &quot;a&quot;)
+True
+&gt;&gt;&gt; accept_nfa(NFA_LAST, &quot;ba&quot;)
+True
+&gt;&gt;&gt; accept_nfa(NFA_LAST, &quot;bba&quot;)
+True
+&gt;&gt;&gt; accept_nfa(NFA_LAST, &quot;bbba&quot;)
+True
+&gt;&gt;&gt; accept_nfa(NFA_LAST, &quot;bbbab&quot;)
+False
+&gt;&gt;&gt; accept_nfa(NFA_LAST, &quot;bbbabb&quot;)
+False
+&gt;&gt;&gt; accept_nfa(NFA_LAST, &quot;aaaab&quot;)
+False
+
+&gt;&gt;&gt; accept_nfa(NFA_FIXED(3), &quot;bbbb&quot;)
+False
+&gt;&gt;&gt; accept_nfa(NFA_FIXED(3), &quot;aa&quot;)
+False
+&gt;&gt;&gt; accept_nfa(NFA_FIXED(3), &quot;aaa&quot;)
+True
+&gt;&gt;&gt; accept_nfa(NFA_FIXED(3), &quot;abb&quot;)
+True
+&gt;&gt;&gt; accept_nfa(NFA_FIXED(3), &quot;babb&quot;)
+True
+
+&gt;&gt;&gt; language(NFA_LAST, 4, accept_nfa)
+a
+aa
+ba
+ca
+aaa
+aba
+aca
+baa
+bba
+bca
+caa
+cba
+cca
+aaaa
+aaba
+aaca
+abaa
+abba
+abca
+acaa
+acba
+acca
+baaa
+baba
+baca
+bbaa
+bbba
+bbca
+bcaa
+bcba
+bcca
+caaa
+caba
+caca
+cbaa
+cbba
+cbca
+ccaa
+ccba
+ccca
+
+&gt;&gt;&gt; language(NFA_FIXED(2), 4, accept_nfa)
+aa
+ab
+ac
+aaa
+aab
+aac
+baa
+bab
+bac
+caa
+cab
+cac
+aaaa
+aaab
+aaac
+abaa
+abab
+abac
+acaa
+acab
+acac
+baaa
+baab
+baac
+bbaa
+bbab
+bbac
+bcaa
+bcab
+bcac
+caaa
+caab
+caac
+cbaa
+cbab
+cbac
+ccaa
+ccab
+ccac
+
+&gt;&gt;&gt; language(NFA_FIXED(3), 4, accept_nfa)
+aaa
+aab
+aac
+aba
+abb
+abc
+aca
+acb
+acc
+aaaa
+aaab
+aaac
+aaba
+aabb
+aabc
+aaca
+aacb
+aacc
+baaa
+baab
+baac
+baba
+babb
+babc
+baca
+bacb
+bacc
+caaa
+caab
+caac
+caba
+cabb
+cabc
+caca
+cacb
+cacc
+</code></pre>
+
+<hr>
+
+<h2>Question 2: Converting NFAs to DFAs</h2>
+
+<p>In Question 1, we simulated nondeterministic finite state machines directly. In this question, we
+convert nondeterministic finite automat to deterministic finite automata using the <em>subset construction</em> we saw in class and which is described in the notes.</p>
+
+<p>To that end, code a function <code>to_dfa(m)</code> taking an NFA <code>m</code> and returning a new DFA that accepts exactly the same
+language as <code>m</code>. The resulting automaton should be deterministic.</p>
+
+<p>Recall that the subset construction creates a DFA from an NFA by taking as states of the new DFA the
+<em>subsets</em> of states of the NFA. There is an <code>a</code>-transition from set of NFA-states P to set of NFA-states
+Q in the new DFA if Q is the set of all states reachable via <code>a</code>-transitions from a state in
+P. (Observe that this is <strong>exactly</strong> what function <code>next_states</code> I suggested you write in Question 1 gives
+you! Accident? I think not.)</p>
+
+<p><strong>Hint 1</strong>: I <em>strongly</em> suggest you use <code>set</code> or <code>frozenset</code> to represent states of the new DFA, so that your DFAs
+can be simulated with the code you wrote in Homework 1.</p>
+
+<p><strong>Hint 2</strong>: You will want to write a function <code>subsets(qs)</code> that takes a set of states <code>qs</code> and returns
+the list of all subsets of states from <code>qs</code>. That's a fun function to write. I have some sample outputs below.</p>
+
+<p>The starting state of the resulting DFA is the set containing only the starting state of the NFA,
+and a set of states is final if it contains at least one final state of the NFA.</p>
+
+<p>You can test your <code>to_nfa</code> function by converting some NFAs and running the result through <code>language</code>
+using <code>accept_dfa</code> from Homework 1.</p>
+
+<p>The DFAs you produce <strong>do not need to look exactly like the DFAs that I produce in my sample outputs below</strong>. As long as your DFAs accept the same language as the original NFA, that's good enough for me.</p>
+
+<p>Sample outputs:</p>
+
+<pre><code>&gt;&gt;&gt; subsets([])
+[frozenset()]
+
+&gt;&gt;&gt; subsets([1])
+[frozenset(), frozenset({1})]
+
+&gt;&gt;&gt; subsets([1, 2])
+[frozenset(), frozenset({2}), frozenset({1}), frozenset({1, 2})]
+
+&gt;&gt;&gt; subsets([1, 2, 3])
+[frozenset(), frozenset({3}), frozenset({2}), frozenset({2, 3}), frozenset({1}), frozenset({1, 3}), frozenset({1, 2}), frozenset({1, 2, 3})]
+
+&gt;&gt;&gt; subsets([1, 2, 3, 4])
+[frozenset(), frozenset({4}), frozenset({3}), frozenset({3, 4}), frozenset({2}), frozenset({2, 4}), frozenset({2, 3}), frozenset({2, 3, 4}), frozenset({1}), frozenset({1, 4}), frozenset({1, 3}), frozenset({1, 3, 4}), frozenset({1, 2}), frozenset({1, 2, 4}), frozenset({1, 2, 3}), frozenset({1, 2, 3, 4})]
+
+&gt;&gt;&gt; subsets([1, 2, 3, 4, 5])
+[frozenset(), frozenset({5}), frozenset({4}), frozenset({4, 5}), frozenset({3}), frozenset({3, 5}), frozenset({3, 4}), frozenset({3, 4, 5}), frozenset({2}), frozenset({2, 5}), frozenset({2, 4}), frozenset({2, 4, 5}), frozenset({2, 3}), frozenset({2, 3, 5}), frozenset({2, 3, 4}), frozenset({2, 3, 4, 5}), frozenset({1}), frozenset({1, 5}), frozenset({1, 4}), frozenset({1, 4, 5}), frozenset({1, 3}), frozenset({1, 3, 5}), frozenset({1, 3, 4}), frozenset({1, 3, 4, 5}), frozenset({1, 2}), frozenset({1, 2, 5}), frozenset({1, 2, 4}), frozenset({1, 2, 4, 5}), frozenset({1, 2, 3}), frozenset({1, 2, 3, 5}), frozenset({1, 2, 3, 4}), frozenset({1, 2, 3, 4, 5})]
+
+&gt;&gt;&gt; to_dfa(NFA_LAST)
+{'states': [frozenset(), frozenset({1}), frozenset({0}), frozenset({0, 1})], 'alphabet': ['a', 'b', 'c'], 'delta': [(frozenset(), 'a', set()), (frozenset(), 'b', set()), (frozenset(), 'c', set()), (frozenset({1}), 'a', set()), (frozenset({1}), 'b', set()), (frozenset({1}), 'c', set()), (frozenset({0}), 'a', {0, 1}), (frozenset({0}), 'b', {0}), (frozenset({0}), 'c', {0}), (frozenset({0, 1}), 'a', {0, 1}), (frozenset({0, 1}), 'b', {0}), (frozenset({0, 1}), 'c', {0})], 'start': frozenset({0}), 'final': [frozenset({1}), frozenset({0, 1})]}
+
+&gt;&gt;&gt; to_dfa(NFA_FIXED(1))
+{'states': [frozenset(), frozenset({0}), frozenset({-1}), frozenset({0, -1})], 'alphabet': ['a', 'b', 'c'], 'delta': [(frozenset(), 'a', set()), (frozenset(), 'b', set()), (frozenset(), 'c', set()), (frozenset({0}), 'a', set()), (frozenset({0}), 'b', set()), (frozenset({0}), 'c', set()), (frozenset({-1}), 'a', {0, -1}), (frozenset({-1}), 'b', {-1}), (frozenset({-1}), 'c', {-1}), (frozenset({0, -1}), 'a', {0, -1}), (frozenset({0, -1}), 'b', {-1}), (frozenset({0, -1}), 'c', {-1})], 'start': frozenset({-1}), 'final': [frozenset({0}), frozenset({0, -1})]}
+
+&gt;&gt;&gt; to_dfa(NFA_FIXED(2))
+{'states': [frozenset(), frozenset({1}), frozenset({0}), frozenset({0, 1}), frozenset({-1}), frozenset({1, -1}), frozenset({0, -1}), frozenset({0, 1, -1})], 'alphabet': ['a', 'b', 'c'], 'delta': [(frozenset(), 'a', set()), (frozenset(), 'b', set()), (frozenset(), 'c', set()), (frozenset({1}), 'a', set()), (frozenset({1}), 'b', set()), (frozenset({1}), 'c', set()), (frozenset({0}), 'a', {1}), (frozenset({0}), 'b', {1}), (frozenset({0}), 'c', {1}), (frozenset({0, 1}), 'a', {1}), (frozenset({0, 1}), 'b', {1}), (frozenset({0, 1}), 'c', {1}), (frozenset({-1}), 'a', {0, -1}), (frozenset({-1}), 'b', {-1}), (frozenset({-1}), 'c', {-1}), (frozenset({1, -1}), 'a', {0, -1}), (frozenset({1, -1}), 'b', {-1}), (frozenset({1, -1}), 'c', {-1}), (frozenset({0, -1}), 'a', {0, 1, -1}), (frozenset({0, -1}), 'b', {1, -1}), (frozenset({0, -1}), 'c', {1, -1}), (frozenset({0, 1, -1}), 'a', {0, 1, -1}), (frozenset({0, 1, -1}), 'b', {1, -1}), (frozenset({0, 1, -1}), 'c', {1, -1})], 'start': frozenset({-1}), 'final': [frozenset({1}), frozenset({0, 1}), frozenset({1, -1}), frozenset({0, 1, -1})]}
+
+&gt;&gt;&gt; to_dfa(NFA_FIXED(3))
+{'states': [frozenset(), frozenset({2}), frozenset({1}), frozenset({1, 2}), frozenset({0}), frozenset({0, 2}), frozenset({0, 1}), frozenset({0, 1, 2}), frozenset({-1}), frozenset({2, -1}), frozenset({1, -1}), frozenset({1, 2, -1}), frozenset({0, -1}), frozenset({0, 2, -1}), frozenset({0, 1, -1}), frozenset({0, 1, 2, -1})], 'alphabet': ['a', 'b', 'c'], 'delta': [(frozenset(), 'a', set()), (frozenset(), 'b', set()), (frozenset(), 'c', set()), (frozenset({2}), 'a', set()), (frozenset({2}), 'b', set()), (frozenset({2}), 'c', set()), (frozenset({1}), 'a', {2}), (frozenset({1}), 'b', {2}), (frozenset({1}), 'c', {2}), (frozenset({1, 2}), 'a', {2}), (frozenset({1, 2}), 'b', {2}), (frozenset({1, 2}), 'c', {2}), (frozenset({0}), 'a', {1}), (frozenset({0}), 'b', {1}), (frozenset({0}), 'c', {1}), (frozenset({0, 2}), 'a', {1}), (frozenset({0, 2}), 'b', {1}), (frozenset({0, 2}), 'c', {1}), (frozenset({0, 1}), 'a', {1, 2}), (frozenset({0, 1}), 'b', {1, 2}), (frozenset({0, 1}), 'c', {1, 2}), (frozenset({0, 1, 2}), 'a', {1, 2}), (frozenset({0, 1, 2}), 'b', {1, 2}), (frozenset({0, 1, 2}), 'c', {1, 2}), (frozenset({-1}), 'a', {0, -1}), (frozenset({-1}), 'b', {-1}), (frozenset({-1}), 'c', {-1}), (frozenset({2, -1}), 'a', {0, -1}), (frozenset({2, -1}), 'b', {-1}), (frozenset({2, -1}), 'c', {-1}), (frozenset({1, -1}), 'a', {0, 2, -1}), (frozenset({1, -1}), 'b', {2, -1}), (frozenset({1, -1}), 'c', {2, -1}), (frozenset({1, 2, -1}), 'a', {0, 2, -1}), (frozenset({1, 2, -1}), 'b', {2, -1}), (frozenset({1, 2, -1}), 'c', {2, -1}), (frozenset({0, -1}), 'a', {0, 1, -1}), (frozenset({0, -1}), 'b', {1, -1}), (frozenset({0, -1}), 'c', {1, -1}), (frozenset({0, 2, -1}), 'a', {0, 1, -1}), (frozenset({0, 2, -1}), 'b', {1, -1}), (frozenset({0, 2, -1}), 'c', {1, -1}), (frozenset({0, 1, -1}), 'a', {0, 1, 2, -1}), (frozenset({0, 1, -1}), 'b', {1, 2, -1}), (frozenset({0, 1, -1}), 'c', {1, 2, -1}), (frozenset({0, 1, 2, -1}), 'a', {0, 1, 2, -1}), (frozenset({0, 1, 2, -1}), 'b', {1, 2, -1}), (frozenset({0, 1, 2, -1}), 'c', {1, 2, -1})], 'start': frozenset({-1}), 'final': [frozenset({2}), frozenset({1, 2}), frozenset({0, 2}), frozenset({0, 1, 2}), frozenset({2, -1}), frozenset({1, 2, -1}), frozenset({0, 2, -1}), frozenset({0, 1, 2, -1})]}
+
+&gt;&gt;&gt; language(to_dfa(NFA_LAST), 4, accept_dfa)
+a
+aa
+ba
+ca
+aaa
+aba
+aca
+baa
+bba
+bca
+caa
+cba
+cca
+aaaa
+aaba
+aaca
+abaa
+abba
+abca
+acaa
+acba
+acca
+baaa
+baba
+baca
+bbaa
+bbba
+bbca
+bcaa
+bcba
+bcca
+caaa
+caba
+caca
+cbaa
+cbba
+cbca
+ccaa
+ccba
+ccca
+
+&gt;&gt;&gt; language(to_dfa(NFA_FIXED(1)), 4, accept_dfa)
+a
+aa
+ba
+ca
+aaa
+aba
+aca
+baa
+bba
+bca
+caa
+cba
+cca
+aaaa
+aaba
+aaca
+abaa
+abba
+abca
+acaa
+acba
+acca
+baaa
+baba
+baca
+bbaa
+bbba
+bbca
+bcaa
+bcba
+bcca
+caaa
+caba
+caca
+cbaa
+cbba
+cbca
+ccaa
+ccba
+ccca
+
+&gt;&gt;&gt; language(to_dfa(NFA_FIXED(2)), 4, accept_dfa)
+aa
+ab
+ac
+aaa
+aab
+aac
+baa
+bab
+bac
+caa
+cab
+cac
+aaaa
+aaab
+aaac
+abaa
+abab
+abac
+acaa
+acab
+acac
+baaa
+baab
+baac
+bbaa
+bbab
+bbac
+bcaa
+bcab
+bcac
+caaa
+caab
+caac
+cbaa
+cbab
+cbac
+ccaa
+ccab
+ccac
+
+&gt;&gt;&gt; language(to_dfa(NFA_FIXED(3)), 4, accept_dfa)
+aaa
+aab
+aac
+aba
+abb
+abc
+aca
+acb
+acc
+aaaa
+aaab
+aaac
+aaba
+aabb
+aabc
+aaca
+aacb
+aacc
+baaa
+baab
+baac
+baba
+babb
+babc
+baca
+bacb
+bacc
+caaa
+caab
+caac
+caba
+cabb
+cabc
+caca
+cacb
+cacc
+
+&gt;&gt;&gt; language(to_dfa(NFA_FIXED(4)), 4, accept_dfa)
+aaaa
+aaab
+aaac
+aaba
+aabb
+aabc
+aaca
+aacb
+aacc
+abaa
+abab
+abac
+abba
+abbb
+abbc
+abca
+abcb
+abcc
+acaa
+acab
+acac
+acba
+acbb
+acbc
+acca
+accb
+accc
+</code></pre>
+
+<hr>
+
+<h2>Question 3: Regular Expressions</h2>
+
+<p>I introduced regular expressions in class as a notation for regular languages, completely equivalent
+to finite automata. A regular expression (over a given alphabet) is an expression using symbols from
+the alphabet, and operations <code>+</code> and <code>*</code> along with sequencing (represented by putting two regular
+expressions next to each other). A regular expression has the associated concept of the set of
+strings that match the regular expression.</p>
+
+<p>For example, regular expression <code>abc</code> is matched by a single string, <code>abc</code>. Regular expression <code>ab*c</code> is
+matched by all strings that start with an <code>a</code> followed by zero or more <code>b</code>s and ending with a <code>c</code>. Regular
+expression <code>ab+ac</code> is matched by two strings, <code>ab</code> and <code>ac</code>, as is regular expression <code>a(b+c)</code>. Note the
+priority of operations: sequencing binds tighter than <code>*</code> which binds tighter than <code>+</code>.</p>
+
+<p>The point of this question is to transform a regular expression into an NFA that accepts the exact
+same language matched by the regular expression. The full conversion is tricky because we need to
+parse the regular expression (a string in Python) into some structure that is more amenable to the
+conversion, and moreover the conversion we saw in class was in term of ϵ-NFAs, and not NFAs. We
+haven't dealt with  ϵ-NFAs in this homework. So I'm going to give you pieces of the conversion, and
+you're going to complete it.</p>
+
+<p>Overall, code a function <code>to_nfa(s, alphabet)</code> that takes a string denoting a regular expression
+over a given alphabet, and returns an NFA (over the same alphabet) that accepts exactly the language
+of strings matched by the regular expression.</p>
+
+<p>The function <code>to_nfa()</code> works in three steps:  (1) it turns the regular expression string into
+a structured representation that is easier to transform; (2) it takes the regular expression
+representation and transforms it into an ϵ-NFA using the constructions we saw in class (and
+described in the notes); (3) it transforms the ϵ-NFA into an NFA by eliminating the null transitions.</p>
+
+<p>I have written functions to do steps (1) and (3) for you. All you need to provide is step
+(2). You're welcome.</p>
+
+<p>First, the representation of regular expressions. I'm going to use tuples to represent regular
+expressions in a structured form. A regular expression is going to be represented by a tuple of the
+form <code>(type, ...)</code> where <code>type</code> is one of <code>&quot;symbol&quot;</code>, <code>&quot;sequence&quot;</code>, <code>&quot;plus&quot;</code>, or <code>&quot;star&quot;</code>,
+representing the different kind of regular expressions we have, and the <code>...</code> part are values that
+depend on the type of regular expression we are representing:</p>
+
+<ul>
+<li><p>The representation of a symbol is <code>(&quot;symbol&quot;, sym)</code> where <code>sym</code> is the symbol being represented. For
+instance, regular expression <code>a</code> is represented by <code>(&quot;symbol&quot;, &quot;a&quot;)</code>.</p></li>
+
+<li><p>The representation of sequencing is <code>(&quot;sequence&quot;, r1, r2)</code> where <code>r1</code> and <code>r2</code> are themselves
+representations of the regular expressions being sequenced. For instance, regular expression <code>ab</code> is
+represented by <code>(&quot;sequence&quot;, (&quot;symbol&quot;, &quot;a&quot;), (&quot;symbol&quot;, &quot;b&quot;))</code>.</p></li>
+
+<li><p>The representation of choice is <code>(&quot;plus&quot;, r1, r2)</code> where <code>r1</code> and <code>r2</code> are themselves representations of
+the regular expressions being chosen between. For instance, regular expressions <code>a+b</code> is represented
+by <code>(&quot;plus&quot;, (&quot;symbol&quot;, &quot;a&quot;), (&quot;symbol&quot;, &quot;b&quot;))</code>, and regular expression <code>ab+ac</code> is represented by
+<code>(&quot;plus&quot;, (&quot;sequence&quot;, (&quot;symbol&quot;, &quot;a&quot;), (&quot;symbol&quot;, &quot;b&quot;)), (&quot;sequence&quot;, (&quot;symbol&quot;, &quot;a&quot;), (&quot;symbol&quot;, &quot;c&quot;)))</code>.</p></li>
+
+<li><p>The representation of a star operation is <code>(&quot;star&quot;, r)</code> where <code>r</code> is the representation of the
+regular expression being starred. For instance, regular expression <code>(ab)*</code> is represented by
+<code>(&quot;star&quot;, (&quot;sequence&quot;, (&quot;symbol&quot;, &quot;a&quot;), (&quot;symbol&quot;, &quot;b&quot;)))</code>.</p></li>
+</ul>
+
+<p>To create these representations from a string, I gave you a function <code>parse(s)</code> that takes a string
+<code>s</code> denoting a regular expression and returns a representation of the regular expression in the
+above representation. (Note that this function is restricted to alphabets over the symbols from <code>a</code>
+to <code>z</code>, so you are restricted to those alphabets for this question.) This takes care of step (1).</p>
+
+<p>Step (2) is what you have to provide. I suggest you write a <code>convert_regexp(r)</code> function that takes
+a regular expression in the above representation and create an ϵ-NFA corresponding to the regular
+expression. That function will very likely need to be recursive - for instance, when converting a
+<code>(&quot;star&quot;, r)</code> you will need to first transform <code>r</code> into an ϵ-NFA (you will do that by invoking the
+<code>convert_regexp</code> function on <code>r</code>, that's the recursion!) and then perform some surgery on that ϵ-NFA
+like we saw in class before returning the result. You may want to read up on recursive
+functions. Note that during the construction you will need to merge ϵ-NFAs into new ϵ-NFAs. The
+challenge there will be to make sure that you rename states in the ϵ-NFAs in such a way that merging
+them does not lead to states clashing. In my code, I added unique prefixes to all state names when
+creating an ϵ-NFA, but there are several other ways of achieving the same effect. This is the one challenge in this question.</p>
+
+<p>An ϵ-NFA is just a NFA except it allows <em>null transitions</em>. A null transition is represented by a
+tuple of form <code>(p, None, q)</code> in the <code>delta</code> field of the automaton, where <code>p</code> and <code>q</code> are
+states. Now, the NFA simulator in Question 1 or the subset construction in Question 2 does not know
+how to handle those transitions, so you cannot just give an NFA with null transitions to the
+functions you wrote in those questions and expect it to work. Instead of changing those functions, I
+gave you a function to transform an ϵ-NFA (where null transitions are represented as I just told
+you) and turn it into an NFA that accepts the same language without any null transitions, and that
+you can feed to <code>accept_nfa</code> from Question 1 or <code>to_dfa</code> from Question 2.</p>
+
+<p>You should be able to write your function <code>to_nfa(r)</code> by first calling <code>parse()</code> then calling your
+<code>convert_regexp()</code> function and then calling <code>remove_null()</code> on the result. And you can test with what
+you wrote in Question 1 or Question 2.</p>
+
+<p>Just like in Question 2, the NFAs you produce <strong>do not need to look exactly like the NFAs that I
+produce in my sample outputs below</strong>. As long as your NFAs accept the same language as the original
+regular expression, that's good enough for me.</p>
+
+<p>Sample outputs:</p>
+
+<pre><code>&gt;&gt;&gt; parse(&quot;ab&quot;)
+('sequence', ('symbol', 'a'), ('symbol', 'b'))
+
+&gt;&gt;&gt; parse(&quot;(a+b)*a&quot;)
+('sequence', ('star', ('plus', ('symbol', 'a'), ('symbol', 'b'))), ('symbol', 'a'))
+
+&gt;&gt;&gt; parse(&quot;(a+b)*aaa&quot;)
+('sequence', ('sequence', ('sequence', ('star', ('plus', ('symbol', 'a'), ('symbol', 'b'))), ('symbol', 'a')), ('symbol', 'a')), ('symbol', 'a'))
+
+&gt;&gt;&gt; convert_regexp(parse(&quot;ab&quot;), [&quot;a&quot;, &quot;b&quot;])
+{'states': ['8-6-0', '8-6-1', '8-7-0', '8-7-1'], 'alphabet': ['a', 'b'], 'delta': [('8-6-1', None, '8-7-0'), ('8-6-0', 'a', '8-6-1'), ('8-7-0', 'b', '8-7-1')], 'start': '8-6-0', 'final': ['8-7-1']}
+
+&gt;&gt;&gt; convert_regexp(parse(&quot;(a+b)*aaa&quot;), [&quot;a&quot;, &quot;b&quot;])
+{'states': ['18-16-14-12-0', '18-16-14-12-11-0', '18-16-14-12-11-1', '18-16-14-12-11-9-0', '18-16-14-12-11-9-1', '18-16-14-12-11-10-0', '18-16-14-12-11-10-1', '18-16-14-13-0', '18-16-14-13-1', '18-16-15-0', '18-16-15-1', '18-17-0', '18-17-1'], 'alphabet': ['a', 'b'], 'delta': [('18-16-15-1', None, '18-17-0'), ('18-16-14-13-1', None, '18-16-15-0'), ('18-16-14-12-0', None, '18-16-14-13-0'), ('18-16-14-12-0', None, '18-16-14-12-11-0'), ('18-16-14-12-11-1', None, '18-16-14-12-0'), ('18-16-14-12-11-0', None, '18-16-14-12-11-9-0'), ('18-16-14-12-11-0', None, '18-16-14-12-11-10-0'), ('18-16-14-12-11-9-1', None, '18-16-14-12-11-1'), ('18-16-14-12-11-10-1', None, '18-16-14-12-11-1'), ('18-16-14-12-11-9-0', 'a', '18-16-14-12-11-9-1'), ('18-16-14-12-11-10-0', 'b', '18-16-14-12-11-10-1'), ('18-16-14-13-0', 'a', '18-16-14-13-1'), ('18-16-15-0', 'a', '18-16-15-1'), ('18-17-0', 'a', '18-17-1')], 'start': '18-16-14-12-0', 'final': ['18-17-1']}
+
+&gt;&gt;&gt; to_nfa(&quot;(a+b)*aaa&quot;, [&quot;a&quot;, &quot;b&quot;])
+{'states': ['28-26-24-22-0', '28-26-24-22-21-0', '28-26-24-22-21-1', '28-26-24-22-21-19-0', '28-26-24-22-21-19-1', '28-26-24-22-21-20-0', '28-26-24-22-21-20-1', '28-26-24-23-0', '28-26-24-23-1', '28-26-25-0', '28-26-25-1', '28-27-0', '28-27-1'], 'alphabet': ['a', 'b'], 'delta': [('28-26-24-22-21-1', 'b', '28-26-24-22-21-20-1'), ('28-27-0', 'a', '28-27-1'), ('28-26-24-22-21-19-0', 'a', '28-26-24-22-21-19-1'), ('28-26-24-23-0', 'a', '28-26-24-23-1'), ('28-26-24-22-21-19-1', 'a', '28-26-24-22-21-19-1'), ('28-26-24-22-21-19-1', 'a', '28-26-24-23-1'), ('28-26-24-22-21-0', 'a', '28-26-24-22-21-19-1'), ('28-26-24-22-21-19-1', 'b', '28-26-24-22-21-20-1'), ('28-26-24-22-0', 'a', '28-26-24-22-21-19-1'), ('28-26-24-22-21-0', 'b', '28-26-24-22-21-20-1'), ('28-26-24-22-21-1', 'a', '28-26-24-22-21-19-1'), ('28-26-24-22-0', 'a', '28-26-24-23-1'), ('28-26-25-0', 'a', '28-26-25-1'), ('28-26-24-22-21-20-1', 'a', '28-26-24-22-21-19-1'), ('28-26-24-23-1', 'a', '28-26-25-1'), ('28-26-24-22-21-20-0', 'b', '28-26-24-22-21-20-1'), ('28-26-25-1', 'a', '28-27-1'), ('28-26-24-22-21-20-1', 'a', '28-26-24-23-1'), ('28-26-24-22-21-1', 'a', '28-26-24-23-1'), ('28-26-24-22-21-20-1', 'b', '28-26-24-22-21-20-1'), ('28-26-24-22-0', 'b', '28-26-24-22-21-20-1')], 'start': '28-26-24-22-21-19-1', 'final': ['28-27-1']}
+
+&gt;&gt;&gt; language(to_nfa(&quot;(a+b)*aaa&quot;, [&quot;a&quot;, &quot;b&quot;]), 5, accept_nfa)
+aaa
+aaaa
+baaa
+aaaaa
+abaaa
+baaaa
+bbaaa
+
+&gt;&gt;&gt; language(to_nfa(&quot;(a+b)*aaa&quot;, [&quot;a&quot;, &quot;b&quot;]), 6, accept_nfa)
+aaa
+aaaa
+baaa
+aaaaa
+abaaa
+baaaa
+bbaaa
+aaaaaa
+aabaaa
+abaaaa
+abbaaa
+baaaaa
+babaaa
+bbaaaa
+bbbaaa
+</code></pre>
+
+    
+  </body>
+  
+</html>
+

@@ -31,7 +31,7 @@ make me unhappy.
 
 - Make your your file `homework1.py` loads without error in a fresh Python 3 shell.
 
-- Submission instructions following shortly, probably via Canvas.
+- Submission via [Canvas](https://canvas.olin.edu).
 
 * * *
 
@@ -111,7 +111,7 @@ are really easy to simulate: start at the start state, and follow transitions ov
 symbols from the input string until you reach the end of the string. Accept if you are on a final
 state. 
 
-Code a function **`accept_dfa(m, input)`** where `accept(m, s)` returns `True` if if deterministic
+Code a function **`accept_dfa(m, input)`** where `accept_dfa(m, s)` returns `True` if if deterministic
 finite automaton `m` accepts the string `s`, and `False` otherwise. That is, it returns true exactly
 if there is a way to follow the transitions of `m` labeled by the symbols in `s` from the start
 state to a final state.
@@ -139,7 +139,6 @@ Sample output:
     False
     >>> accept_dfa(DFA_MOD_3, "aaaaaa")
     True
-
     >>> accept_dfa(DFA_MOD_3, "bacab")
     False
     >>> accept_dfa(DFA_MOD_3, "bacaba")

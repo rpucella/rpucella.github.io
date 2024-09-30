@@ -73,7 +73,7 @@ make me unhappy.</p></li>
 <ul>
 <li><p>Make your your file <code>homework1.py</code> loads without error in a fresh Python 3 shell.</p></li>
 
-<li><p>Submission instructions following shortly, probably via Canvas.</p></li>
+<li><p>Submission via <a href="https://canvas.olin.edu">Canvas</a>.</p></li>
 </ul>
 
 <hr>
@@ -155,7 +155,7 @@ are really easy to simulate: start at the start state, and follow transitions ov
 symbols from the input string until you reach the end of the string. Accept if you are on a final
 state.</p>
 
-<p>Code a function <strong><code>accept_dfa(m, input)</code></strong> where <code>accept(m, s)</code> returns <code>True</code> if if deterministic
+<p>Code a function <strong><code>accept_dfa(m, input)</code></strong> where <code>accept_dfa(m, s)</code> returns <code>True</code> if if deterministic
 finite automaton <code>m</code> accepts the string <code>s</code>, and <code>False</code> otherwise. That is, it returns true exactly
 if there is a way to follow the transitions of <code>m</code> labeled by the symbols in <code>s</code> from the start
 state to a final state.</p>
@@ -183,7 +183,6 @@ False
 False
 &gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;aaaaaa&quot;)
 True
-
 &gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;bacab&quot;)
 False
 &gt;&gt;&gt; accept_dfa(DFA_MOD_3, &quot;bacaba&quot;)
