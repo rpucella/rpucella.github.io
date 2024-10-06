@@ -365,9 +365,6 @@ Sample outputs:
     Exception: Not deterministic!
 
 
-...
-
-
 
 ***
 

@@ -149,32 +149,35 @@
         </div>
       </li>
       
-      <li><p><span class="hdr">Sep 30: </span><b>Pushdown Automata, Context-Free Grammars</b></p>
+      <li><p><span class="hdr">Sep 30: </span><b>Pushdown Automata</b></p>
+        <p>Lecture notes shared privately on <a href="https://canvas.olin.edu">Canvas</a>. </p>
+        <p>Wikipedia links for: <a href="https://en.wikipedia.org/wiki/Pushdown_automaton">pushdown automata</a>, <a href="https://en.wikipedia.org/wiki/Deterministic_pushdown_automaton">deterministic pushdown automata</a>.</p>
+        <p>Unlike finite automata, deterministic pushdown automata are NOT equivalent to nondetermninistic pushdown automata. Nondeterminism genuinely give you more. For example, there is a nondeterministic pushdown automaton to accept (even length) palindromes over a given alphabet, but there is no such deterministic pushdown automaton.</p>
       </li>
 
-      <li><p><span class="hdr">Oct 7: </span><b>Turing Machines</b></p>
+      <li><p><span class="hdr">Oct 7: </span><b>Context-Free Grammars</b></p>
       </li>
 
-      <li><p><span class="hdr">Oct 17 (Olin Monday): </span><b>Non-computable Languages</b></p>
+      <li><p><span class="hdr">Oct 17 (Olin Monday): </span><b>Turing Machines</b></p>
       </li>
 
       <li><p><b>CHURCH-TURING THESIS</b></p></li>
 
-      <li><p><span class="hdr">Oct 21: </span><b>The Abacus Model</b></p>
+      <li><p><span class="hdr">Oct 21: </span><b>Non-Computable Languages</b></p>
       </li>
 
-      <li><p><span class="hdr">Nov 4: </span><b>Compiling Arithmetic Expressions</b></p>
+      <li><p><span class="hdr">Nov 4: </span><b>The Abacus Model</b></p>
       </li>
 
-      <li><p><span class="hdr">Nov 11: </span><b>Simple Control Flow</b></p>
+      <li><p><span class="hdr">Nov 11: </span><b>Compiling Arithmetic Expressions</b></p>
       </li>
 
-      <li><p><span class="hdr">Nov 18: </span><b>Adding Functions</b></p>
+      <li><p><span class="hdr">Nov 18: </span><b>Adding Control Flow</b></p>
+      </li>
+
+      <li><p><span class="hdr">Dec 2: </span><b>Adding Functions</b></p>
       </li>
       
-      <li><p><span class="hdr">Dec 2: </span><b>TDB</b></p>
-      </li>
-
       <li><p><span class="hdr">Dec 9: </span><b>TDB</b></p>
       </li>
 
