@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+  <style type="text/css">
+     code { 
+      white-space: pre;
+     }
+
+     body { 
+       font-family: sans-serif;
+       margin: 24px;
+       line-height: 1.2;
+       font-size: 16px;
+     }
+
+     hr, h2, h3, h4, h5, h6 {
+         margin-top: 24px;
+     }
+
+     pre { 
+         margin-left: 32px;
+         color: blue;
+     }
+  </style>
+
+  </head>
+
+
+  <body>
+  
+    <script>
+  document.title = 'Homework 3'
+</script>
+
+<h1>Homework 3</h1>
+
+<h2>Due Date: Sunday Oct 13, 2024 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.</p></li>
+
+<li><p>Please do not post your solutions on a public website or a public repository (including GitHub).</p></li>
+
+<li><p>All programming is to be done in Python 3.</p></li>
+
+<li><p>Code your answers by modifying the file <a href="homework3.py"><code>homework3.py</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you
+wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+<li><p>Please do not change the &quot;signature&quot; (number and interpretation of arguments) of the
+functions. Doing so will make it impossible to load your code into the testing infrastructure, and
+make me unhappy.</p></li>
+
+<li><p>Feel free to define helper functions if you need them.</p></li>
+</ul>
+
+<p><strong>Electronic Submission Instructions</strong></p>
+
+<ul>
+<li><p>Make your your file <code>homework3.py</code> loads without error in a fresh Python 3 shell.</p></li>
+
+<li><p>Submit <code>homework3.py</code> on <a href="https://canvas.olin.edu">Canvas</a>.</p></li>
+</ul>
+
+<hr>
+
+<h2>Pushdown Automata</h2>
+
+<p>We are going to describe pushdown automata in Python using a similar structure that we used for
+finite automata, as a dictionary:</p>
+
+<pre><code>{
+  &quot;states&quot;: ...,
+  &quot;alphabet&quot;: ...,
+  &quot;stack_alphabet&quot;:...,
+  &quot;delta&quot;: ...,
+  &quot;start&quot;: ...,
+  &quot;final&quot;: ...
+ }
+</code></pre>
+
+<p>As usual, the dictionary fields hold the various components of the automaton: a set of states, a set
+of input symbols (the alphabet), a set of stack symbols (the stack alphabet), a transition relation
+&delta;, a start state, and a set of final states. Lists are used to represent sets.</p>
+
+<p>The transition relation is represented using list of tuples (<em>p</em>, <em>a</em>, <em>s</em>, <em>q</em>, <em>S</em>), stating that
+in state <em>p</em>, reading symbol <em>a</em> from the input string while <em>s</em> is on top of the stack makes the
+machine transition to state <em>q</em>, pop the stack, and push the symbols in <em>S</em> onto the stack, <em>in
+reverse order</em> (last element of the list is pushed first). States can be represented by any value
+that support equality checking. We also allow <em>null transitions</em>, where the <em>a</em> part is <code>None</code>, representing a transition that in state <em>p</em> when <em>s</em> is on top of the stack can make the machine transition to state <em>q</em>, popping the stack and pushing the symbols in <em>S</em> onto the stack in reverse order.</p>
+
+<p>When a pushdown automaton is given a string to accept or reject, it uses a stack. The stack is
+initialized with a special stack alphabet symbol -- we will use <code>.</code> in this homework. The automaton
+is initially in the start state. It transitions to another state via an enabled transition. A
+transition is enabled if it has the current state as the source state, its input symbol is the
+current input symbol, and its stack symbol is the symbol sitting on top of the stack. A null
+transition is enabled if it has the current state as the source state and its stack symbol is the
+symbol sitting on top of the stack. Following an enabled transitions moves the current state to the
+target state of the transition, pops the symbol from the top of the stack, and pushes the new stack
+symbols on top of the stack, in reverse order than they appear in the list in the transition</p>
+
+<p>A pushdown automata accepts string <em>w</em> if there is a sequence of enabled transitions starting in the start state and following the symbols from the input string and ending up in any of the final states with only <code>.</code> in the stack.</p>
+
+<p>For example, here is a pushdown automaton that accepts all strings of the form
+<code>a</code><sup><em>n</em></sup><code>b</code><sup><em>n</em></sup> for all <em>n &ge; 0</em>:</p>
+
+<pre><code>PDA_ANBN = {
+    &quot;states&quot;: [0, 1],
+    &quot;alphabet&quot;: [&quot;a&quot;, &quot;b&quot;],
+    &quot;stack_alphabet&quot;: [&quot;.&quot;, &quot;X&quot;],
+    &quot;start&quot;: 0,
+    &quot;final&quot;: [1],
+    &quot;delta&quot;: [
+        (0, &quot;a&quot;, &quot;.&quot;, 0, [&quot;X&quot;, &quot;.&quot;]),
+        (0, &quot;a&quot;, &quot;X&quot;, 0, [&quot;X&quot;, &quot;X&quot;]),
+        (0, None, &quot;.&quot;, 1, [&quot;.&quot;]),
+        (0, None, &quot;X&quot;, 1, [&quot;X&quot;]),
+        (1, &quot;b&quot;, &quot;X&quot;, 1, []),
+    ]
+}
+</code></pre>
+
+<p>and here is a pushdown automaton that accepts all palindromes over {<code>a</code>, <code>b</code>}, of both even and odd length:</p>
+
+<pre><code>PDA_PAL = {
+    &quot;states&quot;: [0, 1],
+    &quot;alphabet&quot;: [&quot;a&quot;, &quot;b&quot;],
+    &quot;stack_alphabet&quot;: [&quot;.&quot;, &quot;X&quot;, &quot;Y&quot;],
+    &quot;start&quot;: 0,
+    &quot;final&quot;: [1],
+    &quot;delta&quot;: [
+        (0, &quot;a&quot;, &quot;.&quot;, 0, [&quot;X&quot;, &quot;.&quot;]),
+        (0, &quot;a&quot;, &quot;X&quot;, 0, [&quot;X&quot;, &quot;X&quot;]),
+        (0, &quot;a&quot;, &quot;Y&quot;, 0, [&quot;X&quot;, &quot;Y&quot;]),
+        (0, &quot;b&quot;, &quot;.&quot;, 0, [&quot;Y&quot;, &quot;.&quot;]),
+        (0, &quot;b&quot;, &quot;X&quot;, 0, [&quot;Y&quot;, &quot;X&quot;]),
+        (0, &quot;b&quot;, &quot;Y&quot;, 0, [&quot;Y&quot;, &quot;Y&quot;]),
+        (0, None, &quot;.&quot;, 1, [&quot;.&quot;]),
+        (0, None, &quot;X&quot;, 1, [&quot;X&quot;]),
+        (0, None, &quot;Y&quot;, 1, [&quot;Y&quot;]),
+        (0, &quot;a&quot;, &quot;.&quot;, 1, [&quot;.&quot;]),
+        (0, &quot;a&quot;, &quot;X&quot;, 1, [&quot;X&quot;]),
+        (0, &quot;a&quot;, &quot;Y&quot;, 1, [&quot;Y&quot;]),
+        (0, &quot;b&quot;, &quot;.&quot;, 1, [&quot;.&quot;]),
+        (0, &quot;b&quot;, &quot;X&quot;, 1, [&quot;X&quot;]),
+        (0, &quot;b&quot;, &quot;Y&quot;, 1, [&quot;Y&quot;]),
+        (1, &quot;a&quot;, &quot;X&quot;, 1, []),
+        (1, &quot;b&quot;, &quot;Y&quot;, 1, [])
+    ]
+}
+</code></pre>
+
+<p>Pushdown automata are nondeterministic, and have null transitions.</p>
+
+<hr>
+
+<h2>Question 1</h2>
+
+<p>In this question, we are going to build the tools to accepts strings via pushdown automata.</p>
+
+<p>Rather than asking you to write an <code>accept</code> function directly (how we did in the last two homeworks for finite automata), I'm going to do it a little bit differently, because I want to be able to reuse the code you write here in Question 2.</p>
+
+<p>We are going to break down how to run a pushdown automaton into multiple functions. When running a
+pushdown automaton, we need to keep track of multiple things: the current state,
+what remains of the input string, and the stack. We are going to collect all of the information into
+a triple called a <em>configuration</em>, of the form (<em>inp</em>, <em>q</em>, <em>S</em>) where <code>inp</code> is a string representing what
+remains of the input string to be consumed, <em>q</em> is a state of the automaton, and <em>S</em> is a list of stack
+symbols on the stack (where the stacks grows from the end of the list, so that the first element of
+the list is on top of the stack).</p>
+
+<p>At any point during execution, the pushdown automaton is in some
+configuration, representing what input remains to be consumed, what the current state is, and the
+current content of the stack. Running a pushdown automaton basically means stepping from
+configuration to configuration, following enabled transitions.</p>
+
+<h3>(A)</h3>
+
+<p>Code a function <code>step_pda(m, config)</code> taking a pushdown automaton <code>m</code> and a configuration of the form
+<code>(inp, state, stack)</code>, and returning a list of all configurations that can be reached by following an
+enabled transition from the given configuration: that is, it should return a list of all
+configurations that you can obtain by following a transition from state <code>state</code> with input symbol
+<code>inp[0]</code> and stack symbol <code>stack[0]</code>, or following a null transition from state <code>state</code> with stack symbol
+<code>stack[0]</code>.</p>
+
+<p>Sample output (order of results not relevant):</p>
+
+<pre><code>&gt;&gt;&gt; step_pda(PDA_ANBN, (&quot;aabb&quot;, 0, [&quot;.&quot;]))
+[('abb', 0, ['X', '.']), ('aabb', 1, ['.'])]
+
+&gt;&gt;&gt; step_pda(PDA_ANBN, (&quot;aabb&quot;, 0, [&quot;X&quot;, &quot;.&quot;]))
+[('abb', 0, ['X', 'X', '.']), ('aabb', 1, ['X', '.'])]
+
+&gt;&gt;&gt; step_pda(PDA_ANBN, (&quot;bb&quot;, 1, [&quot;X&quot;, &quot;X&quot;, &quot;.&quot;]))
+[('b', 1, ['X', '.'])]
+
+&gt;&gt;&gt; step_pda(PDA_ANBN, (&quot;&quot;, 1, [&quot;.&quot;]))
+[]
+
+&gt;&gt;&gt; step_pda(PDA_PAL, (&quot;aba&quot;, 0, [&quot;.&quot;]))
+[('ba', 0, ['X', '.']), ('aba', 1, ['.']), ('ba', 1, ['.'])]
+
+&gt;&gt;&gt; step_pda(PDA_PAL, (&quot;ba&quot;, 0, [&quot;X&quot;, &quot;.&quot;]))
+[('a', 0, ['Y', 'X', '.']), ('ba', 1, ['X', '.']), ('a', 1, ['X', '.'])]
+
+&gt;&gt;&gt; step_pda(PDA_PAL, (&quot;a&quot;, 1, [&quot;X&quot;, &quot;.&quot;]))
+[('', 1, ['.'])]
+
+&gt;&gt;&gt; step_pda(PDA_PAL, (&quot;&quot;, 1, [&quot;.&quot;]))
+[]
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a function <code>start_pda(m, input)</code> taking a pushdown automaton <code>m</code> and an input string <code>input</code>
+and returning the <em>starting configuration</em> for executing the machine, that is, the configuration
+with the start state of the automaton, the input string provided, and an initial stack.</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; start_pda(PDA_ANBN, &quot;aabb&quot;)
+('aabb', 0, ['.'])
+
+&gt;&gt;&gt; start_pda(PDA_ANBN, &quot;aabbbb&quot;)
+('aabbbb', 0, ['.'])
+
+&gt;&gt;&gt; start_pda(PDA_PAL, &quot;abba&quot;)
+('abba', 0, ['.'])
+
+&gt;&gt;&gt; start_pda(PDA_PAL, &quot;abbab&quot;)
+('abbab', 0, ['.'])
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a function <code>is_done_pda(m, config)</code> that takes a pushdown automaton <code>m</code> and a configuration
+<code>config</code> and returns <code>True</code> exactly when the configuration is a configuration that has consumed all of
+the input string.</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; is_done_pda(PDA_ANBN, (&quot;ab&quot;, 0, [&quot;X&quot;, &quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_done_pda(PDA_ANBN, (&quot;ab&quot;, 1, [&quot;X&quot;, &quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_done_pda(PDA_ANBN, (&quot;&quot;, 0, [&quot;X&quot;, &quot;.&quot;]))
+True
+
+&gt;&gt;&gt; is_done_pda(PDA_ANBN, (&quot;&quot;, 1, [&quot;X&quot;, &quot;.&quot;]))
+True
+
+&gt;&gt;&gt; is_done_pda(PDA_PAL, (&quot;ab&quot;, 0, [&quot;X&quot;, &quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_done_pda(PDA_PAL, (&quot;ab&quot;, 1, [&quot;X&quot;, &quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_done_pda(PDA_PAL, (&quot;&quot;, 0, [&quot;X&quot;, &quot;.&quot;]))
+True
+
+&gt;&gt;&gt; is_done_pda(PDA_PAL, (&quot;&quot;, 1, [&quot;X&quot;, &quot;.&quot;]))
+True
+</code></pre>
+
+<h3>(D)</h3>
+
+<p>Code a function <code>is_accept_pda(m, config)</code> that takes a pushdown automaton <code>m</code> and a configuration
+<code>config</code> and returns <code>True</code> exactly when the configuration is an <em>accepting configuration</em>, that is
+one that has consumed all of the input string and whose stack is empty but for the initial stack
+symbol <code>.</code> and whose state is a final state of the automaton.  stack is empty but for the initial
+stack symbol <code>&quot;.&quot;</code>.</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; is_accept_pda(PDA_ANBN, (&quot;ab&quot;, 0, [&quot;X&quot;, &quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_accept_pda(PDA_ANBN, (&quot;ab&quot;, 1, [&quot;X&quot;, &quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_accept_pda(PDA_ANBN, (&quot;&quot;, 1, [&quot;X&quot;, &quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_accept_pda(PDA_ANBN, (&quot;&quot;, 1, [&quot;.&quot;]))
+True
+
+&gt;&gt;&gt; is_accept_pda(PDA_ANBN, (&quot;&quot;, 0, [&quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_accept_pda(PDA_PAL, (&quot;aa&quot;, 0, [&quot;X&quot;, &quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_accept_pda(PDA_PAL, (&quot;aa&quot;, 0, [&quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_accept_pda(PDA_PAL, (&quot;aa&quot;, 1, [&quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_accept_pda(PDA_PAL, (&quot;&quot;, 1, [&quot;X&quot;, &quot;.&quot;]))
+False
+
+&gt;&gt;&gt; is_accept_pda(PDA_PAL, (&quot;&quot;, 1, [&quot;.&quot;]))
+True
+
+&gt;&gt;&gt; is_accept_pda(PDA_PAL, (&quot;&quot;, 0, [&quot;.&quot;]))
+False
+</code></pre>
+
+<h3>(E)</h3>
+
+<p>We are going to put the pieces we built above together to create a simular for <em>deterministic
+pushdown automata</em>.  A deterministic pushdown automaton is a pushdown automaton that has the
+property that for every state, for every input symbol, and for every stack symbol, there is exactly
+<strong>one</strong> transition with the state as source, that input symbol, and that stack symbol in the <code>delta</code>
+relation. Deterministic pushdown automata moreover have no null transitions.</p>
+
+<p>The idea is that when the automaton is in a given state, the next state is completely determined by
+the current state, the symbol on the string, and the symbol on top of the stack. Deterministic
+pushdown automata are more limited than pushdown automata. For instance, there is no deterministic
+pushdown automaton that can accept exactly the even-length palindromes over {a, b}. But they are a
+good starting point for us.</p>
+
+<p>Here a deterministic pushdown automaton that accepts all strings of the form
+<code>a</code><sup><em>n</em></sup><code>b</code><sup><em>n</em></sup> for all <em>n &ge; 0</em>:</p>
+
+<pre><code>DPDA_ANBN = {
+    &quot;states&quot;: [0, 1, 2, 99],
+    &quot;alphabet&quot;: [&quot;a&quot;, &quot;b&quot;],
+    &quot;stack_alphabet&quot;: [&quot;.&quot;, &quot;X&quot;],
+    &quot;start&quot;: 0,
+    &quot;final&quot;: [0, 2],
+    &quot;delta&quot;: [
+        (0, &quot;a&quot;, &quot;.&quot;, 1, [&quot;X&quot;, &quot;.&quot;]),
+        (1, &quot;a&quot;, &quot;X&quot;, 1, [&quot;X&quot;, &quot;X&quot;]),
+        (1, &quot;b&quot;, &quot;X&quot;, 2, []),
+        (2, &quot;b&quot;, &quot;X&quot;, 2, []),
+        # Sink transitions (for deterministism)
+        (0, &quot;a&quot;, &quot;X&quot;, 99, []),
+        (0, &quot;b&quot;, &quot;.&quot;, 99, [&quot;.&quot;]),
+        (0, &quot;b&quot;, &quot;X&quot;, 99, []),
+        (1, &quot;a&quot;, &quot;.&quot;, 99, [&quot;.&quot;]),
+        (1, &quot;b&quot;, &quot;.&quot;, 99, [&quot;.&quot;]),
+        (2, &quot;a&quot;, &quot;.&quot;, 99, [&quot;.&quot;]),
+        (2, &quot;a&quot;, &quot;X&quot;, 99, []),
+        (2, &quot;b&quot;, &quot;.&quot;, 99, [&quot;.&quot;]),
+        (99, &quot;a&quot;, &quot;.&quot;, 99, [&quot;.&quot;]),
+        (99, &quot;a&quot;, &quot;X&quot;, 99, []),
+        (99, &quot;b&quot;, &quot;.&quot;, 99, [&quot;.&quot;]),
+        (99, &quot;b&quot;, &quot;X&quot;, 99, [])
+    ]
+}
+</code></pre>
+
+<p>Notice that for every choice of state, input symbol, and stack symbol, there is exactly one transition in <code>delta</code> with those choices in the first three elements of the transition. Notice also that we had to add a &quot;sink state&quot; (here, 99).</p>
+
+<p>Code a function <code>accept_dpda(m, input)</code> that takes a <em>deterministic</em> pushdown automaton <code>m</code> and an input string <code>input</code> and returns True exactly when <code>m</code> accepts input string <code>input</code>. Intuitively, this should work by starting with the starting configuration, loops by applying <code>step_pda</code> to the current configuration to obtain the next configuration until we have consumed the whole input string, and returns True when the final configuration is an accepting configuration. Make sure to check at every step that <code>step_pda()</code> returns exactly one next configuration — if not, raise an exception pointing out that the machine is nondeterministic. As in the last few homeworks, you can pass <code>accept_dpda</code> to <code>language</code> to see all strings accepted by a machine, up to a certain length.</p>
+
+<p>Sample outputs:</p>
+
+<pre><code>&gt;&gt;&gt; accept_dpda(DPDA_ANBN, &quot;&quot;)
+True
+
+&gt;&gt;&gt; accept_dpda(DPDA_ANBN, &quot;ab&quot;)
+True
+&gt;&gt;&gt; accept_dpda(DPDA_ANBN, &quot;aabb&quot;)
+True
+
+&gt;&gt;&gt; accept_dpda(DPDA_ANBN, &quot;aaabbb&quot;)
+True
+
+&gt;&gt;&gt; accept_dpda(DPDA_ANBN, &quot;aa&quot;)
+False
+
+&gt;&gt;&gt; accept_dpda(DPDA_ANBN, &quot;bb&quot;)
+False
+
+&gt;&gt;&gt; accept_dpda(DPDA_ANBN, &quot;aabbb&quot;)
+False
+
+&gt;&gt;&gt; accept_dpda(DPDA_ANBN, &quot;abab&quot;)
+False
+
+&gt;&gt;&gt; language(DPDA_ANBN, 10, accept_dpda)
+&lt;empty string&gt;
+ab
+aabb
+aaabbb
+aaaabbbb
+aaaaabbbbb
+
+&gt;&gt;&gt; accept_dpda(PDA_PAL, &quot;abba&quot;)
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;/Users/riccardo/git/focs/homeworks/nondet.py&quot;, line 155, in acc
+    raise Exception(&quot;Not deterministic!&quot;)
+Exception: Not deterministic!
+</code></pre>
+
+<p>...</p>
+
+<hr>
+
+<h2>Question 2</h2>
+
+<p>Question 1 asked you to write a bunch of functions to help simulate pushdown automata, and you used
+them to create an acceptance function for <em>deterministic</em> pushdown automata. In this question, I'm
+giving you an acceptance function <code>accept_pda(m, input)</code> for general nondeterministic pushdown
+automata, and ask you to create some interesting (nondeterministic) pushdown automata.</p>
+
+<p>(Function <code>accept_pda</code> will only work once you have completed Question 1 parts (A)–(D), and
+basically implements a breadth-first search over the graph of configurations. It's not deep, but it works.)</p>
+
+<p>For submission purposes, I ask you to define those pushdown automata as constants with a fixed name
+given below in each question. There are already placeholders in <code>homework3.py</code> for those
+answers. Just replace each placeholder with your definition.</p>
+
+<h2>(A)</h2>
+
+<p>Construct a nondeterministic pushdown automaton <code>PDA_AMBN_MGN</code> that accepts
+exactly the strings over alphabet {<code>a</code>, <code>b</code>} of the form <code>a</code><sup><em>m</em></sup><code>b</code><sup><em>n</em></sup> in which
+<em>m</em> &ge; <em>n</em> &ge; 0 (at least as many <code>a</code>s as <code>b</code>s).</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; language(PDA_AMBN_MGN, 8, accept_pda)
+&lt;empty string&gt;
+a
+aa
+ab
+aaa
+aab
+aaaa
+aaab
+aabb
+aaaaa
+aaaab
+aaabb
+aaaaaa
+aaaaab
+aaaabb
+aaabbb
+aaaaaaa
+aaaaaab
+aaaaabb
+aaaabbb
+aaaaaaaa
+aaaaaaab
+aaaaaabb
+aaaaabbb
+aaaabbbb
+</code></pre>
+
+<h2>(B)</h2>
+
+<p>Construct a nondeterministic pushdown automaton <code>PDA_AMBN_NGM</code> that accepts exactly the strings over
+alphabet {<code>a</code>, <code>b</code>} of the form <code>a</code><sup><em>m</em></sup><code>b</code><sup><em>n</em></sup> in which <em>n</em> &ge; <em>m</em> &ge; 0 (at
+least as many <code>b</code>s as <code>a</code>s).</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; language(PDA_AMBN_NGM, 8, accept_pda)
+&lt;empty string&gt;
+b
+ab
+bb
+abb
+bbb
+aabb
+abbb
+bbbb
+aabbb
+abbbb
+bbbbb
+aaabbb
+aabbbb
+abbbbb
+bbbbbb
+aaabbbb
+aabbbbb
+abbbbbb
+bbbbbbb
+aaaabbbb
+aaabbbbb
+aabbbbbb
+abbbbbbb
+bbbbbbbb
+</code></pre>
+
+<h2>(C)</h2>
+
+<p>Construct a nondeterministic pushdown automaton <code>PDA_AMBNCMN</code> that accepts exactly the strings over
+alphabet {<code>a</code>, <code>b</code>, <code>c</code>} of the form <code>a</code><sup><em>m</em></sup><code>b</code><sup><em>n</em></sup><code>c</code><sup><em>m+n</em></sup> in which <em>m</em>, <em>n</em> &ge; 0 (the same number of <code>c</code>s as <code>a</code>s and <code>b</code>s combined).</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; language(PDA_AMBNCMN, 8, accept_pda)
+&lt;empty string&gt;
+ac
+bc
+aacc
+abcc
+bbcc
+aaaccc
+aabccc
+abbccc
+bbbccc
+aaaacccc
+aaabcccc
+aabbcccc
+abbbcccc
+bbbbcccc
+</code></pre>
+
+<h2>(D)</h2>
+
+<p>Construct a nondeterministic pushdown automaton <code>PDA_AMBMNCN</code> that accepts exactly the strings over
+alphabet {<code>a</code>, <code>b</code>, <code>c</code>} of the form <code>a</code><sup><em>m</em></sup><code>b</code><sup><em>m+n</em></sup><code>c</code><sup><em>n</em></sup> in which
+<em>m</em>, <em>n</em> &ge; 0 (the same number of <code>b</code>s as <code>a</code>s and <code>c</code>s combined).</p>
+
+<p>Sample output:</p>
+
+<pre><code>&gt;&gt;&gt; language(PDA_AMBMNCN, 8, accept_pda)
+&lt;empty string&gt;
+ab
+bc
+aabb
+abbc
+bbcc
+aaabbb
+aabbbc
+abbbcc
+bbbccc
+aaaabbbb
+aaabbbbc
+aabbbbcc
+abbbbccc
+bbbbcccc
+</code></pre>
+
+    
+  </body>
+  
+</html>
+
