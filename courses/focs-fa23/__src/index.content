@@ -235,7 +235,6 @@
 	    <p><a href="https://en.wikipedia.org/wiki/Pushdown_automaton">Pushdown automata</a> are machine models that exactly capture context-free languages:
               a language A is context-free if and only if you can find a pushdown automaton that accepts A.</p>
 	  </div>
-          </div>
       </li>
 
       <li><p><span class="hdr">Nov 6: </span><b>Lambda calculus (1)</b></p>

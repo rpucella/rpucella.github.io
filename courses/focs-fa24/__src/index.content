@@ -69,7 +69,7 @@
           <li><b>Course Assistant:</b> Ben Kim (details to follow)
           </li>
 
-          <li>Discussions for this course (and homework submissions) will take place over on <a href="https://canvas.olin.edu">Canvas</a>.</li>
+          <li>Discussions for this course and homework submissions will take place over on <a href="https://canvas.olin.edu/courses/820">Canvas</a>.</li>
 
           <li>I expect all of us to follow the <b><a href="http://www.olin.edu/academic-life/student-affairs-resources/student-life/honor-code/">Olin Honor Code</a></b>.</li>
 
@@ -150,7 +150,7 @@
       </li>
       
       <li><p><span class="hdr">Sep 30: </span><b>Pushdown Automata</b></p>
-        <p>Lecture notes shared privately on <a href="https://canvas.olin.edu">Canvas</a>. </p>
+        <p>Lecture notes shared privately on <a href="https://canvas.olin.edu/courses/820">Canvas</a>. </p>
 	<p>Examples of languages that were not regular include
 	    {a<sup>n</sup>b<sup>n</sup> | n &ge; 0}, {a<sup>n</sup>b<sup>n</sup>c<sup>n</sup> | n &ge; 0}, {a<sup>m</sup>b<sup>n</sup> | m &ge; n &ge; 0}, {u | u = reverse(u)}. I gave a direct argument in class for the first of these.. I haven't shown you any general way of showing that a language is not regular. The most common tool used is the <i>pumping lemma (for regular languages)</i>. Here's a reasonable <a href="https://courses.cs.washington.edu/courses/cse322/08au/lec9.pdf">reference</a>.</p>
 
@@ -159,6 +159,28 @@
       </li>
 
       <li><p><span class="hdr">Oct 7: </span><b>Context-Free Grammars</b></p>
+      <div class="lect">
+            <p>Succinct <a href="./grammars.pdf">notes</a> from the lecture. It mentions non-context-free grammars as well, which is not currently our interest.</p>
+
+	    <p>Grammars are used in linguistics (introduced
+	        by <a href="https://en.wikipedia.org/wiki/Syntactic_Structures">Chomsky
+	        to study the structure of natural languages</a>) and
+	        in computer science to implement parsers, that is,
+	        turning a string of symbols into a structured artifact
+	        like an Abstract Syntax Tree to represent a program in
+	        a form that it more amenable to execution and/or
+	        compilation. <a href="http://homepages.cwi.nl/~storm/teaching/sc1112/intro-parsing.pdf">Here's
+	        a reasonable high-level presentation</a> of the basics
+	        of parsing, to give you a flavor.</p>
+
+	    <p>A beautiful application of grammars
+	      is <a href="https://en.wikipedia.org/wiki/L-system">L-systems</a>,
+	      a class of grammars that model the growth processes of plant
+	      development.</p>
+
+	    <p>I posted some additional notes on the converting context-free grammars to and from pushdown automata on our <a href="https://canvas.olin.edu/courses/820">Canvas</a> site.</p>
+
+	  </div>
       </li>
 
       <li><p><span class="hdr">Oct 17 (Olin Monday): </span><b>Turing Machines</b></p>
