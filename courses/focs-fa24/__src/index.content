@@ -180,29 +180,87 @@
 	      a class of grammars that model the growth processes of plant
 	      development.</p>
 
-	    <p>I posted some additional notes on the converting context-free grammars to and from pushdown automata on our <a href="https://canvas.olin.edu/courses/820">Canvas</a> site.</p>
+	    <p>I posted some additional notes on converting context-free grammars to and from pushdown automata on our <a href="https://canvas.olin.edu/courses/820">Canvas</a> site.</p>
 
 	  </div>
       </li>
 
       <li><p><span class="hdr">Oct 17 (Olin Monday): </span><b>Turing Machines</b></p>
+         <div class="lect">
+           <p>Reading: Chen, Section 2.1, 2.6, 2.7</p>
+	   <p>Quiz: finite state machines</p>
+           
+          <p>A <a href="./tm-anbn.png">diagram</a> of the Turing machine I showed in class to accept the langage {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup> | n &ge; 0}. If you want to practice, you can try to modify the machine to accept the languages {<tt>a</tt><sup>m</sup><tt>b</tt><sup>n</sup> | n &ge; m &ge; 0} and {<tt>a</tt><sup>n</sup><tt>b</tt><sup>n</sup><tt>c</tt><sup>n</sup> | n &ge; 0}.</p>
+            
+	  <p><a href="https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf"><i>On Computable
+	        Numbers, with an Application to the Entscheidungsproblem</i></a>, the original paper by
+	    Turing that describes his machines. (Though it's not the most accessible
+	    description.)</p>
+	 </div>
+	  
+      </li>
+
+      <li><p><span class="hdr">Oct 21: </span><b>The Church-Turing Thesis</b></p>
+        <div class="lect">
+	   <p>The <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis">Church-Turing
+	       thesis</a>.</p>
+           
+           <p>Pithy mathematical description of <a
+             href="https://en.wikipedia.org/wiki/Multitape_Turing_machine">multi-tape
+             Turing machines</a>. Some additional notes on multitape
+             Turing machines are available on our <a
+             href="https://canvas.olin.edu/courses/820">Canvas</a>
+             site.</p>
+
+</p>
+
+	    <p>A quick introduction
+	      to <a href="https://en.wikipedia.org/wiki/Universal_Turing_machine">Universal
+		Turing machines</a> from Wikipedia. Moore gives a <a href="moore.pdf">multi-tape implementation of a Universal Turing
+		machine in 15 states</a>. It is from 1952, and it is a delightful (if somewhat opaque) time capsule. </p>
+
+	</div>
+      </li>
+
+      <li><p><span class="hdr">Oct 28: </span><b>Non-Computable Languages</b></p>
+        <div class="lect">
+          <p>Reading: Chen, Sections 2.2 &ndash; 2.4</p>
+
+<!--
+            <p>Wikipedia links: the <a href="https://en.wikipedia.org/wiki/Halting_problem">Halting Problem</a>; <a href="https://en.wikipedia.org/wiki/Reduction_(complexity)">Reducibility</a>; <a href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice's Theorem</a>.</p>
+
+            <p>I mentioned that the non-computability of the halting problem for Turing machines impacts any kind of reasoning that we wish to make about programs in modern programming languages. This is a simple application of the Church-Turing thesis. Matthew Might has an accessible account that <a href="https://matt.might.net/articles/intro-static-analysis/">describes how the non-computability of the halting problem impacts static analysis of programs</a>.
+
+            <p>The <a href="https://en.wikipedia.org/wiki/Post_correspondence_problem">Post Correspondence Problem</a> is non-computable, doesn't talk about Turing machines or interpreters for programming languages, and shows that there are reasonable problems that are non-computable. Here's a <a href="pcp-proof.pdf">proof of non-computability</a> from Sipser, basically showing that you can reduce the Halting Problem for Turing machines to PCP.</p>
+
+-->
+	</div>
       </li>
 
       <li><p><b>CHURCH-TURING THESIS</b></p></li>
 
-      <li><p><span class="hdr">Oct 21: </span><b>Non-Computable Languages</b></p>
-      </li>
-
       <li><p><span class="hdr">Nov 4: </span><b>The Abacus Model</b></p>
+      <div class="lect">
+        <p>Quiz: pushdown automata</p>
+      </div>
       </li>
 
       <li><p><span class="hdr">Nov 11: </span><b>Compiling Arithmetic Expressions</b></p>
+      <div class="lect">
+        <p>Quiz: context-free grammars</p>
+       </div>
       </li>
 
       <li><p><span class="hdr">Nov 18: </span><b>Adding Control Flow</b></p>
+      <div class="lect">
+         <p>Quiz: Turing machines</p>
+       </div>
       </li>
 
       <li><p><span class="hdr">Dec 2: </span><b>Adding Functions</b></p>
+      <div class="lect">
+       Quiz on abacuses.
+      </div>
       </li>
       
       <li><p><span class="hdr">Dec 9: </span><b>TDB</b></p>
