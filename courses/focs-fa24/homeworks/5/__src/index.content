@@ -1,0 +1,630 @@
+<script>
+  document.title = 'Homework 5'
+</script>
+
+<h1>Homework 5</h1>
+
+<h2>Due Date: Tuesday, November 19, 2024 (23h59)</h2>
+
+<ul>
+<li><p>This homework is to be done individually. You may discuss problems
+with fellow students, but all submitted work must be entirely your
+own, and should not be from any other course, present, past, or
+future. If you use a solution from another source you must cite it
+&mdash; this includes when that source is someone else helping
+you.</p></li>
+
+<li><p>Please do not post your solutions on a public website or a public repository (including GitHub).</p></li>
+
+<li><p>All programming is to be done in Python 3.</p></li>
+
+<li><p>Code your answers by modifying the file <a href="homework5.py"><code>homework5.py</code></a> provided. Add your <strong>name</strong>, your <strong>email address</strong>, and any <strong>remarks</strong> that you
+wish to make to the instructor to the block comment at the head of the file.</p></li>
+
+<li><p>Please do not change the &quot;signature&quot; (number and interpretation of arguments) of the
+functions. Doing so will make it impossible to load your code into the testing infrastructure, and
+make me unhappy.</p></li>
+
+<li><p>Feel free to define helper functions if you need them.</p></li>
+</ul>
+
+<p><strong>Electronic Submission Instructions</strong></p>
+
+<ul>
+<li><p>Make your your file <code>homework5.py</code> loads without error in a fresh Python 3 shell.</p></li>
+
+<li><p>Submit <code>homework5.py</code> on <a href="https://canvas.olin.edu">Canvas</a>.</p></li>
+</ul>
+
+<hr>
+
+<h2>Register Machines</h2>
+
+<p>In class, we talked about the abacus model, and programs written as diagrams where you have
+locations containing pebbles and &quot;instructions&quot; such as adding a pebble to a location and removing a
+pebble from a location.  This is described in the first two section of Chapter 1 of Lambek's
+<a href="http://www.math.mcgill.ca/~barr/papers/pga.pdf"><em>Programs, Grammars, Arguments</em></a>. You should
+definitely read it for inspiration in how to address the problems below.</p>
+
+<p>I also described how you can turn that into a simple &quot;assembly language&quot; for a simple register
+machine with an arbitrary number of registers that can hold natural numbers, and simple instructions
+like &quot;add one to a register&quot;, or &quot;remove one from a register&quot;, along with some simple branching
+instructions.</p>
+
+<p>In this homework, we're going to play a little with that assembly language.</p>
+
+<p>A program for a register machine is a sequence of instructions. Execution proceeds by starting from
+the first instruction, executing it, then going to the following instructions, etc. The one
+exception to this is when the instruction is a <code>JUMP</code> instruction which sends execution to another
+instruction, or the <code>DEC</code> instruction when the value in the register is zero.</p>
+
+<p>During execution, the program has access to a set of <em>registers</em>, each of which can hold a natural
+number. Registers have an initial value of 0 if they're not given a value when the program is run.program is run.</p>
+
+<p>Registers are numbered -- there is a register at 0, at 1, etc. You refer to a register by its number.</p>
+
+<p>The instructions available to you are:</p>
+
+<ul>
+<li><code>INC</code> <em><code>reg</code></em> : increment the content of register <em><code>reg</code></em> and go to the next instruction</li>
+<li><code>DEC</code> <em><code>reg</code></em> <em><code>addr</code></em> : if the content of register <em><code>reg</code></em> is zero, go to the instruction at address <em><code>addr</code></em>; otherwise, decrement the content of register <em><code>reg</code></em> and go to the next instruction</li>
+<li><code>JUMP</code> <em><code>addr</code></em> : go to the instruction at address  <em><code>addr</code></em></li>
+<li><code>STOP</code> <em><code>reg</code></em> : stop execution and return value of register <em><code>reg</code></em></li>
+</ul>
+
+<p>An instruction is represented in python by a tuple with the first element a string representing the instruction, and any subsequent item the arguments to the instruction, for example:</p>
+
+<pre><code>(&quot;inc&quot;, 0)
+(&quot;dec&quot;, 1, 37)
+(&quot;jump&quot;, 47)
+(&quot;stop&quot;, 2)
+</code></pre>
+
+<p>Instructions are case insensitive.</p>
+
+<p>A program is represented by a list of instruction tuples. The address of each instruction is just
+the index of the instruction in the list, so that the address of the first instruction is 0, the
+second instruction 1, etc. Execution always starts at address 0.</p>
+
+<p>Here is a simple program that empties out the content of register 0. It returns the final value of
+register 0, which should of course always be 0:</p>
+
+<pre><code>P_RESET = [
+
+   # address 0
+   (&quot;dec&quot;, 0, 2),
+   (&quot;jump&quot;, 0),
+
+   # address 2
+   (&quot;stop&quot;, 0)
+]
+</code></pre>
+
+<p>Here is another program that copies the content of register 0 into register 1, without changing the final content of register 0. It uses a temporary register 2 for doing this.</p>
+
+<pre><code>P_COPY = [
+
+    # address 0
+    (&quot;dec&quot;, 0, 4),
+    (&quot;inc&quot;, 1),
+    (&quot;inc&quot;, 2),
+    (&quot;jump&quot;, 0),
+
+    # address 4
+    (&quot;dec&quot;, 2, 7),
+    (&quot;inc&quot;, 1),
+    (&quot;jump&quot;, 4),
+
+    # address 7
+    (&quot;stop&quot;, 1)
+]
+</code></pre>
+
+<p>To run a program, you call <code>RM().run()</code> passing in the program and also a list with an initial values for the first N registers. For instance:</p>
+
+<pre><code>&gt;&gt;&gt; RM().run(P_RESET, [5])
+0000  5
+0001  4
+0000  4
+0001  3
+0000  3
+0001  2
+0000  2
+0001  1
+0000  1
+0001  0
+0000  0
+0002  0
+----  0
+0
+</code></pre>
+
+<p>Execution proceeds by showing you the address of every instruction being executed and the state of registers before the instruction executes, step by step until the final <code>STOP</code>, with the final state of registers being shown preceded by <code>----</code> and the content of the register specified by the <code>STOP</code> returned.</p>
+
+<p>Here are two sample executions of <code>P_COPY</code>:</p>
+
+<pre><code>&gt;&gt;&gt; RM().run(P_COPY, [6])
+0000  6
+0001  5
+0002  5  1
+0003  5  1  1
+0000  5  1  1
+0001  4  1  1
+0002  4  2  1
+0003  4  2  2
+0000  4  2  2
+0001  3  2  2
+0002  3  3  2
+0003  3  3  3
+0000  3  3  3
+0001  2  3  3
+0002  2  4  3
+0003  2  4  4
+0000  2  4  4
+0001  1  4  4
+0002  1  5  4
+0003  1  5  5
+0000  1  5  5
+0001  0  5  5
+0002  0  6  5
+0003  0  6  6
+0000  0  6  6
+0004  0  6  6
+0005  0  6  5
+0006  1  6  5
+0004  1  6  5
+0005  1  6  4
+0006  2  6  4
+0004  2  6  4
+0005  2  6  3
+0006  3  6  3
+0004  3  6  3
+0005  3  6  2
+0006  4  6  2
+0004  4  6  2
+0005  4  6  1
+0006  5  6  1
+0004  5  6  1
+0005  5  6  0
+0006  6  6  0
+0004  6  6  0
+0007  6  6  0
+----  6  6  0
+6
+
+&gt;&gt;&gt; RM().run(P_COPY, [6, 2])
+0000  6  2
+0001  5  2
+0002  5  3
+0003  5  3  1
+0000  5  3  1
+0001  4  3  1
+0002  4  4  1
+0003  4  4  2
+0000  4  4  2
+0001  3  4  2
+0002  3  5  2
+0003  3  5  3
+0000  3  5  3
+0001  2  5  3
+0002  2  6  3
+0003  2  6  4
+0000  2  6  4
+0001  1  6  4
+0002  1  7  4
+0003  1  7  5
+0000  1  7  5
+0001  0  7  5
+0002  0  8  5
+0003  0  8  6
+0000  0  8  6
+0004  0  8  6
+0005  0  8  5
+0006  1  8  5
+0004  1  8  5
+0005  1  8  4
+0006  2  8  4
+0004  2  8  4
+0005  2  8  3
+0006  3  8  3
+0004  3  8  3
+0005  3  8  2
+0006  4  8  2
+0004  4  8  2
+0005  4  8  1
+0006  5  8  1
+0004  5  8  1
+0005  5  8  0
+0006  6  8  0
+0004  6  8  0
+0007  6  8  0
+----  6  8  0
+8
+</code></pre>
+
+<hr>
+
+<h2>Question 1: Basic Register Machine programs</h2>
+
+<p>The sample outputs below show only the final register values and the returned value. You can use as
+many temporary as you need, and you don't need to use the same number I do.</p>
+
+<p>For all of these programs, please ensure that the input registers are restored to their initial
+value, and that any temporary registers have 0 in them at the end of execution.</p>
+
+<h3>(A)</h3>
+
+<p>Code a program <strong><code>P_PLUS</code></strong> that computes the sum of the values in registers 0 and 1 into register 2
+and returns that sum.</p>
+
+<pre><code>&gt;&gt;&gt; rm = RM()
+
+&gt;&gt;&gt; rm.run(P_PLUS, [0, 0])
+----  0  0  0  0  0
+0
+
+&gt;&gt;&gt; rm.run(P_PLUS, [0, 3])
+----  0  3  3  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_PLUS, [3, 0])
+----  3  0  3  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_PLUS, [3, 1])
+----  3  1  4  0  0
+4
+
+&gt;&gt;&gt; rm.run(P_PLUS, [3, 2])
+----  3  2  5  0  0
+5
+
+&gt;&gt;&gt; rm.run(P_PLUS, [3, 3])
+----  3  3  6  0  0
+6
+
+&gt;&gt;&gt; rm.run(P_PLUS, [3, 4])
+----  3  4  7  0  0
+7
+
+&gt;&gt;&gt; rm.run(P_PLUS, [3, 5])
+----  3  5  8  0  0
+8
+
+&gt;&gt;&gt; rm.run(P_PLUS, [8, 9])
+----  8  9  17  0  0
+17
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a program <strong><code>P_MINUS</code></strong> that computes the &quot;positive difference&quot; between registers 0 and 1 into
+register 2 and returns that difference.</p>
+
+<p>The positive difference of X and Y, written X &dotminus; Y, is defined to be X - Y if X &ge; Y, and 0 otherwise.</p>
+
+<pre><code>&gt;&gt;&gt; rm = RM()
+
+&gt;&gt;&gt; rm.run(P_MINUS, [0, 0])
+----  0  0  0  0  0
+0
+
+&gt;&gt;&gt; rm.run(P_MINUS, [0, 3])
+----  0  3  0  0  0
+0
+
+&gt;&gt;&gt; rm.run(P_MINUS, [3, 0])
+----  3  0  3  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_MINUS, [3, 1])
+----  3  1  2  0  0
+2
+
+&gt;&gt;&gt; rm.run(P_MINUS, [3, 2])
+----  3  2  1  0  0
+1
+
+&gt;&gt;&gt; rm.run(P_MINUS, [3, 3])
+----  3  3  0  0  0
+0
+
+&gt;&gt;&gt; rm.run(P_MINUS, [3, 0])
+----  3  0  3  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_MINUS, [3, 4])
+----  3  4  0  0  0
+0
+
+&gt;&gt;&gt; rm.run(P_MINUS, [3, 5])
+----  3  5  0  0  0
+0
+
+&gt;&gt;&gt; rm.run(P_MINUS, [9, 8])
+----  9  8  1  0  0
+1
+
+&gt;&gt;&gt; rm.run(P_MINUS, [8, 9])
+----  8  9  0  0  0
+0
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a program <strong><code>P_MAX</code></strong> that computes the maximum value stored in registers 0 and 1 into register 2 and returns that maximum.</p>
+
+<pre><code>&gt;&gt;&gt; rm = RM()
+
+&gt;&gt;&gt; rm.run(P_MAX, [0, 0])
+----  0  0  0  0  0
+0
+
+&gt;&gt;&gt; rm.run(P_MAX, [0, 3])
+----  0  3  3  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_MAX, [3, 0])
+----  3  0  3  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_MAX, [3, 1])
+----  3  1  3  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_MAX, [3, 2])
+----  3  2  3  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_MAX, [3, 3])
+----  3  3  3  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_MAX, [3, 4])
+----  3  4  4  0  0
+4
+
+&gt;&gt;&gt; rm.run(P_MAX, [3, 5])
+----  3  5  5  0  0
+5
+
+&gt;&gt;&gt; rm.run(P_MAX, [9, 8])
+----  9  8  9  0  0
+9
+
+&gt;&gt;&gt; rm.run(P_MAX, [8, 9])
+----  8  9  9  0  0
+9
+</code></pre>
+
+<hr>
+
+<h2>Question 2: Symbolic Register Machine programs</h2>
+
+<p>Register Machine programs are a bit of a pain to write because</p>
+
+<ul>
+<li>you have to address registers by numbers which is error prone and difficult to read, and</li>
+<li>you need to explicitly manage the address of the various jumps (in the <code>DEC</code> instruction and the
+<code>JUMP</code> instruction) which means that you whenever you add a new instruction in the middle of a
+program you may need to change bunch of jump target addresses.</li>
+</ul>
+
+<p>How did you approach writing programs in Question 1? Personally, I use placeholders for addresses,
+and only when then program is written do I replace those placeholders by the addresses that I can
+read off the final program. Similarly, instead of explicitly using register numbers, I use
+register names, and changes those names to numbers right before execution.</p>
+
+<p>Let's formalize that. We'll introduce the notion of a <em>symbolic program</em> that uses register names
+instead of numbers, and that uses symbolic labels instead of addresses. Of course, before execution,
+those names will be resolved into actual register numbers and instruction addresses so that execution
+proceeds as previously defined. We're not changing how programs execute. We're only making it easier
+for us to write programs.</p>
+
+<p>For writing symbolic programs, we'll introduce three new <em>pseudo-instructions</em>:</p>
+
+<ul>
+<li><code>REGISTER</code> <em><code>name</code></em> <em><code>reg</code></em></li>
+<li><code>TEMPORARY</code> <em><code>name</code></em></li>
+<li><code>LABEL</code> <em><code>name</code></em></li>
+</ul>
+
+<p>These are not executable instructions for our Register Machines. They are a kind of annotation that
+get used to transform the program before running it.</p>
+
+<p>Pseudo-instruction <code>REGISTER name reg</code> says that you can use <code>name</code> to refer to register number
+<code>reg</code>. So that <code>REGISTER X 0</code> indicates that you can write <code>INC X</code> to mean the same as <code>INC 0</code>.</p>
+
+<p>Pseudo-instruction <code>TEMPORARY name</code> says that you can use <code>name</code> to refer to a temporary register,
+whose number if not known in advance but guaranteed to be different than any other register. (Since
+we do not assign initial values to temporary register, we don't actually care what number they
+are. If we did, we'd use <code>REGISTER</code> to give the register's name a specific number.)</p>
+
+<p>Pseudo-instruction <code>LABEL name</code> indicates that the address of the next (real) instruction can be
+refered to by <code>name</code>. So we can write <code>JUMP foo</code> to jump to the address of the instruction following
+<code>LABEL foo</code>.</p>
+
+<p>Here is program <code>P_COPY</code> from above rewritten as a symbolic program:</p>
+
+<pre><code>P_COPY_sym = [
+    (&quot;register&quot;, &quot;X&quot;, 0),
+    (&quot;register&quot;, &quot;Y&quot;, 1),
+    (&quot;temporary&quot;, &quot;T&quot;)
+
+    (&quot;label&quot;, &quot;empty_x&quot;),
+    (&quot;dec&quot;, &quot;X&quot;, &quot;refresh_x&quot;),
+    (&quot;inc&quot;, &quot;Y&quot;),
+    (&quot;inc&quot;, &quot;T&quot;),
+    (&quot;jump&quot;, &quot;empty_x&quot;),
+
+    (&quot;label&quot;, &quot;refresh_x&quot;)
+    (&quot;dec&quot;, &quot;T&quot;, &quot;done&quot;),
+    (&quot;inc&quot;, &quot;X&quot;),
+    (&quot;jump&quot;, &quot;refresh_x&quot;),
+
+    (&quot;label&quot;, &quot;done&quot;),
+    (&quot;stop&quot;, &quot;Y&quot;)
+]
+</code></pre>
+
+<p>(If we had a dedicated syntax, we could write this more legibly as:</p>
+
+<pre><code>register X 0
+register Y 1
+temporary T
+
+empty_x:
+   dec X refresh_x
+   inc Y
+   inc T
+   jump empty_x
+
+refresh_x:
+   dec T done
+   inc X
+   jump refresh_x
+
+done:
+   stop Y
+</code></pre>
+
+<p>Keep this in mind for next time.)</p>
+
+<h3>(A)</h3>
+
+<p>Code a method <code>resolve_registers()</code> in class <code>RM</code> that takes a symbolic program and returns a <em>new</em>
+(possibly symbolic) program in which:</p>
+
+<ol>
+<li>For every <code>REGISTER name reg</code> in the program, all uses of register name <code>name</code> in <code>INC</code>, <code>DEC</code>,
+and <code>STOP</code> instructions are replaced by register number <code>reg</code>.</li>
+<li>For every <code>TEMPORARY name</code> in the program, all uses of register name <code>name</code> in <code>INC</code>, <code>DEC</code>, and
+<code>STOP</code> instructions are replaced by some register number that is different from all other.
+register numbers used in the program (including other numbers assigned to other <code>TEMPORARY</code> registers)</li>
+<li>Every occurrence of <code>REGISTER name reg</code> or <code>TEMPORARY name</code> is removed.</li>
+</ol>
+
+<p>I've given you a method <code>max_register()</code> that takes a program and returns the highest numbered
+register used in the program. You know, in case it's useful?</p>
+
+<p>Sample outputs (not unique due to <code>TEMPORARY</code>):</p>
+
+<pre><code>&gt;&gt;&gt; p = [(&quot;register&quot;, &quot;X&quot;, 0), (&quot;inc&quot;, &quot;X&quot;), (&quot;stop&quot;, &quot;X&quot;)]
+&gt;&gt;&gt; RM().resolve_registers(p)
+[('inc', 0), ('stop', 0)]
+
+&gt;&gt;&gt; p = [(&quot;register&quot;, &quot;X&quot;, 0), (&quot;register&quot;, &quot;Y&quot;, 1), (&quot;inc&quot;, &quot;X&quot;), (&quot;dec&quot;, &quot;Y&quot;, 3), (&quot;stop&quot;, &quot;X&quot;), (&quot;stop&quot;, &quot;Y&quot;)]
+&gt;&gt;&gt; RM().resolve_registers(p)
+[('inc', 0), ('dec', 1, 3), ('stop', 0), ('stop', 1)]
+
+&gt;&gt;&gt; p = [(&quot;register&quot;, &quot;X&quot;, 2), (&quot;temporary&quot;, &quot;T&quot;), (&quot;temporary&quot;, &quot;U&quot;), (&quot;inc&quot;, &quot;T&quot;), (&quot;dec&quot;, &quot;U&quot;, 3), (&quot;stop&quot;, &quot;T&quot;), (&quot;stop&quot;, &quot;U&quot;)]
+&gt;&gt;&gt; RM().resolve_registers(p)
+[('inc', 3), ('dec', 4, 3), ('stop', 3), ('stop', 4)]
+
+&gt;&gt;&gt; p = [(&quot;temporary&quot;, &quot;T1&quot;), (&quot;temporary&quot;, &quot;T2&quot;), (&quot;temporary&quot;, &quot;T3&quot;), (&quot;temporary&quot;, &quot;T4&quot;), (&quot;temporary&quot;, &quot;T5&quot;), (&quot;inc&quot;, &quot;T1&quot;), (&quot;inc&quot;, &quot;T2&quot;), (&quot;inc&quot;, &quot;T3&quot;), (&quot;inc&quot;, &quot;T4&quot;), (&quot;inc&quot;, &quot;T5&quot;), (&quot;stop&quot;, &quot;T1&quot;)]
+&gt;&gt;&gt; RM().resolve_registers(p)
+[('inc', 1), ('inc', 2), ('inc', 3), ('inc', 4), ('inc', 5), ('stop', 1)]
+
+&gt;&gt;&gt; p = [(&quot;register&quot;, &quot;X&quot;, 0), (&quot;temporary&quot;, &quot;T&quot;), (&quot;label&quot;, &quot;L1&quot;), (&quot;dec&quot;, &quot;X&quot;, &quot;L1&quot;), (&quot;stop&quot;, &quot;T&quot;)]
+&gt;&gt;&gt; RM().resolve_registers(p)
+[('label', 'L1'), ('dec', 0, 'L1'), ('stop', 1)]
+</code></pre>
+
+<h3>(B)</h3>
+
+<p>Code a method <code>resolve_labels()</code> in class <code>RM</code> that takes a symbolic program and returns a <em>new</em>
+(possibly symbolic) program in which:</p>
+
+<ol>
+<li>For every <code>LABEL name</code> in the program, all uses of address <code>name</code> in <code>DEC</code> and <code>JUMP</code>
+instructions are replaced by <em>the address of the instruction following <code>LABEL name</code></em>.</li>
+<li>Every occurrence of <code>LABEL name</code> is removed.</li>
+</ol>
+
+<p>Note that for the purpose of determining the address of instructions in a program,
+pseudo-instructions like <code>REGISTER</code>, <code>TEMPORARY</code>, and <code>LABEL</code> do not count (since they do not appear
+in programs that are actually executed).</p>
+
+<pre><code>&gt;&gt;&gt; p = [(&quot;label&quot;, &quot;L&quot;), (&quot;dec&quot;, 0, &quot;L&quot;), (&quot;jump&quot;, &quot;L&quot;)]
+&gt;&gt;&gt; RM().resolve_labels(p)
+[('dec', 0, 0), ('jump', 0)]
+
+&gt;&gt;&gt; p = [(&quot;label&quot;, &quot;L&quot;), (&quot;dec&quot;, 0, &quot;L&quot;), (&quot;jump&quot;, &quot;L&quot;), (&quot;label&quot;, &quot;M&quot;), (&quot;dec&quot;, 0, &quot;M&quot;), (&quot;jump&quot;, &quot;M&quot;)]
+&gt;&gt;&gt; RM().resolve_labels(p)
+[('dec', 0, 0), ('jump', 0), ('dec', 0, 2), ('jump', 2)]
+
+&gt;&gt;&gt; p = [(&quot;label&quot;, &quot;L&quot;), (&quot;label&quot;, &quot;M&quot;), (&quot;dec&quot;, 0, &quot;L&quot;), (&quot;jump&quot;, &quot;L&quot;), (&quot;dec&quot;, 0, &quot;M&quot;), (&quot;jump&quot;, &quot;M&quot;)]
+&gt;&gt;&gt; RM().resolve_labels(p)
+[('dec', 0, 0), ('jump', 0), ('dec', 0, 0), ('jump', 0)]
+
+&gt;&gt;&gt; p = [(&quot;label&quot;, &quot;L&quot;), (&quot;dec&quot;, 0, &quot;L&quot;), (&quot;label&quot;, &quot;M&quot;), (&quot;jump&quot;, &quot;L&quot;), (&quot;dec&quot;, 0, &quot;M&quot;), (&quot;jump&quot;, &quot;M&quot;)]
+&gt;&gt;&gt; RM().resolve_labels(p)
+[('dec', 0, 0), ('jump', 0), ('dec', 0, 1), ('jump', 1)]
+
+&gt;&gt;&gt; p = [(&quot;register&quot;, &quot;X&quot;, 0), (&quot;label&quot;, &quot;L&quot;), (&quot;dec&quot;, &quot;X&quot;, &quot;L&quot;), (&quot;jump&quot;, &quot;L&quot;), (&quot;label&quot;, &quot;M&quot;), (&quot;dec&quot;, &quot;X&quot;, &quot;M&quot;), (&quot;jump&quot;, &quot;M&quot;)]
+&gt;&gt;&gt; RM().resolve_labels(p)
+[('register', 'X', 0), ('dec', 'X', 0), ('jump', 0), ('dec', 'X', 2), ('jump', 2)]
+
+&gt;&gt;&gt; p = [(&quot;register&quot;, &quot;X&quot;, 0), (&quot;temporary&quot;, &quot;T&quot;), (&quot;label&quot;, &quot;L&quot;), (&quot;dec&quot;, &quot;X&quot;, &quot;L&quot;), (&quot;jump&quot;, &quot;L&quot;), (&quot;label&quot;, &quot;M&quot;), (&quot;dec&quot;, &quot;X&quot;, &quot;M&quot;), (&quot;jump&quot;, &quot;M&quot;)]
+&gt;&gt;&gt; RM().resolve_labels(p)
+[('register', 'X', 0), ('temporary', 'T'), ('dec', 'X', 0), ('jump', 0), ('dec', 'X', 2), ('jump', 2)]
+
+&gt;&gt;&gt; p = [(&quot;label&quot;, &quot;L&quot;), (&quot;register&quot;, &quot;X&quot;, 0), (&quot;temporary&quot;, &quot;T&quot;), (&quot;dec&quot;, &quot;X&quot;, &quot;L&quot;), (&quot;jump&quot;, &quot;L&quot;), (&quot;label&quot;, &quot;M&quot;), (&quot;dec&quot;, &quot;X&quot;, &quot;M&quot;), (&quot;jump&quot;, &quot;M&quot;)]
+&gt;&gt;&gt; RM().resolve_labels(p)
+[('register', 'X', 0), ('temporary', 'T'), ('dec', 'X', 0), ('jump', 0), ('dec', 'X', 2), ('jump', 2)]
+</code></pre>
+
+<h3>(C)</h3>
+
+<p>Code a symbolic program <strong><code>P_DIFF</code></strong> that computes the absolute difference between the values in
+registers 0 and 1 into register 2, and returns that difference. The absolute difference between X
+and Y is the absolute value |X - Y| of the difference between X and Y, and is obviously always
+positive.</p>
+
+<p>The sample outputs below show only the final register values and the returned value. You can use as
+many temporary as you need, and you don't need to use the same number I do.</p>
+
+<p>Please ensure that the input registers are restored to their initial value, and any temporary
+registers have 0 in them at the end of execution.</p>
+
+<pre><code>&gt;&gt;&gt; rm = RM()
+
+&gt;&gt;&gt; rm.run(P_DIFF, [0, 0])
+----  0  0  0  0  0  0  0  0  0  0  0
+0
+
+&gt;&gt;&gt; rm.run(P_DIFF, [3, 0])
+----  3  0  3  0  0  0  0  0  0  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_DIFF, [3, 1])
+----  3  1  2  0  0  0  0  0  0  0  0
+2
+
+&gt;&gt;&gt; rm.run(P_DIFF, [3, 2])
+----  3  2  1  0  0  0  0  0  0  0  0
+1
+
+&gt;&gt;&gt; rm.run(P_DIFF, [3, 3])
+----  3  3  0  0  0  0  0  0  0  0  0
+0
+
+&gt;&gt;&gt; rm.run(P_DIFF, [3, 4])
+----  3  4  1  0  0  0  0  0  0  0  0
+1
+
+&gt;&gt;&gt; rm.run(P_DIFF, [3, 5])
+----  3  5  2  0  0  0  0  0  0  0  0
+2
+
+&gt;&gt;&gt; rm.run(P_DIFF, [3, 6])
+----  3  6  3  0  0  0  0  0  0  0  0
+3
+
+&gt;&gt;&gt; rm.run(P_DIFF, [0, 3])
+----  0  3  3  0  0  0  0  0  0  0  0
+3
+</code></pre>
+
+<p><strong>Hint</strong>: |X - Y| = X &dotminus; Y if X &ge; Y and = Y &dotminus; X if X &lt; Y. Equivalently, |X - Y|
+= (X &dotminus; Y) + (Y &dotminus; X).</p>
