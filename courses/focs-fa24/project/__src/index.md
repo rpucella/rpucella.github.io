@@ -40,6 +40,18 @@ machine that takes (the encoding of) a Turing machine as input as well as a stri
 the input Turing machine running on that input string. Implement a Universal Turing machine, and use
 it to simulate other Turing machines.
 
+
+### (NEW) Modular Turing Machines
+
+Constructing Turing machines is a bit of a pain. It needs to be built all at once, and if it
+requires functionality that you've already implemented for another Turing machine, you cannot reuse
+the "code" in any meaninful way. When I talked about building a Turing machine corresponding to a
+Register Machine program, I introduced the notion of "gadgets" that you can combine together to
+create a Turing machine, but didn't formalize the notion. This project would be to create a notion
+of "modular" Turing machines that you can build by putting together pre-created (possibly
+parameterized) components
+
+
 ### Post Correspondence Problem
 
 We saw the Post Correspondence Problem in class as an example of a non-computable problem that is
