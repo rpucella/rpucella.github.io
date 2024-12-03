@@ -41,7 +41,7 @@ make me unhappy.
 In class, we talked about the abacus model, and programs written as diagrams where you have
 locations containing pebbles and "instructions" such as adding a pebble to a location and removing a
 pebble from a location.  This is described in the first two section of Chapter 1 of Lambek's
-[_Programs, Grammars, Arguments_](http://www.math.mcgill.ca/~barr/papers/pga.pdf). You should
+[_Programs, Grammars, Arguments_](https://www.math.mcgill.ca/barr/papers/pga.pdf). You should
 definitely read it for inspiration in how to address the problems below.
 
 
