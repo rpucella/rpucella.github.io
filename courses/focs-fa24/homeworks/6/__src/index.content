@@ -42,9 +42,9 @@ make me unhappy.</p></li>
 include:</p>
 
 <ul>
-<li><code>INC reg</code> : increment the content of register <code>rgstr</code> and go to the next instruction</li>
-<li><code>DEC reg addr</code> : if the content of register <code>rgstr</code> is zero, go to the instruction at label <code>lbl</code>; otherwise, decrement the content of register <code>rgstr</code> and go to the next instruction</li>
-<li><code>JUMP addr</code> : go to the instruction at label <code>lbl</code></li>
+<li><code>INC reg</code> : increment the content of register <code>reg</code> and go to the next instruction</li>
+<li><code>DEC reg addr</code> : if the content of register <code>reg</code> is zero, go to the instruction at address <code>addr</code>; otherwise, decrement the content of register <code>reg</code> and go to the next instruction</li>
+<li><code>JUMP addr</code> : go to the instruction at address <code>addr</code></li>
 <li><code>STOP reg</code> : stop execution and return value of register <code>reg</code></li>
 <li><code>NOP</code>: do nothing go to the next instruction</li>
 </ul>

@@ -38,9 +38,9 @@ In [last homework](../5/) we developed the register machines we saw in class.
 Recall that a program for a register machine is a sequence of instructions, where instructions
 include:
 
-- `INC reg` : increment the content of register `rgstr` and go to the next instruction
-- `DEC reg addr` : if the content of register `rgstr` is zero, go to the instruction at label `lbl`; otherwise, decrement the content of register `rgstr` and go to the next instruction
-- `JUMP addr` : go to the instruction at label `lbl`
+- `INC reg` : increment the content of register `reg` and go to the next instruction
+- `DEC reg addr` : if the content of register `reg` is zero, go to the instruction at address `addr`; otherwise, decrement the content of register `reg` and go to the next instruction
+- `JUMP addr` : go to the instruction at address `addr`
 - `STOP reg` : stop execution and return value of register `reg`
 - `NOP`: do nothing go to the next instruction
 
