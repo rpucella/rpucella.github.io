@@ -689,3 +689,10 @@ running a program. So once you complete `resolve_executes()` you should be able 
     ----  2  3  6  0  0  0  0
     6
 
+
+## To think about
+
+Not part of the homework, but if you worked through the above, you may want to contemplate the following questions:
+
+- Can you `EXECUTE` a program that itself has `EXECUTE` pseudo-instructions in it? If not, what changes would you need to make to your code to support that functionality?
+- If you could handle the `EXECUTE` of a program with `EXECUTE` pseudo-instructions in it, what happens if program `A` executes a program `B` that itself executes program `A`? Can you `EXECUTE` mutually recursive programs? What would you need to do to support this feature?

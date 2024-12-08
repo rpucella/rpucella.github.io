@@ -710,3 +710,12 @@ running a program. So once you complete <code>resolve_executes()</code> you shou
 ----  2  3  6  0  0  0  0
 6
 </code></pre>
+
+<h2>To think about</h2>
+
+<p>Not part of the homework, but if you worked through the above, you may want to contemplate the following questions:</p>
+
+<ul>
+<li>Can you <code>EXECUTE</code> a program that itself has <code>EXECUTE</code> pseudo-instructions in it? If not, what changes would you need to make to your code to support that functionality?</li>
+<li>If you could handle the <code>EXECUTE</code> of a program with <code>EXECUTE</code> pseudo-instructions in it, what happens if program <code>A</code> executes a program <code>B</code> that itself executes program <code>A</code>? Can you <code>EXECUTE</code> mutually recursive programs? What would you need to do to support this feature?</li>
+</ul>
