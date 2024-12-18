@@ -243,20 +243,13 @@
       </div>
       </li>
 
-      <li><p><span class="hdr">Nov 18: </span><b>Compiling Arithmetic Expressions</b></p>
+      <li><p><span class="hdr">Nov 18 - Dec 9: </span><b>Compiling to Register Machines</b></p>
       <div class="lect">
-        <p>Quiz: context-free grammars</p>
-       </div>
-      </li>
-
-      <li><p><span class="hdr">Dec 2: </span><b>Adding Control Flow</b></p>
-      <div class="lect">
-      </div>
-      </li>
-      
-      <li><p><span class="hdr">Dec 9: </span><b>Adding Functions</b></p>
-       <div class="lect">
-         <p>Quiz on Turing machines</p>
+        <p>Quiz (Nov 18): context-free grammars</p>
+         <p>Quiz (Dev 9): Turing machines</p>
+	 <p>Some very rough notes on <a href="compiler.html">compiling a language of while loops</a>. A follow-up <a href="compiling-while-loops.pdf">slide deck</a> going into more details of the compiler that I demo-ed in class.<p>
+	 <p>(I will post the compiler's code here once I receive the last few Homework 6s. Check back after Christmas.)</p>
+	 <p>The parser for the language I presented in class is based on parser combinators, which is a technique for parsing context-free grammars using backtracking. If you're interested in some of the theory underlying parser combinators, a good starting point is Graham Hutton's <a href="http://www.cs.nott.ac.uk/~pszgmh/parsing.pdf"><i>Higher-Order Functions for Parsing</i></a> tutorial.</p>
        </div>
       </li>
 
