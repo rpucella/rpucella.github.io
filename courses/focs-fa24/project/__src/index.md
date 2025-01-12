@@ -9,18 +9,30 @@
 
 Think of the final project as a more open-ended last homework with an associated short presentation.
 
-The task: 
+<b>The task:</b> 
 
 - Create teams of 2.
 - Propose a topic or pick one from the list below.
 - Once you've selected a topic (or want to propose your own), send me an email to let me know your team composition and your topic, and we can discuss scope and references if you need any.
 - Most of these projects have an implementation component — you should feel free to use whatever language you want for that.
 
-Deliverables:
+<b>Deliverables:</b>
 
 - A 10-15 minutes presentation during final events period
 - Code for your implementation (when relevant) and instructions for how to run the code
 - A write up describing the work and walking through the code
+
+<b>Submission instructions:</b>
+
+Please send me an email (one per team) with:
+
+- a link to your source code
+- your write up
+- a PDF of your presentation
+
+A link to a github repo that contains all of the above works.
+
+
 
 ***
 

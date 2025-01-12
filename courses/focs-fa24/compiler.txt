@@ -1,0 +1,176 @@
+
+NOTES ON COMPILING A LANGUAGE OF WHILE LOOPS
+============================================
+
+
+Ideally, we want to be able to write program as follows:
+
+
+    function plus(x, y) {
+      z = y;
+      while x > 0 {
+        z++;
+        x--;
+      }
+      return z;
+    }
+    
+    function times(x, y) { 
+      z = y;
+      while x > 0 {
+        z = plus(y, z);
+        x--;
+      }
+      return z;
+    }
+    
+    function minus(x, y) {
+      if y > x {
+        return 0;
+      }
+      while y > 0 {
+        x--;
+        y--;
+      }
+      return x;
+    }
+    
+    function gcd(x, y) {
+      if x == 0 {
+        return 0;
+      }
+      if y == 0 { 
+        return 0;
+      }
+      while x != y {
+        if x > y { 
+          x = minus(x, y);
+        } else {
+          y = minus(y, x);
+        }
+      }
+      return x;
+    }
+
+We're not going to start there though, and instead show how to compile
+simple programs containing in only one function. Once we have the
+pseudo-instruction EXECUTE from homework 6, we'll be able to handle
+multi-function programs (with some limitations).
+
+Here's the syntax of the language, written in Backus-Naur form (BNF),
+a notation for context-free grammars:
+
+    F ::= function (var, ...) { S }
+    
+    S ::= var = E
+          if E { S } else { S }
+          while E { S }
+          return E
+          S S
+    
+    E ::= number
+          var
+          E + E
+
+I'm assuming a single primitive function + for addition. Obviously,
+I could add more primitive operations. I just need to account for them
+in the translation process below. Each primitive operation needs to
+translate to register machine code to perform the operation.
+
+The translation (compilation) from source programs into register
+machine code is done via three translation functions, one for each
+syntactic category: functions F, statements S, and expressions E:
+
+    [[ E ]]R = <code to evaluate E into register R>
+    [[ S ]]  = <code to execute S>
+    [[ F ]]  = <code for function F>
+
+The translation function [[ E ]]R for expressions takes a target
+register as an argument to the translation. That will usually be a
+temporary register.
+
+I'm going to assume and enforce the invariant that [[ E ]]R does not
+change any register except R, and R will contain the result of
+"evaluating" E.
+
+
+TRANSLATION FOR EXPRESSIONS E
+-----------------------------
+
+    [[ 0 ]]R = NOP
+    
+    [[ n ]]R = INC R       (for n > 0)
+               ...
+               INC R
+    
+    
+    [[ var ]]R = <copy var to R>
+    
+    
+    [[ E1 + E2 ]]R = TEMPORARY T1
+                     TEMPORARY T2
+                     [[ E1 ]]T1
+                     [[ E2 ]]T2
+                     <move T1 to R>
+                     <move T2 to R>
+    
+                     (T1, T2 fresh registers)
+    
+
+TRANSLATION FOR STATEMENTS
+--------------------------
+
+    [[ var = E ]] = TEMPORARY T1
+                    [[ E ]]T1
+                    <empty var>
+                    <move T1 to var>
+    
+                    (T1 fresh register)
+    
+    
+    [[ if E { S1 } else { S2 } ]] =    TEMPORARY T1
+                                       [[ E ]]T1
+                                       DEC T1, L1
+                                       # E is true
+                                       <empty T1>
+                                       [[ S1 ]]
+                                       JUMP L2
+                                   L1: # E is false
+                                       [[ S2 ]]
+                                   L2: NOP
+      
+                                   (T1 fresh register, L1, L2 fresh labels)
+       
+    
+    [[ while E { S } ]] =     TEMPORARY T1
+                          L1: [[ E ]] T1
+                              DEC T1, L2
+                              # E is true
+                              <empty T1>
+                              [[ S ]]
+                              JUMP L1
+                          L2: # E is false
+                              NOP
+    
+                          (T1 fresh register, L1, L2 fresh labels)
+    
+    
+    [[ return E ]] = TEMPORARY T1
+                     [[ E ]]T1
+                     STOP T1
+    
+                     (T1 fresh register)
+    
+    
+    [[ S1 S2 ]] = [[ S1 ]]
+                  [[ S2 ]]
+
+
+
+TRANSLATION FOR FUNCTIONS
+-------------------------
+
+    [[ function (var, ...) { S } ]] = REGISTER var
+                                      ...
+                                      [[ S ]]
+
