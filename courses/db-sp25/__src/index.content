@@ -21,7 +21,7 @@
           <li><b>Prerequisites:</b> Software Design</li>
 
           <li><b>Location and Time:</b>
-            MAC 126 / Mon 6:00-8:40pm
+            MAC 326 / Mon 6:00-8:40pm
           </li>
 
           <li><b>Instructor:</b> <a href="https://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</li>
@@ -125,7 +125,7 @@
         <h2>Homeworks</h2>
         
         <ul class="plain">
-          
+         <li><a href="./homeworks/1">Homework 1</a> &mdash; due Friday Feb 7</li>
         </ul>
         
       </section>
