@@ -101,11 +101,35 @@
         </div>
       </li>
 
+      <li><p><span class="hdr">Feb 3: </span><b>Basics of Storage</b></p>
+        <div class="lect">
+
+          <p><a href="./notes/storage.pdf">Slides</a> from the lecture.</p>
+
+          <p>Wikipedia page on <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD operations</a>.</p>
+
+          <p>What I called "arrays with capacity" in the slides are sometimes called <a href="https://en.wikipedia.org/wiki/Dynamic_array">dynamic arrays</a>.</p>
+          
+          <p>Wikipedia links for <a href="https://en.wikipedia.org/wiki/Binary_search_algorithm">binary search</a> and for <a href="https://en.wikipedia.org/wiki/Binary_search_tree">binary search trees</a>.</p>
+
+        <p><a href="https://en.wikipedia.org/wiki/AVL_tree">AVL trees</a> are one of the simplest form of balanced trees. Here's a <a href="https://www.cs.usfca.edu/~galles/visualization/AVLtree.html">cute visualization</a> of what happens when you insert
+	    into an AVL tree. Try starting with the empty tree, and
+	    inserting 1, 2, 3, 4, 5, 6, 7, 8... You'll see the tree
+	      grow "to the right" and then rebalance itself repeatedly.</p>
+
+          <p>Wikipedia article on <a href="https://en.wikipedia.org/wiki/Hash_function">hash functions</a>, which
+            provides a good overview of various kind of hash functions. Note that the hash function I mentioned
+            in class using the mod operation is an instance of division hashing.</p>
+
+          <p>A way to resolve collisions in a hash table is to use <a href="https://en.wikipedia.org/wiki/Linear_probing">linear probing</a> to find a free cell when the cell that a hash function targets is already occupied by another item than the one we're trying to insert.</p>
+
+        </div>
+      </li>
+
     </ul>
 
-        <p>Tentative schedule:</p>
+        <p>Upcoming topics:</p>
         <ul>
-	  <li>Storage</li>
           <li>Entity-Relationship Model</li>
           <li>Relational Model</li>
           <li>Relational Databases</li>
