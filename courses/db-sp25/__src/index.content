@@ -21,7 +21,7 @@
           <li><b>Prerequisites:</b> Software Design</li>
 
           <li><b>Location and Time:</b>
-            MAC ? / Mon 4:00-6:30pm
+            MAC 326 / Mon 6:00-8:40pm
           </li>
 
           <li><b>Instructor:</b> <a href="https://www.rpucella.net">Riccardo Pucella</a> (&#x72;&#x69;&#x63;&#x63;&#x61;&#x72;&#x64;&#x6F;&#x2E;&#x70;&#x75;&#x63;&#x65;&#x6C;&#x6C;&#x61;&#x40;&#x6F;&#x6C;&#x69;&#x6E;&#x2E;&#x65;&#x64;&#x75;)</li>
@@ -87,12 +87,49 @@
         </h2>
 
         <p>
-          Schedule and topics subject to change. Details will be added as the course progresses.
+          Schedule and topics subject to change.
         </p>
 
-        <p>Tentative schedule:</p>
+    <ul class="lectures">
+
+      <li><p><span class="hdr">Jan 27: </span><b>Introduction</b></p>
+        <div class="lect">
+
+          <p><a href="./notes/introduction.pdf">Slides</a> from the lecture.</p>
+          
+          <p>The Go <a href="./demo.go">demo code</a> I showed in class, annotated. Please have a read-through. To run the code, you can use <pre>    go run demo.go</pre> from the command-line in the directory in which you stored <tt>demo.go</tt>. Alternatively, you can also compile the code with <pre>    go build demo.go</pre> which should create an executable <tt>demo</tt> in the directory and which you can run in the usual way, <tt>./demo</tt>. If you use an IDE, investigate how you can run and/or compile Go code.</p>
+        </div>
+      </li>
+
+      <li><p><span class="hdr">Feb 3: </span><b>Basics of Storage</b></p>
+        <div class="lect">
+
+          <p><a href="./notes/storage.pdf">Slides</a> from the lecture.</p>
+
+          <p>Wikipedia page on <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD operations</a>.</p>
+
+          <p>What I called "arrays with capacity" in the slides are sometimes called <a href="https://en.wikipedia.org/wiki/Dynamic_array">dynamic arrays</a>.</p>
+          
+          <p>Wikipedia links for <a href="https://en.wikipedia.org/wiki/Binary_search_algorithm">binary search</a> and for <a href="https://en.wikipedia.org/wiki/Binary_search_tree">binary search trees</a>.</p>
+
+        <p><a href="https://en.wikipedia.org/wiki/AVL_tree">AVL trees</a> are one of the simplest form of balanced trees. Here's a <a href="https://www.cs.usfca.edu/~galles/visualization/AVLtree.html">cute visualization</a> of what happens when you insert
+	    into an AVL tree. Try starting with the empty tree, and
+	    inserting 1, 2, 3, 4, 5, 6, 7, 8... You'll see the tree
+	      grow "to the right" and then rebalance itself repeatedly.</p>
+
+          <p>Wikipedia article on <a href="https://en.wikipedia.org/wiki/Hash_function">hash functions</a>, which
+            provides a good overview of various kind of hash functions. Note that the hash function I mentioned
+            in class using the mod operation is an instance of division hashing.</p>
+
+          <p>A way to resolve collisions in a hash table is to use <a href="https://en.wikipedia.org/wiki/Linear_probing">linear probing</a> to find a free cell when the cell that a hash function targets is already occupied by another item than the one we're trying to insert.</p>
+
+        </div>
+      </li>
+
+    </ul>
+
+        <p>Upcoming topics:</p>
         <ul>
-          <li>Introduction</li>
           <li>Entity-Relationship Model</li>
           <li>Relational Model</li>
           <li>Relational Databases</li>
@@ -102,6 +139,7 @@
           <li>Transactions and Concurrency</li>
           <li>Distribution and Replication</li>
           <li>NoSQL Databases</li>
+         </ul>	   
 
       </section>
 
@@ -111,7 +149,7 @@
         <h2>Homeworks</h2>
         
         <ul class="plain">
-          
+         <li><a href="./homeworks/1">Homework 1</a> &mdash; due Friday Feb 7</li>
         </ul>
         
       </section>
