@@ -126,13 +126,32 @@
         </div>
       </li>
 
+      <li><p><span class="hdr">Feb 10: </span><b>The Entity-Relationship Model</b></p>
+        <div class="lect">
+
+             <p>Reading: Textbook, Chapter 3.</p>
+
+           <p><a href="./notes/entity-relationship-model.pdf">Slides</a> from the lecture.</p>
+
+                         <p>A <a href="https://vertabelo.com/blog/chen-erd-notation/">good summary of the ER diagrams</a> we saw in class.</p>
+
+              <p>The original paper by Chen, <a href="https://dspace.mit.edu/bitstream/1721.1/47432/1/entityrelationshx00chen.pdf"><i>The Entity-Relationship Model: Towards a unified view of Data</i></a>, published in ACM Transactions on Database Systems, 1976.</p>
+              
+        </div>
+      </li>
+
+      <li><p><span class="hdr">Feb 21: </span><b>The Relational Model and Relational Databases</b></p>
+        <div class="lect">
+
+          <p>Reading: Textbook, Chapter 6.</p>
+
+        </div>
+      </li>
+
     </ul>
 
         <p>Upcoming topics:</p>
         <ul>
-          <li>Entity-Relationship Model</li>
-          <li>Relational Model</li>
-          <li>Relational Databases</li>
           <li>SQL</li>
           <li>Normalization</li>
           <li>Indexing</li>
