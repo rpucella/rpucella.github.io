@@ -6,11 +6,10 @@
 
 ## Due Date: Friday, February 23, 2025 (23h59)
 
-- This homework is to be done individually. You may discuss problems
-with fellow students, but all submitted work must be entirely your
-own, and should not be from any other course, present, past, or
-future. If you use a solution from another source you must cite it. 
-That includes when that source is someone else helping you.
+- This homework is to be done *in teams of two*. You may discuss problems with fellow students, but
+all submitted work must be entirely your team's, and should not be from any other course, present,
+past, or future. If you use a solution from another source you must cite it.  That includes when
+that source is someone else helping you.
 
 - **Please do not post your solutions on a public website or a public repository like GitHub.**
 
@@ -33,7 +32,7 @@ impossible to load your code into the testing infrastructure, and generall make 
 
 - If there are any error, do not submit. I can't test what I can't compile.
 
-- Submission done via the course <a href="canvas.olin.edu">Canvas</a> site.
+- Submission done via the course <a href="canvas.olin.edu">Canvas</a> site. One submission per team is sufficient, but please make sure to indicate who is in your team in the the header of your `homework2.go` submitted file.
 
 
 * * *
