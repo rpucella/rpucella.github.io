@@ -32,7 +32,7 @@ impossible to load your code into the testing infrastructure, and generall make 
 
 - If there are any error, do not submit. I can't test what I can't compile.
 
-- Submission done via the course <a href="canvas.olin.edu">Canvas</a> site. One submission per team is sufficient, but please make sure to indicate who is in your team in the the header of your `homework2.go` submitted file.
+- Submission done via the course <a href="https://canvas.olin.edu">Canvas</a> site. One submission per team is sufficient, but please make sure to indicate who is in your team in the the header of your `homework2.go` submitted file.
 
 
 * * *
