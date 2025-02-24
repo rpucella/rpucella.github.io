@@ -1,0 +1,19 @@
+# sqlite3
+SQLite version 3.45.1 2024-01-30 16:01:20
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .read books.sql
+sqlite> .tables
+Authors     Books       Publishers  Write     
+sqlite> select * from Authors;
+1|Robertson Davies|1913
+2|John Fowles|1926
+sqlite> .mode table
+sqlite> select * from Authors;
++----------+------------------+-----------+
+| authorId |       name       | yearBirth |
++----------+------------------+-----------+
+| 1        | Robertson Davies | 1913      |
+| 2        | John Fowles      | 1926      |
++----------+------------------+-----------+
