@@ -160,9 +160,28 @@
       <li><p><span class="hdr">Feb 24: </span><b>SQL (Structured Query Language)</b></p>
         <div class="lect">
 
+              <p>Reading: Textbook, Chapter 7.</p>
+              
+          <p><a href="./notes/SQL.pdf">Slides</a> from the lecture.</p>
+	  
+	      <p>Wikipedia page on <a href="https://en.wikipedia.org/wiki/SQL">SQL</a>.</p>
+              
+	      <p>A draft of the <a href="http://www.contrib.andrew.cmu.edu/~shadow/sql/sql1992.txt">1992 standard</a>, if you like reading those sort of documents.</p>
 
+	      <p>There are tons of tutorials on SQL online, usually tied to a particular database implementation, since you can't use SQL "in the abstract". I've used <a href="http://www.postgresqltutorial.com">Postgres's SQL tutorial</a> in the past to introduce SQL to colleagues (start with Section 2). An interactive tutorial that I greatly enjoy is <a href="https://sqlbolt.com/">SQLBolt</a>.</p>
+
+              <p>Two SQL features we did not cover in class but you may run into are <a href="https://www.sqltutorial.org/sql-views/">views</a> (which are a form of live query that looks like a table in the database) and <a href="https://en.wikipedia.org/wiki/Stored_procedure">stored procedures</a> (which are a form of functions that can be written directly into the database). Views tend to look the same across relational databases, while stored procedures are much more vendor dependent.</p>
+	
         </div>
       </li>
+
+      <li><p><span class="hdr">Mar 3: Programming APIs and ORMs </span><b></b></p>
+        <div class="lect">
+
+           <p>Reading: Textbook, Chapter 15.</p>
+	   
+	</div>
+      </li>	
 
     </ul>
 
