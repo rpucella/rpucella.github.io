@@ -1,5 +1,5 @@
 <script>
-  document.title = 'Homework 1 - DB SP25'
+  document.title = 'Homework 2 - DB SP25'
 </script>
 
 # Homework 2
