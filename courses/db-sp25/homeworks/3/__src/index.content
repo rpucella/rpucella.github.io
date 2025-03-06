@@ -733,4 +733,100 @@ PrintTable(LeftOuterJoin(FullOuterJoin(t, t2, &quot;n&quot;, &quot;number&quot;)
 
 <h2>Question 6: Aggregation</h2>
 
-<p>(Coming soon!)</p>
+<p>Code a function</p>
+
+<pre><code>Aggregate(t Table, groupBy string, concat []string) Table
+</code></pre>
+
+<p>that takes a table <code>t</code>, a field name <code>groupBy</code> of <code>t</code>, and an array of field names of <code>t</code> (different from <code>groupBy</code>) and returns a new table with both <code>groupBy</code> and the fileds in <code>concat</code> as fields, and in which every row is the aggregation of the rows of <code>t</code> with the same value for <code>groupBy</code>: each aggregated row gets the common value of <code>groupBy</code> as the value of <code>groupBy</code> and gets the values of <code>f</code> concatenated together (separated by a comma) as the value of field <code>f</code>, for every <code>f</code> in <code>concat</code>.</p>
+
+<p>(Obviously, this is a restricted form of aggregation. A more general aggregation would let you decide <em>for each field</em> how to aggregate the values in that field. Thinking how about you could generalize this function is left as an open exercise.)</p>
+
+<p><strong>Hint</strong>: use function <code>strings.Join</code> from the standard library.</p>
+
+<p>Sample output (using <code>t</code> from Question 1):</p>
+
+<pre><code>t3 := CreateTable([]string{&quot;n&quot;, &quot;first&quot;, &quot;last&quot;}, &quot;n&quot;)
+for i := 0; i &lt; 20; i++ {
+	v := fmt.Sprintf(&quot;%d&quot;, i)
+	InsertRow(&amp;t3, Record{v, v[:1], v[len(v) - 1:]})
+}
+
+PrintTable(t3)
+
++-------------------+
+| n  | first | last |
++-------------------+
+| 0  | 0     | 0    |
+| 1  | 1     | 1    |
+| 2  | 2     | 2    |
+| 3  | 3     | 3    |
+| 4  | 4     | 4    |
+| 5  | 5     | 5    |
+| 6  | 6     | 6    |
+| 7  | 7     | 7    |
+| 8  | 8     | 8    |
+| 9  | 9     | 9    |
+| 10 | 1     | 0    |
+| 11 | 1     | 1    |
+| 12 | 1     | 2    |
+| 13 | 1     | 3    |
+| 14 | 1     | 4    |
+| 15 | 1     | 5    |
+| 16 | 1     | 6    |
+| 17 | 1     | 7    |
+| 18 | 1     | 8    |
+| 19 | 1     | 9    |
++-------------------+
+
+PrintTable(Aggregate(t3, &quot;first&quot;, []string{&quot;n&quot;, &quot;last&quot;}))
+
++-------------------------------------------------------------------------------------+
+| first | n                                         | last                            |
++-------------------------------------------------------------------------------------+
+| 0     | 0                                         | 0                               |
+| 1     | 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 | 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 |
+| 2     | 2                                         | 2                               |
+| 3     | 3                                         | 3                               |
+| 4     | 4                                         | 4                               |
+| 5     | 5                                         | 5                               |
+| 6     | 6                                         | 6                               |
+| 7     | 7                                         | 7                               |
+| 8     | 8                                         | 8                               |
+| 9     | 9                                         | 9                               |
++-------------------------------------------------------------------------------------+
+
+PrintTable(Aggregate(t3, &quot;last&quot;, []string{&quot;n&quot;, &quot;first&quot;}))
+
++----------------------+
+| last | n     | first |
++----------------------+
+| 0    | 0, 10 | 0, 1  |
+| 1    | 1, 11 | 1, 1  |
+| 2    | 2, 12 | 2, 1  |
+| 3    | 3, 13 | 3, 1  |
+| 4    | 4, 14 | 4, 1  |
+| 5    | 5, 15 | 5, 1  |
+| 6    | 6, 16 | 6, 1  |
+| 7    | 7, 17 | 7, 1  |
+| 8    | 8, 18 | 8, 1  |
+| 9    | 9, 19 | 9, 1  |
++----------------------+
+
+PrintTable(Aggregate(InnerJoin(t, t3, &quot;n&quot;, &quot;n&quot;), &quot;2.first&quot;, []string{&quot;1.square&quot;, &quot;1.n&quot;}))
+
++-----------------------------------------------------------------------------------------------------------+
+| 2.first | 1.square                                            | 1.n                                       |
++-----------------------------------------------------------------------------------------------------------+
+| 0       | 0                                                   | 0                                         |
+| 1       | 1, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361 | 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 |
+| 2       | 4                                                   | 2                                         |
+| 3       | 9                                                   | 3                                         |
+| 4       | 16                                                  | 4                                         |
+| 5       | 25                                                  | 5                                         |
+| 6       | 36                                                  | 6                                         |
+| 7       | 49                                                  | 7                                         |
+| 8       | 64                                                  | 8                                         |
+| 9       | 81                                                  | 9                                         |
++-----------------------------------------------------------------------------------------------------------+
+</code></pre>

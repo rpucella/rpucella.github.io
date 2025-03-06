@@ -721,4 +721,99 @@ Sample output (using `t` from Question 1 and `t2` from Question 4):
 
 ## Question 6: Aggregation
 
-(Coming soon!)
+Code a function
+
+    Aggregate(t Table, groupBy string, concat []string) Table
+    
+that takes a table `t`, a field name `groupBy` of `t`, and an array of field names of `t` (different from `groupBy`) and returns a new table with both `groupBy` and the fileds in `concat` as fields, and in which every row is the aggregation of the rows of `t` with the same value for `groupBy`: each aggregated row gets the common value of `groupBy` as the value of `groupBy` and gets the values of `f` concatenated together (separated by a comma) as the value of field `f`, for every `f` in `concat`.
+
+(Obviously, this is a restricted form of aggregation. A more general aggregation would let you decide *for each field* how to aggregate the values in that field. Thinking how about you could generalize this function is left as an open exercise.)
+
+**Hint**: use function `strings.Join` from the standard library.
+
+Sample output (using `t` from Question 1):
+
+	t3 := CreateTable([]string{"n", "first", "last"}, "n")
+	for i := 0; i < 20; i++ {
+		v := fmt.Sprintf("%d", i)
+		InsertRow(&t3, Record{v, v[:1], v[len(v) - 1:]})
+	}
+    
+    PrintTable(t3)
+    
+    +-------------------+
+    | n  | first | last |
+    +-------------------+
+    | 0  | 0     | 0    |
+    | 1  | 1     | 1    |
+    | 2  | 2     | 2    |
+    | 3  | 3     | 3    |
+    | 4  | 4     | 4    |
+    | 5  | 5     | 5    |
+    | 6  | 6     | 6    |
+    | 7  | 7     | 7    |
+    | 8  | 8     | 8    |
+    | 9  | 9     | 9    |
+    | 10 | 1     | 0    |
+    | 11 | 1     | 1    |
+    | 12 | 1     | 2    |
+    | 13 | 1     | 3    |
+    | 14 | 1     | 4    |
+    | 15 | 1     | 5    |
+    | 16 | 1     | 6    |
+    | 17 | 1     | 7    |
+    | 18 | 1     | 8    |
+    | 19 | 1     | 9    |
+    +-------------------+
+
+    PrintTable(Aggregate(t3, "first", []string{"n", "last"}))
+
+    +-------------------------------------------------------------------------------------+
+    | first | n                                         | last                            |
+    +-------------------------------------------------------------------------------------+
+    | 0     | 0                                         | 0                               |
+    | 1     | 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 | 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 |
+    | 2     | 2                                         | 2                               |
+    | 3     | 3                                         | 3                               |
+    | 4     | 4                                         | 4                               |
+    | 5     | 5                                         | 5                               |
+    | 6     | 6                                         | 6                               |
+    | 7     | 7                                         | 7                               |
+    | 8     | 8                                         | 8                               |
+    | 9     | 9                                         | 9                               |
+    +-------------------------------------------------------------------------------------+
+
+	PrintTable(Aggregate(t3, "last", []string{"n", "first"}))
+    
+    +----------------------+
+    | last | n     | first |
+    +----------------------+
+    | 0    | 0, 10 | 0, 1  |
+    | 1    | 1, 11 | 1, 1  |
+    | 2    | 2, 12 | 2, 1  |
+    | 3    | 3, 13 | 3, 1  |
+    | 4    | 4, 14 | 4, 1  |
+    | 5    | 5, 15 | 5, 1  |
+    | 6    | 6, 16 | 6, 1  |
+    | 7    | 7, 17 | 7, 1  |
+    | 8    | 8, 18 | 8, 1  |
+    | 9    | 9, 19 | 9, 1  |
+    +----------------------+
+
+	PrintTable(Aggregate(InnerJoin(t, t3, "n", "n"), "2.first", []string{"1.square", "1.n"}))
+
+    +-----------------------------------------------------------------------------------------------------------+
+    | 2.first | 1.square                                            | 1.n                                       |
+    +-----------------------------------------------------------------------------------------------------------+
+    | 0       | 0                                                   | 0                                         |
+    | 1       | 1, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361 | 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 |
+    | 2       | 4                                                   | 2                                         |
+    | 3       | 9                                                   | 3                                         |
+    | 4       | 16                                                  | 4                                         |
+    | 5       | 25                                                  | 5                                         |
+    | 6       | 36                                                  | 6                                         |
+    | 7       | 49                                                  | 7                                         |
+    | 8       | 64                                                  | 8                                         |
+    | 9       | 81                                                  | 9                                         |
+    +-----------------------------------------------------------------------------------------------------------+
+
