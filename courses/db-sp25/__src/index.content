@@ -178,17 +178,34 @@
       <li><p><span class="hdr">Mar 3: Programming APIs and ORMs </span><b></b></p>
         <div class="lect">
 
-           <p>Reading: Textbook, Chapter 15.</p>
+           <p>Reading: Textbook, Chapter 6.2 (normalization) and Chapter 15 (Programming APIs).</p>
+           
+           <p>A reasonable set of slides on <a href="http://www.cs.cornell.edu/courses/cs4320/2008fa/slides/20081114_fds.pdf">normalizations and functional dependencies</a>. It goes into a more details than I covered, including decomposition.</p>
+
+           <p>The <a href="./database-apis.zip">sample code</a> I demo-ed in class, a simple flask-based web application server that navigates the simple SQLite books database we have been using to study SQL. Unzip the file, go into the `database-apis/` folder that gets created, and look at the `README.md` file to run the code. It requires Python 3.</p>
+
+	   <p><a href="https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html">JDBC</a> is the Java API for connecting to databases. Most databases have JDBC drivers that support that API. It has become a de facto standard, and many other languages use that same API to provide database connectivity.</p>
+	      
+           <p><a href="https://en.wikipedia.org/wiki/Object-relational_mapping">ORMs</a> (Object-Relational Mappings) are a more abstract  way to provide an interface to a database through a programming language: ORMs reify database tables as data structures in the language, so that modifying the structures will automatically update the underlying tables, and changes to the underlying tables will be visible through the structures. <a href="https://www.sqlalchemy.org/">SQLAlchemy</a> is a popular Python ORM, while <a href="https://gorm.io/">GORM</a> is one you can use in Go.</p>
+
+           <p><a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/">LINQ</a> is one approach to integrate SQL-style querying within a programming language (here, C#).</p>
+
+        </div>
 	   
-	</div>
       </li>	
 
+      
+      <li><p><span class="hdr">Mar 10: Physical Model and Indexing</span><b></b></p>
+        <div class="lect">
+
+          <p>Reading: Chapter 12</p>
+          
+        </div>
+      </li>
     </ul>
 
         <p>Upcoming topics:</p>
         <ul>
-          <li>Normalization</li>
-          <li>Indexing</li>
           <li>Transactions and Concurrency</li>
           <li>Distribution and Replication</li>
           <li>NoSQL Databases</li>
