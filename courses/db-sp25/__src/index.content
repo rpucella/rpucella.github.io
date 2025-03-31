@@ -212,7 +212,10 @@
       <li><p><span class="hdr">Mar 17: <i>Spring Break</i></span><b></b></p>
       </li>
       
-      <li><p><span class="hdr">Mar 24: </span><b>Transactions</b></p>
+      <li><p><span class="hdr">Mar 24: <i>Cancelled</i></span><b></b></p>
+      </li>
+      
+      <li><p><span class="hdr">Mar 31: </span><b>Transactions</b></p>
         <div class="lect">
 
            <p>Reading: Textbook, Chapter 14.</p>
@@ -220,17 +223,12 @@
         </div>
       </li>
       
-      <li><p><span class="hdr">Mar 31: </span><b>Distribution and Replication</b></p>
+      <li><p><span class="hdr">Apr 7: </span><b>Distribution and Replication</b></p>
         <div class="lect">
         </div>
       </li>
       
-      <li><p><span class="hdr">Apr 7: </span><b>NoSQL Databases</b></p>
-        <div class="lect">
-        </div>
-      </li>
-
-      <li><p><span class="hdr">Apr 14: </span><b></b></p>
+      <li><p><span class="hdr">Apr 14: </span><b>NoSQL Databases</b></p>
         <div class="lect">
         </div>
       </li>
@@ -258,6 +256,8 @@
          <li><a href="./homeworks/1">Homework 1</a> &mdash; due Friday Feb 7</li>
          <li><a href="./homeworks/2">Homework 2</a> &mdash; due Sunday Feb 23</li>
          <li><a href="./homeworks/3">Homework 3</a> &mdash; due Sunday Mar 16</li>
+         <li>Homework 4</a> &mdash; any day now :)</li>
+         <li><a href="./project">Final Project</a> &mdash; due Sunday May 11</li>
         </ul>
         
       </section>
