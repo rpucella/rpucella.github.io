@@ -229,6 +229,21 @@
       
       <li><p><span class="hdr">Apr 7: </span><b>Distribution and Replication</b></p>
         <div class="lect">
+          <p>Reading: Textbook, Chapter 16.</p>
+          <p><a href="./notes/distribution-and-replication.pdf">Slides</a> from the lecture.</p>
+              
+	  <p>The two extremes of the distribution spectrum: <a href="https://en.wikipedia.org/wiki/Replication_(computing)">replication</a> and <a href="https://en.wikipedia.org/wiki/Partition_(database)">partitioning</a>.</p>
+
+	  <p>The <a href="https://en.wikipedia.org/wiki/CAP_theorem">CAP Theorem</a>.</p>
+
+	  <p>The <a href="https://en.wikipedia.org/wiki/Two-phase_commit_protocol">two-phase commit protocol</a>, which ensures that database nodes agree on whether a distributed transaction should commit or abort.</p>
+
+	  <p>Lamport's <a href="https://en.wikipedia.org/wiki/Paxos_(computer_science)">Paxos protocols family</a> is widespread way to achieve consensus on what the data stored in a distributed system when some of the nodes disagree due to update messages not getting to them. It is worth understanding. Here is a two-parter that does a reasonable job explaining the details: <a href="https://distributedthoughts.com/2013/09/22/understanding-paxos-part-1/">Part 1</a>, <a href="https://distributedthoughts.com/2013/09/30/understanding-paxos-part-2/">Part 2</a>. The original <a href="https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf">article</a> is worth reading if only because it is presented in an amusing way.</p>
+
+          <p>A research survey on <a href="https://www.alexdelis.eu/MDE519.DOCS/QP-Survey.pdf"><i>The State of the Art in Distributed Query Processing</i></a>. Reasonably readable if you're willing to spend some time on it.</p>
+
+          <p>A <a href="https://www.freecodecamp.org/news/a-thorough-introduction-to-distributed-systems-3b91562c9b3c/">good introduction to distributed systems</a> with an emphasis on databases, and which covers not only what I talked about for this lecture, but also hints at some of the things we'll cover when talking about NoSQL databases.</p>
+
         </div>
       </li>
       
