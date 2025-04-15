@@ -249,6 +249,24 @@
       
       <li><p><span class="hdr">Apr 14: </span><b>NoSQL Databases</b></p>
         <div class="lect">
+              <p>Reading: Textbook, Chapter 11.</p>
+	      
+          <p><a href="./notes/nosql-databases.pdf">Slides</a> from the lecture.</p>
+
+              <p>An old (2011) survey of <a href="https://www.christof-strauch.de/nosqldbs.pdf">NoSQL Databases</a> by Strauch. It gives a good overview of the field. </p>
+
+	      <p><a href="https://queue.acm.org/detail.cfm?id=1394128">BASE: An ACID Alternative</a> by Pritchett.</p>
+
+              <p>Amazon's <a href="https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf">Dynamo paper</a> which describes one of the first high-availability key-value store. There is a nicer <a href="https://www.dynamodbguide.com/the-dynamo-paper/">primer</a> for it as well. <a href="https://redis.io/">Redis</a> is one of the most common key-value stores, that operates purely in memory (and therefore is not persistent.). </p>
+
+	      <p>Wikipedia entries on <a href="https://en.wikipedia.org/wiki/Consistent_hashing">consistent hashing</a> and <a href="https://en.wikipedia.org/wiki/Distributed_hash_table">distributed hash tables</a>, the main technique for sharding in NoSQL systems.</p>
+
+	      <p><a href="https://en.wikipedia.org/wiki/Bigtable">BigTable</a>, <a href="https://en.wikipedia.org/wiki/Apache_Cassandra">Cassandra</a>, and <a href="https://en.wikipedia.org/wiki/Apache_HBase">HBase</a> are examples of wide column stores. The original <a href="http://static.googleusercontent.com/media/research.google.com/en//archive/bigtable-osdi06.pdf">BigTable paper</a> is fairly readable.</p>
+
+              <p>A good overview of <a href="https://ravendb.net/articles/nosql-document-oriented-databases-detailed-overview">document-oriented data stores</a> and their advantages. <a href="https://www.mongodb.com/">MongoDB</a> is a popular document-oriented data store. It supports sharding and a form of transactions.</p>
+
+              <p>Google's <a href="https://en.wikipedia.org/wiki/Spanner_(database)">Spanner</a> database is an interesting example of a system that started out as a key-value store and that evolved into a distributed relational database system. A great technical overview is an <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46103.pdf">OSDI 2012</a> paper.</p>
+              
         </div>
       </li>
 
