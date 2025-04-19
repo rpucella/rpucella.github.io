@@ -367,11 +367,6 @@ looking for test-99: false
 [Reading overflow block]
 [Reading overflow block]
 [Reading block 0]
-0
-1
-2
-3
-4
 [Writing block 0]
 [Writing overflow block]
 [Reading block 0]
@@ -401,13 +396,8 @@ looking for test-99: false
 [Reading block 0]
 [Writing block 0]
 [Reading block 0]
-0
 [Writing block 0]
 [Reading block 1]
-1
-2
-3
-4
 [Writing block 1]
 [Writing overflow block]
 [Reading block 1]
@@ -445,13 +435,8 @@ looking for test-99: false
 [Reading block 1]
 [Writing block 1]
 [Reading block 1]
-0
 [Writing block 1]
 [Reading block 2]
-1
-2
-3
-4
 [Writing block 2]
 [Writing overflow block]
 [Reading block 1]
@@ -484,13 +469,8 @@ looking for test-99: false
 [Reading block 2]
 [Writing block 2]
 [Reading block 2]
-0
 [Writing block 2]
 [Reading block 3]
-1
-2
-3
-4
 [Writing block 3]
 [Writing overflow block]
 [Reading block 2]
