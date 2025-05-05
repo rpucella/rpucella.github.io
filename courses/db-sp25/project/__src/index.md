@@ -5,7 +5,7 @@
 
 # Final Project
 
-## Final Presentations: Wednesday, May 7, 2025 (4-7pm, MAC 126)
+## Final Presentations: Wednesday, May 7, 2025 (4-7pm, MAC 328 <del>126</del>)
 
 ## Deliverables Due: Sunday, May 11, 2025 (11:59pm)
 
