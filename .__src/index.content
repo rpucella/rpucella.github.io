@@ -25,12 +25,31 @@
   <section>
     <h2>What's New?</h2>
     
-    <ul class="plain">
-    <li>2024-12-20 — I'm teaching <a href="/courses/db-sp25">Databases</a> at Olin College in Spring 2025.</li>
-      <li>2024-08-01 — I'm teaching <a href="/courses/focs-fa24">Foundations of Computer Science</a> at Olin College in Fall 2024.</li>
-      <li>2024-05-25 — New blog post <a href="/blog/posts/canvas-based-web-apps">Canvas-Based Web Applications</a></li>
-      <li>2023-12-10 — I'm teaching <a href="/courses/webdev-sp24">Full-Stack Web Development</a> at Olin College in Spring 2024.</li>
-    </ul>
+    <article class="news">
+      <div class="date">Dec 10, 2024</div>
+      <div class="title">New blog post <a href="/blog/posts/2024/migrating-express-neutralino-1">Migrating from Express to Neutralino, Part 1</a>.</div>
+    </article>
+
+    <article class="news">
+      <div class="date">Dec 1, 2024</div>
+      <div class="title">I'm teaching <a href="/courses/db-sp25">Databases</a> at Olin College in Spring 2025.</div>
+    </article>
+
+    <article class="news">
+      <div class="date">Aug 1, 2024</div>
+      <div class="title">I'm teaching <a href="/courses/focs-fa24">Foundations of Computer Science</a> at Olin College in Fall 2024.</div>
+    </article>
+
+    <article class="news">
+      <div class="date">May 25, 2024</div>
+      <div class="title">New blog post <a href="/blog/posts/2024/canvas-based-web-apps">Canvas-Based Web Applications</a>.</div>
+    </article>
+
+    <article class="news">
+      <div class="date">Dec 10, 2023</div>
+      <div class="title">I'm teaching <a href="/courses/webdev-sp24">Full-Stack Web Development</a> at Olin College in Spring 2024.</div>
+    </article>
+
   </section>
   
 </main>

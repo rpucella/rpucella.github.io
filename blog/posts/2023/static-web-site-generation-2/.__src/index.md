@@ -4,7 +4,7 @@ date: 2023-05-02
 reading: Mantissa (by John Fowles)
 ---
 
-*Previous post in the series: [Static Web Site Generation (Part 1)](../static-web-site-generation)*.
+*Previous post in the series: [Static Web Site Generation (Part 1)](/blog/posts/2023/static-web-site-generation)*.
 
 In my last post, I talked about `webgen`, the tool I wrote to maintain this website. It is a
 fairly conventional static web site generator, based on the simplest of all ideas: HTML templates

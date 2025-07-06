@@ -1,44 +1,4 @@
-<!DOCTYPE html>
-<html>
-
-  <head>
-    
-    <meta charset="utf-8">
-    <title>Riccardo Pucella</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="/static/main.css" type="text/css">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-      rel="stylesheet">
-  </head>
-
-  <body>
-  
-    <nav>
-
-      
-
-      <input type="checkbox" />
-
-      <span></span>
-      <span></span>
-      <span></span>
-
-      <ul>
-	<li id="home"><a href="/">Riccardo Pucella</a></li>
-	<li id="teaching"><a href="/courses">Teaching</a></li>
-	<li id="writing"><a href="/papers">Writing</a></li>
- 	<li id="blogging"><a href="/blog">Blogging</a></li>
-      </ul>
-
-    </nav>
-
-    <script>
+<script>
   document.title = "Static Web Site Generation (Part 2)" + ' — Riccardo Pucella'
   document.querySelector("#blogging").classList.add("active")
 </script>
@@ -52,7 +12,7 @@
     <div class="date">May 2, 2023</div>
     
     <div class="body">
-      <p><em>Previous post in the series: <a href="../static-web-site-generation">Static Web Site Generation (Part 1)</a></em>.</p>
+      <p><em>Previous post in the series: <a href="/blog/posts/2023/static-web-site-generation">Static Web Site Generation (Part 1)</a></em>.</p>
 
 <p>In my last post, I talked about <code>webgen</code>, the tool I wrote to maintain this website. It is a
 fairly conventional static web site generator, based on the simplest of all ideas: HTML templates
@@ -298,8 +258,3 @@ refactoring over the code.</p>
   </article>
   
 </main>
-
-    
-  </body>
-  
-</html>

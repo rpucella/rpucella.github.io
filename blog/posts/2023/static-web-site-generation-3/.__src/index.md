@@ -4,7 +4,7 @@ date: 2023-05-20
 reading: The Ebony Tower (by John Fowles)
 ---
 
-*Previous posts in the series: [Part 1](../static-web-site-generation), [Part 2](../static-web-site-generation-2)*.
+*Previous posts in the series: [Part 1](/blog/posts/2023/static-web-site-generation), [Part 2](/blog/posts/2023/static-web-site-generation-2)*.
 
 This is the latest installment of a series detailing how I maintain this website through a
 custom-built static web site generator I call `webgen`. Earlier posts described the [general
