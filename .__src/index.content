@@ -26,7 +26,7 @@
     <h2>What's New?</h2>
     
     <article class="news">
-      <div class="date">Dec 10, 2024</div>
+      <div class="date">Dec 15, 2024</div>
       <div class="title">New blog post <a href="/blog/posts/2024/migrating-express-neutralino-1">Migrating from Express to Neutralino, Part 1</a>.</div>
     </article>
 
