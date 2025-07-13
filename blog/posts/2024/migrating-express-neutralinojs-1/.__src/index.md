@@ -1,5 +1,5 @@
 ---
-title: Migrating from Express to Neutralino, Part 1
+title: Migrating from Express to Neutralinojs, Part 1
 date: 2024-12-15
 reading: Nickel Mountain (by John Gardner)
 ---
@@ -37,24 +37,24 @@ issue with Electron.
 But it is now years later, and other options have emerged that compete with Electron. [Tauri](https://v2.tauri.app/) is a
 lighter desktop web app bundler that uses [Rust](https://www.rust-lang.org/) as the backend language instead of Javascript. It
 relies on the operating system's native WebView component to render the web-based frontend of the
-app instead of Chromium. [Neutralino](https://neutralino.js.org/) is an alternative that also uses the native WebView component,
+app instead of Chromium. [Neutralinojs](https://neutralino.js.org/) is an alternative that also uses the native WebView component,
 but rather than requiring a specific language for writing the backend allows that backend to be
 implemented in a separate process and using inter-process communication (a websocket, to be precise)
 to connect the web-based frontend to the backend.
 
-Since my goal was to try to rewrite as little as possible, I decided to try Neutralino. In theory,
+Since my goal was to try to rewrite as little as possible, I decided to try Neutralinojs. In theory,
 it would let me reuse not just the web frontend but also the Node.js backend. The only thing I would
-need to figure out is how to get those pieces working with the Neutralino infrastructure. I am still
+need to figure out is how to get those pieces working with the Neutralinojs infrastructure. I am still
 curious about Tauri, but will postpone an evaluation until another project requires it.
 
-I set out to migrate my web app to Neutralino. To jump straight to the conclusion: it can be done,
+I set out to migrate my web app to Neutralinojs. To jump straight to the conclusion: it can be done,
 it's not that hard, and it works reasonably well. Because my web app did not use server-side
-rendering in any deep way, all the rendering could easily be folded into Neutralino without
+rendering in any deep way, all the rendering could easily be folded into Neutralinojs without
 rewriting. If you use server-side rendering more intensely, your experience may well be
 different from mine.
 
-As it was, the bulk of the work was refactoring the backend (the server) to work with Neutralino:
-the web app relies on a standard REST-like API with several endpoints, while Neutralino requires the
+As it was, the bulk of the work was refactoring the backend (the server) to work with Neutralinojs:
+the web app relies on a standard REST-like API with several endpoints, while Neutralinojs requires the
 frontend to communicate with the backend via a single websocket. The frontend code required no
 change except for communicating with the refactored backend. The migration therefore boiled down to
 translating a multi-endpoint HTTP-based RPC communication backend into a websocket-based
@@ -66,11 +66,11 @@ To make sure I was not trying to solve too many possibly interrelated problems a
 
 - Migrate the Express-based web app with multiple HTTP endpoints to an Express-based web app with a single HTTP endpoint.
 - Migrate the Express-based web app with a single HTTP endpoint to an Express-based web app with a websocket.
-- Migrate from an Express-based web app with a websocket to a Neutralino app.
+- Migrate from an Express-based web app with a websocket to a Neutralinojs app.
 
 Intuitively, the first migration collapses communication to a single endpoint, the second introduces
 a websocket for the communication, and the final migration does the actual switch over to
-Neutralino. In this post and subsequent ones, I will walk you through the above migrations. None of
+Neutralinojs. In this post and subsequent ones, I will walk you through the above migrations. None of
 them are difficult in isolation.
 
 To simplify the presentation, instead of working through the actual app I migrated, I'll use a smaller version that nevertheless contains all the pieces that make the original web app interesting: a list of pictures with a way to add a new picture to the list (by downloading it from a URL), and a way to click on a picture to see it in full. It will not give you a way to add a description to the picture, but that functional is both easy to add and orthogonal to the topic I want to focus on.
@@ -168,7 +168,7 @@ the server, corresponding to the three API calls supported by the server and des
           }
         }
 
-The implementation of the class relies on a common `_fetch_` method that does the actual job of communicating with the server. In the future, this `_fetch` method will bear the bulk of the changes needed to support Neutralino.
+The implementation of the class relies on a common `_fetch_` method that does the actual job of communicating with the server. In the future, this `_fetch` method will bear the bulk of the changes needed to support Neutralinojs.
 
 The handler code for the controls is equally straightforward. Two globals hold the list of image names retrieved from the server and an index into the currently displayed image, if any. (A -1 represents no image selected.), and the API is initialized. 
 
@@ -323,7 +323,7 @@ That's it for the frontend. The backend server is equally simple, and implements
 
     app.listen(port, () => console.log(`Listening at http://localhost:${port}`))
 
-The endpoints use a `Controller` object to isolate the logic of the endpoints: interacting with a `Storage` object that abstract away from the underlying image storage facility. As yet another nod towards simplicity, images are stored in memory in a global array. Yes, I know, that means that images are not persisted, so that whatever you add to the array gets wiped out whenever you stop and restart the server. Modifying `Storage` so that it persists images to a database is easy, and does not affect the way in which the migration to Neutralino I want to illustrate functions. If you want to add a persistent database layer here, go right ahead — as long as it is accessed through the `Storage` object methods, it will transparently be usable from the Neutralino app we will end up with.
+The endpoints use a `Controller` object to isolate the logic of the endpoints: interacting with a `Storage` object that abstract away from the underlying image storage facility. As yet another nod towards simplicity, images are stored in memory in a global array. Yes, I know, that means that images are not persisted, so that whatever you add to the array gets wiped out whenever you stop and restart the server. Modifying `Storage` so that it persists images to a database is easy, and does not affect the way in which the migration to Neutralinojs I want to illustrate functions. If you want to add a persistent database layer here, go right ahead — as long as it is accessed through the `Storage` object methods, it will transparently be usable from the Neutralinojs app we will end up with.
 
 One additional detail: the line `app.use(express.static('client'))` ensures that if you hit any route that is not a defined endpoint, it will look for a file at a path corresponding to the route relative to directory `client`. That's how we get the frontend to display: pointing the web browser to `/index.html` gets the `index.html` file above encapsulating the frontend.
 
@@ -331,7 +331,7 @@ One additional detail: the line `app.use(express.static('client'))` ensures that
 ## First Migration: A Single-Endpoint Express-Based Web App
 
 Because eventually we'll want to collapse all of our communication over a single websocket to use
-Neutralino, let's take a step in that direction by making our express-backed app use a single
+Neutralinojs, let's take a step in that direction by making our express-backed app use a single
 endpoint instead of the three that we are currently using. The code can be found in directory `2-express-rest-single` of the [repo](https://github.com/rpucella/neutralino-testbed):
 
     client/
