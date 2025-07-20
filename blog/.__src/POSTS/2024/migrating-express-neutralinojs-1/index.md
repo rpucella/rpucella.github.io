@@ -20,10 +20,10 @@ post is _not_ about fixing something that does not work.
 This post is about answering a question that I've had ever since I created the app: could I rewrite
 it as a desktop app instead of a server-based web app? Having a server spinning in the background on the bit chance that I'll use the app feels inelegant; most days, I do not use it. Again, it works. It's just inelegant.
 
-The answer to the question is trivially yes. I could reimplement the in a language that comes with a
+The answer to the question is trivially yes. I could reimplement it in a language that comes with a
 GUI toolkit. I use a Mac, so something like [Swift](https://www.swift.org/) or even [Objective-C](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html). That's
 less interesting to me right now. I do not particularly want to recreate that app. So let me revise
-the question: could I rewrite it as a desktop app without changing too much? I have the UI built
+the question: could I rewrite it as a desktop app without making too many changes? I have the UI built
 using standard web technologies, can I reuse that?
 
 For the longest time, the answer to that revised question has been: "Sure, use [Electron](https://www.electronjs.org/)." Electron
@@ -415,7 +415,10 @@ a single port, and the route embedded in the HTTP message is used by Express to 
 function to call. So in a way, the above is simply pushing the determination of which function to
 call for every message later in the process (in the code, via the `processMessage` function). Of
 course, there are some differences. For instance, the HTTP protocol permits `GET` messages to be
-cached, something that we lose via this "everything is done through a single `POST` request. This would be important if we were writing a server to serve web traffic on the Internet. However, we are migrating a local server to support a desktop tab, which is a different (and simpler) use case.
+cached, something that we lose via this "everything is done through a single `POST` request. This
+would be important if we were writing a server to serve web traffic on the Internet. However, we are
+migrating a local server to support a desktop application, which is a different (and simpler) use
+case.
 
 Fun anecdote: an old colleague of mine would approach his database work in exactly that way. Instead
 of exposing a collection of stored procedures to be called by our applications, he would write a
