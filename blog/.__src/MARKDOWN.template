@@ -19,6 +19,8 @@
       <div class="reading">{{ .Reading }}</div>
     {{end}}
 
+     <div class="human">This post was written entirely by a human.</div>
+
   </article>
   
 </main>

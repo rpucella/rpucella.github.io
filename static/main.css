@@ -131,6 +131,14 @@ article.post div.reading::before {
     font-weight: bold;
 }
 
+article.post div.human {
+    margin-top: 8px;
+    font-size: 0.9em;
+    text-align: right;
+    font-style: italic;
+    opacity: 0.75;
+}
+
 article.post div.date {
     width: 100%;
     text-align: right;
