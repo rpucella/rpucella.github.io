@@ -238,9 +238,6 @@ That's it for the frontend. The backend server is equally simple, and implements
     const app = express()
     const port = 8000
     
-    // The list of images.
-    const images = []
-
     app.use(express.json())
 
     // A class to represent the storage of images.

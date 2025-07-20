@@ -186,7 +186,7 @@ A more elegant approach is to replicate the
 classical construction of the ring of integers from the natural numbers as 
 [equivalence classes of pairs of natural numbers](https://en.wikipedia.org/wiki/Integer#Equivalence_classes_of_ordered_pairs). 
 It is well covered in any elementary abstract algebra textbook. (The original construction goes back
-at least to [Kronecker](Kronecker.), and it was generalized
+at least to [Kronecker](https://en.wikipedia.org/wiki/Leopold_Kronecker), and it was generalized
 by [Grothendieck](https://en.wikipedia.org/wiki/Alexander_Grothendieck) — one of the most fascinating mathematicians of the twentieth century —
 who used the general construction in his proof of the [Grothendieck-Riemann-Roch theorem](https://en.wikipedia.org/wiki/Grothendieck%E2%80%93Riemann%E2%80%93Roch_theorem).)
 

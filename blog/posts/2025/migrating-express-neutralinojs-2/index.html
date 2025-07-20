@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = "Migrating from Express to Neutralinojs, Part 2" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Migrating from Express to Neutralinojs, Part 2</h3>
+    
+    <div class="date">Jul 18, 2025</div>
+    
+    <div class="body">
+      <p><em>Previous posts in the series: <a href="/blog/posts/2024/migrating-express-neutralinojs-1">Part 1</a></em>.</p>
+
+<p>This is part 2 of a series about migrating an Express-based web app to <a href="https://neutralino.js.org/">Neutralinojs</a>, a
+desktop application platform based on web technologies. Neutralinojs is an
+alternative to <a href="https://www.electronjs.org/">Electron</a> that in theory requires less resources, as it does not embed a full Chromium
+build. More interestingly, Neutralinojs lets you write the backend logic using any programming
+language by relying on IPC via a WebSocket to a separate process running the backend code. Neutralinojs calls those separate processes <em>extensions</em>.</p>
+
+<p>To illustrate this migration, I use a simple picture viewing web app as an example. The code is <a href="https://github.com/rpucella/neutralino-testbed">freely available on GitHub</a>.  The migration itself is achieved through a sequence of small migrations, each isolating one interesting aspect of the whole migration:</p>
+
+<ul>
+<li>Migrate the Express-based web app with multiple HTTP endpoints to an Express-based web app with a single HTTP endpoint.</li>
+<li>Migrate the Express-based web app with a single HTTP endpoint to an Express-based web app with a WebSocket.</li>
+<li>Migrate from an Express-based web app with a WebSocket to a Neutralinojs app.</li>
+</ul>
+
+<p>We completed the first migration in the <a href="/blog/posts/2024/migrating-express-neutralinojs-1">last post</a>, ending up with an Express-based web app with a
+single HTTP endpoint. You can find it in directory <code>2-express-rest-single/</code> of the <a href="https://github.com/rpucella/neutralino-testbed">repository</a>:</p>
+
+<p>Today, we tackle the second migration to obtain an Express-based web app with a WebSocket.</p>
+
+<h2>Second Migration: A WebSocket Express-Based Web App</h2>
+
+<p>A <a href="https://en.wikipedia.org/wiki/WebSocket">WebSocket</a> is a long-duration two-way data communication channel over TCP between a client and a
+server. In that sense, it is like an <a href="https://en.wikipedia.org/wiki/Network_socket">Internet socket</a>. One difference is that it is designed to work
+well alongside HTTP (or HTTPS). More specifically, you can start with an existing HTTP connection
+and ask it to switch to the WebSocket protocol via the <a href="https://en.wikipedia.org/wiki/HTTP/1.1_Upgrade_header">HTTP Upgrade header</a>. This makes using
+WebSockets fairly transparent from a web app perspective. WebSockets are typically used when we need real-time collaboration, where messages may need to be send from the server to the client without a request by the client.  For example, a chat system needs to send messages to user A's client when some other user types a message directed at user A. Without a WebSocket or something similar, the client frontend for a user would have to
+poll the server at regular intervals to check if new messages are available directed at the user.</p>
+
+<p>MDN has a reasonable <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API">introduction to and description of the WebSocket API in browsers</a>.</p>
+
+<p>Since Neutralinojs uses WebSockets to communicate with processes running backend logic, we prepare that forthcoming migration by modifying our Express server to use a WebSocket for
+communication instead of an HTTP endpoint. The code can be found in directory <code>3-express-websocket</code>
+of the <a href="https://github.com/rpucella/neutralino-testbed">repository</a>:</p>
+
+<pre><code>client/
+  index.html
+server/
+  package.json
+  server.js
+</code></pre>
+
+<p>Again, there are no changes in the architecture of the web app: one directory for the client code (a
+single HTML file), and one directory for the server code (using Nodejs and Express). The changes are
+confined to the <code>API</code> class in the <code>index.html</code> client and the new WebSocket endpoint
+in the <code>server.js</code> server.</p>
+
+<p>Let's start with the new WebSocket endpoint on the server. Instead of the <code>app.post</code> route created
+in the single-endpoint version of the server, we now create a WebSocket endpoint. I use the
+<a href="https://www.npmjs.com/package/express-ws"><code>express-ws</code></a> package to manage the creation of this server-side WebSocket.</p>
+
+<pre><code>import expressWS from 'express-ws'
+
+expressWS(app)
+
+app.ws('/api/ws', async (ws, req) =&gt; {
+  ws.on('message', async (msg) =&gt; {
+    const obj = JSON.parse(msg)
+    const callId = obj.callId
+    const result = await processMessage(obj)
+    ws.send(JSON.stringify({content: result, callId}))
+  })
+})
+</code></pre>
+
+<p>The <code>expressWS(app)</code> call sets up the Express app to manage WebSocket endpoints. It handles all the logic to upgrade the HTTP request to a WebSocket request, and transforms actions and messages over the WebSocket into events. From the perspective of the server, all we need to do is create a route (here, <code>/api/ws</code>) and expose it as a WebSocket. As we'll see below, a client only has to open a WebSocket connection to <code>/api/ws</code> and everything should flow beautifully.</p>
+
+<p>WebSockets work through events triggered when WebSockets connect, receive messages, close, or error out. For simplicity, the server above only handles receiving messages; a production system would need a lot more error checking.</p>
+
+<p>The HTTP-based server uses a JSON object to pass and return information via the <code>POST</code> endpoint. Our WebSocket will use the same JSON. It needs to be stringified explicitly though. Recall that the JSON object sent by the client has a field <code>mode</code> indicating the operation to perform (<code>get-images</code>, <code>get-image</code>, <code>post-image</code>) and other fields hold whatever parameters are pertinent to the operation. For example, this is the JSON for downloading and adding a new picture to the server list:</p>
+
+<pre><code>{
+  &quot;mode&quot;: &quot;post-image&quot;,
+  &quot;url&quot;: URL
+}
+</code></pre>
+
+<p>where <code>URL</code> is the URL of the picture to download.</p>
+
+<p>When a message is received over the WebSocket by the server and triggers the <code>message</code> event, the body
+of the message is parsed into a JSON object and handed over to the <code>processMessage()</code> function to
+perform the operation represented by the JSON object. The <code>processMessage()</code> function is exactly as
+before, requiring no change.  The result of the operation is wrapped into a JSON object that is
+stringified and sent back to the client over the WebSocket.</p>
+
+<p>There is one slight complication with switching from an HTTP endpoint to a WebSocket endpoint. The
+HTTP protocol is naturally a request-response protocol: when you send an HTTP request, you can wait
+for the response and you will get the response that corresponds exactly to the request you sent. If
+you send two requests at the same time, you can wait for the respective responses and they will not
+conflict with each other — the protocol keeps track of which response correspond to which
+request. The WebSocket protocol, in contrast, is a two-way shared communication channel that has no
+concept of request and response. Either end of the channel can post a message on the channel to send
+it to the other end. There is no notion of a response to that message. If we want to impose a
+request-response structure on top of a WebSocket, we need to do it ourselves. The easiest way is
+simply to attach a unique ID to every message sent, and when we send back what we consider a
+response to that message, we attach that ID to the response. The client who sent the original
+request can wait for a message that has a matching ID and ignore all others.</p>
+
+<p>In the code above, you see that the JSON object received has a field <code>callId</code>, which is how that
+unique ID will be passed by the frontend code. That <code>callId</code> is attached to the response before it is
+sent back. The sample code from <a href="https://small-tech.org/">Small Technology Foundation</a>'s <a href="https://github.com/small-tech/site.js-websocket-rpc-example">WebSocket RPC example</a> was an an
+inspiration here.</p>
+
+<p>To round up the description of the server, note that we still need the &quot;catch-all&quot; endpoint to serve
+the frontend from the static <code>client/</code> directory.</p>
+
+<p>On the frontend side, we replace the previous <code>API</code> class with a new <code>API</code> class that creates a WebSocket connection to <code>/api/ws</code> and sends every message to that WebSocket:</p>
+
+<pre><code>class API {
+
+  constructor() {
+    const websocket = new WebSocket(&quot;/api/ws&quot;, &quot;ws&quot;)
+    this._websocket = websocket
+    websocket.onerror = (event) =&gt; {
+      console.dir(event, {depth:null})
+    }
+    this._isReady = new Promise((resolve) =&gt; {
+      websocket.onopen = (event) =&gt; {
+        resolve(true)
+      }
+    })
+    this._callId = 0
+  }
+
+  async _fetch(_, obj) {
+    await this._isReady
+    const websocket = this._websocket
+    // callId is a unique identifier for the call so that we can catch the response.
+    const callId = this._callId
+    this._callId += 1
+    const response = new Promise((resolve) =&gt; {
+      const listener = (event) =&gt; {
+        const data = JSON.parse(event.data)
+          if (data.callId === callId) {
+          websocket.removeEventListener('message', listener)
+          resolve(data)
+        }
+      }
+      websocket.addEventListener('message', listener)
+    })
+    websocket.send(JSON.stringify({...obj, callId}))
+    const data = await response
+    return data.content
+  }
+
+  async fetchImages() {
+    return this._fetch(&quot;/api/message&quot;, {
+       &quot;mode&quot;: &quot;get-images&quot;
+    })
+  }
+
+  async fetchImage(index) {
+    return this._fetch(`/api/message`, {
+      &quot;mode&quot;: &quot;get-image&quot;,
+      &quot;index&quot;: index
+    })
+  }
+
+  async addImage(url) {
+    return this._fetch(&quot;/api/message&quot;, {
+      &quot;mode&quot;: &quot;post-image&quot;,
+      &quot;url&quot;: url
+    })
+  }
+}
+</code></pre>
+
+<p>Only the constructor and the <code>_fetch()</code> method have been modified. Let's look at them in order.</p>
+
+<p>First, the constructor creates the WebSocket connection to the <code>/api/ws</code> WebSocket endpoint on the server. It
+stores the resulting WebSocket connection and initializes the counter <code>callId</code> that keeps track of the
+unique IDs we'll need to associate to every sent message.</p>
+
+<p>Second, the <code>_fetch()</code> method, which is used by the three API methods <code>fetchImages</code>, <code>fetchImage</code>, and <code>addImage</code>, does the bulk of the work. It adds a <code>callId</code> to the JSON object representing the request (incrementing the <code>callId</code> for the next call) and sends the stringified JSON object over the WebSocket. It also sets up a dedicated event listener <em>for the specific <code>callId</code> that went out</em> that waits for a message back from the WebSocket. When a message arrives, the listener checks if the <code>callId</code> matches the <code>callId</code> of the message it is associated with: if it's a match, then the message is taken to be the response and the <code>_fetch()</code> can return. If it's not a match, the message is discarded. (Don't worry — if that message was a response to some other request, then <em>that</em> request's event listener will process the response.) To prevent a memory leak, when a response to a request is received, the event listener associated with the request self-destructs.</p>
+
+<p>Perhaps astonishingly, this works. I'm not sure how expensive it is to keep a long-running WebSocket
+open for each user session if we were to put this server online, but since this is meant as a
+step towards a single-user desktop application, I'm not particularly worried about this.</p>
+
+<p>Next time, we'll take the plunge and migrate the app to Neutralinojs. Stay tuned!</p>
+
+    </div>
+
+    
+      <div class="reading">Sidi (by Arturo Perez-Reverte)</div>
+    
+
+  </article>
+  
+</main>
+
+    
+  </body>
+  
+</html>

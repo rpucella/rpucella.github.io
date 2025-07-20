@@ -92,7 +92,7 @@ defined components. As a specific example, I'm going to use the search box examp
 The out-of-the-box approach would be to use [nested templates](https://www.calhoun.io/intro-to-templates-p2-actions#nested-templates), that is, templates defined in their
 own template files and imported into a target template. Nested templates can therefore be reused
 across different target templates, and can be used to represent atoms, molecules, and organisms. The
-one downsize to nested templates is that they need to be included alongside the target template when
+one downside to nested templates is that they need to be included alongside the target template when
 parsing the target template before it can be filled with data. Nested templates are defined
 
 Let's define some basic atoms. First, the input atom, parameterized by the placeholder
