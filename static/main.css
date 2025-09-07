@@ -119,7 +119,7 @@ article.post div.body h1 {
 }
 
 article.post div.reading {
-    margin-top: 40px;
+    margin: 24px 0;
     font-size: 0.9em;
     width: 100%;
     text-align: right;
@@ -132,11 +132,11 @@ article.post div.reading::before {
 }
 
 article.post div.human {
-    margin-top: 8px;
+    margin: 16px 0;
     font-size: 0.9em;
     text-align: right;
     font-style: italic;
-    opacity: 0.75;
+    opacity: 0.70;
 }
 
 article.post div.date {

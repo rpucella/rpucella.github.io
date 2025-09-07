@@ -15,11 +15,11 @@
       {{ .Body }}
     </div>
 
+    <div class="human">This post was written entirely by a human.</div>
+
     {{if .Reading}}
       <div class="reading">{{ .Reading }}</div>
     {{end}}
-
-     <div class="human">This post was written entirely by a human.</div>
 
   </article>
   

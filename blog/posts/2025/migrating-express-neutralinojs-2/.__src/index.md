@@ -4,7 +4,7 @@ date: 2025-07-18
 reading: Sidi (by Arturo Perez-Reverte)
 ---
 
-*Previous posts in the series: [Part 1](/blog/posts/2024/migrating-express-neutralinojs-1)*.
+*Previous post in the series: [Part 1](/blog/posts/2024/migrating-express-neutralinojs-1)*.
 
 This is part 2 of a series about migrating an Express-based web app to [Neutralinojs](https://neutralino.js.org/), a
 desktop application platform based on web technologies. Neutralinojs is an
