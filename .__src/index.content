@@ -26,6 +26,11 @@
     <h2>What's New?</h2>
     
     <article class="news">
+      <div class="date">Sep 12, 2025</div>
+      <div class="title">New blog post <a href="/blog/posts/2025/migrating-express-neutralinojs-4">Migrating from Express to Neutralinojs, Part 4: Go Extensions</a>.</div>
+    </article>
+    
+    <article class="news">
       <div class="date">Sep 6, 2025</div>
       <div class="title">New blog post <a href="/blog/posts/2025/migrating-express-neutralinojs-3">Migrating from Express to Neutralinojs, Part 3</a>.</div>
     </article>
@@ -43,11 +48,6 @@
     <article class="news">
       <div class="date">Dec 1, 2024</div>
       <div class="title">I'm teaching <a href="/courses/db-sp25">Databases</a> at Olin College in Spring 2025.</div>
-    </article>
-
-    <article class="news">
-      <div class="date">Aug 1, 2024</div>
-      <div class="title">I'm teaching <a href="/courses/focs-fa24">Foundations of Computer Science</a> at Olin College in Fall 2024.</div>
     </article>
 
   </section>

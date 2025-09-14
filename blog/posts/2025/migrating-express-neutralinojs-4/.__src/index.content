@@ -1,0 +1,432 @@
+<script>
+  document.title = "Migrating from Express to Neutralinojs, Part 4: Go Extensions" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Migrating from Express to Neutralinojs, Part 4: Go Extensions</h3>
+    
+    <div class="date">Sep 12, 2025</div>
+    
+    <div class="body">
+      <p><em>Previous post in the series: <a href="/blog/posts/2025/migrating-express-neutralinojs-3">Part 3</a></em>.</p>
+
+<p>Earlier in this series, I describe how I migrated a web app with an Express-based backend to
+<a href="https://neutralino.js.org/">Neutralinojs</a>, a desktop application platform based on web
+technologies, in order to transform it into a desktop app.  Neutralinojs is used to bundle together
+a web-based frontend with a dedicated web renderer into a native app.  If you know
+<a href="https://www.electronjs.org/">Electron</a>, you can think of Neutralinojs as an alternative.</p>
+
+<p>Desktop apps often need to invoke OS operations that are normally restricted
+from frontends running on web browsers: reading and writing to the file system, accessing databases, that
+sort of thing.  To achieve this, Neutralinojs provides built-in APIs that expose some of those
+operations to the frontend running in the Neutralinojs app.  More interestingly, Neutralinojs
+supports <em>extensions</em> (plugins) that can be used to implement additional operations if the
+Neutralinojs APIs are insufficient.  These extensions can be written in any language that supports
+creating WebSocket clients, since Neutralinojs uses WebSockets to make calls to extensions to
+perform these additional operations.  I want to dig a bit more into extensions today.</p>
+
+<p>The web app I used to illustrate the migration throughout this series is a simple picture viewing
+app.  The original web app used an Express-based server to provide persistence.  In the final
+migration (in <a href="/blog/posts/2025/migrating-express-neutralinojs-3">Part 3</a>) where we created the
+Neutralinojs app, we lightly rewrote the Express-based server into an extension implemented in
+Nodejs that provided similar persistence to the Neutralinojs app.  And it worked just fine.</p>
+
+<p>There is a downside to using Nodejs to write the extension.  Even if we build the Neutralinojs app
+as a standalone executable, the resulting executable still needs to be able to run the extension
+into a separate process, and that requires Nodejs to be installed on the machine that runs the
+executable.  That's a bit annoying, and makes distribution tricky.</p>
+
+<p>In particular, on Mac OS, if we were to wrap up the Neutralinojs app as an <a href="https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFBundles/BundleTypes/BundleTypes.html#//apple_ref/doc/uid/10000123i-CH101-SW1">application
+bundle</a>
+that includes both the Neutralinojs executable and the extension, we would probably need to include
+an installation of Nodejs in the bundle. That's definitely possible, but it is inelegant.</p>
+
+<p>One solution to this problem is to create a standalone executable for the extension.  Since
+extensions are just WebSocket clients, any language that lets you write a WebSocket client and
+compiles it to a standalone executable will do.  Because of familiarity, I'm using
+<a href="https://go.dev/">Go</a> here, but you can use C, C++, <a href="https://www.rust-lang.org/">Rust</a>, even
+<a href="https://ziglang.org/">Zig</a>.  The list is long.</p>
+
+<p>All the code is available in the <a href="https://github.com/rpucella/neutralino-testbed">Github repository</a>
+for this series. Note that this post picks up where the last post ended, so you may want to refresh
+your cache before diving in.</p>
+
+<h2>A Go-Based Extension</h2>
+
+<p>Our task, then, is to convert a Nodejs WebSocket client to a Go WebSocket client in order to create a standalone executable for the extension. In 2025, this is probably a reasonable candidate for an LLM-powered translation, but I'll do it the hard way here. Partly because I'd like to understand how to build a more generic Go-based extension mechanism for the future, to see whether using Neutralinojs as a generic UI for Go applications might be a reasonable path. More on that (much) later.</p>
+
+<p>The original extension can be found in the <a href="https://github.com/rpucella/neutralino-testbed/tree/main/4-neutralino-node/image-viewer/backend"><code>4-neutralino-node/image-viewer/backend/</code></a> directory of the repository:</p>
+
+<pre><code>backend/
+  backend.js
+  package.json
+  package-lock.json
+</code></pre>
+
+<p>It's a bog-standard Nodejs client. Here's the full <code>backend.js</code>:</p>
+
+<pre><code>import { v4 as uuidV4 } from &quot;uuid&quot;
+
+import process from &quot;process&quot;
+import fs from &quot;fs&quot;
+const input = fs.rattlesnake(process.stdin.fd, 'utf-8')
+const processInput = JSON.parse(input)
+const NL_PORT = processInput.nlPort
+const NL_TOKEN = processInput.nlToken
+const NL_CTOKEN = processInput.nlConnectToken
+const NL_EXTID = processInput.nlExtensionId
+const NL_URL =  `ws://localhost:${NL_PORT}?extensionId=${NL_EXTID}&amp;connectToken=${NL_CTOKEN}`
+
+const images = []
+
+class Storage {
+    constructor() {
+        this.images = []
+    }
+
+    readImage(index) {
+        return this.images[index]
+    }
+
+    readImageNames() {
+        return this.images.map(img =&gt; img.name)
+    }
+
+    createImage(name, content, contentType) {
+        this.images.push({
+            name: name,
+            content: content,
+            mime: contentType
+        })
+    }
+}
+
+class Controller {
+    constructor() {
+        this.store = new Storage()
+    }
+
+    getImageDetails(key) {
+        const img = this.store.readImage(key)
+        return `data:${img.mime};base64,${img.content}`
+    }
+
+    getImages() {
+        return this.store.readImageNames()
+    }
+
+    async addImage(url) {
+        const response = await fetch(url)
+        const contentType = response.headers.get('content-type')
+        const abuffer = await response.arrayBuffer()
+        const base64Image = Buffer.from(abuffer).toString('base64')
+        this.store.createImage(url, base64Image, contentType)
+    }
+}
+
+const controller = new Controller()
+
+async function processMessage(msg) {
+    switch(msg.mode) {
+    case &quot;get-image&quot;:
+        return controller.getImageDetails(msg.index)
+        break
+
+    case &quot;get-images&quot;:
+        return controller.getImages()
+        break
+
+    case &quot;post-image&quot;:
+        await controller.addImage(msg.url)
+        return &quot;ok&quot;
+    }
+    console.log(`Error - unknown message type ${msg.mode}`)
+    return &quot;unknown message type&quot;
+}
+
+// WebSocket client.
+
+import WebSocket from 'ws'
+
+const client = new WebSocket(NL_URL)
+
+client.on('error', (error) =&gt; {
+    console.log(`Connection error!`)
+    console.dir(error, {depth:null})
+})
+client.on('open', () =&gt; console.log(&quot;Connected&quot;))
+client.on('close', (code, reason) =&gt; {
+  console.log(`WebSocket closed: ${code} - ${reason}`);
+  process.exit()
+})
+client.on('message', async (evt) =&gt; {
+  const evtData = evt.toString('utf-8')
+  console.log(&quot;Event = &quot;, evtData)
+  const { event, data } = JSON.parse(evtData)
+  if (event === &quot;eventToExtension&quot;) {
+    const callId = data.callId
+    const result = await processMessage(data)
+    client.send(JSON.stringify({
+      id: uuidV4(),
+      method: &quot;app.broadcast&quot;,
+      accessToken: NL_TOKEN,
+      data: {
+        event: &quot;eventFromExtension&quot;,
+        data: {content: result, callId}
+      }
+    }))
+ }
+})
+</code></pre>
+
+<p>Remember from last time that when a Neutralinojs app starts, it launches a process for each extension defined in the configuration file, and pipes to each extension its connection information as a stringified JSON: WebSocket port, authentication ID, etc.  You can see at the top of the file the <code>fs.readFileSync()</code> call that reads this JSON from standard input.  After defining the inner functionality of the extension (classes <code>Storage</code> and <code>Controller</code>), the code then creates a WebSocket client connection and waits for messages from the app using <code>client.on(&quot;message&quot;, ...)</code>.  When it receives a message, it processes it via <code>processMessages()</code> which encapsulates the handling of each message by calling appropriate functions to get an  image, get a list summary of images, or download an image from a URL and add it to the list of images.</p>
+
+<p>The Go version of this client entirely similar, and can be found in <a href="https://github.com/rpucella/neutralino-testbed/tree/main/5-neutralino-go/image-viewer/backend"><code>5-neutralino-go/image-viewer/backend/</code></a> directory of the repository:</p>
+
+<pre><code>backend/
+  backend.go
+  go.mod
+  go.sum
+</code></pre>
+
+<p>(Everything else in <code>5-neutralino-go/</code> is the same as in <code>4-neutralino-node/</code>, except for a line change in <code>neutralino.config.json</code> detailed below.)</p>
+
+<p>File <code>go.mod</code> just gives the modules information:</p>
+
+<pre><code>module github.com/rpucella/neutralino-testbed/5-neutralino-go
+
+go 1.23.3
+
+require (
+	github.com/google/uuid v1.6.0
+	github.com/gorilla/websocket v1.5.3
+)
+</code></pre>
+
+<p>while file <code>backend.go</code> contains the actual extension code:</p>
+
+<pre><code>package main
+
+import (
+	&quot;encoding/json&quot;
+	&quot;encoding/base64&quot;
+	&quot;github.com/google/uuid&quot;
+	&quot;os&quot;
+	&quot;bufio&quot;
+	&quot;io&quot;
+	&quot;fmt&quot;
+	&quot;github.com/gorilla/websocket&quot;
+	&quot;log&quot;
+	&quot;net/http&quot;
+	&quot;os/signal&quot;
+)
+
+// Mostly adapted from https://github.com/gorilla/websocket/blob/main/examples/echo/client.go
+
+func main() {
+	// Read connection information from Neutralino.
+	reader := bufio.NewReader(os.Stdin)
+	connInfoStr, err := reader.ReadString('\n')
+	if err != nil &amp;&amp; err != io.EOF{
+		log.Fatal(fmt.Errorf(&quot;cannot read connection information: %w&quot;, err))
+	}
+	log.Println(connInfoStr)
+	connInfo := make(map[string]string)
+	if err := json.Unmarshal([]byte(connInfoStr), &amp;connInfo); err != nil {
+		log.Fatal(fmt.Errorf(&quot;cannot unmarshal json info: %w&quot;, err))
+	}
+	log.Println(connInfo)
+
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt)
+
+	urlString := fmt.Sprintf(&quot;ws://localhost:%s?extensionId=%s&amp;connectToken=%s&quot;,
+		connInfo[&quot;nlPort&quot;],
+		connInfo[&quot;nlExtensionId&quot;],
+		connInfo[&quot;nlConnectToken&quot;])
+
+	log.Printf(&quot;connecting to %s&quot;, urlString)
+
+	c, _, err := websocket.DefaultDialer.Dial(urlString, nil)
+	if err != nil {
+		log.Fatal(&quot;dial:&quot;, err)
+	}
+	defer c.Close()
+
+	done := make(chan struct{})
+
+	go func() {
+		defer close(done)
+		for {
+            // Wait for a message from Neutralino and process it.
+			_, message, err := c.ReadMessage()
+			if err != nil {
+				log.Println(&quot;read:&quot;, err)
+				return
+			}
+			log.Printf(&quot;recv: %s&quot;, message)
+			messageObj := make(map[string]interface{})
+			if err := json.Unmarshal(message, &amp;messageObj); err != nil {
+				log.Println(&quot;cannot parse message:&quot;, err)
+				continue
+			}
+			eventIfc, ok := messageObj[&quot;event&quot;]
+			if !ok {
+				continue
+			}
+			event := eventIfc.(string)
+			if event == &quot;eventToExtension&quot; {
+				data := messageObj[&quot;data&quot;].(map[string]interface{})
+				callId := data[&quot;callId&quot;].(float64)
+				msgResult, err := processMessage(data)
+				if err != nil {
+					log.Println(&quot;cannot process message:&quot;, err)
+					continue
+				}
+				result := make(map[string]interface{})
+				result[&quot;id&quot;] = uuid.NewString()
+				result[&quot;method&quot;] = &quot;app.broadcast&quot;
+				result[&quot;accessToken&quot;] = connInfo[&quot;nlToken&quot;]
+				dataResult := make(map[string]interface{})
+				data2Result := make(map[string]interface{})
+				dataResult[&quot;event&quot;] = &quot;eventFromExtension&quot;
+				data2Result[&quot;content&quot;] = msgResult
+				data2Result[&quot;callId&quot;] = callId
+				dataResult[&quot;data&quot;] = data2Result
+				result[&quot;data&quot;] = dataResult
+				obj, err := json.Marshal(result)
+				if err != nil {
+					log.Println(&quot;cannot marshal result:&quot;, err)
+				}
+				c.WriteMessage(websocket.BinaryMessage, obj)
+			}
+		}
+	}()
+
+	for {
+		select {
+		case &lt;-done:
+			return
+		case &lt;-interrupt:
+			log.Println(&quot;interrupt&quot;)
+
+			// Cleanly close the connection by sending a close message and then
+			// wait (with timeout) for the server to close the connection.
+			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, &quot;&quot;))
+			if err != nil {
+				log.Println(&quot;write close:&quot;, err)
+				return
+			}
+			select {
+			case &lt;-done:
+			}
+			return
+		}
+	}
+}
+
+func processMessage(message map[string]interface{}) (interface{}, error) {
+	log.Println(&quot;processing message: &quot;, message)
+	mode := message[&quot;mode&quot;].(string)
+	switch(mode) {
+	case &quot;get-images&quot;:
+		return getImages(), nil
+
+	case &quot;get-image&quot;:
+		index := message[&quot;index&quot;].(float64)
+		return getImageDetails(int(index)), nil
+
+	case &quot;post-image&quot;:
+		url := message[&quot;url&quot;].(string)
+		err := addImage(url)
+		return &quot;ok&quot;, err
+	}
+	return nil, fmt.Errorf(&quot;Unknown mode: %s&quot;, mode)
+}
+
+type image struct {
+	name string
+	content string // Base64 encoding
+	mime string
+}
+
+var images []image = make([]image, 0)
+
+func getImageDetails(key int) string {
+	img := images[key]
+	return fmt.Sprintf(&quot;data:%s;base64,%s&quot;, img.mime, img.content)
+}
+
+func getImages() []string {
+	names := make([]string, 0)
+	for _, img := range images {
+		names = append(names, img.name)
+	}
+	return names
+}
+
+func addImage(url string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return fmt.Errorf(&quot;cannot fetch image: %w&quot;, err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf(&quot;request status: %s&quot;, resp.StatusCode)
+	}
+	// get content-type
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf(&quot;cannot read image: %w&quot;, err)
+	}
+	base64Str := base64.StdEncoding.EncodeToString(bodyBytes)
+	contentType := resp.Header.Get(&quot;content-type&quot;)
+	images = append(images, image{url, base64Str, contentType})
+	return nil
+}
+</code></pre>
+
+<p>I use the <a href="https://github.com/gorilla/websocket">Gorilla</a> WebSocket implementation for Go.</p>
+
+<p>The code is pretty straightforward. Function <code>main()</code> reads the connection information from standard
+input, creates and connects a WebSocket client, then repeatedly reads Neutralinojs messages from and performs the appropriate action before responding.  As with the Nodejs code, processing is encapsulated in a function <code>processMessages()</code>. Also like in the Nodejs code, we only persisted images in the memory of the extension. Adding database persistence is easy, either by writing to the file system or to a <a href="https://sqlite.org/">SQLite database</a>. All it takes is modifying the the image-related functions <code>getImageDetails</code>, <code>getImages</code>, and <code>addImage</code>.</p>
+
+<p>One question I posed myself was whether processing each message should use its own <a href="https://gobyexample.com/goroutines">goroutine</a>.
+In the end I chose not to, because requests will not come in fast enough for concurrency to be useful, at least not in the current version of the app.  Remember, an extension is associated with a single desktop app, unlike a server that may need to serve multiple clients simultaneously.</p>
+
+<p>We can compile the code with</p>
+
+<pre><code>go -o backend/backend backend/bin/backend.go
+</code></pre>
+
+<p>and we can set up Neutralinojs to use this extension by updating the <code>extensions</code> field in
+<code>5-neutralino-go/image-viewer/neutralino.config.json</code>:</p>
+
+<pre><code>&quot;extensions&quot;: [
+  {
+    &quot;id&quot;: &quot;imageviewer_backend&quot;,
+    &quot;command&quot;: &quot;${NL_PATH}/backend/bin/backend&quot;
+  }
+]
+</code></pre>
+
+<p>This still suffers from a problem we identified last time when the Neutralinojs app is built using
+<code>npx @neutralinojs/neu build</code>: environment variable <code>NL_PATH</code> defaults to the directory containing the
+Neutralinojs app standalone executable. The solution we used last time still works: symbolically link
+the <code>backend/</code> directory inside the <code>dist/image-viewer/</code> directory. Another solution is to have a post-build step that moves both the Neutralinojs standalone executable and the extension executable to a dedicated <code>bin/</code> directory.</p>
+
+    </div>
+
+    <div class="human">This post was written entirely by a human.</div>
+
+    
+      <div class="reading">The Silkworm (by Robert Galbraith)</div>
+    
+
+  </article>
+  
+</main>
