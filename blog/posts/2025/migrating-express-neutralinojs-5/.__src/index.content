@@ -1,0 +1,213 @@
+<script>
+  document.title = "Migrating from Express to Neutralinojs, Part 5: Mac OS Bundling" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Migrating from Express to Neutralinojs, Part 5: Mac OS Bundling</h3>
+    
+    <div class="date">Sep 27, 2025</div>
+    
+    <div class="body">
+      <p><em>Previous post in the series: <a href="/blog/posts/2025/migrating-express-neutralinojs-4">Part 4</a></em>.</p>
+
+<p>In previous posts in this series, I migrated a web app with an Express-based backend to
+<a href="https://neutralino.js.org/">Neutralinojs</a>, a desktop application platform based on web technologies, as an easy way to turn it into
+a desktop app. Neutralinojs can bundle together a web-based frontend with a dedicated
+web renderer to create a native desktop app, <em>à la</em> <a href="https://www.electronjs.org/">Electron</a>.</p>
+
+<p>Neutralinojs is basically platform independent. The code for the app can be <em>built</em> to produce an
+executable for any common platform (Windows, Mac OS, Linux) that when run will open a web renderer
+and render the web-based frontend bundled into the app.</p>
+
+<p>Today, I want to focus specifically on the Mac OS executables that Neutralinojs produces.  And
+that's for two reasons.  The first is pragmatic: that's the system I use. The second is more
+interesting: there are two &quot;kinds&quot; of Mac OS executables: command-line executables and application
+bundles.  A command-line executable is just what it says on the tin — it is an executable that you
+can run from a terminal window.  An <a href="https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFBundles/BundleTypes/BundleTypes.html#//apple_ref/doc/uid/10000123i-CH101-SW1">application bundle</a> is just a directory with a specific structure
+and which contains a command-line executable and an icon. The Mac OS Finder recognizes and shows
+such an application bundle as a standalone icon that can be double-clicked to execute the underlying
+command-line executable. The executable within the bundle naturally has access to any of the support
+files included in the bundle. Application bundles are the main distribution mechanism for Mac OS
+applications.</p>
+
+<p>When you build a Neutralinojs desktop app, the result is a command-line executable.  Ideally, on Mac OS, we
+should wrap the executable into an application bundle so that the desktop app doesn't need to be run from the command
+line.  Additionally, Neutralinojs desktop apps can come with extensions, which are supporting
+executables providing access to OS resources what Neutralinojs supports natively, and those extensions can
+be included in the application bundle.</p>
+
+<p>So the question becomes: how do we go about bundling a Neutralinojs desktop app into an application
+bundle?</p>
+
+<h2>Mac OS Bundling</h2>
+
+<p>Mac OS application bundling is a bit of a dark art. <a href="https://developer.apple.com/xcode/">XCode</a> (Apple's development suite) comes with an
+application bundler as part of its build process.  If you're not using XCode to create a Mac OS
+application, however, it looks like there's no support.  I could not find a standalone application bundle
+creator, at least not one that could be considered off the shelf.  (Full disclosure: I did not
+search very long or very wide.)</p>
+
+<p>I did find a GitHub repository with the pithy name <a href="https://github.com/hschneider/neutralino-build-scripts">Neutralino Build-Automation for macOS, Linux and
+Windows App-Bundles</a>.  And it turns out to do the job just fine.  It consists of a set of shell
+scripts that plug into a Neutralinojs app code base and let you build a Mac OS application bundle
+following the build of the Neutralinojs command-line executable.  There seems to be support for
+so-called Linux and Windows application bundles as well, but I have not used or evaluated these.</p>
+
+<p>The rest of this post is going to be an illustration of how the Build-Automation tool is used to create an application bundle for the sample web app we have migrated to Neutralinojs in the rest of this series. As usual, all the code is in the <a href="https://github.com/rpucella/neutralino-testbed">Github repository</a>.  The code specifically for today — the bundled version of the desktop app — is in the <code>6-neutralino-app/</code> directory. Let's take a look at the content first. I'll describe how I got there afterward.</p>
+
+<pre><code>image-viewer/
+  resources/
+    index.html
+    js/
+      neutralino.js
+    icons/
+     appIcon.png
+  backend/
+    backend.go
+    go.mod
+    go.sum
+  neutralino.config.json
+
+  build-mac.sh
+  preproc-mac.sh
+  postproc-mac.sh
+  _app_scaffolds/
+    win
+    mac
+    linux
+</code></pre>
+
+<p>The structure of the directory is the same as <a href="/blog/posts/2025/migrating-express-neutralinojs-4">last time</a>, with additional files tossed in from the Build-Automation repository.</p>
+
+<p>The crux of the bundle builder (say <em>that</em> three times fast...) are the three <code>.sh</code> shell scripts and the <code>_app_scaffolds/</code> directory. All of which comes from the Build-Automation installation.</p>
+
+<p>To build the bundle, first we build the Neutralinojs executable via the usual</p>
+
+<pre><code>npx @neutralinojs/neu run 
+</code></pre>
+
+<p>(or the <code>npm</code> version if you installed <code>@neutralinojs/neu</code> locally). Remember, this will drop a command-line executable in <code>dist/image-viewer</code>. Then we run <code>./build-mac.sh</code> to bundle the just-created executable into an application bundle. The result is in <code>dist/</code> as well, classified by system architecture:</p>
+
+<pre><code>dist/
+  mac_arm64/
+    ImageViewer.app/
+      ...
+  mac_universal/
+    ImageViewer.app/
+      ...
+  mac_x64/
+    ImageViewer.app/
+      ...
+</code></pre>
+
+<p>The various <code>ImageViewer.app</code> <em>are</em> the application bundles. Opening <code>dist/</code> in the Mac OS Finder will show these as double-clickable icons like any other app. And double-clicking them indeed opens our picture viewing desktop app. Success!</p>
+
+<p>So, how did I populate the directory above? How did I install the Build-Automation tool? Short answer: lots of trial and error, and some luck. I'm also not entirely sure I'm doing it right, but then again I <em>am</em> creating an application bundle at the end, so I cannot be <em>that</em> wrong. Right?</p>
+
+<p>What is this reproducible flow? How did I set up the <code>6-neutralino-app/</code> directory?</p>
+
+<p>Step 1: I copied over the structure in <code>5-neutralino-go/</code>, the version of the Neutralinojs desktop app I described in the <a href="/blog/posts/2025/migrating-express-neutralinojs-4">last article</a> of this series.</p>
+
+<p>Step 2: I downloaded a zipped version of the <a href="https://github.com/hschneider/neutralino-build-scripts">Build-Automation repository</a> into the root directory of the Neutralinojs project, <code>6-neutralino-app/image-viewer/</code>. I could also have just cloned it, but a git repository embedded inside another git repository is sometimes problematic, so I went the zip file route instead.</p>
+
+<p>Step 3: I created a subdirectory <code>unused-build_scripts/</code> and moved everything from Build-Automation that I did not need into it, keeping only <code>_app_scaffolds/</code> and the three <code>mac-XXX.sh</code> files in the <code>6-neutralino_app/image_viewer/</code> directory.</p>
+
+<p>Step 4: I added an entry to <code>neutralino.config.js</code> to tell the Build-Automation scripts how to build the application bundle:</p>
+
+<pre><code>&quot;buildScript&quot;: {
+  &quot;mac&quot;: {
+    &quot;architecture&quot;: [&quot;x64&quot;, &quot;arm64&quot;, &quot;universal&quot;],
+    &quot;minimumOS&quot;: &quot;10.13.0&quot;,
+    &quot;appName&quot;: &quot;ImageViewer&quot;,
+    &quot;appBundleName&quot;: &quot;ImageViewer&quot;,
+    &quot;appIdentifier&quot;: &quot;net.rpucella.neutralino_testbed.imageviewer&quot;,
+    &quot;appIcon&quot;:  &quot;resources/icons/appIcon.png&quot;
+  }
+}
+</code></pre>
+
+<p>Presumably, if you wanted to create bundles for Windows or for Linux, you'd add a corresponding section to the <code>buildScript</code> entry.</p>
+
+<p>And that's <em>almost</em> it. If you were to run <code>./build-mac.sh</code> at this point, and assuming that the command-line executable had been built, then an application bundle would get created. It wouldn't run correctly though. Because our Neutralinojs app uses an extension, and we haven't accounted for it in the bundle.</p>
+
+<h2>What About Extensions?</h2>
+
+<p>Extensions are the mechanism by which Neutralinojs apps can communicate with the underlying OS to
+perform OS-specific operations: accessing the file system, accessing databases, communicating with
+other applications, and so on. Neutralinojs itself provides built-in APIs that expose some of those
+operations to frontends running in the Neutralinojs apps. Extensions are the way to extend those
+APIs. An extension is a separate program that connects to the Neutralinojs desktop app via a
+WebSocket, and can receive and response to messages from the desktop app.</p>
+
+<p>Last time, we implemented a Go-based extension to provide persistence for our sample picture viewing
+app. This had the advantage that the extension could be compiled into a command-line executable. The
+Neutralinojs desktop app starts this extension when it launches, and shuts it down when it
+quits. The extension's executable is <code>backend/bin/backend</code>.</p>
+
+<p>In order for us to create a complete application bundle for the picture viewing app, we need to
+bundle the extension executable alongside the Neutralinojs executable.</p>
+
+<p>More specifically, we need to do two things: we need to copy the extension executable into the
+application bundle, and then we need to register the command to start the extension in a way that
+the Neutralinojs app can find it. Note that the command to start the extension's executable will
+change based on where we put that executable in the application bundle.</p>
+
+<p>Let's first take a look at the structure of the <code>ImageViewer.app</code> application bundle created by the
+Build-Automation tool:</p>
+
+<pre><code>ImageViewer.app/
+  Contents/
+    Info.plist
+    MacOS/
+      ...
+    Resources/
+      ...
+</code></pre>
+
+<p><a href="https://developer.apple.com/documentation/bundleresources/placing-content-in-a-bundle">Apple's documentation</a> states that any helper executable (which an extension qualifies as) should be
+placed in the <code>Contents/MacOS/</code> or <code>Contents/Helpers/</code> subdirectories of the bundle. I chose to place
+the extension in <code>Contents/MacOS</code> alongside the Neutralinojs executable.</p>
+
+<p>How do we copy the extension executable into the bundle? The Build-Automation tool provides a hook:
+we can edit the <code>postproc-mac.sh</code> shell script which is designed to be run by <code>build-mac.sh</code> after the
+application bundle created to perform any post-build update. This is the bit I added to that script:</p>
+
+<pre><code>cp backend/bin/backend &quot;${APP_MACOS}/&quot;
+</code></pre>
+
+<p>The Build-Automation scripts set environment variable <code>APP_MACOS</code> to the <code>Contents/MacOS</code> subdirectory
+of the constructed application bundle during execution of the <code>build-mac.sh</code> script chain.</p>
+
+<p>How do we tell Neutralinojs the command to use to start the extension? That information is held in <code>neutralino.config.json</code>, just like before.  I modified the <code>extensions</code> entry of <code>neutralino.config.json</code> as follows:</p>
+
+<pre><code>&quot;extensions&quot;: [
+  {
+    &quot;id&quot;: &quot;imageviewer_backend&quot;,
+    &quot;command&quot;: &quot;${NL_PATH}/../MacOS/backend&quot;
+  }
+]
+</code></pre>
+
+<p>This entry specifies that our Neutralinojs app has one extension that can be by running <code>${NL_PATH}/../MacOS/backend</code>.
+When running within an application bundle, <code>NL_PATH</code> seems to hold the <code>Contents/Resources/</code> subdirectory. Hence, I use it to construct a relative path to the <code>Contents/MacOS</code> directory where I put the <code>backend</code> extension executable.</p>
+
+<p>After these two changes, running <code>build-mac.sh</code> produces an application bundle that can indeed be
+executed by double-clicking its icon, starting both the Neutralinojs app and the supporting extension. Bottom line: it works. And the application bundle can be moved anywhere else once it is created.</p>
+
+<p>One minor annoyance remains: since I changed the <code>neutralino.config.json</code> file to account for where the extension executable lives in the application bundle, this prevents the Neutralinojs app from running correctly either from the command line or via <code>npx @neutralinojs/neu run</code>. I suspect there is a clean solution to that problem, but I have not really investigated what it might look like. Perhaps just replicating the application bundle structure within the <code>6-neutralino-app/</code> directory might do the trick. That's okay. Something to explore in the future.</p>
+
+    </div>
+
+    <div class="human">This post was written entirely by a human.</div>
+
+    
+      <div class="reading">Haute Démolition (by Jean-Philippe Baril Guérard); Tromper Martine (by Stéphane Dompierre)</div>
+    
+
+  </article>
+  
+</main>

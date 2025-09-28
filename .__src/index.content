@@ -26,28 +26,28 @@
     <h2>What's New?</h2>
     
     <article class="news">
+      <div class="date">Sep 27, 2025</div>
+      <div class="title">Blog post <a href="/blog/posts/2025/migrating-express-neutralinojs-5">Migrating from Express to Neutralinojs, Part 5: Mac OS Bundling</a>.</div>
+    </article>
+    
+    <article class="news">
       <div class="date">Sep 12, 2025</div>
-      <div class="title">New blog post <a href="/blog/posts/2025/migrating-express-neutralinojs-4">Migrating from Express to Neutralinojs, Part 4: Go Extensions</a>.</div>
+      <div class="title">Blog post <a href="/blog/posts/2025/migrating-express-neutralinojs-4">Migrating from Express to Neutralinojs, Part 4: Go Extensions</a>.</div>
     </article>
     
     <article class="news">
       <div class="date">Sep 6, 2025</div>
-      <div class="title">New blog post <a href="/blog/posts/2025/migrating-express-neutralinojs-3">Migrating from Express to Neutralinojs, Part 3</a>.</div>
+      <div class="title">Blog post <a href="/blog/posts/2025/migrating-express-neutralinojs-3">Migrating from Express to Neutralinojs, Part 3</a>.</div>
     </article>
 
     <article class="news">
       <div class="date">July 18, 2025</div>
-      <div class="title">New blog post <a href="/blog/posts/2025/migrating-express-neutralinojs-2">Migrating from Express to Neutralinojs, Part 2</a>.</div>
+      <div class="title">Blog post <a href="/blog/posts/2025/migrating-express-neutralinojs-2">Migrating from Express to Neutralinojs, Part 2</a>.</div>
     </article>
 
     <article class="news">
       <div class="date">Dec 15, 2024</div>
-      <div class="title">New blog post <a href="/blog/posts/2024/migrating-express-neutralinojs-1">Migrating from Express to Neutralinojs, Part 1</a>.</div>
-    </article>
-
-    <article class="news">
-      <div class="date">Dec 1, 2024</div>
-      <div class="title">I'm teaching <a href="/courses/db-sp25">Databases</a> at Olin College in Spring 2025.</div>
+      <div class="title">Blog post <a href="/blog/posts/2024/migrating-express-neutralinojs-1">Migrating from Express to Neutralinojs, Part 1</a>.</div>
     </article>
 
   </section>
