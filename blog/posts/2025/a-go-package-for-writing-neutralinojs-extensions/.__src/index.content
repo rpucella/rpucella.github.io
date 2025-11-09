@@ -1,0 +1,141 @@
+<script>
+  document.title = "A Go Package for Writing Neutralinojs Extensions" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">A Go Package for Writing Neutralinojs Extensions</h3>
+    
+    <div class="date">Nov 7, 2025</div>
+    
+    <div class="body">
+      <p>My last several posts have all been about <a href="https://neutralino.js.org/">Neutralinojs</a>. I'm not obsessed. It's just the latest thing
+I've been playing with that I feel like writing about here. Ironically, my writing about it is what
+keeps me working with it. If not for that, I probably would have already moved on to something
+else. And working with Neutralinojs while writing these posts has exposed me to topics that I would have not
+gone into otherwise. Today's post is one such example.</p>
+
+<p>Much of my recent explorations with Neutralinojs have revolved around <a href="https://neutralino.js.org/docs/how-to/extensions-overview/">extensions</a>. As a reminder,
+because Neutralinojs is meant for building desktop apps through web-based technologies, it needs to
+provide access to the same kind of OS resources that a typical desktop app has access to: file
+system, processes, even hardware. Neutralinojs provides APIs that expose some of those OS resources,
+but this needs to be supplemented with custom APIs for resources that have no built-in support.
+Extensions are the way to implement those custom APIs; they are just separate programs that can
+connect to a Neutralinojs desktop app via a WebSocket and can receive and respond to messages from
+the desktop app. They can be implemented in any language that supports WebSockets.  Thus, if you
+need to access a local database, then you need to create an extension that accesses the database and
+call that extension from your Neutralinojs app to perform database operations. There's nothing complicated going on here.</p>
+
+<p>In <a href="/blog/posts/2025/migrating-express-neutralinojs-4/">Part 4</a> of my series of posts about migrating an Express-based web app to a Neutralinojs desktop app, I implemented a Go-based extension to provide (fake) persistence for the sample picture viewing
+app we were migrating. That extension was minimalist: it started a WebSocket client that connected to the Neutralinojs app, and waited for and processed messages from the app by either returning pictures from an internal list of pictures or adding pictures to the list after downloading them from a URL. I call what it did <em>fake</em> persistence because it kept the list of pictures in memory instead of persisting it to disk.
+My argument was that adding actual persistence by writing the pictures to a <a href="https://sqlite.org/">SQLite</a> database was a simple exercise. (I'll return to persistence later in the post.)</p>
+
+<p>If I'm seriously going to use Neutralinojs to build desktop apps (and I am) then I'll need to
+develop more extensions, most likely in Go. It therefore makes sense to create a package to abstract
+away all the common stuff that an extension needs to do, so that the only thing I need to specify is
+how to handle the individual messages.  If you've ever used the <code>http</code> package in Go for writing a web
+server, then you get it.</p>
+
+<p>Here's my first stab at just such a package: <a href="https://github.com/rpucella/go-neutralino-extension"><code>go-neutralino-extension</code></a>, which imports as <code>neutralinoext</code>. It exposes a couple of functions. The first is</p>
+
+<pre><code>func ReadConnInfo(r io.Reader) (ConnInfo, error)
+</code></pre>
+
+<p>which reads the Neutralinojs connection information sent from the app when it starts the
+extension. The input should almost always be <code>os.Stdin</code>. The resulting connection object of type <code>ConnInfo</code> supports a method</p>
+
+<pre><code>func (ci ConnInfo) StartMessageLoop(process ProcessFn) error
+</code></pre>
+
+<p>which starts the loop that waits for messages from the app and takes a callback function to invoke on every received message, with type</p>
+
+<pre><code>func(string, any) (map[string]any, error)
+</code></pre>
+
+<p>Once the loop is started, every received message triggers a call to the callback function with
+name of the event in the message and the data in the message as an unmarshaled JSON object. It is up to the callback function to process the message appropriately to implement whatever you want the extension to do.</p>
+
+<p>The package implements a simple form of RPC, inspired by this <a href="https://github.com/small-tech/site.js-websocket-rpc-example">WebSocket RPC example</a>: when a received message has a <code>_respId</code>
+field and a <code>_respEvent</code> field and the callback function returns a non-nil <code>map[string]any</code> value, then
+the message loop sends back a message to the Neutralinojs app via the <code>app.broadcast</code> API with
+<code>_respEvent</code> as the event and a JSON object marshaled from the <code>map[string]any</code> as data, that object extended with a <code>_respId</code> field holding the same <code>_respId</code> value that was received. Thus, from the Neutralinojs app perspective, if it sends a message to the extension by setting <code>_respId</code> in the message, it can then wait for a message from the extension with a matching <code>_respId</code>.</p>
+
+<p>Here's some sample Javascript code to do just that. The following function sends a
+message <code>obj</code> with event <code>evtName</code> to extension <code>ext</code> and waits for a response:</p>
+
+<pre><code>// Store a sequence number for each call to the extension.
+let _callId = 0
+
+async function _fetch(ext, evtName, obj) {
+  const callId = _callId
+  _callId += 1
+  const response = new Promise((resolve) =&gt; {
+    const listener = (event) =&gt; {
+      const data = event.detail
+      if (data._respId === callId) {
+        Neutralino.events.off(evtName, listener)
+        resolve(data)
+      }
+    }
+    Neutralino.events.on(evtName, listener)
+  })
+  await Neutralino.extensions.dispatch(extension, evtName, {...obj, _respId: callId, _respEvent: evtName})
+  const data = await response
+  return data
+}
+</code></pre>
+
+<p>To illustrate the use of the package, here's a trivial callback function that echoes back every message with event <code>echo</code> and a data object with a field <code>message</code> containing the string to be echoed back. The echoed string is constructed by prepending <code>echoed value:</code> in front of the string received:</p>
+
+<pre><code>func processMsg(event string, data any) (map[string]any, error) {
+	if event != &quot;echo&quot; {
+		return nil, nil
+	}
+	dataObj, ok := data.(map[string]any)
+	if !ok {
+		return nil, errors.New(&quot;data not an object&quot;)
+	}
+	messageIfc, ok := dataObj[&quot;message&quot;]
+	if !ok {
+		return nil, errors.New(&quot;no message field&quot;)
+	}
+	message, ok := messageIfc.(string)
+	if !ok {
+		return nil, errors.New(&quot;mesage not a string&quot;)
+	}
+	result := make(map[string]any)
+	result[&quot;echo&quot;] = &quot;echoed value: &quot; + message
+	return result, nil
+}
+</code></pre>
+
+<p>The complete example can be found in the <a href="https://github.com/rpucella/go-neutralino-extension">repository</a>, along with the skeleton of an extension that can query a SQLite database. I intend to flesh this one out to a full extension, since most of my desktop apps are backed by such a database.</p>
+
+<p>Two quick notes on the package before I drop off:</p>
+
+<ul>
+<li><p>Messages are not buffered. They could be, but they're not. Building a buffer to receive messages
+is an easy Go exercise. In practice, because messages send to the extension all come from the one
+desktop app, it seems unlikely that the extension would get more messages that it can handle. But
+I guess we'll find out.</p></li>
+
+<li><p>A function to send a message to the app, unprompted, is available. I haven't found a use for it
+yet, but I can imagine a scenario where the extension is running some task in the background and
+alerts the app when something special happens. The requires the message loop to run in a goroutine
+alongside a goroutine to run the background task. Again, a typical Go pattern.</p></li>
+</ul>
+
+    </div>
+
+    <div class="human">This post was written entirely by a human.</div>
+
+    
+      <div class="reading">The Pornographer (by John McGahern)</div>
+    
+
+  </article>
+  
+</main>

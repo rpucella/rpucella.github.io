@@ -16,8 +16,8 @@ Desktop apps often need to invoke OS operations that are normally restricted
 from frontends running on web browsers: reading and writing to the file system, accessing databases, that
 sort of thing.  To achieve this, Neutralinojs provides built-in APIs that expose some of those
 operations to the frontend running in the Neutralinojs app.  More interestingly, Neutralinojs
-supports _extensions_ (plugins) that can be used to implement additional operations if the
-Neutralinojs APIs are insufficient.  These extensions can be written in any language that supports
+supports _extensions_ (plugins) that can be used to [implement additional operations if the
+Neutralinojs APIs are insufficient](https://neutralino.js.org/docs/how-to/extensions-overview/).  These extensions can be written in any language that supports
 creating WebSocket clients, since Neutralinojs uses WebSockets to make calls to extensions to
 perform these additional operations.  I want to dig a bit more into extensions today.
 
