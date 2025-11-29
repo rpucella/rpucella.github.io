@@ -1,0 +1,207 @@
+<script>
+  document.title = "A SQLite Neutralinojs Extension" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">A SQLite Neutralinojs Extension</h3>
+    
+    <div class="date">Nov 28, 2025</div>
+    
+    <div class="body">
+      <p>Okay, this is probably going to be my last <a href="https://neutralino.js.org/">Neutralinojs</a> post for a while, because with what I'll talk about today, I have all the ingredients to supports my ongoing desktop app requirements.</p>
+
+<p>I've already rambled on about <a href="https://neutralino.js.org/docs/how-to/extensions-overview">extensions for Neutralinojs</a>, which are the main way to provide non-native OS-level resource access to Neutralinojs apps. In my series of posts where I <a href="/blog/posts/2025/migrating-express-neutralinojs-3">migrate an online web app into a Neutralinojs desktop app</a>, an extension plays the role of the server-side code in the original web app, ostensibly to implement persistence. While creating an extension for that was technically correct, it over complicates the picture; if the goal is to provide persistence, then instead of creating an application-specific extension to manage access to the database, it is better to provide access to the database directly from the Neutralinojs app via a generic &quot;database&quot; extension. This is more in line with how the rest of the Neutralinojs APIs are structure.</p>
+
+<p>In other words, instead of calling an extension that exposes an entry point, say <code>getImage()</code>, that in the extension fetches an image from the database table, we should simply issue a <code>select ... from images where...</code> query to a database extension. Direct database access from frontend code is frowned upon in a web app, but none of the arguments apply to a desktop application.  That reflect my improving understanding of extensions: they're just OS-level APIs. Approaching them like I'd approach a server in a web app is a distortion.</p>
+
+<p>With all of that in mind, the goal for today is to provide that kind of generic database extension usable by Neutralinojs apps. For the sake of specificity (and because that's my personal use case), the database extension supports a SQLite database, but it shouldn't be difficult to generalize it to provide generic access to any other relational database. In fact, the extension is pretty bare bones, even with the restriction to SQLite: it provides parameterized query access, and that's about it. No transactions, no cursors, nothing. Just queries and result sets. Additional features may be added at some point, but for now, as I said above, my desktop app requirements are happily met.</p>
+
+<h2>The Extension</h2>
+
+<p>The SQLite extension is found in the <a href="https://github.com/rpucella/neutralino-sqlite"><code>neutralino-sqlite</code></a> Github repository. It uses the Neutralinojs extension library for Go that I implemented and described in <a href="/blog/posts/2025/a-go-package-for-writing-neutralinojs-extensions">A Go Package For Writing Neutralinojs Extensions</a>, including the RPC mechanism described there.</p>
+
+<p>The extension expects one command-line argument: the SQLite database file to which all queries will be directed. It then reads the connection information sent from the Neutralinojs app on standard input when it starts up the extension and connects to the Neutralinojs app before entering the message loop and waiting for relevant messages.</p>
+
+<p>Recall that a message sent by a Neutralinojs app to an extension has an <code>event</code> field and a <code>data</code> field. Two events are currently supported: <code>query</code> and <code>exec</code>. Both issue a SQL query to the database: <code>query</code> returns a sequence of rows while <code>exec</code> does not return any value and is merely executed for its side effects.</p>
+
+<p>In more details, the <code>query</code> message expects a <code>data</code> object of the form</p>
+
+<pre><code>{
+  &quot;sql&quot;: &lt;query string&gt;,
+  &quot;params&quot;: [&lt;value&gt;, ...]
+}
+</code></pre>
+
+<p>where <code>sql</code> is the actual SQL query to issue. The <code>params</code> field is there to support <em>parameterized queries</em>, that is, queries with <em>placeholders</em> where the placeholders are replaced by values passed separately, and converted to SQL values by the database driver: strings are automatically quoted, etc. The <code>params</code> field is a list of JSON values to inject into the SQL query at position indicated by <code>$1</code>, <code>$2</code>, <code>$3</code>, ... in the query. For example:</p>
+
+<pre><code>{
+  &quot;sql&quot;: &quot;select name, email from users where user_id = $1 or user_id = $2&quot;,
+  &quot;params&quot;: [101, 102]
+}
+</code></pre>
+
+<p>(The use of <code>$1</code>, <code>$2</code>, <code>$3</code>, ... comes from the underlying Go package used to interface to SQLite, <a href="https://github.com/mattn/go-sqlite3"><code>go-sqlite3</code></a>.) The <code>query</code> message returns a response as an object with one field (<code>rows</code>) containing an array of rows, where each row represented by an array of values. For example:</p>
+
+<pre><code>{
+  &quot;rows&quot;: [[&quot;Alice&quot;, &quot;alice@example.com&quot;], [&quot;Bob&quot;, &quot;bob@example.com&quot;]]
+}
+</code></pre>
+
+<p>The <code>exec</code> message works exactly the same as the <code>query</code> message, except that it doesn't return an array of rows. It is meant to execute DDL statements that change the database without returning data. For example:</p>
+
+<pre><code>{
+  &quot;sql&quot;: &quot;update users set name = $1 where user_id = $2&quot;,
+  &quot;params&quot;: [&quot;Robert&quot;, 102]
+}
+</code></pre>
+
+<p>It does return an acknowledgment that the statement was executed, of the form:</p>
+
+<pre><code>{
+  &quot;done&quot;: true
+}
+</code></pre>
+
+<p>Since this extension is built upon the Neutralinojs Go extension library <a href="https://github.com/rpucella/go-neutralino-extensions"><code>go-neutralino-extension</code></a>, it supports the RPC mechanism of that library: if we add <code>_respId</code> and <code>_respEvent</code> to the data object sent as part of the message to the extension, the response from the extension will also contain a field <code>_respId</code> with the same value as the message that was sent, and will be sent with the event name specified in <code>_respEvent</code>. This means that we can wait for the exact response to any message we send to the extension by waiting on the event we specify, and match the <code>_respId</code> that we receive back. (See method <code>_sql</code> in class <code>API</code> in the example below for one way to do just that.)</p>
+
+<h2>An Example</h2>
+
+<p>A full example of a Neutralinojs app using the extension can be found in the <code>example/</code> directory of the repository.  It is the image viewer example I've been using in my migration posts, a variant of the <a href="/blog/posts/2025/migrating-express-neutralinojs-4">code described in Part 4 that uses a Go extension</a>.</p>
+
+<p>The code has the same structure as I've described in the migration posts:</p>
+
+<pre><code>Makefile
+images.db
+images.ddl
+neutralino.config.json
+bin/
+extensions/
+resources/
+  index.html
+  icons/
+  js/
+</code></pre>
+
+<p>The frontend code is in the <code>resources/</code> directory, while <code>bin/</code> contains the files that Neutralinojs uses to build the final desktop app. File <code>neutralino.config.json</code> is the app configuration file.</p>
+
+<p>The initial SQLite database (which contains a single cat picture) is <code>images.db</code>. It was created using the <code>images.ddl</code> script which is included for reference. The database contains a single table with one row per image with a name, a base64 encoding of the image, and a mime type for the image:</p>
+
+<pre><code>create table images (
+  id integer primary key, 
+  url text, 
+  image text
+);
+</code></pre>
+
+<p>The Neutralinojs configuration file tells Neutralinojs how to start the extension when the app starts:</p>
+
+<pre><code>&quot;extensions&quot;: [
+    {
+      &quot;id&quot;: &quot;sqlite&quot;,
+      &quot;command&quot;: &quot;${NL_PATH}/extensions/sqlite-ext ${NL_PATH}/extensions/images.db&quot;
+    }
+  ],
+</code></pre>
+
+<p>You see it expects the extension (and the database file) in directory <code>extensions/</code>. So the first step of the build process has to be to populate the <code>extensions/</code> directory with the extension executable, and the initial database. I do this via <code>a Makefile</code>, which also build the Neutralinojs app:</p>
+
+<pre><code>build:
+	cp ../../bin/sqlite-ext extensions
+	cp images.db extensions
+	npx @neutralinojs/neu build
+</code></pre>
+
+<p>Yes, I know, this is just a shell script. I use <code>Makefile</code>s in all my projects, for consistency. Full disclosure: this works well for this project, because the extension itself is available in the same repository, but I am not entirely sure how I would distribute the source of a Neutralinojs app that uses the SQLite extension. Do I provide a script to fetch and build the extension? The Neutralinojs app is a Node.js project, run via <code>npm</code>, while the extension requires building via a Go compiler. I'll need to dig into this a bit more in the future.</p>
+
+<p>Anyway, all of that is setup. To use the SQLite extension from the Neutralinojs app, I rely on the fact that my app code already had its calls to the &quot;database&quot; isolated through an <code>API</code> class. That was meant to support the original migration from an Express-based backend (where the API calls were REST calls) to Neutralinojs (where the API calls were extension calls via the Neutralinojs library), and I benefit from that here. It is a simple matter to update the class to use this generic SQLite extension over the custom-built extension:</p>
+
+<pre><code>class API {
+  constructor() {
+    this._callId = 0
+  }
+
+  async _query(obj) {
+    return this._sql(&quot;query&quot;, obj)
+  }
+
+  async _exec(obj) {
+    return this._sql(&quot;exec&quot;, obj)
+  }
+
+ async _sql(eventName, obj) {
+    const extension = &quot;sqlite-ext&quot;
+    const callId = this._callId
+    this._callId += 1
+    const response = new Promise((resolve) =&gt; {
+      const listener = (event) =&gt; {
+        const data = event.detail
+        if (data._respId === callId) {
+          Neutralino.events.off(eventName, listener)
+          resolve(data)
+        }
+      }
+      Neutralino.events.on(eventName, listener)
+    })
+    const dataObj = {...obj, _respId: callId, _respEvent: eventName}
+    await Neutralino.extensions.dispatch(extension, eventName, dataObj)
+    const dataResp = await response
+    return dataResp
+  }
+
+  async fetchImages() {
+      console.log(&quot;about to query&quot;)
+    return this._query({
+      sql: &quot;select url from images&quot;
+    })
+}
+
+  async fetchImage(index) {
+    return this._query({
+        sql: &quot;select url, image from images where id = $1&quot;,
+        params: [index]
+    })
+  }
+
+  async addImage(index, name, url) {
+    const base64 = await imageToBase64(url)
+    return this._exec({
+        sql: &quot;insert into images (id, url, image) values ($1, $2, $3)&quot;,
+        params: [index, name, base64]
+    })
+  }
+}
+
+async function imageToBase64(url) {
+    const response = await fetch(url)
+    const blob = await response.blob()
+
+    return new Promise((resolve, reject) =&gt; {
+        const reader = new FileReader()
+        reader.onloadend = () =&gt; resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+    })
+}
+</code></pre>
+
+<p>The <code>_sql()</code> method ultimately contains the logic to send a message to the extension and more importantly to wait for the result of the message in the form of a message sent by the extension with the same call ID that was sent with the original message.</p>
+
+<p>That's it. Build the app, run it, and it will correctly save the images you add to it to the database, and persist them even if you close the app and restart it.</p>
+
+<p>Direct access to a SQLite database in a generic way from any Neutralinojs desktop app achieved.</p>
+
+    </div>
+
+    <div class="human">This post was written entirely by a human.</div>
+
+    
+      <div class="reading">Royal (by Jean-Philippe Baril Guérard)</div>
+    
+
+  </article>
+  
+</main>
