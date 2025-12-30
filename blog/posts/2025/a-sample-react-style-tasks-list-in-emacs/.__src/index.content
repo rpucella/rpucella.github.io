@@ -1,0 +1,166 @@
+<script>
+  document.title = "A Sample React-Style Tasks List in Emacs" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">A Sample React-Style Tasks List in Emacs</h3>
+    
+    <div class="date">Dec 31, 2025</div>
+    
+    <div class="body">
+      <p><a href="/blog/posts/2025/a-react-style-structure-for-emacs-special-modes">A few days ago</a>, I gave a simple set of Emacs Lisp macros and functions to rationalize (as far as I'm concerned) the creation of Emacs <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Basic-Major-Modes.html">special modes</a>. Recall that special modes are major buffer modes that provide functionality that are not strictly speaking related to editing files. For example, <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html"><code>dired</code></a> (to list files in a directory and manipulate them) or <a href="https://www.masteringemacs.org/article/introduction-magit-emacs-mode-git"><code>magit</code></a> (to issue <code>git</code> commands on local repository). They function like little apps within Emacs that use buffers to provide user interfaces for specific functionalities.</p>
+
+<p>The macro <code>defstate</code> and accompanying functions <code>getstate</code> and <code>setstate</code> enable the definition of a <em>state variable</em> associated with a buffer in such a way that any update to the state variable triggers a refresh of the buffer, mimicking the way that state updates in a React-based web application trigger a redraw of the components of the web application affected by the updated state. This leads to what I feel is a fairly natural way to structure the code controlling a special mode, at least for the examples that have kept me entertained in my Emacs adventures.</p>
+
+<p>In my post where I talk about <code>defstate</code>, I used a trivial counter mode to illustrate the principles involved. Admittedly, that example was pretty unsatisfying. In an effort to better showcase the approach, here is a more involved example that is taken straight from the React tutorials playbook: the <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Frameworks_libraries/React_todo_list_beginning">React TodoMatic todo list example</a> from MDN. You can see the <a href="https://mdn.github.io/todo-react">demo here</a>:</p>
+
+<p><img src="./todomatic.png" alt="TodoMatic Screenshot" /></p>
+
+<p>The idea is simple: we use an Emacs buffer to show a list of tasks. Each task has an associated checkbox to indicate and control completion; checking a task marks it as completed, unchecking it marks it back as active (not completed). There are buttons to add tasks, and buttons to filter the tasks list: showing all tasks, showing active tasks, and showing completed tasks. The two features that the TodoMatic demo provide that I will not implement is editing or deleting tasks. I might come back to that kind of functionality later and leave it as an exercise to the reader for now.</p>
+
+<p>I am going to follow the structure of the counter mode I showed last time for this new <em>tasks</em> mode. I am assuming we have the <code>defstate</code> macro and the <code>setstate</code> and <code>getstate</code> functions from <a href="/blog/posts/2025/a-react-style-structure-for-emacs-special-modes">last time</a>. The mode definition itself is unremarkable:</p>
+
+<pre><code>(define-derived-mode tasks-mode
+          special-mode &quot;Tasks&quot;
+          &quot;Major mode for managing a tasks list.&quot;)
+</code></pre>
+
+<p>The <code>tasks</code> command sets up the buffer and the state variable:</p>
+
+<pre><code>    (defun tasks ()
+      (interactive)
+      (let* ((name &quot;*Tasks*&quot;)
+             (buff (get-buffer-create name)))
+        (switch-to-buffer buff)
+        (tasks-mode)
+        ;; Automatically called by `g` in special modes.
+        (setq revert-buffer-function (lambda (&amp;rest ignore) (tasks--render)))
+        ;; To navigate buttons using tab/backtab.
+        (button-mode)
+        ;; Define state variable.
+        (defstate **state** (:tasks :show) 'tasks--render)
+        ;; Initialize state variable with two sample tasks.
+        (setstate :tasks (list (tasks--new-task &quot;sample task 1&quot;)
+                               (tasks--new-task &quot;sample task 2&quot;))
+                  :show :all)))
+
+    (defun tasks--new-task (name)
+      ;; Structure of a task.
+      (list :name name :completed nil))
+</code></pre>
+
+<p>The state <code>**state**</code> defined via <code>defstate</code> has two state properties: the list of tasks <code>:tasks</code> and the filtering requested <code>:show</code>. State property <code>:show</code> admits three possible values: <code>:all</code> (to show all tasks), <code>:active</code> (to show only active non-completed, tasks), and <code>:completed</code> (to show only completed tasks). A task is represented by a property list with a <code>:name</code> and a <code>:completed</code> flag indicating whether the task has been completed. Function <code>tasks--new-task</code> creates a new active task with a given name. The buffer is initialized with Two sample tasks for illustration purposes.</p>
+
+<p>The implementation of <code>setstate</code> ensures that once we initialize the state variable at the end of function <code>tasks</code>, a render of the buffer via the registered render function <code>tasks--render</code> is triggered:</p>
+
+<pre><code>(defun tasks--render ()
+  (interactive)
+  (let* ((inhibit-read-only t)
+         (show (getstate :show))
+         (tasks (getstate :tasks)))
+    (erase-buffer)
+    (insert &quot;\nShow tasks: &quot;)
+    (tasks--simple-button show :all &quot;ALL&quot; 'tasks-show-all)
+    (insert &quot; &quot;)
+    (tasks--simple-button show :active &quot;ACTIVE&quot; 'tasks-show-active)
+    (insert &quot; &quot;)
+    (tasks--simple-button show :completed &quot;COMPLETED&quot; 'tasks-show-completed)
+    (insert &quot;\n\n&quot;)
+    (tasks--simple-button show nil &quot;ADD NEW TASK&quot; 'tasks-create)
+    (insert &quot;\n\n\n&quot;)
+    (dolist (task tasks)
+      (let ((completed (plist-get task :completed)))
+        (when (or (eq show :all)
+                  (and (eq show :active) (not completed))
+                  (and (eq show :completed) completed))
+          (insert-button (if (plist-get task :completed) &quot;[X]&quot; &quot;[ ]&quot;)
+                         'face '(:underline nil :inherit default)
+                         'task task
+                         'action (lambda (btn) (tasks--toggle-task (button-get btn 'task))))
+          (insert (format &quot; %s\n&quot; (plist-get task :name))))))
+    (goto-char (point-min))))
+
+(defun tasks--simple-button (show if-show text action-fn)
+  (if (and (not (null if-show))
+           (eq show if-show))
+      (insert (concat &quot;-&quot; text &quot;-&quot;))
+    (insert-button (concat &quot;[&quot; text &quot;]&quot;)
+                   'face '(:underline nil :inherit default)
+                   'action-fn action-fn
+                   'action (lambda (btn) (call-interactively (button-get btn 'action-fn))))))
+</code></pre>
+
+<p>There's a lot of interesting stuff happening here. The render function first clears the buffer after temporarily removing the read-only restriction on the buffer,, and then redraws it from scratch. It sets up three buttons (<strong>all</strong>, <strong>active</strong>, and <strong>completed</strong>) at the top of the buffer to control what tasks to show, exactly mirroring the <code>:show</code> state property. The option corresponding to the current filter selection is not rendered as a button, but just a string of text, via the <code>tasks--simple-button</code> helper function. Aside from the filter buttons, there is also a button to add a new task.</p>
+
+<p>Buttons are implemented using the <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Buttons.html"><code>button</code> package</a> built into Emacs for simplicity. In other projects, I have used the <a href="https://www.gnu.org/software/emacs/manual/html_mono/widget.html"><code>widget</code> package</a> instead. Interestingly, the same conflict that arises in the React community with respect to <a href="https://dev.to/ale3oula/navigating-reacts-controlled-vs-uncontrolled-components-48kb">controlled versus uncontrolled components</a> arises here as well. Since in this example I can get away with using simple buttons, I will do so and avoid that particular can of worms.</p>
+
+<p>Those buttons invoke commands to perform their action:</p>
+
+<pre><code>    (defun tasks-show-all ()
+      (interactive)
+      (setstate :show :all))
+
+    (defun tasks-show-active ()
+      (interactive)
+      (setstate :show :active))
+
+    (defun tasks-show-completed ()
+      (interactive)
+      (setstate :show :completed))
+
+    (defun tasks-create (task)
+      (interactive (list (read-string &quot;New task to create: &quot;)))
+      (let* ((tasks (getstate :tasks))
+             (new-task (tasks--new-task task)))
+        (setstate :tasks (cons new-task tasks))))
+</code></pre>
+
+<p>In all those cases, the commands make the obvious update to the appropriate state property and force a re-render, which keeps the content of the buffer in sync with the actions of the user.</p>
+
+<p><em>(Helper function <code>tasks--simple-button</code> highlights something fun about dynamic scoping. It takes the function to invoke upon pressing the button as a parameter, and because the callback associated with the button expects a <code>btn</code> argument while the actions don't, I want to do the usual so-called eta reduction and provide a <code>(lambda (btn) (call-interactively action-fn))</code> as the callback to the button, referring to the <code>action-fn</code> passed as an argument to the <code>tasks--simple-button</code> function. But of course that doesn't work in a dynamic scoping setting, because <code>action-fn</code> is a free variable of the <code>lambda</code>! I could have switched to lexical scoping for this example, and probably should have because lexical scoping is so much saner, but there is a way to address the issue even in dynamically-scoped Emacs Lisp: add a custom property <code>'action-fn</code> to the button that holds the value of the <code>action-fn</code> parameter, and use the fact that the current button is passed to the callback and retrieve <code>action-fn</code> from the button itself using <code>(button-get btn 'task)</code>. Cute trick.)</em></p>
+
+<p>After showing the buttons, the render function then loops over all tasks, and for every task that can be shown according to the currently selected filter it adds line to the buffer with first a &quot;checkbox&quot; button showing either <code>[ ]</code> or <code>[X]</code> depending on whether the task is completed or not and second the name of the task.</p>
+
+<p>The &quot;checkbox&quot; button associated with each task in the buffer has an action that invokes a command to toggle the <code>:completed</code> status of the given task before updating the <code>:task</code> state property to force a re-render of the buffer. That re-render will of course show the &quot;checkbox&quot; button of that task with the now updated <code>:completed</code> status:</p>
+
+<pre><code>    (defun tasks--toggle-task (task)
+      (let ((completed (plist-get task :completed)))
+        (plist-put task :completed (not completed))
+        (setstate :tasks (getstate :tasks))))
+</code></pre>
+
+<p>Forcing a re-render by writing the <code>:tasks</code> value back to the state property is inelegant, but I can live with it. Welcome to the ungainly world of mutable state.</p>
+
+<p>The only thing that now remains to complete this special mode example is to create a few key
+bindings to tie actions to keys, such as creating a new task or changing the filters:</p>
+
+<pre><code>(define-key tasks-mode-map (kbd &quot;n&quot;) 'tasks-create)
+(define-key tasks-mode-map (kbd &quot;a&quot;) 'tasks-show-all)
+(define-key tasks-mode-map (kbd &quot;c&quot;) 'tasks-show-active)
+(define-key tasks-mode-map (kbd &quot;d&quot;) 'tasks-show-completed)
+</code></pre>
+
+<p>And that's it! The complete code for this example is <a href="./defstate-tasks.el">available</a>.</p>
+
+<p><img src="./screenshot-all.png" alt="Screenshot Show All" />
+<img src="./screenshot-active.png" alt="Screenshot Show Active" /></p>
+
+<p>As I mentioned earlier, the original TodoMatic React demo has functionality to edit and delete tasks. The <em>easiest</em> way to replicate thos features is to provide buttons associated with each task for editing (using the minibuffer to input the new task name) and deleting. Those can be handled similarly to the &quot;checkbox&quot; buttons, except invoking an editing or deleting command on the task instead of updating the completed status of the task.</p>
+
+<p>Emacs has a native <a href="https://www.gnu.org/software/emacs/manual/html_mono/todo-mode.html">todo list mode</a>, so there is no point really belaboring this example. But if you're looking for an interesting exercise to practice hacking Emacs special modes, consider extending this example with the ability to anchor tasks to a file: the <code>tasks</code> function can take a file as input (creating it as needed), tasks can be read from that file, and the file can either be saved manually when the user presses a key or automatically after every update.</p>
+
+    </div>
+
+    <div class="human">This post was written entirely by a human.</div>
+
+    
+      <div class="reading">Un Mois à Sienne (by Hisham Matar)</div>
+    
+
+  </article>
+  
+</main>
