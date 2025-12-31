@@ -191,7 +191,7 @@ bindings to tie actions to keys, such as creating a new task or changing the fil
 
 <p>As I mentioned earlier, the original TodoMatic React demo has functionality to edit and delete tasks. The <em>easiest</em> way to replicate thos features is to provide buttons associated with each task for editing (using the minibuffer to input the new task name) and deleting. Those can be handled similarly to the &quot;checkbox&quot; buttons, except invoking an editing or deleting command on the task instead of updating the completed status of the task.</p>
 
-<p>Emacs has a native <a href="https://www.gnu.org/software/emacs/manual/html_mono/todo-mode.html">todo list mode</a>, so there is no point really belaboring this example. But if you're looking for an interesting exercise to practice hacking Emacs special modes, consider extending this example with the ability to anchor tasks to a file: the <code>tasks</code> function can take a file as input (creating it as needed), tasks can be read from that file, and the file can either be saved manually when the user presses a key or automatically after every update.</p>
+<p>Emacs has a native <a href="https://www.gnu.org/software/emacs/manual/html_mono/todo-mode.html">todo mode</a>, so there is no point really belaboring this example. But if you're looking for an interesting exercise to practice hacking Emacs special modes, consider extending this example with the ability to anchor tasks to a file: the <code>tasks</code> function can take a file as input (creating it as needed), tasks can be read from that file, and the file can either be saved manually when the user presses a key or automatically after every update.</p>
 
     </div>
 

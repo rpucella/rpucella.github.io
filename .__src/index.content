@@ -24,7 +24,12 @@
   
   <section>
     <h2>What's New?</h2>
-    
+
+    <article class="news">
+      <div class="date">Dec 31, 2025</div>
+      <div class="title">Blog post: <a href="/blog/posts/2025/a-sample-react-style-tasks-list-in-emacs">A Sample React-Style Tasks List in Emacs</a></div>
+    </article>
+
     <article class="news">
       <div class="date">Dec 29, 2025</div>
       <div class="title">Blog post: <a href="/blog/posts/2025/a-react-style-structure-for-emacs-special-modes">A React-Style Structure for Emacs Special Modes</a></div>
@@ -43,11 +48,6 @@
     <article class="news">
       <div class="date">Nov 7, 2025</div>
       <div class="title">Blog post: <a href="/blog/posts/2025/a-go-package-for-writing-neutralinojs-extensions">A Go Package for Writing Neutralinojs Extensions</a>.</div>
-    </article>
-    
-    <article class="news">
-      <div class="date">Sep 27, 2025</div>
-      <div class="title">Blog post: <a href="/blog/posts/2025/migrating-express-neutralinojs-5">Migrating from Express to Neutralinojs, Part 5: Mac OS Bundling</a>.</div>
     </article>
     
   </section>
