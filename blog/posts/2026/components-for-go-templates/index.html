@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = "Components for Go Templates" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Components for Go Templates</h3>
+    
+    <div class="date">Jan 17, 2026</div>
+    
+    <div class="body">
+      <p>A few years ago, I <a href="/posts/2023/atomic-design/">wrote about an approach</a> to implementing an <a href="https://bradfrost.com/blog/post/atomic-web-design/">atomic design library</a> using Go templates. Since then, I've had the opportunity the revise the approach somewhat, finding a better balance between expressiveness and ease of use. It all comes down to the ability to define a visual component in Go's template engine, that is, a reusable and parameterized HTML fragment. For example, a hero banner parameterized by a title, a subtitle, a description, possibly some action buttons and a breadcrumb, that sort of thing.</p>
+
+<p>We can already write components in Go's templating language:</p>
+
+<pre><code>{{define &quot;Banner&quot;}}
+&lt;div class=&quot;banner&quot;&gt;
+  &lt;div class=&quot;title&quot;&gt;{{.Title}}&lt;/div&gt;
+  &lt;div class=&quot;subtitle&quot;&gt;{{.Subtitle}}&lt;/div&gt;
+  &lt;div class=&quot;description&quot;&gt;{{.Description}}&lt;/div&gt;
+  &lt;div class=&quot;button-bar&quot;&gt;
+    &lt;button onclick=&quot;{{.ActionOnClick}}&quot;&gt;{{.ActionLabel}}&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+{{end}}
+</code></pre>
+
+<p>This is vastly simplified, but you get the gist. The point being, there's a lot of structural stuff here, and if you build a website from templates, then most pages may get this kind of banner, and therefore would benefit from simply using the component (subtemplate) above, for example:</p>
+
+<pre><code>&lt;div class=&quot;screen&quot;&gt;
+  {{template &quot;Banner&quot; .BannerArgs}}
+  &lt;div class=&quot;content&quot;&gt;
+    ...
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>This assumes that the Go program that &quot;executes&quot; this template passes a struct value to the template with a field <code>BannerArgs</code> containing the struct with the banner arguments, namely something like:</p>
+
+<pre><code>struct {
+  Title string
+  Subtitle string
+  Description string
+  ActionOnClick string
+  ActionLabel string
+}
+</code></pre>
+
+<p>The above works fine, and there are many variations available. For instance, you can have the banner arguments in the top level struct value passed to the template, and use <code>{{template &quot;Banner&quot; .}}</code>, etc.</p>
+
+<p>There are times, however, where the above solution is inelegant. In particular, the fact that all arguments to the banner need to come from the Go program executing the template means that even choices that are internal to the template need to be surfaced to the level of the Go program. That's because Go's templating engine doesn't allow you to create a struct value <em>on the fly</em> within a template to pass to a component. Again, not a problem <em>per se</em> — just inelegant. But there is a solution.</p>
+
+<p>The solution is two-fold: implement components in such a way that they use a <em>map</em> from strings to values instead of a struct, and provide a way to construct such a map <em>on the fly</em> within a template.</p>
+
+<p>Implementing components to use a map actually requires zero changes, since accessing fields of a struct and indexing a map uses the same syntax in a Go template, as long as the map indices don't use special characters. In those situations, instead of <code>{{.Foo}}</code>, we can use <code>{{index . &quot;Foo&quot;}}</code></p>
+
+<p>Creating a map <em>on the fly</em> within a template can be done with a <em>template function</em>. I'm calling this function <code>props</code> because it mimics how a React component gets instantiated by passing values for its props (using the form <code>name={value}</code>):</p>
+
+<pre><code>func templateProps(props ...any) (map[string]interface{}, error) {
+	if len(props) % 2 != 0 {
+		return nil, errors.New(&quot;invalid props call&quot;)
+	}
+	dict := make(map[string]any, len(props) / 2)
+	for i := 0; i &lt; len(props); i += 2 {
+		key, ok :=props[i].(string)
+		if !ok {
+			return nil, errors.New(&quot;props keys must be strings&quot;)
+		}
+		dict[key] = props[i+1]
+	}
+	return dict, nil
+}
+</code></pre>
+
+<p>Once this function is made it available to the template (see below), we can invoke it when instantiating a component as follows:</p>
+
+<pre><code>{{template &quot;Banner&quot; props
+    &quot;Title&quot; &quot;My Fantastic New Page&quot; 
+    &quot;Subtitle&quot; &quot;It'll blow your mind&quot; 
+    &quot;Description&quot; &quot;(Insert witty description here)&quot; 
+    &quot;ActionOnClick&quot; &quot;navigate()&quot; 
+    &quot;ActionLabel&quot; &quot;Go to overview&quot;}}
+</code></pre>
+
+<p>Note the alternation between prop name and prop value. This invokes component <code>Banner</code> with a map that sends <code>Title</code> to <code>My Fantastic New Page</code>, <code>Subtitle</code> to <code>It'll blow your mind</code>, etc. Basically, every alternation of prop name and prop value after the <code>props</code> function call gets used to create the map passed to the component.</p>
+
+<p>To use this function, you need register it with the template before executing it. Personally, I tend to put all my project components in a single template file <code>components.gohtml</code>, and then use a function <code>createTemplate</code> that takes a source template file, adds the components library file, and registers the <code>templateProps</code> function:</p>
+
+<pre><code>func createTemplate(page string) (*template.Template, error) {
+	tmpl := template.New(&quot;components.gohtml&quot;).Funcs(template.FuncMap{
+		&quot;props&quot;: templateProps,
+	})
+	return tmpl.ParseFiles(&quot;templates/components.gohtml&quot;, page)
+}
+</code></pre>
+
+<p>I use this function in the most straightforward way to create a template before executing it:</p>
+
+<pre><code>tmpl, err := createTemplate(&quot;templates/test.gohtml&quot;)
+if err != nil {
+	log.Println(err)
+	http.Error(w, err.Error(), http.StatusInternalServerError)
+	return
+}
+args := &amp;struct {
+    SomeTemplateArg string
+}{
+    &quot;Hello world&quot;
+}
+err = tmpl.Execute(w, args)
+if err != nil {
+	log.Println(err)
+	return
+}
+</code></pre>
+
+    </div>
+
+    <div class="human">This post was written entirely by a human.</div>
+
+    
+      <div class="reading">Coldheart Canyon (by Clive Barker)</div>
+    
+
+  </article>
+  
+</main>
+
+    
+  </body>
+  
+</html>

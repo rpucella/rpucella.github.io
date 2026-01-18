@@ -12,6 +12,13 @@
   
 
     <article class="summary">
+      <div class="title"><a href="/blog/posts/2026/components-for-go-templates">Components for Go Templates</a></div>
+      <div class="date">Jan 17, 2026</div>
+    </article>
+
+  
+
+    <article class="summary">
       <div class="title"><a href="/blog/posts/2025/a-sample-react-style-tasks-list-in-emacs">A Sample React-Style Tasks List in Emacs</a></div>
       <div class="date">Dec 31, 2025</div>
     </article>
