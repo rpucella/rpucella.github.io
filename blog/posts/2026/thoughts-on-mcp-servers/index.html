@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = "Thoughts On MCP Servers" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Thoughts On MCP Servers</h3>
+    
+    <div class="date">Feb 10, 2026</div>
+    
+    <div class="body">
+      <p>I have been unable to avoid the whole <em>put AI into stuff</em> at work. No surprise there, really. Not entirely unwelcome, either. Fact is, our clients are using LLM-based AI assistants such as Microsoft Copilot to interact with the world, and one of the tenants of marketing is to meet clients where they work.</p>
+
+<p>So how can we provide access to our resources to AI assistants? This field changes at a pace that makes one's head spin and makes settling on a stable solution difficult, but <a href="https://modelcontextprotocol.io/docs/getting-started/intro">MCP servers</a> are probably a reasonably safe bet. MCP here stands for <em>Model Context Protocol</em>, the idea being that MCP servers can be used to augment the context of an AI assistant to help answer user queries. Accordingly, I've been digging into MCP servers in the past month. I'm putting down my current thoughts about them here as a forcing function to try to impose some structure on the chaos.</p>
+
+<p>To a first approximation, an MCP server is just an app (when run locally) or a web application server (when exposed online) that does the equivalent of exposing a bunch of API endpoints. These endpoints are called <em>tools</em>. Some LLMs are trained to be able to invoke such tools made available through MCP servers, in order to help answer user queries. Cool. That's the tag line at least. But that brings up a bunch of questions.</p>
+
+<p><strong>Question 1</strong>: what do I mean by <em>exposing a bunch of API endpoints</em>? Well, they're not endpoints in the strict sense of REST API endpoints exposed as routes accessible through HTTP requests. Instead, those endpoints are exposed through a single HTTP endpoint (in the case of an MCP server available online) that uses <a href="https://www.jsonrpc.org/">JSON-RPC</a> to send and response to requests. A client can send JSON-RPC requests to the endpoint, and get a JSON-RPC response. So it's a single HTTP endpoint that can be used to send specially formatted queries and get specially formatted responses. A bit like <a href="https://graphql.org/">GraphQL</a> if you've ever used that. Note that just like you do not generally write a web application server by hand but instead rely on a framework such as <a href="https://expressjs.com/">Express</a>, you do not generally generally write an MCP server by hand but instead rely on an SDK, such as <a href="https://github.com/modelcontextprotocol/typescript-sdk">this one</a> for Typescript. Same idea: instead of defining routes exposed through a REST API, you define tools exposed through JSON-RPC. Aside from the fact that they are using JSON-RPC, there is nothing particularly special about MCP servers. They are another form of online API.</p>
+
+<p><strong>Question 2</strong>: how does an LLM-based AI assistant know which endpoints are available through an MCP server? That's actually one of the pieces that I find cool. These endpoints are <em>discoverable</em>. There is a standard request you can send to the endpoint to get a list of all available tools, along with details of the parameters that each tool accepts and the format of the tool's response. An LLM-based AI assistant trained on tool calling can use this information to determine if one of the tools available through the MCP server can help in answering the current user query, construct the request, and actually call the tool to get a response back. This is the old dream of a self-documenting discoverable API resurrected in this LLM era.</p>
+
+<p><strong>Question 3</strong>: how do I control what tools the LLM-based AI assistant calls? You can't. At least, not easily. The LLM will use the description you associate with each tool and which gets returned as part of the <em>which tools do you have available?</em> query, and you get to control that description and make it as precise as possible, but in the end, the LLM will decide if the tool is appropriate to the query, using its own internal logic. That's the part I've found the trickiest to get right when building MCP servers for our use case: determining what form the tools need to take to help the LLM make the right decision. As an added difficulty bonus, the usability of the tools you expose will depend drastically on the model underpinning the AI assistant calling the MCP server. If it uses one of the large state-of-the-art models, it should be able to handle pretty much anything. For smaller models though, the kind of model you would self-host, then the structure of the tools and the quality of the descriptions will have more of an impact.</p>
+
+<p><strong>Question 4</strong>: how are models trained to call tools, anyway? I found this <a href="https://simplicityissota.substack.com/p/how-llms-are-trained-for-function">nice write-up</a> useful to help me understand what's going on there.</p>
+
+<p><strong>Question 5</strong>: couldn't we generate an MCP server automatically around an existing REST API? Yeah, that sounds like it should be doable, right? I suspect it's not too hard to wrap any REST API equipped with an <a href="https://www.openapis.org/">OpenAPI</a> specification as an MCP server. Imagine writing an OpenAPI MCP server that can load the <code>/openapi.json</code> file of a REST API and automatically expose tools for the endpoints described there. I think the only thing missing there are the LLM-readable descriptions. By the time you read this, I wouldn't be surprised somebody will have created that MCP server.</p>
+
+<p>I don't have an MCP server to show you because, you know, proprietary blabbity blah. But you can check out an example such as this <a href="https://github.com/modelcontextprotocol/servers/tree/main/src/time">MCP server for time</a> written in Python, that exposes two tools:</p>
+
+<ul>
+<li><code>get_current_time</code> to return the current time</li>
+<li><code>convert_time</code> to convert a given time to a different timezone</li>
+</ul>
+
+<p>Of course, most state-of-the-art AI assistants will already know how to do this natively, without requiring access to an MCP server. But for smaller models, that ability is not a given.</p>
+
+    </div>
+
+    <div class="human">This post was written entirely by a human.</div>
+
+    
+      <div class="reading">The Dwarf (by Pär Lagerkvist)</div>
+    
+
+  </article>
+  
+</main>
+
+    
+  </body>
+  
+</html>

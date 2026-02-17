@@ -26,6 +26,11 @@
     <h2>What's New?</h2>
 
     <article class="news">
+      <div class="date">Feb 10, 2026</div>
+      <div class="title">Blog post: <a href="/blog/posts/2026/thoughts-on-mcp-servers">Thoughts On MCP Servers</a></div>
+    </article>
+
+    <article class="news">
       <div class="date">Jan 17, 2026</div>
       <div class="title">Blog post: <a href="/blog/posts/2026/components-for-go-templates">Components for Go Templates</a></div>
     </article>
@@ -43,11 +48,6 @@
     <article class="news">
       <div class="date">Dec 20, 2025</div>
       <div class="title">Blog post: <a href="/blog/posts/2025/chaining-callbacks-in-emacs-lisp-with-macros">Chaining Callbacks In Emacs Lisp With Macros</a></div>
-    </article>
-    
-    <article class="news">
-      <div class="date">Nov 28, 2025</div>
-      <div class="title">Blog post: <a href="/blog/posts/2025/a-sqlite-neutralinojs-extension">A SQLite Neutralinojs Extension</a></div>
     </article>
     
   </section>
