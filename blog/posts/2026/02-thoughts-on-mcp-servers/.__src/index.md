@@ -4,7 +4,7 @@ date: 2026-02-10
 reading: The Dwarf (by Pär Lagerkvist)
 ---
 
-I have been unable to avoid the whole _put AI into stuff_ at work. No surprise there, really. Not entirely unwelcome, either. Fact is, our clients are using LLM-based AI assistants such as Microsoft Copilot to interact with the world, and one of the tenants of marketing is to meet clients where they work.
+I have been unable to avoid the whole _put AI into stuff_ at work. No surprise there, really. Not entirely unwelcome, either. Fact is, our clients are using LLM-based AI assistants such as Microsoft Copilot to interact with the world, and one of the tenets of marketing is to meet clients where they work.
 
 So how can we provide access to our resources to AI assistants? This field changes at a pace that makes one's head spin and makes settling on a stable solution difficult, but [MCP servers](https://modelcontextprotocol.io/docs/getting-started/intro) are probably a reasonably safe bet. MCP here stands for _Model Context Protocol_, the idea being that MCP servers can be used to augment the context of an AI assistant to help answer user queries. Accordingly, I've been digging into MCP servers in the past month. I'm putting down my current thoughts about them here as a forcing function to try to impose some structure on the chaos.
 
