@@ -38,7 +38,8 @@
 
   <body>
   
-    <script>
+    <div>
+  <script>
   document.title = 'Analysis of Algorithms (2)'
 </script>
 
@@ -274,6 +275,9 @@ else
 <p>Therefore, <math><mrow><mi>P</mi><mo form="prefix" stretchy="false">(</mo><mi>k</mi><mo form="postfix" stretchy="false">)</mo></mrow></math> is true for all <math><mrow><mi>k</mi><mo>≥</mo><mn>0</mn></mrow></math>, meaning that <code>SUM_TO(A, k)</code> is <math><mrow><mi>A</mi><mo form="prefix" stretchy="false">[</mo><mn>1</mn><mo form="postfix" stretchy="false">]</mo><mo>+</mo><mo>⋯</mo><mo>+</mo><mi>A</mi><mo form="prefix" stretchy="false">[</mo><mi>k</mi><mo form="postfix" stretchy="false">]</mo></mrow></math> for all <math><mrow><mi>k</mi><mo>≤</mo><mi>n</mi></mrow></math>. Since <code>SUM(A) = SUM_TO(A, n)</code>, we get that <code>SUM(A)</code> is <math><mrow><mi>A</mi><mo form="prefix" stretchy="false">[</mo><mn>1</mn><mo form="postfix" stretchy="false">]</mo><mo>+</mo><mo>⋯</mo><mo>+</mo><mi>A</mi><mo form="prefix" stretchy="false">[</mo><mi>n</mi><mo form="postfix" stretchy="false">]</mo></mrow></math>, and <code>SUM</code> is correct with respect to its problem definition.</p>
 
 <p>I will leave establishing the correctness of Merge Sort as a (somewhat challenging depending on your comfort level with induction) exercise. Here are the properties to be proved by induction. For <code>MSORT(A, i, j)</code>, we can use <math><mrow><mi>P</mi><mo form="prefix" stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo form="postfix" stretchy="false">)</mo><mo>≡</mo><mi>A</mi><mo form="prefix" stretchy="false">[</mo><mi>i</mi><mo form="postfix" stretchy="false">]</mo><mo>≤</mo><mo>⋯</mo><mo>≤</mo><mi>A</mi><mo form="prefix" stretchy="false">[</mo><mi>j</mi><mo form="postfix" stretchy="false">]</mo></mrow></math>, where induction is over the difference <math><mrow><mi>j</mi><mo>−</mo><mi>i</mi></mrow></math> (which goes down to 0 as <math><mi>i</mi></math> and <math><mi>j</mi></math> grow closer). For <code>MERGE(A, i, k, j)</code>, similarly, we can use <math><mrow><mi>Q</mi><mo form="prefix" stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo form="postfix" stretchy="false">)</mo><mo>≡</mo><mi>A</mi><mo form="prefix" stretchy="false">[</mo><mi>i</mi><mo form="postfix" stretchy="false">]</mo><mo>≤</mo><mi>A</mi><mo form="prefix" stretchy="false">[</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo form="postfix" stretchy="false">]</mo><mo>≤</mo><mo>⋯</mo><mo>≤</mo><mi>A</mi><mo form="prefix" stretchy="false">[</mo><mi>j</mi><mo form="postfix" stretchy="false">]</mo></mrow></math>, where induction is again over the difefrence <math><mrow><mi>j</mi><mo>−</mo><mi>i</mi></mrow></math>.</p>
+
+</div>
+  
 
     
   </body>

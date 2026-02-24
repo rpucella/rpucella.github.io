@@ -1,0 +1,393 @@
+<div>
+  <h1>Notes on the λ-calculus (Part 1)</h1>
+
+<p>A term of the λ-calculus is either:</p>
+
+<blockquote>
+<p>an identifier <em>x</em>, <em>y</em>, <em>z</em>, ...</p>
+
+<p>an abstraction <em>( \x → M )</em>  where <em>x</em> is an identifier and <em>M</em> a term</p>
+
+<p>an application <em>(M N)</em>  where <em>M</em> and <em>N</em> are terms</p>
+</blockquote>
+
+<p>Examples:</p>
+
+<blockquote>
+<p><em>x</em></p>
+
+<p><em>( \x → x )</em></p>
+
+<p><em>( \y → ( \x → x ))</em></p>
+
+<p><em>( \x → (x ( \y → y )))</em></p>
+</blockquote>
+
+<p>Intuitively, <em>( \x → M )</em> represents a function with parameter <em>x</em>
+and returning <em>M</em>, while <em>M N</em> represents an application of
+function <em>M</em> to argument <em>N</em>. The simplification rules below will
+enforce this interpretation.</p>
+
+<p>The standard presentation of the λ-calculus uses notation <em>λx.M</em> for
+what I write <em>( \x → M )</em>, hence the name <em>λ-calculus</em>. The notation
+with <em>(...)</em>, while not at all standard, is easier to disambiguate.</p>
+
+<p>Just like elsewhere in mathematics, we can use parentheses freely to
+group terms together to affect or just clarify the order of
+applications. More generally, though, we will often <em>drop</em> parentheses
+to reduce syntactic overload when it is not ambiguous to do so. The
+one place where we need some guidance is for application: application
+<em>M N</em> is a binary operation that associates to the left, so that
+writing <em>M N P</em> is the same as writing <em>(M N) P</em>. If you want <em>M (N
+P)</em> (which means something different) then you need to use parentheses
+explicitly.</p>
+
+<p>An <em>occurrence</em> of <em>x</em> in a term <em>M</em> is the appearance of identifier <em>x</em> in <em>M</em> in a non-parameter
+position. The <em>scope</em> of a parameter <em>x</em> in <em>( x → M )</em> is all of <em>M</em>.  An occurence of
+<em>x</em> is said to be <em>bound</em> if it occurs in the scope of an abstraction with that identifier <em>x</em> as a
+parameter.  More precisely, it is bound to the nearest enclosing abstraction. An occurrence of an
+identifier is said to be <em>free</em> if it is not bound.</p>
+
+<p><em>Examples</em>: <em>y</em> is free in <em>( \x → y )</em>; the first
+occurrence of <em>x</em> is
+free in <em>( \y → x ( \x → x ) )</em> while the second is not; <em>z</em> is
+bound in <em>( \z → ( \x → z ) )</em>.</p>
+
+<p>Bound identifiers can be renamed without affecting the meaning of term. Intuitively, <em>( \x →
+x )</em> and <em>( \y → y )</em> represent the same function, namely the identity function. That
+we happen to call the parameter <em>x</em> in the first and <em>y</em> in the second is pretty irrelevant. Two
+terms are α-equivalent when they are equal up to renaming of some bound identifiers. Thus,
+<em>( \x → x z )</em> and <em>( \y → y z )</em> are α-equivalent. We can rename
+parameters and bound identifiers freely, as long as we do so consistently. Be careful that your
+renaming does not <em>capture</em> a free occurrence of an identifier. For example, <em>( \x → x z
+)</em> and <em>( \z → z z )</em> are <em>not</em> α-equivalent. They represent different functions.</p>
+
+<p>We will generally identify α-equivalent terms.</p>
+
+<h2>Substitution</h2>
+
+<p>An important operation is that of substituting a term <em>N</em> for an identifier <em>x</em>
+inside another term <em>M</em>, written <em>M {N / x}</em>. It is defined formally as</p>
+
+<blockquote>
+<p><em>x {N / x} = N</em></p>
+
+<p><em>y {N / x} = y</em>   when <em>x</em> is not <em>y</em></p>
+
+<p><em>(M P) {N / x} = M {N / x} P {N / x}</em></p>
+
+<p><em>( \y → M ) {N / x} = ( \y → M {N / x} )</em>  when <em>y</em> is not <em>x</em> and <em>y</em> is not free in <em>N</em></p>
+</blockquote>
+
+<p>In the last case, if <em>x = y</em> or if <em>y</em> is free in <em>N</em>, we can
+always find a term <em>( \z → M' )</em> that is α-equivalent to
+<em>( \y → M )</em> and such that <em>z</em> is not <em>x</em> and <em>z</em> is not free in <em>N</em> to
+perform the sustitution.</p>
+
+<p>Because it avoids capturing free identifiers, this form of substitution
+is called a <em>capture-avoiding substitution</em>.</p>
+
+<h2>Simplification Rules</h2>
+
+<p>The main simplification rule is:</p>
+
+<blockquote>
+<p><em>( \x → M )  N ⇒ M {N / x}</em></p>
+</blockquote>
+
+<p>A term of the form <em>( \x → M )  N</em> is called a <em>redex</em>.</p>
+
+<p>Simplification can occur within the context of a larger term, of course, leading to the following
+three derived simplification rules:</p>
+
+<blockquote>
+<p><em>M P ⇒ N P</em>  when <em>M ⇒ N</em></p>
+
+<p><em>P M ⇒ P N</em>  when <em>M ⇒ N</em></p>
+
+<p><em>( \x → M ) ⇒ ( \x → N )</em>   when   <em>M ⇒ N</em></p>
+</blockquote>
+
+<p>Examples:</p>
+
+<blockquote>
+<p><em>( \x → x ) ( \y → y )</em><br>
+  ⇒ <em>x {( \y → y ) / x}</em> = <em>( \y → y )</em></p>
+
+<p><em>(( \x → ( \y → x ) ) v) w</em><br>
+⇒ <em>(( \y → x {v / x} )) w</em> = <em>( \y → v ) w</em><br>
+⇒ <em>v {w / y}</em> = <em>v</em></p>
+
+<p><em>(( \x → ( \y → y ) ) ( \z → z )) ( \x → ( \y → x ) )</em><br>
+⇒ <em>( \y → y ) {( \z → z ) / x} ( \x → ( \y → x ) )</em> =  <em>( \y → y ) ( \x → ( \y → x ) )</em><br>
+⇒ <em>y {( \x → ( \y → x ) ) / y}</em> = <em>( \x → ( \y → x ) )</em></p>
+</blockquote>
+
+<p>From now on, I will skip the explicit substitution step when
+showing simplifications.</p>
+
+<p>A term is in <em>normal form</em> if it has no redex. A term is normal form cannot be simplified.</p>
+
+<p>Not every term can be simplified to a normal form:</p>
+
+<blockquote>
+<p><em>( \x → x x ) ( \x → x x )</em><br>
+ ⇒ <em>( \x → x x ) ( \x → x x )</em><br>
+ ⇒ <em>( \x → x x ) ( \x → x x )</em><br>
+ ⇒ ...</p>
+</blockquote>
+
+<p>There can be more than one redex in a term, meaning that
+there may be more than one applicable simplification. For instance, in the term
+<em>(( \x → x ) ( \y → x )) (( \x → ( \y → x ) ) w)</em>.
+A property of the λ-calculus is that all the
+ways to simplify a term down to a normal form yield the same normal form (up
+to renaming of bound identifiers). This is called the
+<em>Church-Rosser property</em>. It says that the order in which we
+perform simplifications to reach a normal form is not important.</p>
+
+<p>In practice, one often imposes an order in which to apply simplifications
+to avoid nondeterminisn. The <em>normal-order strategy</em>, which
+always simplifies the leftmost and outermost redex, is guaranteed to
+find a normal form if one exists.</p>
+
+<h2>Encoding Booleans</h2>
+
+<p>Even though the λ-calculus only
+has identifiers and functions, that's enough to encode all traditional data types.</p>
+
+<p>Here's one way to encode Boolean values, due to Alonzo Church:</p>
+
+<blockquote>
+<p><em><strong>true</strong></em> = <em>( \x → ( \y → x ) )</em></p>
+
+<p><em><strong>false</strong></em> = <em>( \x → ( \y → y ) )</em></p>
+</blockquote>
+
+<p>In what sense are these encodings of Boolean values? Booleans are
+useful because they allow you to select one
+branch or the other of a conditional expression.</p>
+
+<blockquote>
+<p><em><strong>if</strong></em> = <em>( \c → ( \x → ( \y → c x y ) ) )</em></p>
+</blockquote>
+
+<p>The trick is that
+when <em>B</em> simplifies to either <em><strong>true</strong></em> or <em><strong>false</strong></em>, then <em><strong>if</strong> B M N</em>
+simplifies either to <em>M</em> or to <em>N</em>, respectively:</p>
+
+<p>If <em>B = <strong>true</strong></em>, then:</p>
+
+<blockquote>
+<p><em><strong>if</strong> B M N</em><br>
+ ⇒ <em>B M N</em><br>
+ ⇒ <em><strong>true</strong> M N</em><br>
+ ⇒ <em>( \x → ( \y → x ) ) M N</em><br>
+ ⇒ <em>( \y → M ) N</em><br>
+ ⇒ <em>M</em></p>
+</blockquote>
+
+<p>while if <em>B = <strong>false</strong></em>, then:</p>
+
+<blockquote>
+<p><em><strong>if</strong> B M N</em><br>
+⇒ <em>B M N</em><br>
+⇒ <em><strong>false</strong> M N</em><br>
+⇒ <em>( \x → ( \y → y ) ) M N</em><br>
+⇒ <em>( \y → y )  N</em><br>
+⇒ <em>N</em></p>
+</blockquote>
+
+<p>Of course, these show that <em><strong>if</strong></em> is not strictly necessary. You
+should convince yourself that <em><strong>true</strong> M N ⇒ M</em> and that
+<em><strong>false</strong> M N ⇒ N</em>.</p>
+
+<p>We can easily define logical operators <em><strong>and</strong></em>, <em><strong>or</strong></em>, and <em><strong>not</strong></em> using simple conditional expressions.</p>
+
+<h2>Encoding Natural Numbers</h2>
+
+<p>Here is an encoding of natural numbers, again due to Alonzo Church, hence their name: <em>Church numerals</em>.</p>
+
+<blockquote>
+<p><em><strong>0</strong></em> = <em>( \f → ( \x → x ) )</em><br>
+<em><strong>1</strong></em> = <em>( \f → ( \x → f x ) )</em><br>
+<em><strong>2</strong></em> = <em>( \f → ( \x → f (f x) ) )</em><br>
+<em><strong>3</strong></em> = <em>( \f → ( \x → f (f (f x)) ) )</em><br>
+<em><strong>4</strong></em> = ...</p>
+</blockquote>
+
+<p>In general, natural number <em>n</em> is encoded as <em>( \f → ( \x → f (f (f (...
+(f x) ... ))) ) )</em>, with <em>n</em> applications of <em>f</em> to <em>x</em>.</p>
+
+<p>Successor operation:</p>
+
+<blockquote>
+<p><em><strong>succ</strong></em> = <em>( \n → ( \f → ( \x → n f (f x) ) ) )</em></p>
+
+<p><em><strong>succ</strong> <strong>1</strong></em><br>
+⇒  <em>( \n → ( \f → ( \x → n f (f x) ) ) ) ( \f → ( \x → f x ) )</em><br>
+⇒  <em>( \f → ( \x → ( \f → ( \x → f x ) ) f (f x) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \x → f x ) (f x) ) )</em><br>
+⇒  <em>( \f → ( \x → f (f x) ) )</em><br>
+⇒  <em><strong>2</strong></em></p>
+</blockquote>
+
+<p>Other operations:</p>
+
+<blockquote>
+<p><em><strong>plus</strong></em> = <em>( \m → ( \n → m <strong>succ</strong> n ) )</em></p>
+
+<p><em><strong>times</strong></em> = <em>( \m → ( \n → ( \f → ( \x → m (n f) x ) ) ) )</em></p>
+
+<p><em><strong>iszero?</strong></em> = <em>( \n → n ( \x → <strong>false</strong> ) <strong>true</strong> )</em></p>
+
+<p><em><strong>plus</strong> <strong>2</strong> <strong>1</strong></em><br>
+⇒  <em>( \m → ( \n → m <strong>succ</strong> n ) ) <strong>2</strong> <strong>1</strong></em><br>
+⇒  <em>( \n → <strong>2</strong> <strong>succ</strong> n ) <strong>1</strong></em><br>
+⇒  <em><strong>2</strong> <strong>succ</strong> <strong>1</strong></em><br>
+⇒  <em>( \f → ( \x → f (f x) ) ) <strong>succ</strong> <strong>1</strong></em><br>
+⇒  <em>( \x → <strong>succ</strong> (<strong>succ</strong> x) ) <strong>1</strong></em><br>
+⇒  <em><strong>succ</strong> (<strong>succ</strong> <strong>1</strong>)</em><br>
+⇒  <em><strong>succ</strong> (( \n → ( \f → ( \x → n f (f x) ) ) ) <strong>1</strong>)</em><br>
+⇒  <em><strong>succ</strong> ( \f → ( \x → <strong>1</strong> f (f x) ) )</em><br>
+⇒  <em><strong>succ</strong> ( \f → ( \x → ( \f → ( \x → f x ) ) f (f x) ) )</em><br>
+⇒  <em><strong>succ</strong> ( \f → ( \x → ( \x → f x ) (f x) ) )</em><br>
+⇒  <em><strong>succ</strong> ( \f → ( \x → f (f x) ) )</em><br>
+⇒  <em>( \n → ( \f → ( \x → n f (f x) ) ) ) ( \f → ( \x → f (f x) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \f → ( \x → f (f x) ) ) f (f x) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \x → f (f x) ) (f x) ) )</em><br>
+⇒  <em>( \f → ( \x → f (f (f x)) ) )</em><br>
+⇒  <em><strong>3</strong></em></p>
+
+<p><em><strong>times</strong> <strong>2</strong> <strong>3</strong></em><br>
+⇒  <em>( \m → ( \n → ( \f → ( \x → m (n f) x ) ) ) ) <strong>2</strong> <strong>3</strong></em><br>
+⇒  <em>( \n → ( \f → ( \x → <strong>2</strong> (n f) x ) ) ) <strong>3</strong></em><br>
+⇒  <em>( \f → ( \x → <strong>2</strong> (<strong>3</strong> f) x ) )</em><br>
+⇒  <em>( \f → ( \x → <strong>2</strong> (( \f → ( \x → f (f (f x)) ) ) f) x ) )</em><br>
+⇒  <em>( \f → ( \x → <strong>2</strong> ( \x → f (f (f x)) ) x ) )</em><br>
+⇒  <em>( \f → ( \x → ( \f → ( \x → f (f x) ) ) ( \x → f (f (f x)) ) x ) )</em><br>
+⇒  <em>( \f → ( \x → ( \x → ( \x → f (f (f x)) ) (( \x → f (f (f x)) ) x) ) x ) )</em><br>
+⇒  <em>( \f → ( \x → ( \x → ( \x → f (f (f x)) ) (f (f (f x))) ) x ) )</em><br>
+⇒  <em>( \f → ( \x → ( \x → f (f (f (f (f (f x))))) ) x ) )</em><br>
+⇒  <em>( \f → ( \x → f (f (f (f (f (f x))))) ) )</em><br>
+⇒  <em><strong>6</strong></em></p>
+
+<p><em><strong>iszero?</strong> <strong>0</strong></em><br>
+⇒  <em>( \n → n ( \x → <strong>false</strong> ) <strong>true</strong> ) ( \f → ( \x → x ) )</em><br>
+⇒  <em>( \f → ( \x → x ) ) ( \x → <strong>false</strong> ) <strong>true</strong></em><br>
+⇒  <em>( \x → x ) <strong>true</strong></em><br>
+⇒  <em><strong>true</strong></em></p>
+
+<p><em><strong>iszero?</strong> <strong>2</strong></em><br>
+⇒  <em>( \n → n ( \x → <strong>false</strong> ) <strong>true</strong> ) ( \f → ( \x → f (f x) ) )</em><br>
+⇒  <em>( \f → ( \x → f (f x) ) ) ( \x → <strong>false</strong> ) <strong>true</strong></em><br>
+⇒  <em>( \x → ( \x → <strong>false</strong> ) (( \x → <strong>false</strong> ) x) ) <strong>true</strong></em><br>
+⇒  <em>( \x → ( \x → <strong>false</strong> ) <strong>false</strong> ) <strong>true</strong></em><br>
+⇒  <em>( \x → <strong>false</strong> ) <strong>true</strong></em><br>
+⇒  <em><strong>false</strong></em></p>
+</blockquote>
+
+<p>An alternative way to define <em><strong>times</strong></em> is as <em>( \m → ( \n → m (<strong>plus</strong> n) <strong>0</strong> ) )</em>. Check that <em><strong>times</strong> <strong>2</strong> <strong>3</strong> ⇒ <strong>6</strong></em>
+with this definition.</p>
+
+<p>Defining a predecessor function is a bit more challenging. Predecessor takes a nonzero
+natural number <em>n</em> and returns <em>n - 1</em>. There are several ways of
+defining such a function, all challenging. Here is probably the simplest, and it's still a doozy:</p>
+
+<blockquote>
+<p><em><strong>pred</strong></em> = <em>( \n → ( \f → ( \x → n ( \g → ( \h → h (g f) ) ) ( \u → x ) ( \u → u ) ) ) )</em></p>
+</blockquote>
+
+<p>(This definition under the hood uses an encoding of pairs of the kind described in the next section.)</p>
+
+<blockquote>
+<p><em><strong>pred</strong> <strong>2</strong></em><br>
+⇒  <em>( \n → ( \f → ( \x → n ( \g → ( \h → h (g f) ) ) ( \u → x ) ( \u → u ) ) ) ) ( \f → ( \x → f (f x) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \f → ( \x → f (f x) ) ) ( \g → ( \h → h (g f) ) ) ( \u → x ) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \x → ( \g → ( \h → h (g f) ) ) (( \g → ( \h → h (g f) ) ) x) ) ( \u → x ) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \g → ( \h → h (g f) ) ) (( \g → ( \h → h (g f) ) ) ( \u → x )) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \g → ( \h → h (g f) ) ) ( \h → h (( \u → x ) f) ) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \g → ( \h → h (g f) ) ) ( \h → h x ) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \h → h (( \h → h x ) f) ) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \h → h (f x) ) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \u → u ) (f x) ) )</em><br>
+⇒  <em>( \f → ( \x → f x ) )</em><br>
+ ⇒ <em><strong>1</strong></em></p>
+</blockquote>
+
+<p>Note that under this definition <em><strong>pred</strong> <strong>0</strong></em> is just <em><strong>0</strong></em> :</p>
+
+<blockquote>
+<p><em><strong>pred</strong> <strong>0</strong></em><br>
+⇒  <em>( \n → ( \f → ( \x → n ( \g → ( \h → h (g f) ) ) ( \u → x ) ( \u → u ) ) ) ) ( \f → ( \x → x ) )</em><br>
+⇒  <em>( \f → ( \x → ( \f → ( \x → x ) ) ( \g → ( \h → h (g f) ) ) ( \u → x ) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \x → x ) ( \u → x ) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → ( \u → x ) ( \u → u ) ) )</em><br>
+⇒  <em>( \f → ( \x → x ) )</em><br>
+⇒  <em><strong>0</strong></em></p>
+</blockquote>
+
+<h2>Encoding Pairs</h2>
+
+<p>A pair is just a packaging up of two terms in such a way that we can recover the two terms later on.</p>
+
+<blockquote>
+<p><em><strong>pair</strong></em> =  <em>( \x → ( \y → ( \s → s x y ) ) )</em></p>
+
+<p><em><strong>first</strong></em> =  <em>( \p → p ( \x → ( \y → x ) ) )</em></p>
+
+<p><em><strong>second</strong></em> =  <em>( \p → p ( \x → ( \y → y ) ) )</em></p>
+</blockquote>
+
+<p>Intuitively, a pair &quot;object&quot; obtained by pairing an <em>x</em> and a <em>y</em> is a function that accepts a selector <em>s</em> and can apply that selector <em>s</em> to both <em>x</em> and <em>y</em>. Passing the right selector will return <em>x</em>, and passing the right selector will return <em>y</em>. Definitions <em><strong>first</strong></em> and <em><strong>second</strong></em> pass the appropriate selector to the pair to extract the first (resp., second) component of the pair.</p>
+
+<p>It is easy to check that this works as advertised:</p>
+
+<blockquote>
+<p><em><strong>first</strong> (<strong>pair</strong> a b)</em><br>
+⇒  <em>( \p → p ( \x → ( \y → x ) ) ) (( \x → ( \y → ( \s → s x y ) ) ) a b)</em><br>
+⇒  <em>( \p → p ( \x → ( \y → x ) ) ) (( \y → ( \s → s a y ) ) b)</em><br>
+⇒  <em>( \p → p ( \x → ( \y → x ) ) ) ( \s → s a b )</em><br>
+⇒  <em>( \s → s a b ) ( \x → ( \y → x ) )</em><br>
+⇒  <em>( \x → ( \y → x ) ) a b</em><br>
+⇒  <em>( \y → a ) b</em><br>
+⇒  <em>a</em></p>
+
+<p><em><strong>second</strong> (<strong>pair</strong> a b)</em><br>
+⇒  <em>( \p → p ( \x → ( \y → y ) ) ) (( \x → ( \y → ( \s → s x y ) ) ) a b)</em><br>
+⇒  <em>( \p → p ( \x → ( \y → y ) ) ) (( \y → ( \s → s a y ) ) b)</em><br>
+⇒  <em>( \p → p ( \x → ( \y → y ) ) ) ( \s → s a b )</em><br>
+⇒  <em>( \s → s a b ) ( \x → ( \y → y ) )</em><br>
+⇒  <em>( \x → ( \y → y ) ) a b</em><br>
+⇒  <em>( \y → y ) b</em><br>
+⇒  <em>b</em></p>
+</blockquote>
+
+<p>It is an easy exercise to extend this encoding to <em>n</em>-tuples for any <em>n</em>. It is a slightly more
+interesting exercise to extend this encoding to lists, that is, structures that can record an
+arbitrary number of elements.</p>
+
+<h2>A convenient abbreviation</h2>
+
+<p>To simplify the presentation of more complex terms, we can introduce a convenient abbreviation. We
+write</p>
+
+<blockquote>
+<p><em>( \x y → M )  = ( \x → ( \y → M ) )</em><br>
+<em>( \x y z → M )  = ( \x → ( \y → ( \z → M ) ) )</em><br>
+<em>( \x y z w → M ) = ( \x → ( \y → ( \z → ( \w → M ) ) ) )</em><br>
+...</p>
+</blockquote>
+
+<p>Working through the abbreviations, this means that we have simplifications:</p>
+
+<blockquote>
+<p><em>( \x y → M ) N ⇒ ( \y → M {N / x} )</em><br>
+<em>( \x y z → M ) N ⇒ ( \y z → M {N / x} )</em><br>
+...</p>
+</blockquote>
+
+<p>This, of course, is just like currying in OCaml. I may or may not use this abbreviation.</p>
+
+</div>
+  

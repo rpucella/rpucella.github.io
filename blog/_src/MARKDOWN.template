@@ -1,0 +1,50 @@
+<script>
+  document.title = {{ .Title }} + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">{{ .Title }}</h3>
+    
+    <div class="date">{{ .FormattedDate }}</div>
+    
+    <div class="body">
+      {{ .Body }}
+    </div>
+
+    <div class="human">
+      This post was written entirely by a human.
+    </div>
+
+    {{if .Reading}}
+      <div class="reading">{{ .Reading }}</div>
+    {{end}}
+
+    <hr>
+
+    <div class="navigation">
+    {{if .PrevUrl}}
+      <div class="previous">
+        <span>&lsaquo; Previous</span>
+        <a href="{{.PrevUrl}}">{{.PrevTitle}}</a>
+      </div>
+    {{else}}
+      &nbsp;
+    {{end}}
+
+    {{if .NextUrl}}
+      <div class="next">
+        <span>Next &rsaquo;</span>
+        <a href="{{.NextUrl}}">{{.NextTitle}}</a>
+      </div>
+    {{else}}
+      &nbsp;
+    {{end}}
+    </div>
+
+  </article>
+  
+</main>

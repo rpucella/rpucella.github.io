@@ -118,8 +118,31 @@ article.post div.body h1 {
     color: rgb(0,0,0);
 }
 
+article.post div.navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+article.post div.previous {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 0 1 auto;
+    text-align: start;
+}
+
+article.post div.next {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex: 0 1 auto;
+    text-align: end;
+}
+
 article.post div.reading {
-    margin: 24px 0;
+    margin: 8px 0;
     font-size: 0.9em;
     width: 100%;
     text-align: right;
@@ -132,7 +155,7 @@ article.post div.reading::before {
 }
 
 article.post div.human {
-    margin: 16px 0;
+    margin: 36px 0 0 0;
     font-size: 0.9em;
     text-align: right;
     font-style: italic;
@@ -177,8 +200,8 @@ article.post tt, code {
 
 article.post blockquote {
     margin: 0;
-    border-left: 4px solid #333333;
-    border-right: 4px solid #333333;
+    border-left: 4px solid #666666;
+    border-right: 4px solid #666666;
     padding: 8px 32px;
     font-style: italic;
     background-color: #eeeeee;
@@ -247,6 +270,7 @@ article.news div.title {
 
 hr {
     margin: 48px 0;
+    opacity: 0.2;
 }
 
 
