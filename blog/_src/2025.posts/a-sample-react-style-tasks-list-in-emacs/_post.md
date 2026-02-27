@@ -43,7 +43,7 @@ The `tasks` command sets up the buffer and the state variable:
           ;; Structure of a task.
           (list :name name :completed nil))
 
-The state `**state**` defined via `defstate` has two state properties: the list of tasks `:tasks` and the filtering requested `:show`. State property `:show` admits three possible values: `:all` (to show all tasks), `:active` (to show only active non-completed, tasks), and `:completed` (to show only completed tasks). A task is represented by a property list with a `:name` and a `:completed` flag indicating whether the task has been completed. Function `tasks--new-task` creates a new active task with a given name. The buffer is initialized with Two sample tasks for illustration purposes.
+The state `**state**` defined via `defstate` has two state properties: the list of tasks `:tasks` and the filtering requested `:show`. State property `:show` admits three possible values: `:all` (to show all tasks), `:active` (to show only active non-completed, tasks), and `:completed` (to show only completed tasks). A task is represented by a property list with a `:name` and a `:completed` flag indicating whether the task has been completed. Function `tasks--new-task` creates a new active task with a given name. The buffer is initialized with two sample tasks for the sake of illustration.
 
 The implementation of `setstate` ensures that once we initialize the state variable at the end of function `tasks`, a render of the buffer via the registered render function `tasks--render` is triggered:
 

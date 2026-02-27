@@ -53,7 +53,7 @@
       (list :name name :completed nil))
 </code></pre>
 
-<p>The state <code>**state**</code> defined via <code>defstate</code> has two state properties: the list of tasks <code>:tasks</code> and the filtering requested <code>:show</code>. State property <code>:show</code> admits three possible values: <code>:all</code> (to show all tasks), <code>:active</code> (to show only active non-completed, tasks), and <code>:completed</code> (to show only completed tasks). A task is represented by a property list with a <code>:name</code> and a <code>:completed</code> flag indicating whether the task has been completed. Function <code>tasks--new-task</code> creates a new active task with a given name. The buffer is initialized with Two sample tasks for illustration purposes.</p>
+<p>The state <code>**state**</code> defined via <code>defstate</code> has two state properties: the list of tasks <code>:tasks</code> and the filtering requested <code>:show</code>. State property <code>:show</code> admits three possible values: <code>:all</code> (to show all tasks), <code>:active</code> (to show only active non-completed, tasks), and <code>:completed</code> (to show only completed tasks). A task is represented by a property list with a <code>:name</code> and a <code>:completed</code> flag indicating whether the task has been completed. Function <code>tasks--new-task</code> creates a new active task with a given name. The buffer is initialized with two sample tasks for the sake of illustration.</p>
 
 <p>The implementation of <code>setstate</code> ensures that once we initialize the state variable at the end of function <code>tasks</code>, a render of the buffer via the registered render function <code>tasks--render</code> is triggered:</p>
 
