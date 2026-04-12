@@ -3,7 +3,9 @@ title: Remembering Joe Halpern
 date: 2026-02-21
 reading: England, England (by Julian Barnes)
 prevTitle: Thoughts On MCP Servers
+nextTitle: Previous/Next Posts In WebGen
 prevUrl: ../../2026/02-thoughts-on-mcp-servers
+nextUrl: ../../2026/04-previous-next-posts-in-webgen
 ---
 
 [Joe Halpern passed away](https://news.cornell.edu/stories/2026/02/joe-halpern-towering-computer-scientist-and-mentor-dies-72) in Ithaca on Friday February 13. Joe was my Ph.D. advisor at Cornell twenty-five years ago, and I'm still coming to grips with his death.

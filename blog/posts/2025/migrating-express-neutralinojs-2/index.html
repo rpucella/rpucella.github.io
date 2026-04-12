@@ -153,7 +153,7 @@ request can wait for a message that has a matching ID and ignore all others.</p>
 
 <p>In the code above, you see that the JSON object received has a field <code>callId</code>, which is how that
 unique ID will be passed by the frontend code. That <code>callId</code> is attached to the response before it is
-sent back. The sample code from <a href="https://small-tech.org/">Small Technology Foundation</a>'s <a href="https://github.com/small-tech/site.js-websocket-rpc-example">WebSocket RPC example</a> was an an
+sent back. The sample code from <a href="https://small-tech.org/">Small Technology Foundation</a>'s <a href="https://github.com/small-tech/site.js-websocket-rpc-example">WebSocket RPC example</a> was an
 inspiration here.</p>
 
 <p>To round up the description of the server, note that we still need the &quot;catch-all&quot; endpoint to serve
@@ -228,7 +228,7 @@ unique IDs we'll need to associate to every sent message.</p>
 
 <p>Second, the <code>_fetch()</code> method, which is used by the three API methods <code>fetchImages</code>, <code>fetchImage</code>, and <code>addImage</code>, does the bulk of the work. It adds a <code>callId</code> to the JSON object representing the request (incrementing the <code>callId</code> for the next call) and sends the stringified JSON object over the WebSocket. It also sets up a dedicated event listener <em>for the specific <code>callId</code> that went out</em> that waits for a message back from the WebSocket. When a message arrives, the listener checks if the <code>callId</code> matches the <code>callId</code> of the message it is associated with: if it's a match, then the message is taken to be the response and the <code>_fetch()</code> can return. If it's not a match, the message is discarded. (Don't worry — if that message was a response to some other request, then <em>that</em> request's event listener will process the response.) To prevent a memory leak, when a response to a request is received, the event listener associated with the request self-destructs.</p>
 
-<p>Perhaps astonishingly, this works. I'm not sure how expensive it is to keep a long-running WebSocket
+<p>Perhaps astonishingly, this works. I'm not sure how expensive it would be to keep a long-running WebSocket
 open for each user session if we were to put this server online, but since this is meant as a
 step towards a single-user desktop application, I'm not particularly worried about this.</p>
 

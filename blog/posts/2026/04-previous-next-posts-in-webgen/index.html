@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = "Previous/Next Posts In WebGen" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Previous/Next Posts In WebGen</h3>
+    
+    <div class="date">Apr 11, 2026</div>
+    
+    <div class="body">
+      <p>Two features have been missing from my static site generator WebGen (the one I've created to generate the site you're currently reading): connecting blog posts together with <em>Previous post</em> and <em>Next post</em> buttons, and tagging blog posts. This post is about the first feature, which I implemented recently. I'm going to work on tagging next and describe that in a future post.</p>
+
+<p>To a first approximation, linking posts through <em>Previous</em> and <em>Next</em> buttons is pretty straightforward: each post needs the concept of the post that precedes it and the post that follows it. The only challenge is how to integrate it with the philosophy of the broader static site generator in such a way that I do not need to manually update two other posts when I upload a new post.</p>
+
+<p>If you dig into my <a href="/blog/posts/2023/static-web-site-generation-2/">original descriptions of WebGen</a> you'll find that the tool is based on <em>cascading</em> transformations. The core transformation consists of combining <code>.content</code> files in <code>_src/</code> directories along with templates to create the final <code>.html</code> files. Additional transformations can be defined to transform files of type <em>X</em> into files of type <em>Y</em> in those <code>_src</code> directories, for various instances of <code>X</code> and <code>Y</code>. For example, transforming a <code>.md</code> markdown file into a <code>.content</code> file, etc. The cascade means that an <code>.md</code> file gets transformed into a <code>.content</code> file, which itself gets converted into an <code>.html</code> file. If there was another transformation to take a file of type <code>Z</code> into an <code>.md</code> file, then that transformation would naturally lead to a file of type <code>Z</code> ultimately being converted into an <code>.html</code> file via the obvious sequence of transformations <code>Z</code> ⟶ markdown ⟶ content ⟶ html. If you've ever used <a href="https://www.gnu.org/software/make/manual/html_node/Introduction.html">makefiles</a> then none of this is new.</p>
+
+<p>Blog posts are <a href="/blog/posts/2023/static-web-site-generation-3/">handled in the same way</a>. A preliminary transformation takes all posts stored in subdirectories of <code>/blog/_src/</code> (where each such subdirectory contains a <code>_post.md</code> file with the content of the post in markdown format), and copy all those subdirectories into <code>/blog/posts/</code> subdirectories and creating in each a <code>_src/</code> subdirectory containing an <code>index.md</code> file filled with the content of the original <code>_post.md</code> file. Once that transformation is done, the normal markdown ⟶ content ⟶ html cascade kicks in, turning the markdown post into an HTML page containing the text of the post, embedded in the website.</p>
+
+<p>Two things are key for my support of <em>Previous</em> and <em>Next</em> buttons on each post:this framework:</p>
+
+<ul>
+<li><p>There is a loop in the original &quot;copy posts to <code>/blog/posts/</code>&quot; phase that loops through every post subdirectory in <code>/blog/_src/</code> in order to copy them to <code>/blog/posts</code>.</p></li>
+
+<li><p>Each <code>_post.md</code> file (which becomes <code>_src/index.md</code> in each target post directory) uses <em>metadata</em> to handle information such as title and publish date to show appropriately on the post page; for example, this is the metadata info for the current post you're reading:</p>
+
+<pre><code>---
+title: Previous/Next Posts In WebGen
+date: 2026-04-11
+reading: Arthur &amp; George (by Julian Barnes)
+---
+</code></pre></li>
+</ul>
+
+<p>The markdown ⟶ content transformation knows how to take that metadata and inject it into the content file, controlled via a <code>MARKDOWN.template</code> template file.</p>
+
+<p>Why is this important? Well, creating the <code>.content</code> file for each post is done separately for each post from the markdown file of the post via the markdown ⟶ content transformation. Since the <em>Previous</em> and <em>Next</em> button need to be created in each <code>.content</code> file, they must already be present in each individual markdown file. But a markdown file by itself doesn't know which post comes before or after it. That information is only known when we loop over all posts in the <code>/blog/_src</code> directory. We somehow need to put that information into the markdown file that gets created during the &quot;copy posts to <code>/blog/posts</code>&quot; loop.</p>
+
+<p>This leads to the following algorithm to perform the &quot;copy posts to <code>/blog/posts/</code>&quot; phase: do a first scan to accumulate the posts <em>in order</em> so that we can determine for each posts which precedes it and which follows it, then loop over all posts to copy the individual markdown files in the appropriate <code>_src/</code> subdirectories in <code>/blog/posts/</code>, making sure to add new metadata field in each markdown file with links to the previous and next posts. More precisely:</p>
+
+<ol>
+<li>Collects all the posts in one list, ordered by date, most recent first.</li>
+<li>Go through every <code>_src/{x}.posts/{y}</code> directory, copy them to their destination folder in <code>/blog/posts/</code>, adding the previous and next post information from the collected posts list.</li>
+</ol>
+
+<p>(A final third step involves using the collected posts list to create a table of content (summary) page with all the post titles. This is independent of any <em>Previous</em> and <em>Next</em> buttons handling.)</p>
+
+<p>To show the buttons on a post page, the <code>MARKDOWN.template</code> is adjusted to take the new fields into account:</p>
+
+<pre><code>&lt;main&gt;
+  &lt;article class=&quot;post&quot;&gt;
+
+    &lt;h1 class=&quot;title&quot;&gt;{{ .Title }}&lt;/h3&gt;
+    &lt;div class=&quot;date&quot;&gt;{{ .FormattedDate }}&lt;/div&gt;
+    &lt;div class=&quot;body&quot;&gt;
+      {{ .Body }}
+    &lt;/div&gt;
+    &lt;div class=&quot;human&quot;&gt;
+      This post was written entirely by a human.
+    &lt;/div&gt;
+    {{if .Reading}}
+      &lt;div class=&quot;reading&quot;&gt;{{ .Reading }}&lt;/div&gt;
+    {{end}}
+
+    &lt;hr&gt;
+
+    &lt;div class=&quot;navigation&quot;&gt;
+    {{if .PrevUrl}}
+      &lt;div class=&quot;previous&quot;&gt;
+        &lt;span&gt;&amp;lsaquo; Previous&lt;/span&gt;
+        &lt;a href=&quot;{{.PrevUrl}}&quot;&gt;{{.PrevTitle}}&lt;/a&gt;
+      &lt;/div&gt;
+    {{else}}
+      &amp;nbsp;
+    {{end}}
+
+    {{if .NextUrl}}
+      &lt;div class=&quot;next&quot;&gt;
+        &lt;span&gt;Next &amp;rsaquo;&lt;/span&gt;
+        &lt;a href=&quot;{{.NextUrl}}&quot;&gt;{{.NextTitle}}&lt;/a&gt;
+      &lt;/div&gt;
+    {{else}}
+      &amp;nbsp;
+    {{end}}
+    &lt;/div&gt;
+
+  &lt;/article&gt;
+&lt;/main&gt;
+</code></pre>
+
+<p>(It's the <code>div class=&quot;navigation&quot;</code> bit...)</p>
+
+<p>And that's about it. All the fun is is in the &quot;copy posts to <code>/blog/posts/</code>&quot; phase.</p>
+
+<p>Here's the full code to process posts, if you are curious. It splits neatly into the three steps above: collect posts, loop through post directories to copy posts to their final target subdirectory, and build the table of content (summary) page.</p>
+
+<pre><code>func ProcessPostFiles(rootPath, srcDir string, force bool) error {
+    srcPath := filepath.Join(rootPath, srcDir)
+
+    // 1. Find all posts folder
+    postsDirs, err := findAllPostsDirectories(srcPath)
+    if err != nil {
+        return fmt.Errorf(&quot;cannot read _src directory: %w&quot;, err)
+    }
+    if len(postsDirs) == 0 {
+        // No posts directories - skip.
+        return nil
+    }
+    // Get full list of posts.
+    posts, err := extractAllPosts(srcPath, postsDirs)
+    if err != nil {
+        return err
+    }
+    if len(posts) == 0 {
+        // Nothing to do.
+        return nil
+    }
+    sort.Sort(byDate(posts))
+    // Patch previous/next.
+    // Remember, we're going from recent to old!
+    for i, p := range posts {
+        if i &gt; 0 {
+            pp := posts[i-1]
+            p.NextUrl = filepath.Join(&quot;..&quot;, &quot;..&quot;, fmt.Sprintf(&quot;%d&quot;, pp.Year), pp.EntryName)
+            p.NextTitle = pp.Title
+        }
+        if i &lt; len(posts)-1 {
+            pp := posts[i+1]
+            p.PrevUrl = filepath.Join(&quot;..&quot;, &quot;..&quot;, fmt.Sprintf(&quot;%d&quot;, pp.Year), pp.EntryName)
+            p.PrevTitle = pp.Title
+        }
+    }
+    postPath := filepath.Join(rootPath, POSTDIR)
+    anyPostUpdated := false
+
+    // 2. Copy post folders.
+    // ...Skipped... code to clear out /post folder completely.
+    for _, p := range posts {
+        srcKey := filepath.Join(fmt.Sprintf(&quot;%d.posts&quot;, p.Year), p.EntryName)
+        tgtKey := filepath.Join(fmt.Sprintf(&quot;%d&quot;, p.Year), p.EntryName)
+        // Copy content of folder YYYY.posts/entry-name.
+        // Do not copy subfolders.
+        posture's, err := os.ReadDir(filepath.Join(srcPath, srcKey))
+        if err != nil {
+            log.Printf(&quot;error: %s\n&quot;, err)
+            continue
+        }
+        srcPaths := make([]string, 0, len(postEntries))
+        dstPaths := make([]string, 0, len(postEntries))
+        for _, f := range postEntries {
+            if !f.IsDir() {
+                srcPath := filepath.Join(srcPath, srcKey, f.Name())
+                dstPath := filepath.Join(postPath, tgtKey, f.Name())
+                if f.Name() == POSTMD {
+                    dstPath = filepath.Join(postPath, tgtKey, SRCDIR, &quot;index.md&quot;)
+                }
+                srcPaths = append(srcPaths, srcPath)
+                dstPaths = append(dstPaths, dstPath)
+            }
+        }
+        needsUpdating, err := isAnyFileNeedsUpdating(srcPaths, dstPaths)
+        if err != nil {
+            return err
+        }
+        // Check if metadata changed!
+        indexPath := filepath.Join(postPath, tgtKey, SRCDIR, &quot;index.md&quot;)
+        metadata, _, err := readMarkdownFile(indexPath)
+        if err != nil &amp;&amp; !errors.Is(err, os.ErrNotExist) {
+            return fmt.Errorf(&quot;cannot access index.md file: %w&quot;, err)
+        } else if err == nil {
+            // Index file exists.
+            needsUpdating = needsUpdating || (metadata.PrevTitle != p.PrevTitle)
+            needsUpdating = needsUpdating || (metadata.PrevUrl != p.PrevUrl)
+            needsUpdating = needsUpdating || (metadata.NextTitle != p.NextTitle)
+            needsUpdating = needsUpdating || (metadata.NextUrl != p.NextUrl)
+        }
+        if !needsUpdating {
+            continue
+        }
+        if !anyPostUpdated {
+            // First post we're updating, so show the header.
+            log.Println(rootPath)
+            anyPostUpdated = true
+        }
+        for _, f := range postEntries {
+            if !f.IsDir() {
+                srcPath := filepath.Join(srcPath, srcKey)
+                srcName := f.Name()
+                dstPath := filepath.Join(POSTDIR, tgtKey)
+                dstName := f.Name()
+                if err := os.MkdirAll(filepath.Join(postPath, tgtKey), 0755); err != nil {
+                    log.Printf(&quot;error: %s\n&quot;, err)
+                    continue
+                }
+                // Do something different for the main post file - add next/previous metadata.
+                if f.Name() == POSTMD {
+                    if err := os.MkdirAll(filepath.Join(rootPath, dstPath, SRCDIR), 0755); err != nil {
+                        log.Printf(&quot;error: %s\n&quot;, err)
+                        continue
+                    }
+                    metadata, body, err := readMarkdownFile(filepath.Join(srcPath, srcName))
+                    if err != nil {
+                        log.Printf(&quot;error: %s\n&quot;, err)
+                        continue
+                    }
+                    metadata.PrevTitle = p.PrevTitle
+                    metadata.NextTitle = p.NextTitle
+                    metadata.PrevUrl = p.PrevUrl
+                    metadata.NextUrl = p.NextUrl
+                    dst := filepath.Join(rootPath, dstPath, SRCDIR, &quot;index.md&quot;)
+                    err = writeMarkdownFile(dst, metadata, body)
+                    if err != nil {
+                        log.Printf(&quot;error: %s\n&quot;, err)
+                        continue
+                    }
+                } else {
+                    fsrc, err := os.Open(filepath.Join(srcPath, srcName))
+                    defer fsrc.Close()
+                    if err != nil {
+                        log.Printf(&quot;error: %s\n&quot;, err)
+                        continue
+                    }
+                    fdst, err := os.Create(filepath.Join(rootPath, dstPath, dstName))
+                    defer fdst.Close()
+                    if err != nil {
+                        log.Printf(&quot;error: %s\n&quot;, err)
+                        continue
+                    }
+                    if _, err := io.Copy(fdst, fsrc); err != nil {
+                        log.Printf(&quot;error: %s\n&quot;, err)
+                        continue
+                    }
+                }
+            }
+        }
+        log.Printf(&quot;  =&gt; %s\n&quot;, filepath.Join(POSTDIR, tgtKey))
+    }
+
+    // 3. Construct summary.
+    // ...Skipped...
+
+    return nil
+}
+</code></pre>
+
+<p>The full code is in this file in the git repository: <a href="https://github.com/rpucella/webgen/blob/main/internal/core/posts.go"><code>internal/core/posts.go</code></a>.</p>
+
+    </div>
+
+    <div class="human">
+      This post was written entirely by a human.
+    </div>
+
+    
+      <div class="reading">Arthur &amp; George (by Julian Barnes)</div>
+    
+
+    <hr>
+
+    <div class="navigation">
+    
+      <div class="previous">
+        <span>&lsaquo; Previous</span>
+        <a href="../../2026/03-remembering-joe-halpern">Remembering Joe Halpern</a>
+      </div>
+    
+
+    
+      &nbsp;
+    
+    </div>
+
+  </article>
+  
+</main>
+
+    
+  </body>
+  
+</html>

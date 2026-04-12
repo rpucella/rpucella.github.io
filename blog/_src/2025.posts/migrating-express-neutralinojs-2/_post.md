@@ -102,7 +102,7 @@ request can wait for a message that has a matching ID and ignore all others.
 
 In the code above, you see that the JSON object received has a field `callId`, which is how that
 unique ID will be passed by the frontend code. That `callId` is attached to the response before it is
-sent back. The sample code from [Small Technology Foundation](https://small-tech.org/)'s [WebSocket RPC example](https://github.com/small-tech/site.js-websocket-rpc-example) was an an
+sent back. The sample code from [Small Technology Foundation](https://small-tech.org/)'s [WebSocket RPC example](https://github.com/small-tech/site.js-websocket-rpc-example) was an 
 inspiration here.
 
 To round up the description of the server, note that we still need the "catch-all" endpoint to serve
@@ -176,7 +176,7 @@ unique IDs we'll need to associate to every sent message.
 
 Second, the `_fetch()` method, which is used by the three API methods `fetchImages`, `fetchImage`, and `addImage`, does the bulk of the work. It adds a `callId` to the JSON object representing the request (incrementing the `callId` for the next call) and sends the stringified JSON object over the WebSocket. It also sets up a dedicated event listener _for the specific `callId` that went out_ that waits for a message back from the WebSocket. When a message arrives, the listener checks if the `callId` matches the `callId` of the message it is associated with: if it's a match, then the message is taken to be the response and the `_fetch()` can return. If it's not a match, the message is discarded. (Don't worry — if that message was a response to some other request, then _that_ request's event listener will process the response.) To prevent a memory leak, when a response to a request is received, the event listener associated with the request self-destructs.
 
-Perhaps astonishingly, this works. I'm not sure how expensive it is to keep a long-running WebSocket
+Perhaps astonishingly, this works. I'm not sure how expensive it would be to keep a long-running WebSocket
 open for each user session if we were to put this server online, but since this is meant as a
 step towards a single-user desktop application, I'm not particularly worried about this.
 
