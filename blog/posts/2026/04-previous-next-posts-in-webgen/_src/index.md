@@ -3,7 +3,9 @@ title: Previous/Next Posts In WebGen
 date: 2026-04-11
 reading: Arthur & George (by Julian Barnes)
 prevTitle: Remembering Joe Halpern
+nextTitle: On Web Pages Versus Desktop Apps Design
 prevUrl: ../../2026/03-remembering-joe-halpern
+nextUrl: ../../2026/05-web-pages-vs-desktop-apps
 ---
         
 Two features have been missing from my static site generator WebGen (the one I've created to generate the site you're currently reading): connecting blog posts together with _Previous post_ and _Next post_ buttons, and tagging blog posts. This post is about the first feature, which I implemented recently. I'm going to work on tagging next and describe that in a future post.

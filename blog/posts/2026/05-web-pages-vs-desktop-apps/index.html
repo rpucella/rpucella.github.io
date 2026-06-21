@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = "On Web Pages Versus Desktop Apps Design" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">On Web Pages Versus Desktop Apps Design</h3>
+    
+    <div class="date">Jun 20, 2026</div>
+    
+    <div class="body">
+      <p>I had a realization the other day while designing a simple web app at work. The realization is not profound, nor is it new, but it made me pause and think a bit more deeply about what I was doing. In the end, I went with my original design, but the realization has been noted and I will have to give it some attention in the future. This blog post is the first such attention I'm giving it, while I digest the implications.</p>
+
+<p>The realization is right there in the title. When designing an app, there are two possible principles that I could follow: I can either design the app as though it was an interactive web page, or I could design it like it was a desktop app.</p>
+
+<p>What's the difference? Basically, a web page takes as a starting point the notion of a <em>page</em>, an artifact with a fixed width but an arbitrary height, while a desktop app takes as a starting point a viewport (the app window) with a fixed width and a fixed height.</p>
+
+<p>(I know, I know, it's really a spectrum. I am just identifying the useful end points on that spectrum.)</p>
+
+<p>To illustrate the difference, here's a toy app with a header, a vertical panel with a selection of documents, and an area to show the document selected. The document is generally taller than the available height of the window. In a web page design, the height of the document tends to translate to the available height of the page, and the scroll bar would appear on the page as a whole, scrolling everything up. (Click on the image to navigate to the live page.)</p>
+
+<p><center><a href="./web-app-example.html"><img src="./web-app-example.png" width="75%"></a></center></p>
+
+<p>This is a standard web app design you often find online. You can use <code>position: sticky;</code> to control, for example, whether the header or the selector pane on the right remains in view while scrolling. Making everything &quot;sticky&quot; leads to what I call the desktop app design, where every component is fixed within the available width and height of the browser window, and scrolling is restricted within specific components. The window <em>as a whole</em> does not scroll. (Click on the image to navigate to the live page.)</p>
+
+<p><center><a href="./desktop-app-example.html"><img src="./desktop-app-example.png" width="75%"></a></center></p>
+
+<p>In the end, the functionality is available under both designs, and is not <em>that</em> different. Both app work in the same way, and even implementation-wise, they are not that different. The difference is in the layout, and a perhaps undefinable distinction in the quality of the user experience. And, ultimately, the most subjective of all distinctions: some users will prefer the first, others will prefer the second.</p>
+
+    </div>
+
+    <div class="human">
+      This post was written entirely by a human.
+    </div>
+
+    
+      <div class="reading">Mon Frère (by Daniel Pennac)</div>
+    
+
+    <hr>
+
+    <div class="navigation">
+    
+      <div class="previous">
+        <span>&lsaquo; Previous</span>
+        <a href="../../2026/04-previous-next-posts-in-webgen">Previous/Next Posts In WebGen</a>
+      </div>
+    
+
+    
+      &nbsp;
+    
+    </div>
+
+  </article>
+  
+</main>
+
+    
+  </body>
+  
+</html>
