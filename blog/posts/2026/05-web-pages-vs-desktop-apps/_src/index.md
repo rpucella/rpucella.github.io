@@ -3,7 +3,9 @@ title: On Web Pages Versus Desktop Apps Design
 date: 2026-06-20
 reading: Mon Frère (by Daniel Pennac)
 prevTitle: Previous/Next Posts In WebGen
+nextTitle: A Box Layout Component For Desktop Apps Design
 prevUrl: ../../2026/04-previous-next-posts-in-webgen
+nextUrl: ../../2026/06-box-layout
 ---
 
 I had a realization the other day while designing a simple web app at work. The realization is not profound, nor is it new, but it made me pause and think a bit more deeply about what I was doing. In the end, I went with my original design, but the realization has been noted and I will have to give it some attention in the future. This blog post is the first such attention I'm giving it, while I digest the implications.
