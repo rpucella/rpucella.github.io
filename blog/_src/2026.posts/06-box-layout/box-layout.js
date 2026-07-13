@@ -19,8 +19,14 @@ function boxLayoutInit() {
     elt.style.width = `${width}px`
     elt.style.height = `${height}px`
     if (elt.classList.contains("box-vt")) {
+      const style = getComputedStyle(elt)
+      height = height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom)
+      width = width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
       refreshVt(elt, width, height)
     } else if (elt.classList.contains("box-hz")) {
+      const style = getComputedStyle(elt)
+      height = height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom)
+      width = width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
       refreshHz(elt, width, height)
     } 
   }
@@ -92,11 +98,11 @@ function boxLayoutInit() {
     const innerWidth =
           elt.clientWidth -
           parseFloat(style.paddingLeft) -
-          parseFloat(style.paddingRight);
+          parseFloat(style.paddingRight)
     const innerHeight =
           elt.clientHeight -
           parseFloat(style.paddingTop) -
-          parseFloat(style.paddingBottom);
+          parseFloat(style.paddingBottom)
     return {innerWidth, innerHeight, height: elt.offsetHeight, width: elt.offsetWidth}
   }
 

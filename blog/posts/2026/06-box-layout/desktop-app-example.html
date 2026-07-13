@@ -23,7 +23,6 @@
       }
 
       div.tab {
-          padding: 8px 16px;
           font-size: 120%;
       }
 
@@ -43,11 +42,10 @@
       div.title {
           font-size: 150%;
           font-weight: bold;
-          padding: 16px;
       }
 
       div.body {
-          padding: 16px 16px 80px 16px;
+          padding-bottom: 80px;
           overflow-y: auto;
           padding-bottom: 80px;
       }
@@ -70,7 +68,7 @@
       <div class="header" data-max-height="80">
         Desktop App Example
       </div>
-      <div class="box-hz">
+      <div class="box-hz" style="padding: 16px;">
         <div class="box-vt">
           <div class="title" data-max-height="60">
             Document 1
@@ -153,10 +151,8 @@
             &gt; Document 3
           </div>
           <div data-min-height="40"></div>
-          <div style="padding: 16px;" data-max-height="120">
-            <div class="info">
-              For additional information, click here.
-            </div>
+          <div class="info" data-max-height="80">
+            For additional information, click here.
           </div>
         </div>
       </div>
