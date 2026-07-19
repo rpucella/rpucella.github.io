@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+ <head>
+  <title>Box Layout Test</title>
+  <meta charset='utf-8'>
+  
+  <link rel="stylesheet" href="./box-layout.css">
+  <script src="./box-layout.js"></script>
+  
+  <script>
+    window.onload = boxLayoutInit
+  </script>
+  
+ </head>
+ <body style="margin: 40px;">
+   <div class="box-layout"  style="height: 600px; width: 600px; background-color: #cccccc;">
+     
+     <div class="box-hz" style="border: 1px solid #ffffff;" data-height="200">
+       <div class="box-vt" style="border: 1px solid #ffffff;" data-width="200">
+         <div class="box-vt box-align-left">
+           <div class="box-hz box-align-top" data-width="100">
+             <div style="background-color: #333333;" data-height="50" data-width="50"></div>
+             <div style="background-color: #888888;" data-height="150" data-width="50"></div>
+           </div>
+         </div>
+       </div>
+       <div class="box-vt" style="border: 1px solid #ffffff;" data-width="200">
+         <div class="box-vt box-align-center" data-width="200">
+           <div class="box-hz box-align-top" data-width="100">
+             <div style="background-color: #333333;" data-height="50" data-width="50"></div>
+             <div style="background-color: #888888;" data-height="150" data-width="50"></div>
+           </div>
+         </div>
+       </div>
+       <div class="box-vt" style="border: 1px solid #ffffff;" data-width="200">
+         <div class="box-vt box-align-right" data-width="200">
+           <div class="box-hz box-align-top" data-width="100">
+             <div style="background-color: #333333;" data-height="50" data-width="50"></div>
+             <div style="background-color: #888888;" data-height="150" data-width="50"></div>
+           </div>
+         </div>
+       </div>
+     </div>
+
+     <div class="box-hz" style="border: 1px solid #ffffff;" data-height="200">
+       <div class="box-vt" style="border: 1px solid #ffffff;" data-width="200">
+         <div class="box-vt box-align-left">
+           <div class="box-hz box-align-center" data-width="100">
+             <div style="background-color: #333333;" data-height="50" data-width="50"></div>
+             <div style="background-color: #888888;" data-height="150" data-width="50"></div>
+           </div>
+         </div>
+       </div>
+       <div class="box-vt" style="border: 1px solid #ffffff;" data-width="200">
+         <div class="box-vt box-align-center" data-width="200">
+           <div class="box-hz box-align-center" data-width="100">
+             <div style="background-color: #333333;" data-height="50" data-width="50"></div>
+             <div style="background-color: #888888;" data-height="150" data-width="50"></div>
+           </div>
+         </div>
+       </div>
+       <div class="box-vt" style="border: 1px solid #ffffff;" data-width="200">
+         <div class="box-vt box-align-right" data-width="200">
+           <div class="box-hz box-align-center" data-width="100">
+             <div style="background-color: #333333;" data-height="50" data-width="50"></div>
+             <div style="background-color: #888888;" data-height="150" data-width="50"></div>
+           </div>
+         </div>
+       </div>
+     </div>
+
+     <div class="box-hz" style="border: 1px solid #ffffff;" data-height="200">
+       <div class="box-vt" style="border: 1px solid #ffffff;" data-width="200">
+         <div class="box-vt box-align-left">
+           <div class="box-hz box-align-bottom" data-width="100">
+             <div style="background-color: #333333;" data-height="50" data-width="50"></div>
+             <div style="background-color: #888888;" data-height="150" data-width="50"></div>
+           </div>
+         </div>
+       </div>
+       <div class="box-vt" style="border: 1px solid #ffffff;" data-width="200">
+         <div class="box-vt box-align-center" data-width="200">
+           <div class="box-hz box-align-bottom" data-width="100">
+             <div style="background-color: #333333;" data-height="50" data-width="50"></div>
+             <div style="background-color: #888888;" data-height="150" data-width="50"></div>
+           </div>
+         </div>
+       </div>
+       <div class="box-vt" style="border: 1px solid #ffffff;" data-width="200">
+         <div class="box-vt box-align-right" data-width="200">
+           <div class="box-hz box-align-bottom" data-width="100">
+             <div style="background-color: #333333;" data-height="50" data-width="50"></div>
+             <div style="background-color: #888888;" data-height="150" data-width="50"></div>
+           </div>
+         </div>
+       </div>
+     </div>
+
+     
+   </div>
+
+
+ </body>
+</html>

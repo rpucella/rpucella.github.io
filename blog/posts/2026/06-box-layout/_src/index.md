@@ -3,7 +3,9 @@ title: A Box Layout Component For Desktop Apps Design
 date: 2026-07-12
 reading: The Only Story (by Julian Barnes)
 prevTitle: On Web Pages Versus Desktop Apps Design
+nextTitle: Alignment For Box Layout Component
 prevUrl: ../../2026/05-web-pages-vs-desktop-apps
+nextUrl: ../../2026/07-box-layout-alignment
 ---
 
 [Last time](/blog/posts/2026/05-web-pages-vs-desktop-apps/) I talked about using desktop app layouts for web applications, where the intuition is to use the browser viewport as the central design principle instead of the page that is the default for the web.
@@ -12,7 +14,7 @@ How do we support that sort of layout in a nicely generic way? Obviously we can 
 
 It has enough differences though that it is worth describing here, if only to examine an alternative approach to layout. The biggest difference is that a box layout takes the overall size of the area into account, especially the height. I implemented it as a small Javascript library with an accompanying CSS file, to illustrate in practice.
 
-Basically, a box layout is a widget that, given a height and width, wraps around other widgets, called box widget. A box widget is one of three kinds:
+Basically, a box layout is a widget that, given a height and width, wraps around other widgets, called box widgets. A box widget is one of three kinds:
 
 - a generic widget
 - a horizontal layout of box widgets

@@ -1,0 +1,37 @@
+div.box-layout {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+div.box-layout {
+    overflow: auto;
+}
+
+div.box-layout * {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+div.box-hz {
+    display: flex;
+    flex-direction: row;
+}
+
+div.box-vt{
+    display: flex;
+    flex-direction: column;
+}
+
+div.box-align-left, div.box-align-top {
+    align-items: flex-start;
+}
+
+div.box-align-center {
+    align-items: center;
+}
+
+div.box-align-right, div.box-align-bottom {
+    align-items: flex-end
+}    

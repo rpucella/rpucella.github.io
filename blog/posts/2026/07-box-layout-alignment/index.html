@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riccardo Pucella</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/main.css" type="text/css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </head>
+
+  <body>
+  
+    <nav>
+
+      
+
+      <input type="checkbox" />
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <ul>
+	<li id="home"><a href="/">Riccardo Pucella</a></li>
+	<li id="teaching"><a href="/courses">Teaching</a></li>
+	<li id="writing"><a href="/papers">Writing</a></li>
+ 	<li id="blogging"><a href="/blog">Blogging</a></li>
+      </ul>
+
+    </nav>
+
+    <script>
+  document.title = "Alignment For Box Layout Component" + ' — Riccardo Pucella'
+  document.querySelector("#blogging").classList.add("active")
+</script>
+
+<main>
+  
+  <article class="post">
+  
+    <h1 class="title">Alignment For Box Layout Component</h3>
+    
+    <div class="date">Jul 18, 2026</div>
+    
+    <div class="body">
+      <p>Last week I discussed one way to implement desktop-style user interfaces in a web context using a small <a href="/blog/posts/2026/06-box-layout">box layout widget</a> that, given a height and width, wraps around other widgets and lays them out either horizontally or vertically, in a nested fashion. Very much like flexbox, except optimized to fit within an given height and width where the size of nested widgets is allocated based on an algorithm that calculated a uniform height and width for all nested widget, subject to optional minimum and maximum specified height and width for all nested widgets.</p>
+
+<p>Historically, this is the kind of layout that goes back to classical UI widget library for desktop applications, such as the <a href="https://wiki.tcl-lang.org/page/pack">Tcl/Tk <code>pack</code> geometry manager</a>.</p>
+
+<p>I implemented that box layout widget for web pages through a set of CSS classes <code>box-layout</code>, <code>box-hz</code>, and <code>box-vt</code> and an associated Javascript file to run the the algorithm to allocate nested widgets heights and widths when the browser window resizes.</p>
+
+<p>One thing I forgot to put in is <em>alignment</em>. When laying out out a sequence of widgets horizontally, they can be lined up at their top edge or bottom edge, or they can be centered along their horizontal axis. Similarly, when laying out a sequence of widgets vertically, they can be lined up their left edge or right edge, or they can be centered along their vertical axis. Thankfully, that's easily remedied. Basically, the alignment can be a parameter of the horizontal and vertical layout annotations.</p>
+
+<p>In the CSS-based implementation, this amounts to adding classes to control the alignment: <code>box-align-top</code>, <code>box-align-bottom</code>, and <code>box-align-center</code> for horizontal layouts, and <code>box-align-left</code>, <code>box-align-right</code>, and the same <code>box-align-center</code> for vertical layouts. These classes are used in conjunction with the <code>box-hz</code> and <code>box-vt</code> classes.</p>
+
+<p>My implementation relies on flexbox for the underlying layout management, so these new classes just translate to a specific <code>align-items</code> property. Of course, for a different implementation, these would need to be handled differently.</p>
+
+<p>Here's the revised CSS file: <a href="./box-layout.css">box-layout.css</a>. The Javascript support file remains unchanged: <a href="./box-layout.js">box-layout.js</a></p>
+
+<p>Here is an example that shows the various alignments in action:</p>
+
+<p><center><img src="./example.png" width="75%"></center></p>
+
+<p>The code to produce it is straightforward, if repetitive:</p>
+
+<pre><code>&lt;div class=&quot;box-layout&quot;  style=&quot;height: 600px; width: 600px; background-color: #cccccc;&quot;&gt;
+
+     &lt;div class=&quot;box-hz&quot; style=&quot;border: 1px solid #ffffff;&quot; data-height=&quot;200&quot;&gt;
+       &lt;div class=&quot;box-vt&quot; style=&quot;border: 1px solid #ffffff;&quot; data-width=&quot;200&quot;&gt;
+         &lt;div class=&quot;box-vt box-align-left&quot;&gt;
+           &lt;div class=&quot;box-hz box-align-top&quot; data-width=&quot;100&quot;&gt;
+             &lt;div style=&quot;background-color: #333333;&quot; data-height=&quot;50&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+             &lt;div style=&quot;background-color: #888888;&quot; data-height=&quot;150&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+           &lt;/div&gt;
+         &lt;/div&gt;
+       &lt;/div&gt;
+       &lt;div class=&quot;box-vt&quot; style=&quot;border: 1px solid #ffffff;&quot; data-width=&quot;200&quot;&gt;
+         &lt;div class=&quot;box-vt box-align-center&quot; data-width=&quot;200&quot;&gt;
+           &lt;div class=&quot;box-hz box-align-top&quot; data-width=&quot;100&quot;&gt;
+             &lt;div style=&quot;background-color: #333333;&quot; data-height=&quot;50&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+             &lt;div style=&quot;background-color: #888888;&quot; data-height=&quot;150&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+           &lt;/div&gt;
+         &lt;/div&gt;
+       &lt;/div&gt;
+       &lt;div class=&quot;box-vt&quot; style=&quot;border: 1px solid #ffffff;&quot; data-width=&quot;200&quot;&gt;
+         &lt;div class=&quot;box-vt box-align-right&quot; data-width=&quot;200&quot;&gt;
+           &lt;div class=&quot;box-hz box-align-top&quot; data-width=&quot;100&quot;&gt;
+             &lt;div style=&quot;background-color: #333333;&quot; data-height=&quot;50&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+             &lt;div style=&quot;background-color: #888888;&quot; data-height=&quot;150&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+           &lt;/div&gt;
+         &lt;/div&gt;
+       &lt;/div&gt;
+     &lt;/div&gt;
+
+     &lt;div class=&quot;box-hz&quot; style=&quot;border: 1px solid #ffffff;&quot; data-height=&quot;200&quot;&gt;
+       &lt;div class=&quot;box-vt&quot; style=&quot;border: 1px solid #ffffff;&quot; data-width=&quot;200&quot;&gt;
+         &lt;div class=&quot;box-vt box-align-left&quot;&gt;
+           &lt;div class=&quot;box-hz box-align-center&quot; data-width=&quot;100&quot;&gt;
+             &lt;div style=&quot;background-color: #333333;&quot; data-height=&quot;50&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+             &lt;div style=&quot;background-color: #888888;&quot; data-height=&quot;150&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+           &lt;/div&gt;
+         &lt;/div&gt;
+       &lt;/div&gt;
+       &lt;div class=&quot;box-vt&quot; style=&quot;border: 1px solid #ffffff;&quot; data-width=&quot;200&quot;&gt;
+         &lt;div class=&quot;box-vt box-align-center&quot; data-width=&quot;200&quot;&gt;
+           &lt;div class=&quot;box-hz box-align-center&quot; data-width=&quot;100&quot;&gt;
+             &lt;div style=&quot;background-color: #333333;&quot; data-height=&quot;50&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+             &lt;div style=&quot;background-color: #888888;&quot; data-height=&quot;150&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+           &lt;/div&gt;
+         &lt;/div&gt;
+       &lt;/div&gt;
+       &lt;div class=&quot;box-vt&quot; style=&quot;border: 1px solid #ffffff;&quot; data-width=&quot;200&quot;&gt;
+         &lt;div class=&quot;box-vt box-align-right&quot; data-width=&quot;200&quot;&gt;
+           &lt;div class=&quot;box-hz box-align-center&quot; data-width=&quot;100&quot;&gt;
+             &lt;div style=&quot;background-color: #333333;&quot; data-height=&quot;50&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+             &lt;div style=&quot;background-color: #888888;&quot; data-height=&quot;150&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+           &lt;/div&gt;
+         &lt;/div&gt;
+       &lt;/div&gt;
+     &lt;/div&gt;
+
+     &lt;div class=&quot;box-hz&quot; style=&quot;border: 1px solid #ffffff;&quot; data-height=&quot;200&quot;&gt;
+       &lt;div class=&quot;box-vt&quot; style=&quot;border: 1px solid #ffffff;&quot; data-width=&quot;200&quot;&gt;
+         &lt;div class=&quot;box-vt box-align-left&quot;&gt;
+           &lt;div class=&quot;box-hz box-align-bottom&quot; data-width=&quot;100&quot;&gt;
+             &lt;div style=&quot;background-color: #333333;&quot; data-height=&quot;50&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+             &lt;div style=&quot;background-color: #888888;&quot; data-height=&quot;150&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+           &lt;/div&gt;
+         &lt;/div&gt;
+       &lt;/div&gt;
+       &lt;div class=&quot;box-vt&quot; style=&quot;border: 1px solid #ffffff;&quot; data-width=&quot;200&quot;&gt;
+         &lt;div class=&quot;box-vt box-align-center&quot; data-width=&quot;200&quot;&gt;
+           &lt;div class=&quot;box-hz box-align-bottom&quot; data-width=&quot;100&quot;&gt;
+             &lt;div style=&quot;background-color: #333333;&quot; data-height=&quot;50&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+             &lt;div style=&quot;background-color: #888888;&quot; data-height=&quot;150&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+           &lt;/div&gt;
+         &lt;/div&gt;
+       &lt;/div&gt;
+       &lt;div class=&quot;box-vt&quot; style=&quot;border: 1px solid #ffffff;&quot; data-width=&quot;200&quot;&gt;
+         &lt;div class=&quot;box-vt box-align-right&quot; data-width=&quot;200&quot;&gt;
+           &lt;div class=&quot;box-hz box-align-bottom&quot; data-width=&quot;100&quot;&gt;
+             &lt;div style=&quot;background-color: #333333;&quot; data-height=&quot;50&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+             &lt;div style=&quot;background-color: #888888;&quot; data-height=&quot;150&quot; data-width=&quot;50&quot;&gt;&lt;/div&gt;
+           &lt;/div&gt;
+         &lt;/div&gt;
+       &lt;/div&gt;
+     &lt;/div&gt;
+
+   &lt;/div&gt;
+</code></pre>
+
+<p>Here's the <a href="./example.html">full file</a>.</p>
+
+    </div>
+
+    <div class="human">
+      This post was written entirely by a human.
+    </div>
+
+    
+      <div class="reading">Nikolski (by Nicolas Dickner)</div>
+    
+
+    <hr>
+
+    <div class="navigation">
+    
+      <div class="previous">
+        <span>&lsaquo; Previous</span>
+        <a href="../../2026/06-box-layout">A Box Layout Component For Desktop Apps Design</a>
+      </div>
+    
+
+    
+      &nbsp;
+    
+    </div>
+
+  </article>
+  
+</main>
+
+    
+  </body>
+  
+</html>

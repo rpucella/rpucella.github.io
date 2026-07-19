@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang='en'>
+ <head>
+  <title>Box Layout Test</title>
+  <meta charset='utf-8'>
+
+  <link rel="stylesheet" href="./box-layout.css">
+  <script src="./box-layout.js"></script>
+  
+  <script>
+    window.onload = boxLayoutInit
+  </script>
+  
+ </head>
+ <body style="margin: 0;">
+   <!-- Box layouts need an explicit size for calculating inner sizes of elements -->
+   <div class="box-layout"  style="height: 100vh; width: 100vw;">
+     <div style="background: #333333; color: white;" data-height="50">
+       <span style="line-height: 50px; padding-left: 20px;">
+         Header
+       </span>
+     </div>
+     <div data-min-height="100" data-max-height="200"></div>
+     <div class="box-hz" data-min-height="50">
+       <div style="background: blue;" data-min-width="50"></div>
+       <div style="background: navy;" data-width="100"></div>
+     </div>
+   </div>
+ </body>
+</html>

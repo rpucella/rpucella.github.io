@@ -10,7 +10,7 @@ How do we support that sort of layout in a nicely generic way? Obviously we can 
 
 It has enough differences though that it is worth describing here, if only to examine an alternative approach to layout. The biggest difference is that a box layout takes the overall size of the area into account, especially the height. I implemented it as a small Javascript library with an accompanying CSS file, to illustrate in practice.
 
-Basically, a box layout is a widget that, given a height and width, wraps around other widgets, called box widget. A box widget is one of three kinds:
+Basically, a box layout is a widget that, given a height and width, wraps around other widgets, called box widgets. A box widget is one of three kinds:
 
 - a generic widget
 - a horizontal layout of box widgets
