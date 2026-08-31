@@ -3,7 +3,9 @@ title: Alignment For Box Layout Component
 date: 2026-07-18
 reading: Nikolski (by Nicolas Dickner)
 prevTitle: A Box Layout Component For Desktop Apps Design
+nextTitle: Fault Tree Handbook
 prevUrl: ../../2026/06-box-layout
+nextUrl: ../../2026/08-fault-tree-handbook
 ---
 
 Last week I discussed one way to implement desktop-style user interfaces in a web context using a small [box layout widget](/blog/posts/2026/06-box-layout) that, given a height and width, wraps around other widgets and lays them out either horizontally or vertically, in a nested fashion. Very much like flexbox, except optimized to fit within an given height and width where the size of nested widgets is allocated based on an algorithm that calculated a uniform height and width for all nested widget, subject to optional minimum and maximum specified height and width for all nested widgets. 
